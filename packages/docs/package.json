@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "dev": "vuepress dev",
+        "build": "rm -rf docs;mkdir docs;rm -rf ../../docs; vuepress build; cp -r ./docs ../../;"
+    },
+    "devDependencies": {
+        "vuepress": "^1.3.0"
+    }
+}
