@@ -1,0 +1,9 @@
+__pycache__
+utils/__pycache__
+.DS_Store
+**/.DS_Store
+.idea/
+.vscode/
+.mypy_cache/3.6
+node_modules/
+

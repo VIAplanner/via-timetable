@@ -1,0 +1,19 @@
+{
+  "name": "timetable-planner",
+  "version": "0.0.1",
+  "description": "A tool that helps UofT students plan their courses to generate their optimal timetable.",
+  "main": "planner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UofT-Course-Tools/TimetablePlanner.git"
+  },
+  "author": "UofT-Course-Tools",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UofT-Course-Tools/TimetablePlanner/issues"
+  },
+  "homepage": "https://github.com/UofT-Course-Tools/TimetablePlanner#readme"
+}
