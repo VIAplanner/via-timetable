@@ -5,4 +5,5 @@ utils/__pycache__
 .idea/
 .vscode/
 .mypy_cache/3.6
+node_modules/
 
