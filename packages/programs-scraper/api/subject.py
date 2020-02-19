@@ -16,7 +16,6 @@ class Subject:
     def __init__ (self):
         self.name = ""
         self.degrees = []
-        self.description = ""
         self.notes = []
         self.programs = []
     
