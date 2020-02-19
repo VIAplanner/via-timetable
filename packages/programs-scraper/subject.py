@@ -9,16 +9,14 @@ class Subject:
 
     name: str
     degrees:List[str]
-    description: str
-    program_type: int
     notes: List[str]
     programs: List[Program]
 
 
     def __init__ (self):
+        self.name = ""
         self.degrees = []
         self.description = ""
-        self.program_type = None
         self.notes = []
         self.programs = []
     
@@ -33,11 +31,3 @@ class Subject:
     
     def set_name(self, name:str):
         self.name = name
-    
-    def set_description(self, description:str):
-        self.description = description
-
-    def set_program_type(self, program_type: int):
-        self.program_type = program_type
-    
-        

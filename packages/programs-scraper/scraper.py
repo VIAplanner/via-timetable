@@ -15,29 +15,23 @@ body = soup.find('div', class_='centralpos').find('div', class_='contentpos')
 notes = body.find('ol', class_="numbers").find_all('li')
 programs = body.find_all('p', class_="title_program")
 
-subject_name = title.text
+subject_name = title.text.split(' (')[0]
 subject_degrees = []
-subject_notes = []
+subject_notes = [] 
 subject_programs = []
+
+subject.set_name(subject_name)
 
 for degree in all_degrees:
     if degree in title.text:
-        # subject_degrees.append(degree)
         subject.add_degree(degree)
 
 for note in notes:
-    # subject_notes.append(note.text.replace("\r", "").strip())
     subject.add_note(note.text.replace("\r", "").strip())
 
 for program in programs:
-    # subject_programs.append(program.text)
     subject.add_program(program.text)
 
 
-# print(title.text)
-# print(subject_degrees)
-# print(subject_notes)
-# print(subject_programs)
-
-subject_json = json.dumps(subject.__dict__, indent=4, sort_keys=True)
+subject_json = json.dumps(subject.__dict__, indent=4)
 print(subject_json)
