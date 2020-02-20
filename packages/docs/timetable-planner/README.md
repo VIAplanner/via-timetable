@@ -57,11 +57,25 @@ after some preferences made:
 
 ### Future Implementation:
 
-Pseudocode:
+<details>
+<summary>Pseudocodes</summary>
 <details>
 <summary> Parse from course name to individual section</summary>
 
 ```json
+
+This program takes in the input data from below and output all combinations of the section times of the courses.
+
+function courseToTime(dic_courses){
+
+    for course in dic_courses
+        for section in the course
+            check if the enrolment is not full
+                Add to the list of available for that course
+    Make a combination out of all the courses
+    return a list of all possible combination
+
+}
 
 ```
 
@@ -72,17 +86,20 @@ Pseudocode:
 
 ```json
 
+This program takes in a set of timetables and outputs the desired timetable based on the preference
+
+function idleTime(set_timetable, max_or_min){
+
+    for timetable in set_timetable
+        sum up all the idletime and store the idex
+    check for the max and min of the idletimes
+    return based on max_or_min
+
+}
+
 ```
 
 </details>
-
-<details>
-<summary> Lock Courses</summary>
-
-```json
-
-```
-
 </details>
 
 
@@ -184,7 +201,8 @@ If no such schedule available, outputs "inValid".
 
 2. In TimetablePlanner, user inputs the preferrences:
 
-- Constraint days:
+<details>
+<summary>Constraint days</summary>
 
 Valid:
 
@@ -341,29 +359,52 @@ Invalid:
 ```
 
 </details>
-
-
+</details>
 
 ## Current Implementateion
 ### (WIP)
 
-Pseudocode:
+<details>
+<summary>Pseudocodes</summary>
 <details>
 <summary> Check Conflict</summary>
 
 ```json
 
+This program checks if there are conflict in the timetable
+
+function overlap (dic_timetable){
+
+    for time in timetable
+        if the time overlaps each other
+            return invalid
+    return valid
+
+}
+
 ```
 
 </details>
 <details>
-<summary> Tansform from course time to timetable</summary>
+<summary> Tansform course sections to timetable</summary>
 
 ```json
+
+This program transform specific course secitons to a timetable
+
+funtion transform(dic_course){
+
+    for course in dic_course
+        append to timetable
+    check if valid or not by overlap function
+
+}
 
 ```
 
 </details>
+</details>
+
 
 Given a set of times, check if there is a valid timetable avaliable.
 
