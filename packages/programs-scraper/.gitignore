@@ -1,5 +1,4 @@
 node_modules/
 __pycache__/
 test.py
-subjects/
 .vscode/
