@@ -35,3 +35,51 @@ __User Journey Statechart__
 
 __Course Selection Concept Design__
 ![course-selecting-figma](./figma_course_pic.png)
+
+
+## Component Breakdowns
+
+The course guide involves the most UI interaction with the user, thus it is important to keep track of the abstract design. 
+
+The followings are the detailed of state chart:
+
+[User Journey Statechart](#_User-Journey-Statechart)
+### ProgramSearchBar
+* Data:
+    * Query: The current search query 
+
+* Methods:
+
+    * searchProgram()
+        * Searches the subject names for programs that is under the query subject
+
+        * Output the subjects of the searched name
+
+### SubjectSearchResult
+
+This component is rendered to the SubjectSearchResultList after the results from the ProgramSearchBar appear. 
+
+```js
+SubjectSearchResult {
+    data: {
+        title: String,
+    },
+    components: {
+        ProgramUnderSubject,
+    }
+}
+
+```
+
+### ProgramUnderSubject
+
+
+* Data:
+    * name of the program: String
+    * POSTS: String
+
+* Method:
+    * clickProgram()
+        * When user clicked on the subject name, it will populate a list of program cards at the other side of the frame 
+
+### Program Cards
