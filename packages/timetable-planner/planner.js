@@ -52,7 +52,7 @@ function overlap(timetable) {
 
 }
 
-function transform(course_list) {
+function bucket_course_by_day(course_list) {
     //return: timetable = {"MONDAY":[], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
     //parameter: dictionary of courses as the key with their time as the value 
     //dic_course: {"title":[{"date":[time]}]}
