@@ -14,6 +14,7 @@ def subject_exists(url: str) -> bool:
         'dl', class_='title2')  # if the there are any program advisors
     return exist is not None
 
+
 # test if a subject is no longer offered
 def program_exists(code_name_level: List[str], all_program_types: Dict[str, str]) -> bool:
     return all_program_types.get(code_name_level[0]) is not None

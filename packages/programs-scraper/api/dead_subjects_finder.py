@@ -5,7 +5,7 @@ from tqdm import tqdm # progress bar magic
 
 
 # test if a subject is no longer offered
-def subject_exist(url: str) -> bool:
+def subject_exists(url: str) -> bool:
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
     exist = soup.find('div', class_='centralpos').find('div', class_='contentpos').find(
@@ -39,6 +39,6 @@ for subject_id in tqdm(ids):
     soup = BeautifulSoup(source, 'lxml')
     title = soup.find('p', class_='titlestyle')
 
-    if not subject_exist(url):
+    if not subject_exists(url):
         with open('../output/dead_subjects.txt', 'a') as file:
             file.write(title.text.split(' (')[0] + '\n')
