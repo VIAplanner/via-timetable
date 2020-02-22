@@ -1,9 +1,9 @@
 {
     "scripts": {
         "dev": "vuepress dev",
-        "build": "rm -rf docs; mkdir docs; rm -rf ../../docs; vuepress build; cp -r ./docs ../..;"
+        "build": "rm -rf docs; mkdir docs; rm -rf ../../docs; vuepress build; cp -r ./docs ../..;echo uoftcoursetools.tech > ../../docs/CNAME"
     },
     "devDependencies": {
-        "vuepress": "^1.3.0"
+        "vuepress": "^1.3.1"
     }
 }
