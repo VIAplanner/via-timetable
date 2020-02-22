@@ -2,12 +2,12 @@ import requests, re, json
 from bs4 import BeautifulSoup, element
 from subject import Subject
 from program import Program
-from typing import Tuple, Dict, List
+from typing import Dict, List, Set
 from tqdm import tqdm  # progress bar magic
 
 
 # test if a subject is no longer offered
-def subject_exist(url: str) -> bool:
+def subject_exists(url: str) -> bool:
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
     exist = soup.find('div', class_='centralpos').find('div', class_='contentpos').find(
@@ -15,13 +15,13 @@ def subject_exist(url: str) -> bool:
     return exist is not None
 
 # test if a subject is no longer offered
-def program_exist(cnl: List[str], all_program_types: Dict[str, str]) -> bool:
-    return all_program_types.get(cnl[0]) is not None
+def program_exists(code_name_level: List[str], all_program_types: Dict[str, str]) -> bool:
+    return all_program_types.get(code_name_level[0]) is not None
 
 
 # finds all the subject ids
-def all_subject_ids(url: str) -> Tuple[str]:
-    ids = []
+def all_subject_ids(url: str) -> Set[str]:
+    ids = set()
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
     subject_groups = soup.find('div', class_='centralpos').find(
@@ -30,8 +30,8 @@ def all_subject_ids(url: str) -> Tuple[str]:
     for subject_group in subject_groups:
         for subject in subject_group.find_all('li'):
             subject_id = subject.a['href'].split('=')[1]
-            ids.append(subject_id)
-    return tuple(ids)
+            ids.add(subject_id)
+    return ids
 
 
 # test if a program title is reached
@@ -39,8 +39,8 @@ def title_reached(test_soup) -> bool:
     return isinstance(test_soup, element.Tag) and test_soup.name == 'p' and test_soup['class'][0] == "title_program"
 
 
-# return a dictionary with the name of the program as the key and its type as the value
-def find_all_types() -> Dict[str, str]:
+# return a dictionary with the code of the program as the key and its type as the value
+def get_all_program_types() -> Dict[str, str]:
     url = "https://www.utm.utoronto.ca/registrar/office-registrar-publications/program-selection-guide"
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -57,19 +57,19 @@ def find_all_types() -> Dict[str, str]:
 
 
 # finds the program name, code and its level
-def code_name_level_finder(title: str) -> List[str]:
+def get_code_name_level(scraped_program_title: str) -> List[str]:
 
     normal_pattern = "[A-Z]{5}[0-9]{4}"
     weird_pattern = "[A-Z]{9}[0-9A-Z]"
     curr_pattern = normal_pattern
     all_values = []
 
-    if len(re.findall(curr_pattern, title)) == 0:
+    if len(re.findall(curr_pattern, scraped_program_title)) == 0:
         curr_pattern = weird_pattern
 
-    all_values.append(re.findall(curr_pattern, title)[0])
-    all_values.append(re.split(curr_pattern, title)[1])
-    level_section = re.split(curr_pattern, title)[0]
+    all_values.append(re.findall(curr_pattern, scraped_program_title)[0])
+    all_values.append(re.split(curr_pattern, scraped_program_title)[1])
+    level_section = re.split(curr_pattern, scraped_program_title)[0]
 
     if "Specialist" in level_section:
         all_values.append("Specialist")
@@ -84,7 +84,7 @@ def code_name_level_finder(title: str) -> List[str]:
 subject_ids = all_subject_ids(
     "https://student.utm.utoronto.ca/calendar//program_list.pl")
 
-all_program_types = find_all_types() # gets the type of every program
+all_program_types = get_all_program_types() # gets the type of every program
 
 for subject_id in tqdm(subject_ids):
 
@@ -93,7 +93,7 @@ for subject_id in tqdm(subject_ids):
     soup = BeautifulSoup(source, 'lxml')
     all_degrees = ["HBA", "HBSc", "BBA", "BCom"]
 
-    if subject_exist(url):
+    if subject_exists(url):
         curr_subject = Subject()
         title = soup.find('p', class_='titlestyle')
         body = soup.find('div', class_='centralpos').find(
@@ -116,18 +116,18 @@ for subject_id in tqdm(subject_ids):
 
         for program_soup in programs:
             curr_program = Program()
-            cnl = code_name_level_finder(program_soup.text)
+            code_name_level = get_code_name_level(program_soup.text)
 
             # if program doesn't exist, don't include it
-            if not program_exist(cnl, all_program_types):
+            if not program_exists(code_name_level, all_program_types):
                 continue
 
-            cnl = code_name_level_finder(program_soup.text)
+            code_name_level = get_code_name_level(program_soup.text)
 
             # setting subject code, name, level and type
-            curr_program.set_code(cnl[0])
-            curr_program.set_name(cnl[1])
-            curr_program.set_level(cnl[2])
+            curr_program.set_code(code_name_level[0])
+            curr_program.set_name(code_name_level[1])
+            curr_program.set_level(code_name_level[2])
             curr_program.set_program_type(all_program_types[curr_program.code])
 
 
