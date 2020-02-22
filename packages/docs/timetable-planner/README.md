@@ -57,6 +57,52 @@ after some preferences made:
 
 ### Future Implementation:
 
+<details>
+<summary>Pseudocodes</summary>
+<details>
+<summary> Parse from course name to individual section</summary>
+
+```json
+
+This program takes in the input data from below and output all combinations of the section times of the courses.
+
+function courseToTime(course_lists){
+
+    for course in course_lists
+        for section in the course
+            check if the enrolment is not full
+                Add to the list of available for that course
+    Make a combination out of all the courses
+    return a list of all possible combination
+
+}
+
+```
+
+</details>
+
+<details>
+<summary> Idle Time</summary>
+
+```json
+
+This program takes in a set of timetables and outputs the desired timetable based on the preference
+
+function idleTime(set_timetable, max_or_min){
+
+    for timetable in set_timetable
+        sum up all the idletime and store the idex
+    check for the max and min of the idletimes
+    return based on max_or_min
+
+}
+
+```
+
+</details>
+</details>
+
+
 Given a set of course codes, the timetable planner outputs the schedule available for the set.
 
 If no such schedule available, outputs "inValid".
@@ -64,6 +110,12 @@ If no such schedule available, outputs "inValid".
 //Setting up preference are still work in progress
 
 #### Input:
+
+1. At the beginning, user inputs the selected courses:
+
+
+<details>
+    <summary>Input Data</summary>
 
 ```json
 #provided two courses with two section for simplicity
@@ -102,6 +154,12 @@ If no such schedule available, outputs "inValid".
 
 ```
 
+</details>
+
+
+<details>
+    <summary>Output Data</summary>
+
 #### Output:
 
 ```json
@@ -139,14 +197,221 @@ If no such schedule available, outputs "inValid".
 
 ```
 
-## Current Implementateion
-### (WIP)
+</details>
+
+2. In TimetablePlanner, user inputs the preferrences:
+
+<details>
+<summary>Constraint days</summary>
+
+Valid:
+
+<details>
+    <summary>Input Data</summary>
+
+```json
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "FRIDAY":[0, 1000000],//Friday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+```
+
+</details>
+
+<details>
+    <summary>Output Data</summary>
+
+#### Output:
+
+```json
+
+{
+    "MONDAY":[
+        {
+
+        }
+        ],
+    "TUESDAY":[
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "WEDNESDAY":[
+        {
+            "CSC108H5F2019L0107":[68400, 75600]
+        },
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "THURSDAY":[
+        {
+            "CSC318H5F2019T0101":[68400, 75600]
+        }
+        ],
+    "FRIDAY":[
+        {
+
+        }
+        ],
+}
+
+```
+
+</details>
+
+
+Invalid:
+
+<details>
+    <summary>Input Data</summary>
+
+```json
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "TUESDAY":[0, 1000000],//Tuesday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+```
+
+</details>
+
+<details>
+    <summary>Output Data</summary>
+
+#### Output:
+
+```json
+
+"invalid"//There are courses at Tuesday
+
+```
+
+</details>
+</details>
+
+### Current Implementateion
+(WIP)
+
+<details>
+<summary>Pseudocodes</summary>
+<details>
+<summary> Check Conflict</summary>
+
+```json
+
+This program checks if there are conflict in the timetable
+
+function overlap (timetable){
+
+    for time in timetable
+        if the time overlaps each other
+            return false
+    return true
+
+}
+
+```
+
+</details>
+<details>
+<summary> Tansform course sections to timetable</summary>
+
+```json
+
+This program transform specific course secitons to a timetable
+
+funtion transform(course_list){
+
+    for course in course_list
+        append to timetable
+    check if valid or not by overlap function
+
+}
+
+```
+
+</details>
+</details>
+
 
 Given a set of times, check if there is a valid timetable avaliable.
 
 Outputs "Valid" if such timetable exist, or else "inValid".
 
-#### Input:
+<details>
+<summary>Input</summary>
 
 ```json
 #provided one set of time to check if a valid timetable exist
@@ -174,14 +439,23 @@ Outputs "Valid" if such timetable exist, or else "inValid".
 }
 ```
 
-#### Output:
+</details>
+
+
+<details>
+<summary>Output</summary>
 
 ```json
 "Valid"
 ```
-### or
 
-#### Input:
+</details>
+
+or
+
+
+<details>
+<summary>Input</summary>
 
 ```json
 #provided one set of time to check if a valid timetable exist
@@ -207,10 +481,13 @@ Outputs "Valid" if such timetable exist, or else "inValid".
 
 ```
 
-#### Output:
+</details>
+
+<details>
+<summary>Output</summary>
 
 ```json
 
 "inValid"
-
 ```
+</details>

@@ -12,8 +12,8 @@
 //To check conflict, compare the start time of each course to see if it is overlapped by other courses:
 // A function that determine whether overlapping exists
 // input: A set of course objects with its corresponding start and end time
-// dic_courses = {"CSC108H5F2019LEC0101":[{"Monday":[ "61400", "72800"], "Wednesday":["50400", "54000"],"Friday":["50400", "54000"]}]}
-// dic_timetable = {"Monday":[[]], "Tuesday":[[]],"Wednesday":[[]],"Thursday":[[]],"Friday":[[]]}
+// course_list = {"CSC108H5F2019LEC0101":[{"Monday":[ "61400", "72800"], "Wednesday":["50400", "54000"],"Friday":["50400", "54000"]}]}
+// timetable = {"Monday":[[]], "Tuesday":[[]],"Wednesday":[[]],"Thursday":[[]],"Friday":[[]]}
 // add all the course time to each correspond date, and then compare within the list
 // if any conflict appears, return invalid
 // else return valid
@@ -27,19 +27,19 @@
 // Determine the types of unique meeting sections
 // Create a configuration
 
-function overlap(dic_timetable) {
+function overlap(timetable) {
     //parameter: dictionary of date as the key, time intervals as the value 
-    //dic_timetable = {"MONDAY":[[]], "TUESDAY":[[]],"WEDNESDAY":[[]],"THURSDAY":[[]],"FRIDAY":[[]]}
-    for (var date in dic_timetable) {
-        for (var time in dic_timetable[date]) {
-            if (dic_timetable[date].length > 1) {
-                for (var time_2 in dic_timetable[date]) {
+    //timetable = {"MONDAY":[[]], "TUESDAY":[[]],"WEDNESDAY":[[]],"THURSDAY":[[]],"FRIDAY":[[]]}
+    for (var date in timetable) {
+        for (var time in timetable[date]) {
+            if (timetable[date].length > 1) {
+                for (var time_2 in timetable[date]) {
                     time_2 = +time + +1;
-                    if(time_2 < dic_timetable[date].length){
-                        var time_1_0 = dic_timetable[date][time][0];
-                        var time_1_1 = dic_timetable[date][time][1];
-                        var time_2_0 = dic_timetable[date][time_2][0];
-                        var time_2_1 = dic_timetable[date][time_2][1];
+                    if(time_2 < timetable[date].length){
+                        var time_1_0 = timetable[date][time][0];
+                        var time_1_1 = timetable[date][time][1];
+                        var time_2_0 = timetable[date][time_2][0];
+                        var time_2_1 = timetable[date][time_2][1];
                         if ((time_1_0 >= time_2_0 && time_1_0 <= time_2_1) || (time_1_1 >= time_2_0 && time_1_1 <= time_2_1)) {
                             return false;
                         }
@@ -52,36 +52,36 @@ function overlap(dic_timetable) {
 
 }
 
-function transform(dic_courses) {
-    //return: dic_timetable = {"MONDAY":[], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
+function transform(course_list) {
+    //return: timetable = {"MONDAY":[], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
     //parameter: dictionary of courses as the key with their time as the value 
     //dic_course: {"title":[{"date":[time]}]}
     //date: ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"]
     //time: [start, end] start, end: int in seconds STARTING FROM 12:00AM
     //title: String (should not affect the function for now)
-    var dic_timetable = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
-    for (var title in dic_courses) {
-        for (var dates in dic_courses[title]) {
-            for (var date in dic_courses[title][dates]) {
+    var timetable = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
+    for (var title in course_list) {
+        for (var dates in course_list[title]) {
+            for (var date in course_list[title][dates]) {
                 if (date == "MONDAY") {
-                    dic_timetable["MONDAY"].push(dic_courses[title][dates][date]);
+                    timetable["MONDAY"].push(course_list[title][dates][date]);
                 }
                 if (date == "TUESDAY") {
-                    dic_timetable["TUESDAY"].push(dic_courses[title][dates][date]);
+                    timetable["TUESDAY"].push(course_list[title][dates][date]);
                 }
                 if (date == "WEDNESDAY") {
-                    dic_timetable["WEDNESDAY"].push(dic_courses[title][dates][date]);
+                    timetable["WEDNESDAY"].push(course_list[title][dates][date]);
                 }
                 if (date == "THURSDAY") {
-                    dic_timetable["THURSDAY"].push(dic_courses[title][dates][date]);
+                    timetable["THURSDAY"].push(course_list[title][dates][date]);
                 }
                 if (date == "FRIDAY") {
-                    dic_timetable["FRIDAY"].push(dic_courses[title][dates][date]);
+                    timetable["FRIDAY"].push(course_list[title][dates][date]);
                 }
             }
         }
     }
-    if (overlap(dic_timetable)) {
+    if (overlap(timetable)) {
         return "Valid Timetable";
     } else {
         return "inValid Timetable";
