@@ -22,4 +22,4 @@ jobs:
         git config --global user.name 'ArsalaBangash'
         git config --global user.email 'arsalabangash@gmail.com'
         git commit -am "Deploying new website build"
-        git push
+        git push -f
