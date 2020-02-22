@@ -1,24 +1,37 @@
+---
+sidebar: auto
+---
+
 # Course Guide
 
+## Vision
+The Course Guide component helps students have a better understanding of what the right courses for them are.
 
-A web app that gives students effective course guidance based on their program and year. 
+The Course Guide generates a list of recommend courses based on the student's year and programs from students.
 
-## Components
+## Overview
 
-### Course Search Bar 
+The course guide covers the program and course selection of the user's journey through our system. 
 
-__Data__ 
+![User Joruney](./user-journey.png)
 
-Query: The current search query 
 
-__Methods__ 
+### Program Selection
 
-_search(query)_:  
+After a user selects their year, they're able to browse through the list of programs available to them, adding programs to their program cart as they see fit. 
 
-Searches the course DB for courses that match the query 
+__User Journey Statechart__
+![program-selecting-chart](./Program_Choosing_state.png)
 
-Triggered on every input event (with a small debounce value) 
+__Program Selection Concept Design__
+![program-selecting-figma](./figma_pic.png)
 
-__Sub-Components__
+### Course Selection
 
-Course Card 
+With the programs selected, the user now moves to the course selection stage. Here, the user can add courses to their course cart by exploring courses via the search bar or consulting our _Recommended Courses_ UI component's suggestions. 
+
+__User Journey Statechart__
+ ![course-selecting-chart](./Course_Selecting_State.png)
+
+__Course Selection Concept Design__
+![course-selecting-figma](./figma_course_pic.png)
