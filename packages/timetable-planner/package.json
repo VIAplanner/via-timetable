@@ -4,7 +4,7 @@
   "description": "A tool that helps UofT students plan their courses to generate their optimal timetable.",
   "main": "planner.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/UofT-Course-Tools/TimetablePlanner/issues"
   },
-  "homepage": "https://github.com/UofT-Course-Tools/TimetablePlanner#readme"
+  "homepage": "https://github.com/UofT-Course-Tools/TimetablePlanner#readme",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
 }
