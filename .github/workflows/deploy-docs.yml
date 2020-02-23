@@ -2,10 +2,12 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'packages/docs/'
 
       
 jobs:
-  build-and-deploy:
+  build-and-deploy-docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -22,4 +24,4 @@ jobs:
         git config --global user.name 'ArsalaBangash'
         git config --global user.email 'arsalabangash@gmail.com'
         git commit -am "Deploying new website build"
-        git push -f
+        git push
