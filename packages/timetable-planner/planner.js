@@ -33,17 +33,16 @@ function overlap(timetable) {
     for (var day in timetable) {
         for (var time in timetable[day]) {
             if (timetable[day].length > 1) {
-                for (var time_2 in timetable[day]) {
-                    time_2 = +time + +1;
-                    if (time_2 < timetable[day].length) {
-                        var time_1_0 = timetable[day][time][0];
-                        var time_1_1 = timetable[day][time][1];
-                        var time_2_0 = timetable[day][time_2][0];
-                        var time_2_1 = timetable[day][time_2][1];
-                        if ((time_1_0 >= time_2_0 && time_1_0 <= time_2_1) || (time_1_1 >= time_2_0 && time_1_1 <= time_2_1)) {
-                            return false;
-                        }
+                var time_2 = +time + 1;
+                while (time_2 < timetable[day].length) {
+                    var time_1_0 = timetable[day][time][0];
+                    var time_1_1 = timetable[day][time][1];
+                    var time_2_0 = timetable[day][time_2][0];
+                    var time_2_1 = timetable[day][time_2][1];
+                    if ((time_1_0 >= time_2_0 && time_1_0 < time_2_1) || (time_1_1 > time_2_0 && time_1_1 <= time_2_1)) {
+                        return false;
                     }
+                    time_2 ++;
                 }
             }
         }
