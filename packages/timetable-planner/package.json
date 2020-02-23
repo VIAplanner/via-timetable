@@ -18,5 +18,8 @@
   "homepage": "https://github.com/UofT-Course-Tools/TimetablePlanner#readme",
   "devDependencies": {
     "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "node": "^13.8.0"
   }
 }
