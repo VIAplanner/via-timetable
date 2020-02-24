@@ -1,3 +1,6 @@
+---
+sidebar: auto
+---
 # Timetable Planner
 
 A web app that helps UofT students plan their courses to generate their optimal timetable. 
@@ -48,22 +51,117 @@ When preferences are made, those times will not be changed.
 
 ![lock1](./lock1.png)
 
-after some preferences made:
+after a course is locked and a preference is being made:
 
 ![lock2](./lock2.png)
+
+## Timetable Roadmap:
+
+Timetable roadmap demonstrates the progress for the algorithms of the timetable component. 
+Pseudocodes shows the key ideas of each functionality of the algorithms described in words.
+
+### Pseudocode:
+<details>
+<summary> Check Conflict</summary>
+
+```json
+
+This program checks if there are conflict in the timetable
+
+function overlap (timetable){
+
+    for day in timetable
+        if the times of the day overlaps each other
+            return false
+    return true
+
+}
+
+```
+
+</details>
+<details>
+<summary> Tansform course sections to timetable</summary>
+
+```json
+
+This program takes in specific course secitons and convert to a timetable also checks for invalid time provided by the user
+
+funtion bucket_course_by_day(course_list, invalid_time)s{
+
+    for course in course_list
+        append to timetable
+    for invalid_time_section in invalid_times
+        append to timetable
+    check if valid or not by overlap function
+
+}
+
+```
+
+</details>
+<details>
+<summary> Parse from course name to individual section</summary>
+
+```json
+
+This program takes in the input course data from example usage and produce a list of all combinations of the section times for the courses.
+
+function courseToTime(course_lists){
+
+    for course in course_lists
+        for section in the course
+            check if the enrolment is not full
+                list of available courses appends the specific section of that couse
+    Make a combination out of all the courses from the list of available courses
+    return the list of all possible combination
+
+}
+
+```
+
+</details>
+
+<details>
+<summary> Idle Time</summary>
+
+```json
+
+This program takes in a set of timetables and return the max or min idle time timetable based on the preference
+
+function idleTime(set_timetable, max_or_min){
+
+    for timetable in set_timetable
+        sum up all the idle time and store the index
+    check for the max and min of the idletimes
+    return based on max_or_min
+
+}
+
+```
+
+</details>
+
+
 
 
 ## Example Usage:
 
 ### Future Implementation:
 
+
+
 Given a set of course codes, the timetable planner outputs the schedule available for the set.
 
 If no such schedule available, outputs "inValid".
 
-//Setting up preference are still work in progress
+[Comment]: # (Setting up preference are still work in progress)
 
-#### Input:
+1. At the beginning, user inputs the selected courses:
+
+
+<details>
+    <summary>Input Data</summary>
 
 ```json
 #provided two courses with two section for simplicity
@@ -102,6 +200,12 @@ If no such schedule available, outputs "inValid".
 
 ```
 
+</details>
+
+
+<details>
+    <summary>Output Data</summary>
+
 #### Output:
 
 ```json
@@ -139,14 +243,179 @@ If no such schedule available, outputs "inValid".
 
 ```
 
-## Current Implementateion
-### (WIP)
+</details>
+
+2. In TimetablePlanner, user inputs the preferrences:
+
+<details>
+<summary>Constraint days</summary>
+
+Valid:
+
+<details>
+    <summary>Input Data</summary>
+
+```json
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "FRIDAY":[0, 1000000],//Friday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+```
+
+</details>
+
+<details>
+    <summary>Output Data</summary>
+
+#### Output:
+
+```json
+
+{
+    "MONDAY":[
+        {
+
+        }
+        ],
+    "TUESDAY":[
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "WEDNESDAY":[
+        {
+            "CSC108H5F2019L0107":[68400, 75600]
+        },
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "THURSDAY":[
+        {
+            "CSC318H5F2019T0101":[68400, 75600]
+        }
+        ],
+    "FRIDAY":[
+        {
+
+        }
+        ],
+}
+
+```
+
+</details>
+
+
+Invalid:
+
+<details>
+    <summary>Input Data</summary>
+
+```json
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "TUESDAY":[0, 1000000],//Tuesday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+```
+
+</details>
+
+<details>
+    <summary>Output Data</summary>
+
+#### Output:
+
+```json
+
+"invalid"//There are courses at Tuesday
+
+```
+
+</details>
+</details>
+
+### Current Implementateion
+(WIP)
 
 Given a set of times, check if there is a valid timetable avaliable.
 
 Outputs "Valid" if such timetable exist, or else "inValid".
 
-#### Input:
+<details>
+<summary>Input</summary>
 
 ```json
 #provided one set of time to check if a valid timetable exist
@@ -174,14 +443,23 @@ Outputs "Valid" if such timetable exist, or else "inValid".
 }
 ```
 
-#### Output:
+</details>
+
+
+<details>
+<summary>Output</summary>
 
 ```json
 "Valid"
 ```
-### or
 
-#### Input:
+</details>
+
+or
+
+
+<details>
+<summary>Input</summary>
 
 ```json
 #provided one set of time to check if a valid timetable exist
@@ -207,10 +485,13 @@ Outputs "Valid" if such timetable exist, or else "inValid".
 
 ```
 
-#### Output:
+</details>
+
+<details>
+<summary>Output</summary>
 
 ```json
 
 "inValid"
-
 ```
+</details>
