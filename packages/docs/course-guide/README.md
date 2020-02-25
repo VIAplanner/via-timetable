@@ -41,109 +41,149 @@ __Course Selection Concept Design__
 
 The course guide involves the most UI interaction with the user, thus it is important to keep track of the abstract design. 
 
-The followings are the detailed of state chart:
+## Part 1: Program Choosing
 
-[User Journey Statechart](#_User-Journey-Statechart)
+### MyProgramsList
+
+The list of programs the user has added. 
+
+```js
+MyProgramsList{
+    data:{
+        programs: //array of programs the user has added
+    },
+    methods:{
+        deleteProgram(program) // triggered when pressing delete on a program
+    },
+    components:{
+        ChosenProgramTile //each tile is a program in the list and is clickable
+    }
+}
+```
+
+### ChosenProgramTile
+
+The component for the programs listed in My_programs_List
+
+```js
+ChosenProgramTile{
+    data: {
+        programName: String //The name of the program this tile represents
+        subject //which subject this program belongs in
+    },
+    methods: {
+        loadSubject(subject), /*displays the programs in the same subject as 
+        selected_program in the "programCardsPanel",*/
+        delete() //remove this program when the "x" button is clicked
+    },
+    components: {
+        deleteButton
+    }
+}
+```
+
+### Subjects_List
+
+The Subjects_List is a list of all the subject names offered at UTM. The user can browse through it and click a subject in this list to view all the programs of that subject.
+
+```js
+Subjects_List{
+    data:{
+        selectedSubject, //The selected subject needs to be highlighted
+        searchMatchingSubjects: subject[] /*The subjects that have a program that 
+                                            matches the search query*/
+        showingGroups //array of groups that still shows in this list
+    },
+    components:{
+        SubjectTiles: //an array of subject names that can be clicked
+    }
+}
+```
+
+### Subject_Tile
+
+The component for the subjects in Subjects_List
+
+```js
+Subject_Tile{
+    data: {
+        subject, //the subject this tile represents
+        highlighted: boolean
+    },
+    methods: {
+        loadSubject(subject) /*displays the programs in the same subject as 
+        selected_program in the "programCardsPanel",*/
+    }
+}
+```
+
+### programCardsPanel
+
+The component that displays the detailed information of each program in a subject and allows the user to add a program to My_Programs_List
+
+```js
+programCardsPanel {
+    data: {
+        subject //The subject 
+    },
+    methods:{
+        setSubject(subject) //Save the specified subject into data.subject to load programCards
+    },
+    components:{
+        ProgramCards: //each individual program's information 
+    }
+}
+```
+
+### ProgramCard
+
+The ProgramCard displays all the information about a specific program, and a button to add it
+
+```js
+ProgramCard {
+    data:{
+        program //The program this card represents
+    },
+    methods: {
+        /*The required courses string for a certain year contains course codes
+        that refer to a course, we need a regex to recognize the course code pattern and transform
+        each of them into a CourseLink component that can be clicked to pop up a course info frame.*/
+    },
+    sub_components:{
+        button, //The "Add" button
+        courseLinks //each mention of a course code under required courses is a CourseLink
+    }
+}
+```
+
+### CourseLink
+
+The course code of a course, clicking on it opens Course_Info_Pop_up
+
+```js
+CourseLink {
+    data:{
+        course //The course this component links to
+    },
+    methods: {
+        openPopup() //Triggered when this component is clicked, create a new instance of the pop up frame
+    }
+}
+```
+
 ### ProgramSearchBar
 
-The search bar can narrow down the list of subject into wanted program based on the given input.
+The user can search for a program by name
 
 ```js
 ProgramSearchBar{
     data:{
-        Query: The current search query
+        query: String, //The current search query
     },
     methods:{
-        searchProgram():
-         "It searches programs by the input subject name and Output the subject of the searched name"
-    }
-}
-
-```
-
-### SubjectSearchResult
-
-This component is rendered to the SubjectSearchResultList after the results from the ProgramSearchBar appear. 
-
-```js
-SubjectSearchResult {
-    data: {
-        title: String,
+        search(query) //Call search for query in back-end
     },
-    components: {
-        SubjectSearchResultList
-    }
-}
-
-```
-
-### SubjectSearchResultList
-
-This component is created to contain a set of programs.
-
-```js
-SubjectSearchResultList {
-    data: {
-       list_of_programs: String,
-    },
-    components: {
-        ProgramUnderSubject
-    }
-}
-
-```
-
-
-### ProgramUnderSubject
-
-Each subject contains multiple programs, which allows user to select the one they want.
-
-```js
-SubjectSearchResult {
-    data: {
-        name_of_the_program: String
-        POSTs: String
-    },
-    methods:{
-        clickProgram():
-         "When user clicked on the subject name, \
-         it will populate a list of program cards at the other side of the frame"
-    }
-}
-
-```
-
-### ProgramCards
-
-The program card component is generated whenever user click into a specific subjectSearchResult or direct program
-or the specific program contained in profileBar
-
-```js
-ProgramCards {
-    data:{
-        program_title: string
-        program_detail: string
-    },
-    components:{
-        addProgramButton
-        courseLink
-    }
 }
 ```
 
-### addProgramButton
-
-This component is meant to serve the action when user want to add the selected program into their programCart
-
-```js
-addProgramButton{
-    data:{
-        add:string
-    },
-    methods:{
-        addProgram():
-        "A button that allows user to add selected program"
-    }
-}
-```
-
+## Part 2: Course Choosing
