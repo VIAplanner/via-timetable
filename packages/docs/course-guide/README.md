@@ -82,12 +82,12 @@ ChosenProgramTile{
 }
 ```
 
-### Subjects_List
+### SubjectsList
 
-The Subjects_List is a list of all the subject names offered at UTM. The user can browse through it and click a subject in this list to view all the programs of that subject.
+The SubjectsList is a list of all the subject names offered at UTM. The user can browse through it and click a subject in this list to view all the programs of that subject.
 
 ```js
-Subjects_List{
+SubjectsList{
     data:{
         selectedSubject, //The selected subject needs to be highlighted
         searchMatchingSubjects: subject[] /*The subjects that have a program that 
@@ -100,12 +100,12 @@ Subjects_List{
 }
 ```
 
-### Subject_Tile
+### SubjectTile
 
 The component for the subjects in Subjects_List
 
 ```js
-Subject_Tile{
+SubjectTile{
     data: {
         subject, //the subject this tile represents
         highlighted: boolean
@@ -173,7 +173,18 @@ CourseLink {
 
 ### ProgramSearchBar
 
-The user can search for a program by name
+The user can search for a program by NAME
+
+The search results are shown by the shortening of the SubjectsList
+
+Only the groups of subjects that contain at least one subject that contains at least 
+one program that matches the search query will remain in the SubjectsList
+
+The subjects that contain at least one program that matches the search query will be highlighted
+for the user to see and click into
+
+The search can only be canceled by clearing the search box, in which case the SubjectsList will 
+be restored in full
 
 ```js
 ProgramSearchBar{
@@ -181,9 +192,187 @@ ProgramSearchBar{
         query: String, //The current search query
     },
     methods:{
-        search(query) //Call search for query in back-end
+        search(query) /*Calls search for query in back-end and updates SubjectsList.showingGroups
+                        and SubjectsList.searchMatchingSubjects
+                        Better emit an event up to the main application to call a methods that does 
+                        all that*/
     },
 }
 ```
 
 ## Part 2: Course Choosing
+
+### CourseGroupsList
+
+The list of all the groups of courses offered at UTM, ex: Anthropology, Astronomy
+
+```js
+CourseGroupsList{
+    data: {
+        groups: courseGroup[], //Array of all the courseGroups
+        expandedGroup: courseGroup /*The selected course group is highlighted and expanded
+                                    in the CourseList*/
+    },
+    components:{
+        courseGroupTiles //An array of course group names that can be clicked 
+    }
+}
+```
+### CourseGroupTile
+
+The component for a single course group in CourseGroupsList
+
+```js
+CourseGroupTile{
+    data: {
+        groupName: String //The name of the course group this tile represents
+        highlighted: boolean
+    },
+    methods: {
+        loadCourseGroup() /*load the courses in this group into the course list by,
+                            pass in the groupName*/
+    }
+}
+```
+
+### CourseList
+
+The list shows all the courses in a specific course group, all the courses in one group has
+course codes that start with the same 3 letters, ex: CSC, MAT
+
+```js
+CourseList {
+    data: {
+        courses: courseGroup //The courses 
+    },
+    methods: {
+        loadCourses(groupName) //Searches the backend for the courseGroup with the given groupName
+    },
+    components: {
+        CourseTiles //Each tile represents a course
+    }
+}
+```
+
+### CourseTile
+
+The the component for a single course in MyCoursesList, RecommendedList, and CourseList
+
+```js
+CourseTile {
+    data: {
+        course: course, //The course this tile represents
+        state: int /* What is the parent of this tile,
+                    CourseList: has no extra buttons
+                    MyCoursesList: has delete button while hovering
+                    RecommendedList: has add button while hovering*/
+    },
+    methods: {
+        courseClicked(), //pop up course info  frame
+        deleteCourse(), //If delete button is clicked, remove this course from MyCoursesList
+        addCourse(), /*If add button is clicked, add this course to My CoursesList and Remove 
+                       it from RecommendedList*/
+    },
+    components: {
+        //Depending on the state
+        addButton,
+        deleteButton
+    }
+}
+```
+
+### MyCoursesList
+
+The list of courses the user has selected for this year
+
+```js
+MyCoursesList {
+    data: {
+        myCourses: course[], //The courses the user has added
+    },
+    methods: {
+        addCourse(course), //Adds the specified course to myCourses
+        removeCourse(course), //Removes the specified course from myCourses
+    },
+    components: {
+        CourseTiles
+    }
+}
+```
+
+### RecommendedList
+
+The list of courses recommended to the user based on their year of study and their 
+chosen program(s)
+
+```js
+RecommendedList {
+    data: {
+        recommendedCourses: course[], //Array of recommended courses
+    },
+    methods: {
+        loadRecommendedCourses() /*Looks at the year of study, selected program(s), and 
+                                   what's already in MyProgramsList to determine a list of 
+                                   recommended courses*/
+        removeCourses(course), /*Removes the specified course from recommendedCourses (when
+                                 the user adds it)*/
+    },
+    components: {
+        CourseTiles, 
+        addAllButton //There is a button for adding all of the courses in this list at once
+    }
+}
+```
+
+### CourseInfoPopUp
+
+The pop-up frame what pops up whenever a course is clicked for detailed information
+
+```js
+CourseInfoPopup {
+    data: {
+        added: boolean //Whether this course in my MyCoursesList
+        course: course //The course which this pop-up frame is displaying info for
+    },
+    methods: {
+        addCourse(), //Adds this course to MyCoursesList
+        removeCourse(), //Removes this course from MyCoursesList
+    },
+    components: {
+        CourseLinks, //references to other courses, click to open another pop-up
+        addButton, //Depending on added state
+        removeButton, //Depending on added state
+        exitButton, //To close the pop-up
+    }
+}
+```
+
+### CoursesSearchBar
+
+The search bar allows the user to search for a course by the COURSE CODE.
+
+The search results are in a drop-down frame under the search bar, the drop-
+down frame has a limited size, any overflowing search results can be viewed
+by scrolling in the drop-down frame.
+
+The search results are also CourseTile Components that can be clicked to 
+pop-up a course info frame
+
+The search can be canceled by clicking elsewhere outside the search bar
+
+```js
+CourseSearchBar {
+    data: {
+        query: String, //The current search query   
+        results: course[] //The courses that match the search query
+    },
+    methods: {
+        search(query), /*Searches the back end for courses with course codes that 
+                        match the query and updates results*/
+        clear() //Clears the search box and results drop down if search is canceled
+    },
+    components: {
+        CourseTiles //CourseTile components each as a search result in the drop-down
+    }
+}
+```
