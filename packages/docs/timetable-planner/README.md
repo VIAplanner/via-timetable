@@ -55,39 +55,51 @@ after a course is locked and a preference is being made:
 
 ![lock2](./lock2.png)
 
-## Timetable Roadmap:
+## Roadmap for the Timetable Algorithm
+<!---
+- Introduce what the timetable algorithm is for
+- Tell a story about how the algorithm evolves
+- Have a heading for each optimization in the roadmap
+- Start with base conflict check -> invalid times -> idle time max/min -> locked courses
+--->
+Timetable algorithm takes in a set of course names and transform into a list of timetables. Then the user can optimize the timetable to fit their preference.
 
-Timetable roadmap demonstrates the progress for the algorithms of the timetable component. 
-Pseudocodes shows the key ideas of each functionality of the algorithms described in words.
+The algorithm starts out basic, it checks if the sections given have conflict to each other. If there is no conflict, the algorithm will return "valid timetable", or if there is a conflict between any section, it will return "invalid timetable".
 
-### Pseudocode:
-<details>
-<summary> Check Conflict</summary>
+Based on the validity checking, the algorithm starts to be able to add constraints to the timetable.
 
-```json
+The algorithm then takes in an invalid time argument that inputs from the user's preference time off. This argument is being treated like a course which will be parsed in to the timetable and check for conflict as well.
 
-This program checks if there are conflict in the timetable
+The algorithm then implements an idle time function which takes in a set of valid timetable and returns the max and the min idle time depend on the user's preference.
 
-function overlap (timetable){
+The algorithm then stores the user's locked courses in a list, with future optimization, the locked courses in the list will stays the same section.
 
+### Checking for Conflicts
+
+Before any optimization, the algorithm checks if it is possible to make a timetable out of the given courses by checking the conflict between the course times.
+
+**Pseudocode**
+```js
+/**
+ * 
+ * @param timetable {DAY: [time_sections]}
+ * @define time_section [start_time, end_time]
+ */
+function overlap(timetable){
     for day in timetable
         if the times of the day overlaps each other
             return false
     return true
-
 }
-
 ```
 
-</details>
-<details>
-<summary> Tansform course sections to timetable</summary>
+### Time Offs
 
-```json
+The user can input their desired time offs, such as day off or morning/evening off, the algorithm reruns the conflict check and returns valid timetable with the invalid times.
 
-This program takes in specific course secitons and convert to a timetable also checks for invalid time provided by the user
-
-funtion bucket_course_by_day(course_list, invalid_time)s{
+**Psedocode**
+```js
+function bucket_course_by_day(course_list, invalid_times){
 
     for course in course_list
         append to timetable
@@ -96,39 +108,17 @@ funtion bucket_course_by_day(course_list, invalid_time)s{
     check if valid or not by overlap function
 
 }
-
 ```
 
-</details>
-<details>
-<summary> Parse from course name to individual section</summary>
 
-```json
 
-This program takes in the input course data from example usage and produce a list of all combinations of the section times for the courses.
+### Maximize or Minimize Idle Time
 
-function courseToTime(course_lists){
+The user can choose to maximize or minimize their idle time at school, which is the time gaps between classes each day. The algorithm compares the total idle time in each timetable given and returns the user's preference.
 
-    for course in course_lists
-        for section in the course
-            check if the enrolment is not full
-                list of available courses appends the specific section of that couse
-    Make a combination out of all the courses from the list of available courses
-    return the list of all possible combination
+**Pseudocode**
 
-}
-
-```
-
-</details>
-
-<details>
-<summary> Idle Time</summary>
-
-```json
-
-This program takes in a set of timetables and return the max or min idle time timetable based on the preference
-
+```js
 function idleTime(set_timetable, max_or_min){
 
     for timetable in set_timetable
@@ -137,361 +127,33 @@ function idleTime(set_timetable, max_or_min){
     return based on max_or_min
 
 }
-
 ```
 
-</details>
+### Lock Sections
 
+The user can lock the section(s) they prefer to stay the same while processing other optimizations. The algorithm stores the locked section in a list, when processing other optimization, the list is being compared and put in to the new timetable to ensure timetable includes the locked section.
 
+<!---
 
+Parse from course name to individual section
 
-## Example Usage:
+```js
 
-### Future Implementation:
+This program takes in the input course data from example usage and produce a list of all combinations of the section times for the courses.
 
+function courseToTime(course_lists){
 
+    for course in course_lists
+        for section in the course
+            check if the enrolment is not full
+                list of available courses appends the specific section of that course
+    Make a combination out of all the courses from the list of available courses
+    return the list of all possible combination
 
-Given a set of course codes, the timetable planner outputs the schedule available for the set.
-
-If no such schedule available, outputs "inValid".
-
-[Comment]: # (Setting up preference are still work in progress)
-
-1. At the beginning, user inputs the selected courses:
-
-
-<details>
-    <summary>Input Data</summary>
-
-```json
-#provided two courses with two section for simplicity
-{
-    "CourseCode": {
-        "CSC108H5F2019":{
-            "L0101":[{
-                "MONDAY":[32400, 36000],
-                "WEDNESDAY":[32400, 36000],
-                "FRIDAY":[32400, 36000],
-                "size":160,
-                "enrolment":0
-
-            }],
-            "L0107":[{
-                "WEDNESDAY":[64800, 75600],
-                "size":160,
-                "enrolment":0
-                }]
-        },
-        "CSC318H5F2019":{
-            "L0101":[{
-                "TUESDAY":[68400, 75600],
-                "WEDNESDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-            }],
-            "T0107":[{
-                "THURSDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-                }]
-        },
-        
-}
-
-```
-
-</details>
-
-
-<details>
-    <summary>Output Data</summary>
-
-#### Output:
-
-```json
-
-{
-    "MONDAY":[
-        {
-            "CSC108H5F2019L0101":[32400, 36000]
-        }
-        ],
-    "TUESDAY":[
-        {
-            "CSC318H5F2019L0101":[68400, 75600]
-        }
-        ],
-    "WEDNESDAY":[
-        {
-            "CSC108H5F2019L0101":[32400, 36000]
-        },
-        {
-            "CSC318H5F2019L0101":[68400, 75600]
-        }
-        ],
-    "THURSDAY":[
-        {
-            "CSC318H5F2019T0101":[68400, 75600]
-        }
-        ],
-    "FRIDAY":[
-        {
-            "CSC108H5F2019L0101":[32400, 36000]
-        }
-        ],
-}
-
-```
-
-</details>
-
-2. In TimetablePlanner, user inputs the preferrences:
-
-<details>
-<summary>Constraint days</summary>
-
-Valid:
-
-<details>
-    <summary>Input Data</summary>
-
-```json
-#provided two courses with two section for simplicity
-{
-    "CourseCode": {
-        "CSC108H5F2019":{
-            "L0101":[{
-                "MONDAY":[32400, 36000],
-                "WEDNESDAY":[32400, 36000],
-                "FRIDAY":[32400, 36000],
-                "size":160,
-                "enrolment":0
-
-            }],
-            "L0107":[{
-                "WEDNESDAY":[64800, 75600],
-                "size":160,
-                "enrolment":0
-                }]
-        },
-        "CSC318H5F2019":{
-            "L0101":[{
-                "TUESDAY":[68400, 75600],
-                "WEDNESDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-            }],
-            "T0107":[{
-                "THURSDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-                }]
-        },
-        "Constraints":{
-            "INVALIDTIME":[{
-                "FRIDAY":[0, 1000000],//Friday off
-                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
-            }]
-        }
-        
-}
-
-```
-
-</details>
-
-<details>
-    <summary>Output Data</summary>
-
-#### Output:
-
-```json
-
-{
-    "MONDAY":[
-        {
-
-        }
-        ],
-    "TUESDAY":[
-        {
-            "CSC318H5F2019L0101":[68400, 75600]
-        }
-        ],
-    "WEDNESDAY":[
-        {
-            "CSC108H5F2019L0107":[68400, 75600]
-        },
-        {
-            "CSC318H5F2019L0101":[68400, 75600]
-        }
-        ],
-    "THURSDAY":[
-        {
-            "CSC318H5F2019T0101":[68400, 75600]
-        }
-        ],
-    "FRIDAY":[
-        {
-
-        }
-        ],
-}
-
-```
-
-</details>
-
-
-Invalid:
-
-<details>
-    <summary>Input Data</summary>
-
-```json
-#provided two courses with two section for simplicity
-{
-    "CourseCode": {
-        "CSC108H5F2019":{
-            "L0101":[{
-                "MONDAY":[32400, 36000],
-                "WEDNESDAY":[32400, 36000],
-                "FRIDAY":[32400, 36000],
-                "size":160,
-                "enrolment":0
-
-            }],
-            "L0107":[{
-                "WEDNESDAY":[64800, 75600],
-                "size":160,
-                "enrolment":0
-                }]
-        },
-        "CSC318H5F2019":{
-            "L0101":[{
-                "TUESDAY":[68400, 75600],
-                "WEDNESDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-            }],
-            "T0107":[{
-                "THURSDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-                }]
-        },
-        "Constraints":{
-            "INVALIDTIME":[{
-                "TUESDAY":[0, 1000000],//Tuesday off
-                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
-            }]
-        }
-        
-}
-
-```
-
-</details>
-
-<details>
-    <summary>Output Data</summary>
-
-#### Output:
-
-```json
-
-"invalid"//There are courses at Tuesday
-
-```
-
-</details>
-</details>
-
-### Current Implementateion
-(WIP)
-
-Given a set of times, check if there is a valid timetable avaliable.
-
-Outputs "Valid" if such timetable exist, or else "inValid".
-
-<details>
-<summary>Input</summary>
-
-```json
-#provided one set of time to check if a valid timetable exist
-{
-    "CourseCode": {
-        "CSC108H5F2019":{
-            "L0101":[{
-                "MONDAY":[32400, 36000],
-                "WEDNESDAY":[32400, 36000],
-                "FRIDAY":[32400, 36000],
-                "size":160,
-                "enrolment":0
-
-            }],
-        },
-        "CSC318H5F2019":{
-            "L0101":[{
-                "TUESDAY":[68400, 75600],
-                "WEDNESDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-            }],
-        },
-        
 }
 ```
-
-</details>
-
-
-<details>
-<summary>Output</summary>
-
-```json
-"Valid"
-```
-
-</details>
-
-or
+--->
 
 
-<details>
-<summary>Input</summary>
 
-```json
-#provided one set of time to check if a valid timetable exist
-{
-    "CourseCode": {
-        "CSC108H5F2019":{
-            "L0107":[{
-                "WEDNESDAY":[64800, 75600],
-                "size":160,
-                "enrolment":0
-                }]
-        },
-        "CSC318H5F2019":{
-            "L0101":[{
-                "TUESDAY":[68400, 75600],
-                "WEDNESDAY":[68400, 75600],
-                "size": 60,
-                "enrolment": 0
-            }],
-        },
-        
-}
 
-```
-
-</details>
-
-<details>
-<summary>Output</summary>
-
-```json
-
-"inValid"
-```
-</details>

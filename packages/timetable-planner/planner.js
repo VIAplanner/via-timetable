@@ -27,6 +27,7 @@
 // Determine the types of unique meeting sections
 // Create a configuration
 
+
 function overlap(dic_timetable) {
     //parameter: dictionary of date as the key, time intervals as the value 
     //dic_timetable = {"MONDAY":[[]], "TUESDAY":[[]],"WEDNESDAY":[[]],"THURSDAY":[[]],"FRIDAY":[[]]}
