@@ -37,9 +37,30 @@ __Course Selection Concept Design__
 ![course-selecting-figma](./figma_course_pic.png)
 
 
+## Type Definitions
+
+### Program
+Contains all the information for a program, refer to [Course API](https://uoftcoursetools.tech/course-api/)
+
+### Subject
+Contains an array of Programs, ex: Anthropology contains Specialist Program ERSPE0105
+Anthropology (Science), Major Program ERMAJ0105 Anthropology (Science), and Minor Program ERMIN1775
+Anthropology (Arts).
+
+### Subject Group
+Contains an array of Subjects, subjects are grouped into bigger groups, like the field of study. Ex: Biology is a SubjectGroup that contains Biology, Biology-Health Science, Biotechnology, Ecology & Evolution, Molecular Biology and Paleontology.
+
+### Course
+Contains all the information for a course, refer to [Course API](https://uoftcoursetools.tech/course-api/)
+
+### CourseGroup
+Contains a group of Courses. Courses are grouped according to their course codes, ex: all the courses that start with "CSC" are under the Computer Science group
+
+
 ## Component Breakdowns
 
 The course guide involves the most UI interaction with the user, thus it is important to keep track of the abstract design. 
+
 
 ## Part 1: Program Choosing
 
@@ -50,13 +71,13 @@ The list of programs the user has added.
 ```js
 MyProgramsList{
     data:{
-        programs: //array of programs the user has added
+        programs: [Program]//array of programs the user has added
     },
     methods:{
         deleteProgram(program) // triggered when pressing delete on a program
     },
     components:{
-        ChosenProgramTile //each tile is a program in the list and is clickable
+        [ChosenProgramTile] //each tile is a program in the list and is clickable
     }
 }
 ```
@@ -69,7 +90,7 @@ The component for the programs listed in My_programs_List
 ChosenProgramTile{
     data: {
         programName: String //The name of the program this tile represents
-        subject //which subject this program belongs in
+        subject: Subject //which subject this program belongs in
     },
     methods: {
         loadSubject(subject), /*displays the programs in the same subject as 
@@ -77,7 +98,7 @@ ChosenProgramTile{
         delete() //remove this program when the "x" button is clicked
     },
     components: {
-        deleteButton
+        DeleteButton
     }
 }
 ```
@@ -89,13 +110,12 @@ The SubjectsList is a list of all the subject names offered at UTM. The user can
 ```js
 SubjectsList{
     data:{
-        selectedSubject, //The selected subject needs to be highlighted
-        searchMatchingSubjects: subject[] /*The subjects that have a program that 
+        searchMatchingSubjects: [Subject] /*The subjects that have a program that 
                                             matches the search query*/
-        showingGroups //array of groups that still shows in this list
+        showingGroups: [SubjectGroup] //array of subject groups that still shows in this list
     },
     components:{
-        SubjectTiles: //an array of subject names that can be clicked
+        [SubjectTile]: //an array of subject names that can be clicked
     }
 }
 ```
@@ -107,30 +127,30 @@ The component for the subjects in Subjects_List
 ```js
 SubjectTile{
     data: {
-        subject, //the subject this tile represents
+        subject: Subject, //the subject this tile represents
         highlighted: boolean
     },
     methods: {
         loadSubject(subject) /*displays the programs in the same subject as 
-        selected_program in the "programCardsPanel",*/
+                               selected_program in the "programCardsPanel",*/
     }
 }
 ```
 
-### programCardsPanel
+### ProgramCardsPanel
 
 The component that displays the detailed information of each program in a subject and allows the user to add a program to My_Programs_List
 
 ```js
-programCardsPanel {
+ProgramCardsPanel {
     data: {
-        subject //The subject 
+        subject: Subject //The subject 
     },
     methods:{
         setSubject(subject) //Save the specified subject into data.subject to load programCards
     },
     components:{
-        ProgramCards: //each individual program's information 
+        [ProgramCard] //each individual program's information 
     }
 }
 ```
@@ -142,16 +162,16 @@ The ProgramCard displays all the information about a specific program, and a but
 ```js
 ProgramCard {
     data:{
-        program //The program this card represents
+        program: Program //The program this card represents
     },
     methods: {
         /*The required courses string for a certain year contains course codes
         that refer to a course, we need a regex to recognize the course code pattern and transform
         each of them into a CourseLink component that can be clicked to pop up a course info frame.*/
     },
-    sub_components:{
-        button, //The "Add" button
-        courseLinks //each mention of a course code under required courses is a CourseLink
+    components:{
+        AddProgramButton, //The "Add" button
+        [CourseLink] //each mention of a course code under required courses is a CourseLink
     }
 }
 ```
@@ -163,7 +183,7 @@ The course code of a course, clicking on it opens Course_Info_Pop_up
 ```js
 CourseLink {
     data:{
-        course //The course this component links to
+        course: Course //The course this component links to
     },
     methods: {
         openPopup() //Triggered when this component is clicked, create a new instance of the pop up frame
@@ -209,12 +229,12 @@ The list of all the groups of courses offered at UTM, ex: Anthropology, Astronom
 ```js
 CourseGroupsList{
     data: {
-        groups: courseGroup[], //Array of all the courseGroups
-        expandedGroup: courseGroup /*The selected course group is highlighted and expanded
+        groups: [CourseGroup], //Array of all the courseGroups
+        expandedGroup: CourseGroup /*The selected course group is highlighted and expanded
                                     in the CourseList*/
     },
     components:{
-        courseGroupTiles //An array of course group names that can be clicked 
+        [CourseGroupTile] //An array of course group names that can be clicked 
     }
 }
 ```
@@ -226,11 +246,11 @@ The component for a single course group in CourseGroupsList
 CourseGroupTile{
     data: {
         groupName: String //The name of the course group this tile represents
-        highlighted: boolean
+        highlighted: Boolean
     },
     methods: {
-        loadCourseGroup() /*load the courses in this group into the course list by,
-                            pass in the groupName*/
+        loadCourseGroup() /*load the courses in this group into the course list by
+                            passing in the groupName*/
     }
 }
 ```
@@ -243,13 +263,13 @@ course codes that start with the same 3 letters, ex: CSC, MAT
 ```js
 CourseList {
     data: {
-        courses: courseGroup //The courses 
+        courses: CourseGroup //The courses in this list
     },
     methods: {
-        loadCourses(groupName) //Searches the backend for the courseGroup with the given groupName
+        loadCourses(groupName) //Searches the backend for the CourseGroup with the given groupName
     },
     components: {
-        CourseTiles //Each tile represents a course
+        [CourseTile] //Each tile represents a course
     }
 }
 ```
@@ -261,7 +281,7 @@ The the component for a single course in MyCoursesList, RecommendedList, and Cou
 ```js
 CourseTile {
     data: {
-        course: course, //The course this tile represents
+        course: Course, //The course this tile represents
         state: int /* What is the parent of this tile,
                     CourseList: has no extra buttons
                     MyCoursesList: has delete button while hovering
@@ -275,8 +295,8 @@ CourseTile {
     },
     components: {
         //Depending on the state
-        addButton,
-        deleteButton
+        AddCourseButton,
+        DeleteCourseButton
     }
 }
 ```
@@ -288,14 +308,14 @@ The list of courses the user has selected for this year
 ```js
 MyCoursesList {
     data: {
-        myCourses: course[], //The courses the user has added
+        myCourses: [Course], //The courses the user has added
     },
     methods: {
-        addCourse(course), //Adds the specified course to myCourses
-        removeCourse(course), //Removes the specified course from myCourses
+        addCourse(Course), //Adds the specified course to myCourses
+        removeCourse(Course), //Removes the specified course from myCourses
     },
     components: {
-        CourseTiles
+        [CourseTile]
     }
 }
 ```
@@ -308,18 +328,18 @@ chosen program(s)
 ```js
 RecommendedList {
     data: {
-        recommendedCourses: course[], //Array of recommended courses
+        recommendedCourses: [Course]], //Array of recommended courses
     },
     methods: {
         loadRecommendedCourses() /*Looks at the year of study, selected program(s), and 
                                    what's already in MyProgramsList to determine a list of 
                                    recommended courses*/
-        removeCourses(course), /*Removes the specified course from recommendedCourses (when
+        removeCourses(Course), /*Removes the specified course from recommendedCourses (when
                                  the user adds it)*/
     },
     components: {
-        CourseTiles, 
-        addAllButton //There is a button for adding all of the courses in this list at once
+        [CourseTile], 
+        AddAllButton //There is a button for adding all of the courses in this list at once
     }
 }
 ```
@@ -331,8 +351,8 @@ The pop-up frame what pops up whenever a course is clicked for detailed informat
 ```js
 CourseInfoPopup {
     data: {
-        added: boolean //Whether this course in my MyCoursesList
-        course: course //The course which this pop-up frame is displaying info for
+        added: Boolean //Whether this course in my MyCoursesList
+        course: Course //The course which this pop-up frame is displaying info for
     },
     methods: {
         addCourse(), //Adds this course to MyCoursesList
@@ -340,14 +360,14 @@ CourseInfoPopup {
     },
     components: {
         CourseLinks, //references to other courses, click to open another pop-up
-        addButton, //Depending on added state
-        removeButton, //Depending on added state
-        exitButton, //To close the pop-up
+        AddCourseButton, //Depending on added state
+        RemoveCourseButton, //Depending on added state
+        ExitButton, //To close the pop-up
     }
 }
 ```
 
-### CoursesSearchBar
+### CourseSearchBar
 
 The search bar allows the user to search for a course by the COURSE CODE.
 
@@ -364,7 +384,7 @@ The search can be canceled by clicking elsewhere outside the search bar
 CourseSearchBar {
     data: {
         query: String, //The current search query   
-        results: course[] //The courses that match the search query
+        results: [Course] //The courses that match the search query
     },
     methods: {
         search(query), /*Searches the back end for courses with course codes that 
@@ -372,7 +392,7 @@ CourseSearchBar {
         clear() //Clears the search box and results drop down if search is canceled
     },
     components: {
-        CourseTiles //CourseTile components each as a search result in the drop-down
+        [CourseTile] //CourseTile components each as a search result in the drop-down
     }
 }
 ```
