@@ -1,5 +1,5 @@
 {
-  "name": "new_test",
+  "name": "unified-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.10.0",
     "apollo-server": "^2.9.16",
-    "express": "^4.17.1",
-    "mongodb": "^3.5.2",
     "mongoose": "^5.8.11"
   },
   "devDependencies": {

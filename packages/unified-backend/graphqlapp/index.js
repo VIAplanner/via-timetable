@@ -1,11 +1,6 @@
-const express = require('express');
 const { gql, ApolloServer } = require('apollo-server');
-const { MongoClient } = require('mongodb');
-const assert = require('assert');
-// const courses = require('./schema');
 var mongoose = require('mongoose');
 const { Schema } = require("mongoose");
-
 const username = 'user_1'
 const password = 'coursetools'
 const dbName = 'UofT'
@@ -34,16 +29,16 @@ const typeDefs = gql`
     `;
 
 const CourseSchema = new Schema({
-    id: String, // String is shorthand for {type: String}
+    id: String,
     code: String,
     name: String,
     description: String,
     division: Array,
     department: Object,
     prerequisites: String,
-    exclusions: String, // String is shorthand for {type: String}
+    exclusions: String,
     level: Number,
-    campus: String, // String is shorthand for {type: String}
+    campus: String,
     term: String,
     breadths: Array,
     meeting_sections: Array
