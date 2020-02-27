@@ -33,7 +33,7 @@ The first areas of student experience we're looking to enhance are course select
 
 We envision the following user journey for a student:
 
-![User Journey](./user-journey.png)
+![User Journey](./course-guide/user-journey.png)
 
 The two components we identified to build this system are the [Course Guide](/course-guide/) and the [Timetable Planner](/timetable-planner/)
 
