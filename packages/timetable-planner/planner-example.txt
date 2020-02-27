@@ -1,0 +1,257 @@
+
+Given a set of course codes, the timetable planner outputs the schedule available for the set.
+
+If no such schedule available, outputs "inValid".
+
+1. At the beginning, user inputs the selected courses:
+
+Input Data
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        
+}
+
+
+
+
+Output Data
+
+{
+    "MONDAY":[
+        {
+            "CSC108H5F2019L0101":[32400, 36000]
+        }
+        ],
+    "TUESDAY":[
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "WEDNESDAY":[
+        {
+            "CSC108H5F2019L0101":[32400, 36000]
+        },
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "THURSDAY":[
+        {
+            "CSC318H5F2019T0101":[68400, 75600]
+        }
+        ],
+    "FRIDAY":[
+        {
+            "CSC108H5F2019L0101":[32400, 36000]
+        }
+        ],
+}
+
+
+
+In TimetablePlanner, user inputs the preferrences:
+Constraint days
+
+Valid:
+Input Data
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "FRIDAY":[0, 1000000],//Friday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+
+Output Data
+{
+    "MONDAY":[
+        {
+
+        }
+        ],
+    "TUESDAY":[
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "WEDNESDAY":[
+        {
+            "CSC108H5F2019L0107":[68400, 75600]
+        },
+        {
+            "CSC318H5F2019L0101":[68400, 75600]
+        }
+        ],
+    "THURSDAY":[
+        {
+            "CSC318H5F2019T0101":[68400, 75600]
+        }
+        ],
+    "FRIDAY":[
+        {
+
+        }
+        ],
+}
+
+Invalid:
+Input Data:
+#provided two courses with two section for simplicity
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+            "T0107":[{
+                "THURSDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+                }]
+        },
+        "Constraints":{
+            "INVALIDTIME":[{
+                "TUESDAY":[0, 1000000],//Tuesday off
+                "WEDNESDAY":[75600, 1000000],// Wednesday avoiding evening class
+            }]
+        }
+        
+}
+
+
+Output Data
+
+Output:
+"invalid"//There are courses at Tuesday
+Given a set of times, check if there is a valid timetable avaliable.
+
+Outputs "Valid" if such timetable exist, or else "inValid".
+Input
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0101":[{
+                "MONDAY":[32400, 36000],
+                "WEDNESDAY":[32400, 36000],
+                "FRIDAY":[32400, 36000],
+                "size":160,
+                "enrolment":0
+
+            }],
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+        },
+        
+}
+Output:
+"Valid"
+or
+Input:
+{
+    "CourseCode": {
+        "CSC108H5F2019":{
+            "L0107":[{
+                "WEDNESDAY":[64800, 75600],
+                "size":160,
+                "enrolment":0
+                }]
+        },
+        "CSC318H5F2019":{
+            "L0101":[{
+                "TUESDAY":[68400, 75600],
+                "WEDNESDAY":[68400, 75600],
+                "size": 60,
+                "enrolment": 0
+            }],
+        },
+        
+}
+Output:
+"inValid"
+ 
