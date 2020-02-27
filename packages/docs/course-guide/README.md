@@ -37,7 +37,7 @@ __Course Selection Concept Design__
 ![course-selecting-figma](./figma_course_pic.png)
 
 
-## Type Definitions
+## Terminology
 
 ### Program
 Contains all the information for a program, refer to [Course API](https://uoftcoursetools.tech/course-api/)
@@ -84,7 +84,7 @@ MyProgramsList{
 
 ### ChosenProgramTile
 
-The component for the programs listed in My_programs_List
+The component for the programs listed in MyprogramsList
 
 ```js
 ChosenProgramTile{
@@ -122,7 +122,7 @@ SubjectsList{
 
 ### SubjectTile
 
-The component for the subjects in Subjects_List
+The component for the subjects in SubjectsList
 
 ```js
 SubjectTile{
@@ -178,7 +178,7 @@ ProgramCard {
 
 ### CourseLink
 
-The course code of a course, clicking on it opens Course_Info_Pop_up
+The course code of a course, clicking on it opens CourseInfoPopup
 
 ```js
 CourseLink {
@@ -276,7 +276,7 @@ CourseList {
 
 ### CourseTile
 
-The the component for a single course in MyCoursesList, RecommendedList, and CourseList
+The component for a single course in MyCoursesList, RecommendedList, and CourseList
 
 ```js
 CourseTile {
@@ -328,7 +328,7 @@ chosen program(s)
 ```js
 RecommendedList {
     data: {
-        recommendedCourses: [Course]], //Array of recommended courses
+        recommendedCourses: [Course], //Array of recommended courses
     },
     methods: {
         loadRecommendedCourses() /*Looks at the year of study, selected program(s), and 
