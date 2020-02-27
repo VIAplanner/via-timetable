@@ -62,17 +62,17 @@ after a course is locked and a preference is being made:
 - Have a heading for each optimization in the roadmap
 - Start with base conflict check -> invalid times -> idle time max/min -> locked courses
 --->
-Timetable algorithm takes in a set of course names and transform into a list of timetables. Then the user can optimize the timetable to fit their preference.
+The timetable algorithm takes in a set of course names and transforms into a list of timetables. Then the user can optimize the timetable to fit their preference.
 
-The algorithm starts out basic, it checks if the sections given have conflict to each other. If there is no conflict, the algorithm will return "valid timetable", or if there is a conflict between any section, it will return "invalid timetable".
+The algorithm starts out by checking if the given sections conflict with each other. The algorithm will return true or false depending on whether or not a conflict exists.
 
-Based on the validity checking, the algorithm starts to be able to add constraints to the timetable.
+After checking for basic validity, we can optimize our timetable by adding constraints to it.
 
-The algorithm then takes in an invalid time argument that inputs from the user's preference time off. This argument is being treated like a course which will be parsed in to the timetable and check for conflict as well.
+The algorithm then takes in an invalid time argument that inputs from the user's preference times off. 
 
 The algorithm then implements an idle time function which takes in a set of valid timetable and returns the max and the min idle time depend on the user's preference.
 
-The algorithm then stores the user's locked courses in a list, with future optimization, the locked courses in the list will stays the same section.
+The algorithm then stores the user's locked courses in a list which will stay in position despite future optimization.
 
 ### Checking for Conflicts
 
@@ -82,8 +82,9 @@ Before any optimization, the algorithm checks if it is possible to make a timeta
 ```js
 /**
  * 
- * @param timetable {DAY: [time_sections]}
- * @define time_section [start_time, end_time]
+ * @param timetable: A map of day to timeSections 
+ {"MONDAY": [time_sections], ...}
+ * 
  */
 function overlap(timetable){
     for day in timetable
@@ -93,18 +94,26 @@ function overlap(timetable){
 }
 ```
 
-### Time Offs
+### Times Off
 
-The user can input their desired time offs, such as day off or morning/evening off, the algorithm reruns the conflict check and returns valid timetable with the invalid times.
+The user can input their desired times off, such as day off or morning/evening off, the algorithm reruns the conflict check and returns valid timetable with the invalid times.
 
 **Psedocode**
 ```js
-function bucket_course_by_day(course_list, invalid_times){
+/**
+ * 
+ * @param courseList: A list of course sections 
+ {"CSC108H5FLEC0101": {"MONDAY":[Time Section], ...}, ...}
+ * @param timesOff: A map of day to TimeSections of times off
+ {"MONDAY":[Time Sections], ...} 
+ *
+ */
+function bucketCourseByDay(courseList, timesOff){
 
-    for course in course_list
-        append to timetable
-    for invalid_time_section in invalid_times
-        append to timetable
+    for course in courseList
+        append course to timetable
+    for timesOffBlock in timesOff
+        append timesOffBlock to timetable
     check if valid or not by overlap function
 
 }
@@ -119,40 +128,28 @@ The user can choose to maximize or minimize their idle time at school, which is 
 **Pseudocode**
 
 ```js
-function idleTime(set_timetable, max_or_min){
+/**
+ * 
+ * @param setTimetable: A list of timetable
+ [{"MONDAY":[Time Sections], ...}]
+ * @param maxOrMin: A string 
+ "MAX"/"MIN"
+ *
+ */
+function idleTime(setTimetable, maxOrMin){
 
-    for timetable in set_timetable
+    for timetable in setTimetable
         sum up all the idle time and store the index
     check for the max and min of the idletimes
-    return based on max_or_min
+    return based on maxOrMin
 
 }
 ```
 
-### Lock Sections
+### Locked Time Sections
 
 The user can lock the section(s) they prefer to stay the same while processing other optimizations. The algorithm stores the locked section in a list, when processing other optimization, the list is being compared and put in to the new timetable to ensure timetable includes the locked section.
 
-<!---
-
-Parse from course name to individual section
-
-```js
-
-This program takes in the input course data from example usage and produce a list of all combinations of the section times for the courses.
-
-function courseToTime(course_lists){
-
-    for course in course_lists
-        for section in the course
-            check if the enrolment is not full
-                list of available courses appends the specific section of that course
-    Make a combination out of all the courses from the list of available courses
-    return the list of all possible combination
-
-}
-```
---->
 
 
 
