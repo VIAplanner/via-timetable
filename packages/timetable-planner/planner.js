@@ -12,8 +12,9 @@ The start and end times are in seconds from 12:00am
 To check conflict, compare the start time of each course to see if it is overlapped by other courses:
 A function that determine whether overlapping exists
 input: A set of course objects with its corresponding start and end time
-courseList = {"CSC108H5F2019LEC0101":[{"Monday":[ "61400", "72800"], "Wednesday":["50400", "54000"],"Friday":["50400", "54000"]}]}
-timetable = {"Monday":[[]], "Tuesday":[[]],"Wednesday":[[]],"Thursday":[[]],"Friday":[[]]}
+courseList = {"CSC108H5F2019LEC0101":{"MONDAY":[ "61400", "72800"], "WEDNESDAY":["50400", "54000"],"FRIDAY":["50400", "54000"]}, "CSC369H5F2019LEC0101":{"MONDAY":[ "61400", "72800"], "THURSDAY":["50400", "54000"]}}
+timetable = {"MONDAY":[[]], "TUESDAY":[[]],"WEDNESDAY":[[]],"THURSDAY":[[]],"FRIDAY":[[]]}
+TimeSection = {"CSC108H5F2019LEC0101":[ "61400", "72800"]}
 add all the course time to each correspond date, and then compare within the list
 if any conflict appears, return invalid
 else return valid
@@ -26,17 +27,19 @@ Create a configuration
 function overlap(timetable) {
     /**
     @param timetable: dictionary of date as the key, time intervals as the value 
-    {"MONDAY":[[]], "TUESDAY":[[]],"WEDNESDAY":[[]],"THURSDAY":[[]],"FRIDAY":[[]]}
+    {"MONDAY":[TimeSections], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
     */
     for (var day in timetable) {
         for (var time in timetable[day]) {
             if (timetable[day].length > 1) {
                 var time2 = +time + 1;
                 while (time2 < timetable[day].length) {
-                    var timeStart = timetable[day][time][0];
-                    var timeEnd = timetable[day][time][1];
-                    var time2Start = timetable[day][time2][0];
-                    var time2End = timetable[day][time2][1];
+                    courseTitle = Object.keys(timetable[day][time]);
+                    courseTitle2 = Object.keys(timetable[day][time2]);
+                    var timeStart = timetable[day][time][courseTitle][0];
+                    var timeEnd = timetable[day][time][courseTitle][1];
+                    var time2Start = timetable[day][time2][courseTitle2][0];
+                    var time2End = timetable[day][time2][courseTitle2][1];
                     if ((timeStart >= time2Start && timeStart < time2End) || (timeEnd > time2Start && timeEnd <= time2End)) {
                         return false;
                     }
@@ -51,25 +54,25 @@ function overlap(timetable) {
 
 function bucketCourseByDay(courseList, timesOff) {
     /**
-    @returns timetable = {"MONDAY":[], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
+    @returns timetable = {"MONDAY":[TimeSections], "TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[]}
     @param courseList: map of courses as the key with their time sections as the value  {"title":{"day":[time]}}
     @param timesOff: map of times off section for each day {"timesOff":{"day":[[time]]}}
     day: ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"]
     time: [start, end] start, end: int in seconds STARTING FROM 12:00AM
     title: String (should not affect the function for now)
     */
-    var timetable = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
+    var timetableWithCourse = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
     for (var title in courseList) {
         for (var day in courseList[title]) {
-            timetable[day].push(courseList[title][day]);
+            timetableWithCourse[day].push({title: courseList[title][day]});
         }
     }
     for (var day in timesOff["timesOff"]) {
         for (var time_section in timesOff["timesOff"][day]) {
-            timetable[day].push(timesOff["timesOff"][day][time_section])
+            timetableWithCourse[day].push({"timesOff":timesOff["timesOff"][day][time_section]})
         }
     }
-    if (overlap(timetable)) {
+    if (overlap(timetableWithCourse)) {
         return "Valid Timetable";
     } else {
         return "inValid Timetable";
@@ -79,7 +82,7 @@ function bucketCourseByDay(courseList, timesOff) {
 function idleTime(setTimetable, maxOrMin) {
     /**
      @param setTimetable: A list of timetable
-     [{"MONDAY":[Time Sections], ...}]
+     [{"MONDAY":[TimeSections], ...}]
      @param maxOrMin: A string 
      "MAX"/"MIN"
      */
@@ -92,9 +95,18 @@ function idleTime(setTimetable, maxOrMin) {
                 for (var time in setTimetable[timetable][day]) {
                     var time2 = +time + 1;
                     while (time2 < setTimetable[timetable][day].length) {
-                        var timeEnd = setTimetable[timetable][day][time][1];
-                        var time2Start = setTimetable[timetable][day][time2][0];
-                        sum += (timeEnd - time2Start);
+                        courseTitle = Object.keys(setTimetable[timetable][day][time]);
+                        courseTitle2 = Object.keys(setTimetable[timetable][day][time2]);
+                        var timeStart = setTimetable[timetable][day][time][courseTitle][0];
+                        var timeEnd = setTimetable[timetable][day][time][courseTitle][1];
+                        var time2Start = setTimetable[timetable][day][time2][courseTitle2][0];
+                        var time2End = setTimetable[timetable][day][time2][courseTitle2][1];
+                        if (timeEnd < time2Start){
+                            sum += (+time2Start - +timeEnd);
+                        }
+                        else{
+                            sum += (+timeStart - +time2End);
+                        }
                         time2++;
                     }
 
@@ -105,10 +117,17 @@ function idleTime(setTimetable, maxOrMin) {
         total.push(sum);
 
     }
-    const indexOfMaxIdletime = total.indexOf(Math.max(total));
+    
+    var indexOfIdletime = -1;
+    if (maxOrMin == "MAX"){
+        indexOfIdletime = total.indexOf(Math.max(...total));
+    }
+    else if(maxOrMin == "MIN"){
+        indexOfIdletime = total.iondexof(Math.max(...total));
+    }
     // check for the max and min of the idletimes
     // return based on maxOrMin
-    return setTimetable[indexOfMaxIdletime];
+    return setTimetable[indexOfIdletime];
 }
 
-module.exports = bucketCourseByDay;
+module.exports = {bucketCourseByDay: bucketCourseByDay, idleTime:idleTime};
