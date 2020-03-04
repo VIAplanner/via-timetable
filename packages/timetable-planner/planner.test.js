@@ -10,3 +10,7 @@ test("max idle time?", () => {
     var timetables = [{"MONDAY":[{"CSC108H5F2019LEC0101":[ "61400", "72800"]},{"CSC107H5F2019LEC0101":[ "11400", "22800"]}],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],},{"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],},{"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],}]
     expect(planner.idleTime(timetables, "MAX")).toStrictEqual({"MONDAY":[{"CSC108H5F2019LEC0101":[ "61400", "72800"]},{"CSC107H5F2019LEC0101":[ "11400", "22800"]}],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],});
 })
+test("min idle time?", () => {
+    var timetables = [{"MONDAY":[{"CSC108H5F2019LEC0101":[ "61400", "72800"]},{"CSC107H5F2019LEC0101":[ "11400", "22800"]}],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],},{"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],},{"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],}]
+    expect(planner.idleTime(timetables, "MIN")).toStrictEqual({"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],});
+})

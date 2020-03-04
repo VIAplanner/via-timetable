@@ -123,7 +123,7 @@ function idleTime(setTimetable, maxOrMin) {
         indexOfIdletime = total.indexOf(Math.max(...total));
     }
     else if(maxOrMin == "MIN"){
-        indexOfIdletime = total.iondexof(Math.max(...total));
+        indexOfIdletime = total.indexOf(Math.min(...total));
     }
     // check for the max and min of the idletimes
     // return based on maxOrMin
