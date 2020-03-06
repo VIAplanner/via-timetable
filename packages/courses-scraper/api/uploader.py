@@ -2,6 +2,8 @@ import pymongo
 import json
 from pymongo import MongoClient
 import os
+from tqdm import tqdm  # progress bar magic
+
 
 # the mongodb server
 cluster = MongoClient(
@@ -11,10 +13,7 @@ collection = db["Courses"]
 courses_directory = "courses/"
 
 # adding all JSON from local to server
-count = 0
-for course in os.listdir(courses_directory):
+for course in tqdm(os.listdir(courses_directory)):
     with open(courses_directory + course) as f:
         file_data = json.load(f)
-    count += 1
     collection.insert_one(file_data)
-    print(count)
