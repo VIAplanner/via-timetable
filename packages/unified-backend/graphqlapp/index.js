@@ -7,7 +7,6 @@ const dbName = 'UofT'
 const uri = `mongodb+srv://${username}:${password}@coursetoolscluster-wjb51.mongodb.net/test?retryWrites=true&w=majority`;
 const connection = mongoose.createConnection(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 const uoftDb = connection.useDb(dbName)
-
 const typeDefs = gql`
     type Course {
         id: String, 
@@ -22,12 +21,20 @@ const typeDefs = gql`
         campus: String, 
         term: String,
      }
+     type Program {
+        name: String,
+        degrees: [String],
+     }
 
      type Query {
          courses: [Course]
+         programs: [Progam]
      }
     `;
 
+
+
+    // Still have to implement meeting section, breadths and programs in programs
 const CourseSchema = new Schema({
     id: String,
     code: String,
@@ -43,13 +50,24 @@ const CourseSchema = new Schema({
     breadths: Array,
     meeting_sections: Array
 });
+const ProgramSchema = new Schema({
+    name: String,
+    degrees: Array,
+    notes: Array,
+    programs: Array,
+});
 
 const CoursesModel = uoftDb.model('Course', CourseSchema, "Courses");
+const ProgramModel = uoftDb.model('Program', ProgramSchema, "Subjects");
+
 
 const resolvers = {
     Query: {
         courses: () => {
             return CoursesModel.find();
+        },
+        programs: () => {
+            return ProgramModel.find();
         },
     },
 };
