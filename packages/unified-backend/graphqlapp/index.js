@@ -20,45 +20,80 @@ const typeDefs = gql`
         level: Int,
         campus: String, 
         term: String,
+        breadths: [Int],
+        meeting_sections: [Meeting_Section]
      }
-     type Program {
+     type Meeting_Section{
+        code: String,
+        instructors: [String],
+        times: [Times],
+        size: Int,
+        enrolment: [Int]
+     }
+     type Times{
+        day: String,
+        start: Int,
+        end: Int,
+        duration: Int, 
+        location: String
+     }
+     type Subject {
         name: String,
         degrees: [String],
+        notes: [String],
+        programs: [Program]
      }
-
+     type Program{
+         name: String,
+         level: String,
+         code: String,
+         type: String,
+         notes: [String]!,
+         courses: [Classes]
+     }
+     type Classes {
+         Int: [String]
+     }
      type Query {
-         courses: [Course]
-         programs: [Progam]
+         courses: [Course],
+         programs: [Subject]
      }
     `;
 
 
 
-    // Still have to implement meeting section, breadths and programs in programs
 const CourseSchema = new Schema({
     id: String,
     code: String,
     name: String,
     description: String,
-    division: Array,
-    department: Object,
+    division: String,
+    department: String,
     prerequisites: String,
     exclusions: String,
     level: Number,
     campus: String,
     term: String,
-    breadths: Array,
-    meeting_sections: Array
+    breadths: [Number],
+    meeting_sections:
+        [
+            {
+                code: String, instructors: [String], times: [
+                    { day: String, start: Number, end: Number, duration: Number, location: String }],
+                size: Number, enrolment: Number
+            }
+        ]
 });
+
 const ProgramSchema = new Schema({
     name: String,
-    degrees: Array,
-    notes: Array,
-    programs: Array,
+    degrees: [String],
+    notes: [String],
+    programs: [{ name: String, level: String, code: String, type: String, notes: String, courses: [{Number: [String]}] }],
 });
 
 const CoursesModel = uoftDb.model('Course', CourseSchema, "Courses");
-const ProgramModel = uoftDb.model('Program', ProgramSchema, "Subjects");
+const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
 
 
 const resolvers = {
