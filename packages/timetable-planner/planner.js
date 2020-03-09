@@ -73,9 +73,9 @@ function bucketCourseByDay(courseList, timesOff) {
         }
     }
     if (overlap(timetableWithCourse)) {
-        return "Valid Timetable";
+        return true;
     } else {
-        return "inValid Timetable";
+        return false;
     }
 }
 
@@ -128,6 +128,47 @@ function idleTime(setTimetable, maxOrMin) {
     // check for the max and min of the idletimes
     // return based on maxOrMin
     return setTimetable[indexOfIdletime];
+}
+
+
+function parseNametoSections(courses){
+    var lecList = {};
+    var tutList = {};
+    for (courseIndex in courses){
+        for (section in courses[courseIndex]["meeting_sections"]){
+            var sec = courses[courseIndex]["meeting_sections"][section];
+            if (sec["code"][0] == "L"){
+                var times = {};
+                for (time in sec["times"]){
+                    times[sec["times"][time]["day"]] = [sec["times"][time]["start"], sec["times"][time]["end"]];
+                }
+                var courseName = courses["code"].concat(sec["code"])
+                var timeSection = {courseName: times};
+                var courseTitle = courses[courseIndex][code];
+                if (courseTitle in tutList){
+                    LecList[courseTitle].push(timeSection);
+                }
+                else{
+                    lecList[courseTitle] = [{timeSection}];
+                }
+            }
+            if (sec["code"][0] == "P" || sec["code"][0] == "T"){
+                var times = {};
+                for (time in sec["times"]){
+                    times[sec["times"][time]["day"]] = [sec["times"][time]["start"], sec["times"][time]["end"]];
+                }
+                var courseName = courses["code"].concat(sec["code"])
+                var timeSection = {courseName: times};
+                var courseTitle = courses[courseIndex][code];
+                if (courseTitle in tutList){
+                    tutList[courseTitle].push(timeSection);
+                }
+                else{
+                    tutList[courseTitle] = [{timeSection}];
+                }
+            }
+        }
+    }
 }
 
 module.exports = {bucketCourseByDay: bucketCourseByDay, idleTime:idleTime};
