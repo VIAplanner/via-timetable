@@ -149,7 +149,7 @@ function parseNametoSections(courses){
                     LecList[courseTitle].push(timeSection);
                 }
                 else{
-                    lecList[courseTitle] = [{timeSection}];
+                    lecList[courseTitle] = [timeSection];
                 }
             }
             if (sec["code"][0] == "P" || sec["code"][0] == "T"){
@@ -164,7 +164,7 @@ function parseNametoSections(courses){
                     tutList[courseTitle].push(timeSection);
                 }
                 else{
-                    tutList[courseTitle] = [{timeSection}];
+                    tutList[courseTitle] = [timeSection];
                 }
             }
         }
