@@ -21,9 +21,9 @@ const typeDefs = gql`
         campus: String, 
         term: String,
         breadths: [Int],
-        meeting_sections: [Meeting_Section]
+        meetingSections: [MeetingSection]
      }
-     type Meeting_Section{
+     type MeetingSection{
         code: String,
         instructors: [String],
         times: [Times],
@@ -49,10 +49,11 @@ const typeDefs = gql`
          code: String,
          type: String,
          notes: [String]!,
-         courses: [Classes]
+         courses: [YearCourses]
      }
-     type Classes {
-         Int: [String]
+     type YearCourses {
+         year: String,
+         courses: [String]
      }
      type Query {
          courses: [Course],
@@ -75,7 +76,7 @@ const CourseSchema = new Schema({
     campus: String,
     term: String,
     breadths: [Number],
-    meeting_sections:
+    meetingSections:
         [
             {
                 code: String, instructors: [String], times: [
