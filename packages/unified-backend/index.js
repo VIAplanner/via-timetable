@@ -1,12 +1,16 @@
 const { gql, ApolloServer } = require('apollo-server');
 var mongoose = require('mongoose');
 const { Schema } = require("mongoose");
+
+// setting up connection to mongoDB server
 const username = 'user_1'
 const password = 'coursetools'
 const dbName = 'UofT'
 const uri = `mongodb+srv://${username}:${password}@coursetoolscluster-wjb51.mongodb.net/test?retryWrites=true&w=majority`;
 const connection = mongoose.createConnection(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 const uoftDb = connection.useDb(dbName)
+
+// Defining valid queries for graphql
 const typeDefs = gql`
     type Course {
         id: String, 
@@ -61,8 +65,10 @@ const typeDefs = gql`
      }
     `;
 
-
-
+/** 
+ * Defining schema of mongoDB for courses and programs. 
+ * Notice how the typedef are identical to the schemas
+ */ 
 const CourseSchema = new Schema({
     id: String,
     code: String,
@@ -77,26 +83,42 @@ const CourseSchema = new Schema({
     term: String,
     breadths: [Number],
     meetingSections:
-        [
-            {
-                code: String, instructors: [String], times: [
-                    { day: String, start: Number, end: Number, duration: Number, location: String }],
-                size: Number, enrolment: Number
-            }
-        ]
+        [{
+            code: String,
+            instructors: [String],
+            times: [{
+                day: String,
+                start: Number,
+                end: Number,
+                duration: Number,
+                location: String
+            }],
+            size: Number,
+            enrolment: Number
+        }]
 });
-
 const ProgramSchema = new Schema({
     name: String,
     degrees: [String],
     notes: [String],
-    programs: [{ name: String, level: String, code: String, type: String, notes: String, courses: [{Number: [String]}] }],
+    programs: [{
+        name: String,
+        level: String,
+        code: String,
+        type: String,
+        notes: String,
+        courses: [{ Number: [String] }]
+    }],
 });
 
+// Retrieve model from mongoDB from <collection>
 const CoursesModel = uoftDb.model('Course', CourseSchema, "Courses");
 const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
 
-
+/** 
+ * Respond to queries by searching in the model created above, 
+ * then return a json with the correct data
+ */ 
 const resolvers = {
     Query: {
         courses: () => {
