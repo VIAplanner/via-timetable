@@ -7,7 +7,6 @@ const dbName = 'UofT'
 const uri = `mongodb+srv://${username}:${password}@coursetoolscluster-wjb51.mongodb.net/test?retryWrites=true&w=majority`;
 const connection = mongoose.createConnection(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 const uoftDb = connection.useDb(dbName)
-
 const typeDefs = gql`
     type Course {
         id: String, 
@@ -21,35 +20,90 @@ const typeDefs = gql`
         level: Int,
         campus: String, 
         term: String,
+        breadths: [Int],
+        meetingSections: [MeetingSection]
      }
-
+     type MeetingSection{
+        code: String,
+        instructors: [String],
+        times: [Times],
+        size: Int,
+        enrolment: [Int]
+     }
+     type Times{
+        day: String,
+        start: Int,
+        end: Int,
+        duration: Int, 
+        location: String
+     }
+     type Subject {
+        name: String,
+        degrees: [String],
+        notes: [String],
+        programs: [Program]
+     }
+     type Program{
+         name: String,
+         level: String,
+         code: String,
+         type: String,
+         notes: [String]!,
+         courses: [YearCourses]
+     }
+     type YearCourses {
+         year: String,
+         courses: [String]
+     }
      type Query {
-         courses: [Course]
+         courses: [Course],
+         programs: [Subject]
      }
     `;
+
+
 
 const CourseSchema = new Schema({
     id: String,
     code: String,
     name: String,
     description: String,
-    division: Array,
-    department: Object,
+    division: String,
+    department: String,
     prerequisites: String,
     exclusions: String,
     level: Number,
     campus: String,
     term: String,
-    breadths: Array,
-    meeting_sections: Array
+    breadths: [Number],
+    meetingSections:
+        [
+            {
+                code: String, instructors: [String], times: [
+                    { day: String, start: Number, end: Number, duration: Number, location: String }],
+                size: Number, enrolment: Number
+            }
+        ]
+});
+
+const ProgramSchema = new Schema({
+    name: String,
+    degrees: [String],
+    notes: [String],
+    programs: [{ name: String, level: String, code: String, type: String, notes: String, courses: [{Number: [String]}] }],
 });
 
 const CoursesModel = uoftDb.model('Course', CourseSchema, "Courses");
+const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
+
 
 const resolvers = {
     Query: {
         courses: () => {
             return CoursesModel.find();
+        },
+        programs: () => {
+            return ProgramModel.find();
         },
     },
 };
