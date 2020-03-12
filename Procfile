@@ -1,1 +1,1 @@
-web: node ./packages/unified-backend/index.js
+web: npm run deploy:api
