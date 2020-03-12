@@ -4,7 +4,7 @@
     "description": "The monorepo for UofTCourseTools",
     "main": "packages/unified-backend/index.js",
     "scripts": {
-        "start": "npm start --prefix packages/unified-backend",
+        "start": "node ./packages/unified-backend/index.js",
         "setup": "npm ci; npm ci --prefix packages/docs",
         "build-docs": "npm run build --prefix packages/docs"
     },
