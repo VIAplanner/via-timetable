@@ -135,7 +135,12 @@ const resolvers = {
  * Server instance. To do so, we'll import and use the ApolloServer constructor
  * function from the apollo-server library.
  */
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    introspection: true,
+    playground: true
+});
 
 /**
  * With the Apollo server instance now available to us, we can start 
@@ -146,7 +151,7 @@ const server = new ApolloServer({ typeDefs, resolvers });
  * serverInfo object which has the url of the running server. We'll log a 
  * message to the console with this url value.
  */
-server.listen().then((serverInfo) => {
+server.listen(process.env.PORT || 5000).then((serverInfo) => {
     console.log(`Server is running at ${serverInfo.url}`);
 });
 
