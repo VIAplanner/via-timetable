@@ -1,1 +1,1 @@
-web: node ./packages/unified-backend/index.js 0.0.0.0:$PORTsdfjsdf
+web: node ./packages/unified-backend/index.js
