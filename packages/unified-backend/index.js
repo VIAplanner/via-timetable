@@ -32,7 +32,7 @@ const typeDefs = gql`
         instructors: [String],
         times: [Times],
         size: Int,
-        enrolment: [Int]
+        enrolment: Int
      }
      type Times{
         day: String,
@@ -135,12 +135,7 @@ const resolvers = {
  * Server instance. To do so, we'll import and use the ApolloServer constructor
  * function from the apollo-server library.
  */
-const server = new ApolloServer({ 
-    typeDefs, 
-    resolvers,
-    introspection: true,
-    playground: true
-});
+const server = new ApolloServer({ typeDefs, resolvers });
 
 /**
  * With the Apollo server instance now available to us, we can start 
@@ -151,7 +146,7 @@ const server = new ApolloServer({
  * serverInfo object which has the url of the running server. We'll log a 
  * message to the console with this url value.
  */
-server.listen(process.env.PORT || 5000).then((serverInfo) => {
+server.listen().then((serverInfo) => {
     console.log(`Server is running at ${serverInfo.url}`);
 });
 
