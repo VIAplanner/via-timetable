@@ -47,21 +47,28 @@ function courseSectionCombination(course) {
     var sectionType = [];
     const courseName = Object.keys(course)[0]
     for (let section in course[courseName]) {
-        if (!(section.charAt(6) in sectionType)) {
-            sectionType.push(section.charAt(6));
+        const sectionName = Object.keys(course[courseName][section])[0];
+        if (!(sectionType.includes(sectionName.charAt(9)))) {
+            sectionType.push(sectionName.charAt(9));
         }
     }
     for (let section in course[courseName]) {
-        if (section.charAt(6) == "L") {
-            const lecture = { section: course[courseName][section] };
-            if ("T" in sectionType) {
+        const sectionName = Object.keys(course[courseName][section])[0];
+        if (sectionName.charAt(9) == "L") {
+            const lecture = {};
+            lecture[sectionName] = course[courseName][section][sectionName];
+            if (sectionType.includes("T")) {
                 for (let section2 in course[courseName]) {
-                    if (section.charAt(6) == "T") {
-                        const tutorial = { section: course[courseName][section] };
-                        if ("P" in sectionType) {
+                    const sectionName2 = Object.keys(course[courseName][section2])[0];
+                    if (sectionName2.charAt(9) == "T") {
+                        const tutorial = {};
+                        tutorial[sectionName2] = course[courseName][section2][sectionName2];
+                        if (sectionType.includes("P")) {
                             for (let section3 in course[courseName]) {
-                                if (section.charAt(6) == "P") {
-                                    const practice = { section: course[courseName][section] };
+                                const sectionName3 = Object.keys(course[courseName][section3])[0];
+                                if (sectionName3.charAt(9) == "P") {
+                                    const practice = {};
+                                    practice[sectionName3] = course[courseName][section3][sectionName3];
                                     const combination = Object.assign({}, lecture, tutorial, practice);
                                     sectionCombinations.push(combination);
                                 }
@@ -73,11 +80,13 @@ function courseSectionCombination(course) {
                     }
                 }
             }
-            else if ("P" in sectionType) {
-                for (let section2 in course[courseName]) {
-                    if (section.charAt(6) == "P") {
-                        const practice = { section: course[courseName][section] };
-                        const combination = Object.assign({}, lecture, practice);
+            else if (sectionType.includes("P")) {
+                for (let section3 in course[courseName]) {
+                    const sectionName3 = Object.keys(course[courseName][section3])[0];
+                    if (sectionName3.charAt(9) == "P") {
+                        const practice = {};
+                        practice[sectionName3] = course[courseName][section3][sectionName3];
+                        const combination = Object.assign({}, lecture,  practice);
                         sectionCombinations.push(combination);
                     }
                 }
@@ -87,6 +96,7 @@ function courseSectionCombination(course) {
             }
         }
     }
+    return sectionCombinations;
 }
 /**
  * 
@@ -101,7 +111,7 @@ function courseCombination(courseCombinationList) {
     var numCourses = courseCombinationList.length;
     courseCollection = [];
     for (let section in courseCombinationList[0]) {
-        var courseList = courseCombinationList[0][section1];
+        var courseList = courseCombinationList[0][section];
         if (1 < numCourses) {
             for (let section2 in courseCombinationList[1]) {
                 Object.assign(courseList, courseCombinationList[1][section2])
@@ -176,7 +186,9 @@ function bucketCourseByDay(courseList, timesOff) {
     var timetableWithCourse = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
     for (var title in courseList) {
         for (var day in courseList[title]) {
-            timetableWithCourse[day].push({ title: courseList[title][day] });
+            var course = {};
+            course[title] = courseList[title][day];
+            timetableWithCourse[day].push(course);
         }
     }
     for (var day in timesOff["timesOff"]) {
@@ -247,11 +259,12 @@ function idleTime(setTimetable, maxOrMin) {
  * @param courses: a list of course dictionary
  * 
  */
-function parseNametoSections(courses, timesOff) {
+function parseNametoTimetable(courses, timesOff) {
     //stores the list of lectures from the courses
     var courseList = {};
     //stores the list of tutorial and practice from the courses
     for (var courseIndex in courses) {
+        // console.log(courseIndex, courses[courseIndex],courses[courseIndex]["meeting_sections"])
         for (var section in courses[courseIndex]["meeting_sections"]) {
             var sec = courses[courseIndex]["meeting_sections"][section];
             var times = {};
@@ -260,11 +273,12 @@ function parseNametoSections(courses, timesOff) {
                 times[sec["times"][time]["day"]] = [sec["times"][time]["start"], sec["times"][time]["end"]];
             }
             //ex. "CSC108H5FL0101"
-            var courseName = courses["code"].concat(sec["code"])
+            var courseName = courses[courseIndex]["code"].concat(sec["code"])
             //map the times to the correspond course section
-            var timeSection = { courseName: times };
+            var timeSection = {};
+            timeSection[courseName] = times;
             //ex. "CSC108H5F"
-            var courseTitle = courses[courseIndex][code];
+            var courseTitle = courses[courseIndex]["code"];
             //map the course section to the course {courseCode:{courseSection:timeSection}}
             if (courseTitle in courseList) {
                 courseList[courseTitle].push(timeSection);
@@ -278,7 +292,8 @@ function parseNametoSections(courses, timesOff) {
     var courseComb = [];
     //creates the combination out of the sections from each course
     for (let courseName in courseList) {
-        const course = { courseName: courseList[courseName] };
+        const course = {}
+        course[courseName] = courseList[courseName];
         courseComb.push(courseSectionCombination(course))
     }
     //creates the combination of the sections between the courses
@@ -286,8 +301,18 @@ function parseNametoSections(courses, timesOff) {
     var timetables = []
     // map the course sections to timetable by day 
     for (let courseCollection in courseCollections) {
-        timetables.push(bucketCourseByDay(courseCollections[courseCollection]));
+        var timetable = bucketCourseByDay(courseCollections[courseCollection], timesOff);
+        if (timetable != null) {
+            timetables.push(timetable);
+        }
+    }
+    // console.log(courseList, courseComb, courseCollections, timetables)
+    if (timetables.length > 0) {
+        return timetables[0];
+    }
+    else {
+        return null;
     }
 }
 
-module.exports = { bucketCourseByDay: bucketCourseByDay, idleTime: idleTime };
+module.exports = { bucketCourseByDay: bucketCourseByDay, idleTime: idleTime, parseNametoTimetable: parseNametoTimetable };
