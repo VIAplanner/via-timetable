@@ -38,8 +38,7 @@ class Courses:
         Scraper.logger.info('Queued %d courses.' % total)
         for x in urls:
             course_id = re.search('offImg(.*)', x[0]).group(1).split('"')[0]
-            # if "H5" in course_id or "Y5" in course_id:
-            if "H5" in course_id:
+            if "H5" in course_id or "Y5" in course_id:
                 url = '%s/courseSearch/coursedetails/%s' % (
                     Courses.host,
                     course_id
@@ -49,7 +48,7 @@ class Courses:
         queue.join()
 
         Scraper.logger.info('Took %.2fs to retreive course info.' % (
-                time() - ts
+            time() - ts
         ))
 
         for course in CourseFinderWorker.all_courses:
@@ -70,7 +69,8 @@ class Courses:
             'campusParam': 'St. George,Scarborough,Mississauga'
         }
 
-        json = Scraper.get(url, params=data, cookies=Courses.cookies, json=True)
+        json = Scraper.get(
+            url, params=data, cookies=Courses.cookies, json=True)
 
         return json['aaData']
 
@@ -219,6 +219,8 @@ class Courses:
                     current_enrolment = 0
 
                 time_data = []
+                if len(times) == 0:
+                    continue
                 for i in range(len(times)):
                     info = times[i].split(" ")
                     day = info[0]
@@ -241,7 +243,6 @@ class Courses:
                         ("duration", hours[1] - hours[0]),
                         ("location", location)
                     ]))
-
                 code = code.split(" ")
                 code = code[0][0] + code[1]
 
