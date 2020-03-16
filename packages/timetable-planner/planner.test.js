@@ -17,9 +17,14 @@ test("min idle time?", () => {
     expect(planner.idleTime(timetables, "MIN")).toStrictEqual({"MONDAY":[],"TUESDAY":[],"WEDNESDAY":[],"THURSDAY":[],"FRIDAY":[],});
 })
 
-test("parse courses", () =>{
+test("parse single course", () =>{
     const timetable = {"FRIDAY": [], "MONDAY": [], "THURSDAY": [{"CSC108H5FP0119": [61200, 68400]}], "TUESDAY": [], "WEDNESDAY": [{"CSC108H5FL0107": [64800, 75600]}]}
-    const timesOff = {"timesOff":{}}
-    expect(planner.parseNametoTimetable(courses.courses, timesOff)).toStrictEqual(timetable)
+    const timesOff = {"timesOff":{}};
+    expect(planner.parseNametoTimetable(courses.course, timesOff)).toStrictEqual(timetable);
+
+})
+test("parse multiple courses", () =>{
+    const timesOff = {"timesOff":{}};
+    console.log(planner.parseNametoTimetable(courses.courses, timesOff));
 
 })

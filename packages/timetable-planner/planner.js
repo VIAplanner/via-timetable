@@ -114,28 +114,28 @@ function courseCombination(courseCombinationList) {
         var courseList = courseCombinationList[0][section];
         if (1 < numCourses) {
             for (let section2 in courseCombinationList[1]) {
-                Object.assign(courseList, courseCombinationList[1][section2])
+                var courseList2 = Object.assign({}, courseList, courseCombinationList[1][section2]);
                 if (2 < numCourses) {
                     for (let section3 in courseCombinationList[2]) {
-                        Object.assign(courseList, courseCombinationList[2][section3]);
+                        var courseList3 = Object.assign({}, courseList2, courseCombinationList[2][section3]);
                         if (3 < numCourses) {
                             for (let section4 in courseCombinationList[3]) {
-                                Object.assign(courseList, courseCombinationList[3][section4]);
+                                var courseList4 = Object.assign({}, courseList3, courseCombinationList[3][section4]);
                                 if (4 < numCourses) {
                                     for (let section5 in courseCombinationList[4]) {
-                                        Object.assign(courseList, courseCombinationList[4][section5]);
-                                        courseCollection.push(courseList);
+                                        var courseList5 = Object.assign({}, courseList4, courseCombinationList[4][section5]);
+                                        courseCollection.push(courseList5);
                                     }
                                 } else {
-                                    courseCollection.push(courseList);
+                                    courseCollection.push(courseList4);
                                 }
                             }
                         } else {
-                            courseCollection.push(courseList);
+                            courseCollection.push(courseList3);
                         }
                     }
                 } else {
-                    courseCollection.push(courseList);
+                    courseCollection.push(courseList2);
                 }
             }
         } else {
@@ -296,6 +296,7 @@ function parseNametoTimetable(courses, timesOff) {
         course[courseName] = courseList[courseName];
         courseComb.push(courseSectionCombination(course))
     }
+    
     //creates the combination of the sections between the courses
     var courseCollections = courseCombination(courseComb);
     var timetables = []
@@ -306,7 +307,6 @@ function parseNametoTimetable(courses, timesOff) {
             timetables.push(timetable);
         }
     }
-    // console.log(courseList, courseComb, courseCollections, timetables)
     if (timetables.length > 0) {
         return timetables[0];
     }
