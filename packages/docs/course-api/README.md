@@ -123,7 +123,7 @@ type Subject
 
 ### 5. Program
 
-```json
+```js
 type Program
 { 
          name: String,
@@ -135,7 +135,7 @@ type Program
 }
 ```
 ### 6. YearCourses
-```json
+```js
 type YearCourses
 { 
          year: String,
@@ -144,7 +144,7 @@ type YearCourses
 ```
 ### 7. Course Evaluation
 
-```json
+```js
 { 
    "department":String,
    "course":String,
