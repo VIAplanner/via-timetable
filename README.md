@@ -1,5 +1,9 @@
 # UofT Course Tools
-
+<p align="center">
+  <a href="https://uoftcoursetools.tech/" target="_blank">
+    <img alt="UofT Course Tool Icon" width="100" src="https://github.com/UTM-Hacklab/UofTCourseTools/blob/master/assets/UofT%20ZCour%20(4)%20(1).png">
+  </a>
+</p>
 ## Introduction
 
 We're unifying UofT's course data, and using it to build tools such as a course guide and timetable planner.
