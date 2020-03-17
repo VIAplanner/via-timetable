@@ -86,7 +86,7 @@ function courseSectionCombination(course) {
                     if (sectionName3.charAt(9) == "P") {
                         const practice = {};
                         practice[sectionName3] = course[courseName][section3][sectionName3];
-                        const combination = Object.assign({}, lecture,  practice);
+                        const combination = Object.assign({}, lecture, practice);
                         sectionCombinations.push(combination);
                     }
                 }
@@ -180,24 +180,51 @@ function overlap(timetable) {
 day: ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"]
 time: [start, end] start, end: int in seconds STARTING FROM 12:00AM
 title: String (should not affect the function for now)
-@precondition the courseList has no conflict
 */
 function bucketCourseByDay(courseList, timesOff) {
-    var timetableWithCourse = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] }
-    for (var title in courseList) {
-        for (var day in courseList[title]) {
-            var course = {};
+    const timetableWithCourse = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] };
+    for (let title in courseList) {
+        for (let day in courseList[title]) {
+            const course = {};
             course[title] = courseList[title][day];
             timetableWithCourse[day].push(course);
         }
     }
-    for (var day in timesOff["timesOff"]) {
-        for (var time_section in timesOff["timesOff"][day]) {
+    for (let day in timesOff["timesOff"]) {
+        for (let time_section in timesOff["timesOff"][day]) {
             timetableWithCourse[day].push({ "timesOff": timesOff["timesOff"][day][time_section] })
         }
     }
     if (overlap(timetableWithCourse)) {
-        return timetableWithCourse;
+        const timetable = { "MONDAY": [], "TUESDAY": [], "WEDNESDAY": [], "THURSDAY": [], "FRIDAY": [] };
+        for (let day in timetableWithCourse) {
+            if (timetableWithCourse[day].length > 0) {
+                for (let courseSection in timetableWithCourse[day]) {
+                    const courseName = Object.keys(timetableWithCourse[day][courseSection])[0]
+                    const course = {}
+                    var courseCode
+                    var courseSec
+                    if (courseName == "timesOff"){
+                        courseCode = courseName
+                        courseSec = courseName
+
+                    }
+                    else{
+                        courseCode = courseName.substring(0, 9)
+                        courseSec = courseName.substring(9)
+                    }
+                    const time = timetableWithCourse[day][courseSection][courseName]
+                    const start = time[0]
+                    const end = time[1]
+                    course["courseCode"] = courseCode
+                    course["section"] = courseSec
+                    course["start"] = start
+                    course["end"] = end
+                    timetable[day].push(course)
+                }
+            }
+        }
+        return timetable;
     } else {
         return null;
     }
@@ -219,12 +246,10 @@ function idleTime(setTimetable, maxOrMin) {
                 for (var time in setTimetable[timetable][day]) {
                     var time2 = +time + 1;
                     while (time2 < setTimetable[timetable][day].length) {
-                        courseTitle = Object.keys(setTimetable[timetable][day][time]);
-                        courseTitle2 = Object.keys(setTimetable[timetable][day][time2]);
-                        var timeStart = setTimetable[timetable][day][time][courseTitle][0];
-                        var timeEnd = setTimetable[timetable][day][time][courseTitle][1];
-                        var time2Start = setTimetable[timetable][day][time2][courseTitle2][0];
-                        var time2End = setTimetable[timetable][day][time2][courseTitle2][1];
+                        var timeStart = setTimetable[timetable][day][time]["start"];
+                        var timeEnd = setTimetable[timetable][day][time]["end"];
+                        var time2Start = setTimetable[timetable][day][time2]["start"];
+                        var time2End = setTimetable[timetable][day][time2]["end"];
                         if (timeEnd < time2Start) {
                             sum += (+time2Start - +timeEnd);
                         }
@@ -296,7 +321,7 @@ function parseNametoTimetable(courses, timesOff) {
         course[courseName] = courseList[courseName];
         courseComb.push(courseSectionCombination(course))
     }
-    
+
     //creates the combination of the sections between the courses
     var courseCollections = courseCombination(courseComb);
     var timetables = []
