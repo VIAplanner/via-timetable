@@ -10,8 +10,6 @@ We're unifying UofT's course data, and using it to build tools such as a course 
 
 ## Introduction
 
-We're unifying UofT's course data, and using it to build tools such as a course guide and timetable planner.
-
 The fundamental problem we are trying to solve :
 1. The current process to choose your courses and manually create a schedule without any conflicts that fit your preferences can take days to perfect.
 
