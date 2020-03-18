@@ -26,17 +26,12 @@ Determine the types of unique meeting sections
 Create a configuration
 */
 //helper functions:
-function isEmpty(obj) {
-    for (var i in obj) {
-        return false;
-    }
-    return true;
-}
+
 /**
  * 
  * @param {the course dictionary containing all the sections} course 
  * (e.g. {"CSC108":{"CSC108L0101": times, "CSC108T0101": times, "CSC108T0102":times}}) 
- * 
+ * time:[start,end,location]
  * @returns {a collection of the combination of the sections in the course} sectionCombinations 
  * (e.g. [{"CSC108L0101": times, "CSC108T0101":times}, {"CSC108L0101":times, "CSC108T0102":times}])
  * 
@@ -216,10 +211,12 @@ function bucketCourseByDay(courseList, timesOff) {
                     const time = timetableWithCourse[day][courseSection][courseName]
                     const start = time[0]
                     const end = time[1]
+                    const location = time[2]
                     course["courseCode"] = courseCode
                     course["section"] = courseSec
                     course["start"] = start
                     course["end"] = end
+                    course["location"] = location
                     timetable[day].push(course)
                 }
             }
@@ -231,25 +228,24 @@ function bucketCourseByDay(courseList, timesOff) {
 }
 
 /**
- @param setTimetable: A list of timetable
- [{"MONDAY":[TimeSections], ...}]
+ @param timetables: A list of timetables [{"MONDAY":[TimeSections], ...}]
  @param maxOrMin: A string 
  "MAX"/"MIN"
  */
-function idleTime(setTimetable, maxOrMin) {
+function idleTime(timetables, maxOrMin) {
     var total = [];
-    for (timetable in setTimetable) {
+    for (timetable in timetables) {
         //sum up all the idle time and store the index
         var sum = 0;
-        for (day in setTimetable[timetable]) {
-            if (setTimetable[timetable][day].length > 1) {
-                for (var time in setTimetable[timetable][day]) {
+        for (day in timetables[timetable]) {
+            if (timetables[timetable][day].length > 1) {
+                for (var time in timetables[timetable][day]) {
                     var time2 = +time + 1;
-                    while (time2 < setTimetable[timetable][day].length) {
-                        var timeStart = setTimetable[timetable][day][time]["start"];
-                        var timeEnd = setTimetable[timetable][day][time]["end"];
-                        var time2Start = setTimetable[timetable][day][time2]["start"];
-                        var time2End = setTimetable[timetable][day][time2]["end"];
+                    while (time2 < timetables[timetable][day].length) {
+                        var timeStart = timetables[timetable][day][time]["start"];
+                        var timeEnd = timetables[timetable][day][time]["end"];
+                        var time2Start = timetables[timetable][day][time2]["start"];
+                        var time2End = timetables[timetable][day][time2]["end"];
                         if (timeEnd < time2Start) {
                             sum += (+time2Start - +timeEnd);
                         }
@@ -276,15 +272,20 @@ function idleTime(setTimetable, maxOrMin) {
     }
     // check for the max and min of the idletimes
     // return based on maxOrMin
-    return setTimetable[indexOfIdletime];
+    return timetables[indexOfIdletime];
 }
 
 
 /**
- * @param courses: a list of course dictionary
+ * Creates a TimeTable object from a list of course objects
+ * times off. 
+ * 
+ * @param courses: A list of Course objects
+ * @param timeOff: A object that maps days to a list of invalid 
+ * time blocks for that day
  * 
  */
-function parseNametoTimetable(courses, timesOff) {
+function createTimetable(courses, timesOff) {
     //stores the list of lectures from the courses
     var courseList = {};
     //stores the list of tutorial and practice from the courses
@@ -295,7 +296,7 @@ function parseNametoTimetable(courses, timesOff) {
             var times = {};
             //set the times to map day as the key, and time section as the value
             for (var time in sec["times"]) {
-                times[sec["times"][time]["day"]] = [sec["times"][time]["start"], sec["times"][time]["end"]];
+                times[sec["times"][time]["day"]] = [sec["times"][time]["start"], sec["times"][time]["end"], sec["times"][time]["location"]];
             }
             //ex. "CSC108H5FL0101"
             var courseName = courses[courseIndex]["code"].concat(sec["code"])
@@ -340,4 +341,4 @@ function parseNametoTimetable(courses, timesOff) {
     }
 }
 
-module.exports = { bucketCourseByDay: bucketCourseByDay, idleTime: idleTime, parseNametoTimetable: parseNametoTimetable };
+module.exports = { idleTime: idleTime, createTimetable: createTimetable };
