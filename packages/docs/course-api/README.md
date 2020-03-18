@@ -2,9 +2,19 @@
 sidebar: auto
 ---
 
-# Unified Backend
+# [Course API](http://www.api.uoftcoursetools.tech/)
 
-## Overview
+## API Overview
+GraphQL Playground is a graphical, interactive, in-browser GraphQL __IDE__, created by Prisma and based on GraphiQL.
+
+The way to use the playground is illustrated in the following images. Refer to [**Data Structures 1-6**](#_1-course) for the available data that the API can provide.
+![Example 1](./playgroundEx1.png)
+![Example 2](./playgroundEx2.png)
+
+Refer to [**Data Structures 1-6**](#_1-course) for the available data that the API can provide.
+
+If you are curious on how the API was built and want to know more about GraphQL  , [click here](https://www.howtographql.com/basics/0-introduction/).
+## High-level overview
 
 ![Backend Architecture](./backend-architecture.png)
 
@@ -54,82 +64,87 @@ Items 1-9 are criteria with responses that range from 1 to 5, with 1 as the lowe
 
 ### 1. Course
 
-```json
-{ 
-   "id":String,
-   "code":String,
-   "name":String,
-   "description":String,
-   "division":String,
-   "department":String,
-   "prerequisites":String,
-   "exclusions":String,
-   "level":Number,
-   "campus":String,
-   "term":String,
-   "breadths":String,
-   "meeting_sections":[ 
-      MeetingSection
-   ]
+```js
+type Course 
+{
+        id: String, 
+        code: String,
+        name: String,
+        description: String,
+        division: String,
+        department: String,
+        prerequisites: String,
+        exclusions: String, 
+        level: Int,
+        campus: String, 
+        term: String,
+        breadths: [Int],
+        meetingSections: [MeetingSection]
 }
 ```
 
 ### 2. Meeting Section
 
-```json
+```js
+type MeetingSection
 {
-    "code": String,
-    "instructors": [String],
-    "times": [Time],
-    "size": Number,
-    "enrolment": Number
+        code: String,
+        instructors: [String],
+        times: [Times],
+        size: Int,
+        enrolment: Int
 }
 ```
 
 ### 3. Time
 
-```json
+```js
+type Times
 {
-   "day": String,
-   "start": Number,
-   "end": Number,
-   "duration": Number,
-   "location": String
+        day: String,
+        start: Int,
+        end: Int,
+        duration: Int, 
+        location: String
 }
 ```
 
 ### 4. Subject
 
-```json
+```js
+type Subject
 { 
-   "name":String,
-   "degree":[String],
-   "notes":[string],
-   "programs":[Program],
+        name: String,
+        degrees: [String],
+        notes: [String],
+        programs: [Program]
 }
 ```
 
 ### 5. Program
 
-```json
+```js
+type Program
 { 
-   "name":String,
-   "level":String,
-   "code":String,
-   "program_type":int,
-   "notes":[string],
-   "courses":{
-      "first":[string],
-      "second":[string],
-      "third":[string],
-      "fourth":[string]
-   }
+         name: String,
+         level: String,
+         code: String,
+         type: String,
+         notes: [String]!,
+         courses: [YearCourses]
 }
 ```
+### 6. YearCourses
+```js
+type YearCourses
+{ 
+         year: String,
+         courses: [String]
+}
+```
+### 7. Course Evaluation
 
-### 6. Course Evaluation
-
-```json
+```js
 { 
    "department":String,
    "course":String,

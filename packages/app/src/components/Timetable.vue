@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import TimetableEvent from "./components/TimetableEvent";
+import TimetableEvent from "./TimetableEvent";
 
 const TIMETABLE_START = 9;
 const TIMETABLE_END = 22;
@@ -26,7 +26,7 @@ const convertSecondsToHours = seconds => {
 };
 
 export default {
-  name: "App",
+  name: "timetable",
   components: {
     TimetableEvent
   },

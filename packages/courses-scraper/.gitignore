@@ -6,4 +6,5 @@ utils/__pycache__
 .vscode/
 .mypy_cache/3.6
 node_modules/
+output/
 
