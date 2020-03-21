@@ -1,11 +1,11 @@
 <template>
-  <Timetable/>
+  <div>
+    <Timetable/>
+  </div>
 </template>
 
 <script>
 import Timetable from "./components/Timetable";
-
-//import TimetableEvent from "./components/TimetableEvent";
 
 export default {
   name: "App",
@@ -19,5 +19,9 @@ export default {
 
 body {
   font-family: "Montserrat", sans-serif;
+}
+
+.background {
+  background-color: #E5E5E5;
 }
 </style>

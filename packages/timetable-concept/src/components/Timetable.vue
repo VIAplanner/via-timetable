@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="background">
       <v-row>
         <v-col class="time-axis">
           <div class="top-margin"></div>
@@ -8,7 +8,7 @@
             <h3 class="time-label">{{time}}</h3>
           </div>
         </v-col>
-        <v-col cols="11" name="timetable-body">
+        <v-col cols="11">
           <v-row name="week-days-axis">
             <v-col v-for="weekday in weekdays" :key="weekday">
               <h2 style="margin-bottom:16px;">{{weekday}}</h2>
@@ -55,7 +55,7 @@ export default {
       return codeColorMap;
     },
     timetableStart() {
-      var earliest = 24;
+      var earliest = 9;
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
         for (let event of dayEvents) {
@@ -68,7 +68,7 @@ export default {
       return earliest;
     },
     timetableEnd() {
-      var latest = 0;
+      var latest = 18;
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
         for (let event of dayEvents) {
@@ -212,8 +212,13 @@ export default {
   padding: 0px !important;
 }
 
+.background {
+    border: 0.2px solid gray;
+    background-color: white;
+}
+
 .container {
-  padding: 50px !important;
+  padding: 24px !important;
 }
 
 .time-axis-number {
