@@ -15,7 +15,7 @@ export default {
   title: 'Timetable'
 }
 
-export const withText = () => ({
+export const defaultView = () => ({
   components: { Timetable },
   template: '<timetable />>',
 })
