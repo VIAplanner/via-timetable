@@ -8,11 +8,21 @@ module.exports = async ({ config }) => {
     loader: 'vue-storybook',
   })
 
+  config.module.rules.push()
+
   config.module.rules.push({
     test: /\.s(a|c)ss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
     include: path.resolve(__dirname, '../'),
   })
+
+  config.module.rules.push({
+      test: /\.(graphql|gql)$/,
+      exclude: /node_modules/,
+      loader: 'graphql-tag/loader'
+    })
+
+  
 
   return config
 }

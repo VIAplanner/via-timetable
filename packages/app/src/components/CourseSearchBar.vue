@@ -1,14 +1,18 @@
 <template>
-  <v-autocomplete v-model="value" :items="items" dense label="Search Course"></v-autocomplete>
+  <v-autocomplete v-model="selectedCourse" :items="courses" dense label="Search Course"></v-autocomplete>
 </template>
 
 <script>
 export default {
   name: "course-search-bar",
+  props: {
+    courses: {
+      type: Array
+    }
+  },
   data() {
     return {
-      items: ["foo", "bar", "fizz", "buzz"],
-      value: null
+      selectedCourse: null
     };
   }
 };
