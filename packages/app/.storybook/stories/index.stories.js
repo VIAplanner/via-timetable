@@ -20,13 +20,4 @@ export const defaultView = () => ({
   template: '<timetable />>',
 })
 
-// export const withJSX = () => ({
-//   render() {
-//     return <MyButton onClick={linkTo('Button', 'With Some Emoji')}>With JSX</MyButton>;
-//   }
-// })
 
-// export const withSomeEmoji = () => ({
-//   components: { MyButton },
-//   template: '<my-button>😀 😎 👍 💯</my-button>'
-// })

@@ -1,3 +1,4 @@
+import { makeDecorator } from '@storybook/addons'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
@@ -103,3 +104,18 @@ export async function onLogout (apolloClient) {
     console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
   }
 }
+
+
+
+
+export default makeDecorator({
+    name: 'withVueApollo',
+    parameterName: 'apollo',
+    wrapper: (storyFn, context, { parameters = {} }) => {
+        const WrappedComponent = storyFn(context)
+        return Vue.extend({
+            components: { WrappedComponent },
+            apolloProvider: createProvider(),
+        })
+    },
+})
