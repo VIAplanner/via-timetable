@@ -6,7 +6,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "serve:storybook": "start-storybook -p 6006"
+        "storybook": "start-storybook -p 6006"
     },
     "dependencies": {
         "@mdi/font": "^3.6.95",
