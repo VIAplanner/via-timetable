@@ -3,7 +3,6 @@
     <v-row>
       <v-col>
         <course-search-bar v-if="!$apollo.loading" :courses="formattedCourses" />
-      {{formattedCourses}}
       </v-col>
     </v-row>
     <v-row>
