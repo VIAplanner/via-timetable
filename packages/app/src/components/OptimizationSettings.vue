@@ -23,6 +23,7 @@
 
 <script>
 export default {
+  name: "optimization-settings",
   data() {
     return {
       selectedDays: [],
