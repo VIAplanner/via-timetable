@@ -11,7 +11,7 @@
         <v-col cols="11">
           <v-row name="week-days-axis">
             <v-col v-for="weekday in weekdays" :key="weekday">
-              <h2 style="margin-bottom:16px;">{{weekday}}</h2>
+              <h2 class="day-label">{{weekday}}</h2>
             </v-col>
           </v-row>
           <v-row name="timetable-content">
@@ -169,5 +169,10 @@ font-family: "Montserrat", sans-serif;
 
 .time-label {
   text-align: right;
+}
+
+.day-label {
+  margin-bottom: 16px;
+  text-align: center;
 }
 </style>
