@@ -79,6 +79,11 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+* {
+font-family: "Montserrat", sans-serif;
+}
+
 .event {
   border: 0.2px solid gray;
   color: white;
