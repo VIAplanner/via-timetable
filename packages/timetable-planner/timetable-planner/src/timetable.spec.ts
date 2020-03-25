@@ -1,8 +1,8 @@
 import test from 'ava';
-import {generateTimetables} from './index'
+import { generateTimetables, createTimetable } from './index'
 
 
-const ONE_COURSE_L1_P2:Course[] = [{
+const ONE_COURSE_L1_P2: Course[] = [{
     "code": "CSC108H5F",
     "meeting_sections": [
         {
@@ -29,7 +29,7 @@ const ONE_COURSE_L1_P2:Course[] = [{
                     "location": "MN 1270"
                 }
             ],
-        },{
+        }, {
             "code": "P0101",
             "instructors": [],
             "times": [
@@ -56,15 +56,132 @@ const ONE_COURSE_L1_P2:Course[] = [{
         }
     ]
 }]
-const RESULT_L1_P2:Timetable[] = [{
-    monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: []
+const RESULT_L1_P2: Timetable[] = [{
+    FRIDAY: [
+        {
+            day: 'FRIDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+    ],
+    MONDAY: [
+        {
+            day: 'MONDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+        {
+            day: 'MONDAY',
+            duration: 7200,
+            end: 46800,
+            location: 'DH 2010',
+            start: 39600,
+        },
+    ],
+    THURSDAY: [],
+    TUESDAY: [],
+    WEDNESDAY: [
+        {
+            day: 'WEDNESDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+    ],
 }]
+const SECTION_L1_P2: MeetingSection[] = [
+    {
+        code: 'L0101',
+        instructors: [
+            'A Petersen',
+        ],
+        times: [
+            {
+                day: 'MONDAY',
+                duration: 3600,
+                end: 36000,
+                location: 'MN 1270',
+                start: 32400,
+            },
+            {
+                day: 'WEDNESDAY',
+                duration: 3600,
+                end: 36000,
+                location: 'MN 1270',
+                start: 32400,
+            },
+            {
+                day: 'FRIDAY',
+                duration: 3600,
+                end: 36000,
+                location: 'MN 1270',
+                start: 32400,
+            },
+        ],
+    },
+    {
+        code: 'P0102',
+        instructors: [],
+        times: [
+            {
+                day: 'MONDAY',
+                duration: 7200,
+                end: 46800,
+                location: 'DH 2010',
+                start: 39600,
+            },
+        ],
+    },
+]
+const resultTimetable: Timetable = {
+    FRIDAY: [
+        {
+            day: 'FRIDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+    ],
+    MONDAY: [
+        {
+            day: 'MONDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+        {
+            day: 'MONDAY',
+            duration: 7200,
+            end: 46800,
+            location: 'DH 2010',
+            start: 39600,
+        },
+    ],
+    THURSDAY: [],
+    TUESDAY: [],
+    WEDNESDAY: [
+        {
+            day: 'WEDNESDAY',
+            duration: 3600,
+            end: 36000,
+            location: 'MN 1270',
+            start: 32400,
+        },
+    ],
+}
+test('Test create timetable', async t => {
+    const timetable = createTimetable(SECTION_L1_P2)
+    t.deepEqual(timetable, resultTimetable)
+})
 
 test('Test timetable generator', async t => {
     const timetable = generateTimetables(ONE_COURSE_L1_P2)
-    t.is(timetable, RESULT_L1_P2);
+    t.deepEqual(timetable, RESULT_L1_P2);
 });

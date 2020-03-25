@@ -16,11 +16,11 @@ interface MeetingSectionTime {
 }
 
 interface Timetable {
-    monday: MeetingSectionTime[],
-    tuesday: MeetingSectionTime[],
-    wednesday: MeetingSectionTime[],
-    thursday: MeetingSectionTime[],
-    friday: MeetingSectionTime[]
+    MONDAY: MeetingSectionTime[],
+    TUESDAY: MeetingSectionTime[],
+    WEDNESDAY: MeetingSectionTime[],
+    THURSDAY: MeetingSectionTime[],
+    FRIDAY: MeetingSectionTime[]
 }
 
 interface Course {

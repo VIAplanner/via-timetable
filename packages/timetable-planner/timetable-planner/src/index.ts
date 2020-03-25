@@ -2,64 +2,74 @@ import { courseCombinations, courseMeetingSectionCombinations, } from "./combina
 
 const checkOverlap = (timetable: Timetable): boolean => {
     let section = 0
-    while (section < timetable.monday.length) {
-        const section2 = section + +1
-        while (section2 < timetable.monday.length) {
-            if ((timetable.monday[section].start >= timetable.monday[section2].start &&
-                timetable.monday[section].start < timetable.monday[section2].end) ||
-                (timetable.monday[section].end > timetable.monday[section2].start &&
-                    timetable.monday[section].end <= timetable.monday[section2].end)) {
+    while (section < timetable.MONDAY.length) {
+        let section2 = +section + +1
+        while (section2 < timetable.MONDAY.length) {
+            if ((timetable.MONDAY[section].start >= timetable.MONDAY[section2].start &&
+                timetable.MONDAY[section].start < timetable.MONDAY[section2].end) ||
+                (timetable.MONDAY[section].end > timetable.MONDAY[section2].start &&
+                    timetable.MONDAY[section].end <= timetable.MONDAY[section2].end)) {
                 return false
             }
+            section2++
         }
+        section++
     }
     section = 0
-    while (section < timetable.tuesday.length) {
-        const section2 = +section + +1
-        while (section2 < timetable.tuesday.length) {
-            if ((timetable.tuesday[section].start >= timetable.tuesday[section2].start &&
-                timetable.tuesday[section].start < timetable.tuesday[section2].end) ||
-                (timetable.tuesday[section].end > timetable.tuesday[section2].start &&
-                    timetable.tuesday[section].end <= timetable.tuesday[section2].end)) {
+    while (section < timetable.TUESDAY.length) {
+        let section2 = +section + +1
+        while (section2 < timetable.TUESDAY.length) {
+            if ((timetable.TUESDAY[section].start >= timetable.TUESDAY[section2].start &&
+                timetable.TUESDAY[section].start < timetable.TUESDAY[section2].end) ||
+                (timetable.TUESDAY[section].end > timetable.TUESDAY[section2].start &&
+                    timetable.TUESDAY[section].end <= timetable.TUESDAY[section2].end)) {
                 return false
             }
+            section2++
         }
+        section++
     }
     section = 0
-    while (section < timetable.wednesday.length) {
-        const section2 = +section + +1
-        while (section2 < timetable.wednesday.length) {
-            if ((timetable.wednesday[section].start >= timetable.wednesday[section2].start &&
-                timetable.wednesday[section].start < timetable.wednesday[section2].end) ||
-                (timetable.wednesday[section].end > timetable.wednesday[section2].start &&
-                    timetable.wednesday[section].end <= timetable.wednesday[section2].end)) {
+    while (section < timetable.WEDNESDAY.length) {
+        let section2 = +section + +1
+        while (section2 < timetable.WEDNESDAY.length) {
+            if ((timetable.WEDNESDAY[section].start >= timetable.WEDNESDAY[section2].start &&
+                timetable.WEDNESDAY[section].start < timetable.WEDNESDAY[section2].end) ||
+                (timetable.WEDNESDAY[section].end > timetable.WEDNESDAY[section2].start &&
+                    timetable.WEDNESDAY[section].end <= timetable.WEDNESDAY[section2].end)) {
                 return false
             }
+            section2++
         }
+        section++
     }
     section = 0
-    while (section < timetable.thursday.length) {
-        const section2 = +section + +1
-        while (section2 < timetable.thursday.length) {
-            if ((timetable.thursday[section].start >= timetable.thursday[section2].start &&
-                timetable.thursday[section].start < timetable.thursday[section2].end) ||
-                (timetable.thursday[section].end > timetable.thursday[section2].start &&
-                    timetable.thursday[section].end <= timetable.thursday[section2].end)) {
+    while (section < timetable.THURSDAY.length) {
+        let section2 = +section + +1
+        while (section2 < timetable.THURSDAY.length) {
+            if ((timetable.THURSDAY[section].start >= timetable.THURSDAY[section2].start &&
+                timetable.THURSDAY[section].start < timetable.THURSDAY[section2].end) ||
+                (timetable.THURSDAY[section].end > timetable.THURSDAY[section2].start &&
+                    timetable.THURSDAY[section].end <= timetable.THURSDAY[section2].end)) {
                 return false
             }
+            section2++
         }
+        section++
     }
     section = 0
-    while (section < timetable.friday.length) {
-        const section2 = +section + +1
-        while (section2 < timetable.friday.length) {
-            if ((timetable.friday[section].start >= timetable.friday[section2].start &&
-                timetable.friday[section].start < timetable.friday[section2].end) ||
-                (timetable.friday[section].end > timetable.friday[section2].start &&
-                    timetable.friday[section].end <= timetable.friday[section2].end)) {
+    while (section < timetable.FRIDAY.length) {
+        let section2 = +section + +1
+        while (section2 < timetable.FRIDAY.length) {
+            if ((timetable.FRIDAY[section].start >= timetable.FRIDAY[section2].start &&
+                timetable.FRIDAY[section].start < timetable.FRIDAY[section2].end) ||
+                (timetable.FRIDAY[section].end > timetable.FRIDAY[section2].start &&
+                    timetable.FRIDAY[section].end <= timetable.FRIDAY[section2].end)) {
                 return false
             }
+            section2++
         }
+        section++
     }
     return true
 
@@ -67,11 +77,11 @@ const checkOverlap = (timetable: Timetable): boolean => {
 
 const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
     const timetable: Timetable = {
-        monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: []
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: []
     }
     for (const meetingSection of meetingSectionCombo) {
         for (const time of meetingSection.times) {
@@ -97,7 +107,7 @@ const generateTimetables = (courses: Course[]): Timetable[] => {
     for (const coursesCombo of coursesCombinations) {
         const timetable = createTimetable(coursesCombo)
         if (timetable != null) {
-            timetables.push()
+            timetables.push(timetable)
         }
     }
 
