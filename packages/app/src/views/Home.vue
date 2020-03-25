@@ -7,17 +7,15 @@
     </v-row>
     <v-row style="background: #E5E5E5;">
       <v-col>
-        <timetable :timetable="timetable" />
+        <timetable :timetable="timetable" :courseCodeColorMap="courseCodeColorMap" />
       </v-col>
     </v-row>
     <v-row style="background: #E5E5E5;">
       <v-col>
         <TimetableCourseCard
-          v-for="(info, course) in courseCards"
-          :key="course"
-          :codeAndName="info.codeAndName"
-          :color="info.color"
-          :meetingSections="info.meetingSections"
+          v-for="(courseInfo, courseCode) in formattedCoursesForCourseCards"
+          :key="courseCode"
+          :course="courseInfo"
         />
       </v-col>
     </v-row>
@@ -36,184 +34,157 @@ export default {
     Timetable,
     TimetableCourseCard
   },
+  computed: {
+    formattedCourses() {
+      return this.courses.map(course => `${course.code}: ${course.name}`);
+    },
+    courseCodeColorMap() {
+      const codeColorMap = new Map();
+      var index = 0;
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          if (!codeColorMap.has(event.courseCode)) {
+            codeColorMap.set(event.courseCode, this.colors[index]);
+            index++;
+          }
+        }
+      }
+      return codeColorMap;
+    },
+    formattedCoursesForCourseCards() {
+      const result = {};
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          //If result doesn't already have event.courseCode
+          if (!(event.courseCode in result)) {
+            result[event.courseCode] = {
+              codeAndName: this.getFormattedCodeAndName(
+                event.courseCode,
+                event.courseName
+              ),
+              color: this.courseCodeColorMap.get(event.courseCode),
+              meetingSections: [
+                {
+                  section: event.section,
+                  day: day,
+                  start: event.start,
+                  end: event.end,
+                  location: event.location,
+                  instructorName: event.instructorName
+                }
+              ]
+            };
+          } else {
+            result[event.courseCode].meetingSections.push({
+              section: event.section,
+              day: day,
+              start: event.start,
+              end: event.end,
+              location: event.location,
+              instructorName: event.instructorName
+            });
+          }
+        }
+      }
+      console.log(result)
+      return result;
+    }
+  },
   data() {
     return {
-      courseCards: {
-        CSC258H5S: {
-          codeAndName: "CSC258H5 S Computer Organizaion",
-          color: "#FBB347",
-          meetingSections: [
-            {
-              instructorName: "Andrew Petersen",
-              day: "Monday",
-              section: "L0101",
-              start: 32400,
-              end: 39600,
-              location: "IB 345"
-            },
-            {
-              section: "P0109",
-              instructorName: "TBA",
-              day: "Tuesday",
-              start: 61200,
-              end: 64800,
-              location: "DH 2026"
-            }
-          ]
-        },
-        STA258H5S: {
-          codeAndName: "STA258H5 S Statistics with Prob",
-          color: "#83CC77",
-          meetingSections: [
-            {
-              instructorName: "Alvaro Nosedal Sanchez",
-              day: "Monday",
-              section: "L0101",
-              start: 54000,
-              end: 61200,
-              location: "MN1210"
-            },
-            {
-              instructorName: "TBA",
-              day: "Wednesday",
-              section: "T0105",
-              start: 61200,
-              end: 64800,
-              location: "DH 2080"
-            }
-          ]
-        },
-        CSC207H5S: {
-          codeAndName: "CSC207H5 S Software Design",
-          color: "#4C91F9",
-          meetingSections: [
-            {
-              instructorName: "Arnold Rosenbloom",
-              day: "Tuesday",
-              section: "L0101",
-              start: 39600,
-              end: 46800,
-              location: "MN 1270"
-            }
-          ]
-        },
-        CSC290H5S: {
-          codeAndName: "CSC290H5 S Communication Skills for CSC",
-          color: "#F26B83",
-          meetingSections: [
-            {
-              instructorName: "Paul Virbik",
-              day: "Wednesday",
-              section: "L0101",
-              start: 50400,
-              end: 57600,
-              location: "MN 1270"
-            },
-            {
-              instructorName: "TBA",
-              day: "Thursday",
-              section: "T0101",
-              start: 39600,
-              end: 46800,
-              location: "MN 1270"
-            }
-          ]
-        },
-        CSC209H5S: {
-          codeAndName: "CSC209H5 S Soft Tools & Sys Prog",
-          color: "#5CD1EB",
-          meetingSections: [
-            {
-              instructorName: "Andrew Perersen",
-              day: "Friday",
-              section: "L0104",
-              start: 50400,
-              end: 57600,
-              location: "MN 1270"
-            },
-            {
-              instructorName: "TBA",
-              day: "Thursday",
-              section: "P0111",
-              start: 61200,
-              end: 64800,
-              location: "DH 2026"
-            }
-          ]
-        }
-      },
+      colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
       timetable: {
         Monday: [
           {
             courseCode: "CSC258H5S",
+            courseName: "Computer Organizaion",
             section: "L0101",
             start: 32400,
             end: 39600,
-            location: "IB 345"
+            location: "IB 345",
+            instructorName: "Andrew Petersen"
           },
           {
             courseCode: "STA258H5S",
+            courseName: "Statistics with Prob",
             section: "L0101",
             start: 54000,
             end: 61200,
-            location: "MN 1210"
+            location: "MN 1210",
+            instructorName: "Alvaro Nosedal Sanchez"
           }
         ],
         Tuesday: [
           {
             courseCode: "CSC207H5S",
+            courseName: "Software Design",
             section: "L0101",
             start: 39600,
             end: 46800,
-            location: "MN 1270"
+            location: "MN 1270",
+            instructorName: "Arnold Rosenbloom"
           },
           {
             courseCode: "CSC258H5S",
+            courseName: "Computer Organizaion",
             section: "P0109",
             start: 61200,
             end: 64800,
-            location: "DH 2026"
+            location: "DH 2026",
+            instructorName: "TBA"
           }
         ],
         Wednesday: [
           {
             courseCode: "CSC290H5S",
+            courseName: "Communication Skills for CSC",
             section: "L0101",
             start: 50400,
             end: 57600,
-            location: "MN 1270"
+            location: "MN 1270",
+            instructorName: "Paul Virbik"
           },
           {
             courseCode: "STA258H5S",
+            courseName: "Statistics with Prob",
             section: "T0105",
             start: 61200,
             end: 64800,
-            location: "DH 2080"
+            location: "DH 2080",
+            instructorName: "TBA"
           }
         ],
         Thursday: [
           {
             courseCode: "CSC290H5S",
+            courseName: "Communication Skills for CSC",
             section: "T0101",
             start: 39600,
             end: 46800,
-            location: "MN 1270"
+            location: "MN 1270",
+            instructorName: "TBA"
           },
           {
             courseCode: "CSC209H5S",
+            courseName: "Soft Tools & Sys Prog",
             section: "P0111",
             start: 61200,
             end: 64800,
-            location: "DH 2026"
+            location: "DH 2026",
+            instructorName: "TBA"
           }
         ],
         Friday: [
           {
             courseCode: "CSC209H5S",
+            courseName: "Soft Tools & Sys Prog",
             section: "L0104",
             start: 50400,
             end: 57600,
-            location: "MN 1270"
+            location: "MN 1270",
+            instructorName: "Andrew Petersen"
           }
         ]
       }
@@ -222,9 +193,9 @@ export default {
   apollo: {
     courses: COURSES_SEARCH_BAR_QUERY
   },
-  computed: {
-    formattedCourses() {
-      return this.courses.map(course => `${course.code}: ${course.name}`);
+  methods: {
+    getFormattedCodeAndName(code, name) {
+      return `${code} ${name}`;
     }
   }
 };

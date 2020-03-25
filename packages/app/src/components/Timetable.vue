@@ -43,22 +43,11 @@ export default {
     timetable: {
       type: Object,
     },
+    courseCodeColorMap: {
+      type: Map,
+    },
   },
   computed: {
-    courseCodeColorMap() {
-      const codeColorMap = new Map();
-      var index = 0;
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (!codeColorMap.has(event.courseCode)) {
-            codeColorMap.set(event.courseCode, this.colors[index]);
-            index++;
-          }
-        }
-      }
-      return codeColorMap;
-    },
     timetableStart() {
       var earliest = 9;
       for (let day in this.timetable) {
