@@ -387,12 +387,15 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
         },
     ],
 ]
+
+
 test('Test Course Meeting Section Combinations', async t => {
     const courseMeetingSectionCombosP = courseMeetingSectionCombinations(COURSE_L1_P2)
     t.deepEqual(courseMeetingSectionCombosP, SECTIONS_L1_P2);
     const courseMeetingSectionCombosT = courseMeetingSectionCombinations(COURSE_L1_T2)
     t.deepEqual(courseMeetingSectionCombosT, SECTIONS_L1_T2);
 });
+
 test('Test Course Combination', async t => {
     const courseCombination = courseCombinations([SECTIONS_L1_P2])
     t.deepEqual(courseCombination, COURSES_SECTION_L1_P2)
