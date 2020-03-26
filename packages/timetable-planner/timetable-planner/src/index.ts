@@ -115,5 +115,6 @@ const generateTimetables = (courses: Course[]): Timetable[] => {
 }
 export {
     generateTimetables,
-    createTimetable
+    createTimetable,
+    checkOverlap
 }
