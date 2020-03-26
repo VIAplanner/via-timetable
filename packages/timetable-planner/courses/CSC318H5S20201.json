@@ -1,0 +1,51 @@
+{
+    "id": "CSC318H5S20201",
+    "code": "CSC318H5S",
+    "name": "The Design of Interactive Computational Media",
+    "description": "User-centered design of interactive systems. Methodologies, principles, metaphors, task analysis, and other topics. Interdisciplinary design; the role of industrial design and the behavioural sciences. Interactive hardware and software; concepts from computer graphics. Classes of direct manipulation systems, extensible systems, rapid prototyping tools. Additional topics in interactive computational media. Students work on projects in interdisciplinary teams. Enrolment limited, but non-computer scientists welcome. [24L, 12T] Priority is given to students enrolled in Computer Science Specialist, Information Security Specialist, Bioinformatics Specialist or Computer Science Major programs.",
+    "division": "University of Toronto Mississauga",
+    "department": "Mathematical and Computational Sciences",
+    "prerequisites": "Any CSC half-course; CGPA 3.0 or enrolment in CSC specialist or major program",
+    "exclusions": "CSC318H1",
+    "level": 300,
+    "campus": "UTM",
+    "term": "2020 Winter",
+    "breadths": [],
+    "meeting_sections": [
+        {
+            "code": "L0101",
+            "instructors": ["D Wigdor"],
+            "times": [
+                {
+                    "day": "TUESDAY",
+                    "start": 68400,
+                    "end": 75600,
+                    "duration": 7200,
+                    "location": "MN 2190"
+                }, {
+                    "day": "WEDNESDAY",
+                    "start": 68400,
+                    "end": 75600,
+                    "duration": 7200,
+                    "location": "MN 2190"
+                }
+            ],
+            "size": 60,
+            "enrolment": 0
+        }, {
+            "code": "T0101",
+            "instructors": [],
+            "times": [
+                {
+                    "day": "THURSDAY",
+                    "start": 68400,
+                    "end": 75600,
+                    "duration": 7200,
+                    "location": "MN 2190"
+                }
+            ],
+            "size": 60,
+            "enrolment": 0
+        }
+    ]
+}
