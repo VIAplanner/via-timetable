@@ -44,6 +44,7 @@ export default {
 		margin: 0px;
 		width: 550px;
 		background: #ededed;
+		border: 2px solid #3F5D79;
 		border-radius: 25px;
 	}
 
