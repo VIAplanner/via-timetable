@@ -41,7 +41,7 @@ export default {
 <style scoped>
 
 	.settings-container {
-		margin: 0px;
+		margin: 0px; 
 		width: 550px;
 		background: #ededed;
 		border: 4px solid #3F5D79;
