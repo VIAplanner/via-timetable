@@ -50,7 +50,15 @@ export default {
   },
   methods: {
     getFormattedTime(start, end) {
-      return `${(start / 3600) % 12}:00 - ${(end / 3600) % 12}:00`;
+      var s = (start/3600) % 12
+      if (s == 0) {
+        s = 12
+      }
+      var e = (end / 3600) % 12
+      if (end == 0) {
+        end = 12
+      }
+      return `${s}:00 - ${e}:00`;
     }
   }
 };

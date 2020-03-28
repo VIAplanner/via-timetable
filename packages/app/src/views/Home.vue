@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <course-section-picker />
+        <course-section-picker :timetable="timetable"/>
       </v-col>
     </v-row>
     <v-row>

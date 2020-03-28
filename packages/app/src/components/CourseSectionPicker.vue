@@ -1,62 +1,227 @@
 <template>
-  <v-list rounded subheader two-line flat>
-      <v-subheader>Lectures</v-subheader>
-      <v-list-item-group multiple>
-        <v-list-item v-for="lecture in lectures" :key="lecture.code">
-          <v-list-item-content>
-            <v-list-item-title>{{lecture.code}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{lecture.location}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{lecture.instructors[0]}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-radio></v-radio>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list-item-group>
-      <v-subheader v-if="tutorials.length > 0">Tutorials</v-subheader>
-      <v-list-item-group v-if="tutorials.length > 0" multiple>
-        <v-list-item v-for="tutorial in tutorials" :key="tutorial.code">
-          <v-list-item-content>
-            <v-list-item-title>{{tutorial.code}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{tutorial.location}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{tutorial.instructors[0]}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-radio></v-radio>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list-item-group>
-      <v-subheader>Practicals</v-subheader>
-      <v-list-item-group multiple>
-        <v-list-item v-for="practical in practicals" :key="practical.code">
-          <v-list-item-content>
-            <v-list-item-title>{{practical.code}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{practical.location}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-content>
-            <v-list-item-title>{{practical.instructors[0]}}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-radio></v-radio>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list-item-group>
-  </v-list>
+  <v-container>
+    <v-dialog v-model="dialog" width="800px">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">Pick Section</v-btn>
+      </template>
+      <v-toolbar color="teal" dark>
+        <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
+        <v-spacer />
+        <v-btn text>Done</v-btn>
+      </v-toolbar>
+      <v-list rounded subheader two-line flat>
+        <v-subheader>Lectures</v-subheader>
+        <v-row>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 80px">Activity</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 50px">Time</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 32px">location</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 10px">Instructor</h4>
+          </v-col>
+        </v-row>
+        <v-divider />
+        <v-list-item-group mandatory v-model="selectedLectures">
+          <v-list-item v-for="lecture in lectures" :key="lecture.code" style="margin-bottom: 0px;">
+            <template v-slot:default="{ active, toggle }">
+              <v-list-item-action>
+                <v-radio-group>
+                  <v-radio :value="active" @click="toggle"></v-radio>
+                </v-radio-group>
+              </v-list-item-action>
+
+              <v-list-item-content class="content-no-padding">
+                <v-row>
+                  <v-col class="contain" cols="2">
+                    <v-row class="center-vertical">
+                      <v-col>
+                        <v-list-item-title>{{lecture.code}}</v-list-item-title>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+
+                  <v-col cols="4">
+                    <v-row v-for="time in lecture.times" :key="time.day">
+                      <v-col>
+                        <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+
+                  <v-col>
+                    <v-row v-for="time in lecture.times" :key="time.day">
+                      <v-col>
+                        <div>{{time.location}}</div>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+
+                  <v-col class="contain">
+                    <v-row class="center-vertical">
+                      <v-col>
+                        <v-list-item-title>{{lecture.instructors[0]}}</v-list-item-title>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-list-item-content>
+            </template>
+          </v-list-item>
+        </v-list-item-group>
+
+        <v-subheader v-if="tutorials.length > 0">Tutorials</v-subheader>
+        <v-row v-if="tutorials.length > 0">
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 80px">Activity</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 50px">Time</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 32px">location</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 10px">Instructor</h4>
+          </v-col>
+        </v-row>
+        <v-divider v-if="tutorials.length > 0"></v-divider>
+        <v-list-item-group v-if="tutorials.length > 0" mandatory>
+          <v-list-item v-for="tutorial in tutorials" :key="tutorial.code">
+            <v-list-item-action>
+              <v-radio></v-radio>
+            </v-list-item-action>
+
+            <v-list-item-content class="content-no-padding">
+              <v-row>
+                <v-col class="contain" cols="2">
+                  <v-row class="center-vertical">
+                    <v-col>
+                      <v-list-item-title>{{tutorial.code}}</v-list-item-title>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col cols="4">
+                  <v-row v-for="time in tutorial.times" :key="time.day">
+                    <v-col>
+                      <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col>
+                  <v-row v-for="time in tutorial.times" :key="time.day">
+                    <v-col>
+                      <div>{{time.location}}</div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col class="contain">
+                  <v-row class="center-vertical">
+                    <v-col>
+                      <v-list-item-title>TBA</v-list-item-title>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+
+        <v-subheader v-if="practicals.length > 0">Practicals</v-subheader>
+        <v-row v-if="practicals.length > 0">
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 80px">Activity</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 50px">Time</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 32px">location</h4>
+          </v-col>
+          <v-col class="header-bottom-padding">
+            <h4 style="margin-left: 10px">Instructor</h4>
+          </v-col>
+        </v-row>
+        <v-divider v-if="practicals.length > 0"></v-divider>
+        <v-list-item-group v-if="practicals.length > 0" mandatory>
+          <v-list-item v-for="practical in practicals" :key="practical.code">
+            <v-list-item-action>
+              <v-radio></v-radio>
+            </v-list-item-action>
+
+            <v-list-item-content class="content-no-padding">
+              <v-row>
+                <v-col class="contain" cols="2">
+                  <v-row class="center-vertical">
+                    <v-col>
+                      <v-list-item-title>{{practical.code}}</v-list-item-title>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col cols="4">
+                  <v-row v-for="time in practical.times" :key="time.day">
+                    <v-col>
+                      <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col>
+                  <v-row v-for="time in practical.times" :key="time.day">
+                    <v-col>
+                      <div>{{time.location}}</div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+                <v-col class="contain">
+                  <v-row class="center-vertical">
+                    <v-col>
+                      <v-list-item-title>TBA</v-list-item-title>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "course-selection-picker",
+  props: {
+    timetable: {
+      type: Object
+    }
+  },
+  methods: {
+    getFormattedTime(start, end) {
+      var s = (start / 3600) % 12;
+      if (s == 0) {
+        s = 12;
+      }
+      var e = (end / 3600) % 12;
+      if (end == 0) {
+        end = 12;
+      }
+      return `${s}:00 - ${e}:00`;
+    },
+    getProperDayName(day) {
+      return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+    }
+  },
   computed: {
     lectures() {
       return this.course.meeting_sections.filter(
@@ -73,10 +238,13 @@ export default {
         section => section.code.charAt(0) === "P"
       );
     }
+    // isOccupied(start, end) {
+
+    // }
   },
   data() {
     return {
-      lecture: "",
+      selectedLectures: [],
       course: {
         code: "CSC108H5F",
         name: "Introduction to Computer Programming",
@@ -213,7 +381,7 @@ export default {
                 start: 32400,
                 end: 36000,
                 duration: 3600,
-                location: "MN 1270"
+                location: "MN 1220"
               },
               {
                 day: "WEDNESDAY",
@@ -635,4 +803,27 @@ export default {
 </script>
 
 <style>
+.contain {
+  position: relative;
+}
+
+.center-vertical {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.content-no-padding {
+  padding: 0px;
+}
+
+.container-no-padding {
+  padding-left: 10px;
+}
+
+.header-bottom-padding {
+  padding-bottom: 5px;
+}
 </style>
