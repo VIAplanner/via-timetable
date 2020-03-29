@@ -7,192 +7,88 @@
       <v-toolbar color="teal" dark>
         <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
         <v-spacer />
-        <v-btn text>Done</v-btn>
+        <v-btn text @click="dialog=false">Done</v-btn>
       </v-toolbar>
       <v-list rounded subheader two-line flat>
-        <v-subheader>Lectures</v-subheader>
-        <v-row>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 80px">Activity</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 50px">Time</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 32px">location</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 10px">Instructor</h4>
-          </v-col>
-        </v-row>
-        <v-divider />
-        <v-list-item-group mandatory v-model="selectedLectures">
-          <v-list-item v-for="lecture in lectures" :key="lecture.code" style="margin-bottom: 0px;">
-            <template v-slot:default="{ active, toggle }">
-              <v-list-item-action>
-                <v-radio-group>
-                  <v-radio :value="active" @click="toggle"></v-radio>
-                </v-radio-group>
-              </v-list-item-action>
-
-              <v-list-item-content class="content-no-padding">
-                <v-row>
-                  <v-col class="contain" cols="2">
-                    <v-row class="center-vertical">
-                      <v-col>
-                        <v-list-item-title>{{lecture.code}}</v-list-item-title>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-
-                  <v-col cols="4">
-                    <v-row v-for="time in lecture.times" :key="time.day">
-                      <v-col>
-                        <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-
-                  <v-col>
-                    <v-row v-for="time in lecture.times" :key="time.day">
-                      <v-col>
-                        <div>{{time.location}}</div>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-
-                  <v-col class="contain">
-                    <v-row class="center-vertical">
-                      <v-col>
-                        <v-list-item-title>{{lecture.instructors[0]}}</v-list-item-title>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-list-item-content>
-            </template>
-          </v-list-item>
-        </v-list-item-group>
-
-        <v-subheader v-if="tutorials.length > 0">Tutorials</v-subheader>
-        <v-row v-if="tutorials.length > 0">
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 80px">Activity</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 50px">Time</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 32px">location</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 10px">Instructor</h4>
-          </v-col>
-        </v-row>
-        <v-divider v-if="tutorials.length > 0"></v-divider>
-        <v-list-item-group v-if="tutorials.length > 0" mandatory>
-          <v-list-item v-for="tutorial in tutorials" :key="tutorial.code">
-            <v-list-item-action>
-              <v-radio></v-radio>
-            </v-list-item-action>
-
-            <v-list-item-content class="content-no-padding">
-              <v-row>
-                <v-col class="contain" cols="2">
-                  <v-row class="center-vertical">
-                    <v-col>
-                      <v-list-item-title>{{tutorial.code}}</v-list-item-title>
-                    </v-col>
-                  </v-row>
-                </v-col>
-
-                <v-col cols="4">
-                  <v-row v-for="time in tutorial.times" :key="time.day">
-                    <v-col>
-                      <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
-                    </v-col>
-                  </v-row>
-                </v-col>
-
+        <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
+          <div v-if="meetingSections.length > 0">
+            <v-radio-group
+              v-model="selectedMeetingSections[activityType]"
+              :mandatory="false"
+              style="top-margin: 0px;"
+            >
+              <v-subheader
+                v-if="meetingSections.length > 0"
+                class="activity-header"
+              >{{activityType}}s</v-subheader>
+              <v-row class="activity-label">
                 <v-col>
-                  <v-row v-for="time in tutorial.times" :key="time.day">
-                    <v-col>
-                      <div>{{time.location}}</div>
-                    </v-col>
-                  </v-row>
+                  <h4 style="margin-left: 80px;">Activity</h4>
                 </v-col>
-
-                <v-col class="contain">
-                  <v-row class="center-vertical">
-                    <v-col>
-                      <v-list-item-title>TBA</v-list-item-title>
-                    </v-col>
-                  </v-row>
+                <v-col class="activity-label">
+                  <h4 style="margin-left: 50px">Time</h4>
+                </v-col>
+                <v-col class="activity-label">
+                  <h4 style="margin-left: 25px">Location</h4>
+                </v-col>
+                <v-col class="activity-label">
+                  <h4 style="margin-left: 5px">Instructor</h4>
                 </v-col>
               </v-row>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
+              <v-divider class="activity-divider" />
+              <v-list-item-group>
+                <v-list-item
+                  v-for="meetingSection in meetingSections"
+                  :key="meetingSection.code"
+                  style="margin-bottom: 0px;"
+                >
+                  <v-list-item-action>
+                    <v-radio :value="meetingSection.code"></v-radio>
+                  </v-list-item-action>
 
-        <v-subheader v-if="practicals.length > 0">Practicals</v-subheader>
-        <v-row v-if="practicals.length > 0">
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 80px">Activity</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 50px">Time</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 32px">location</h4>
-          </v-col>
-          <v-col class="header-bottom-padding">
-            <h4 style="margin-left: 10px">Instructor</h4>
-          </v-col>
-        </v-row>
-        <v-divider v-if="practicals.length > 0"></v-divider>
-        <v-list-item-group v-if="practicals.length > 0" mandatory>
-          <v-list-item v-for="practical in practicals" :key="practical.code">
-            <v-list-item-action>
-              <v-radio></v-radio>
-            </v-list-item-action>
+                  <v-list-item-content class="content-no-padding">
+                    <v-row>
+                      <v-col class="contain" cols="2">
+                        <v-row class="center-vertical">
+                          <v-col>
+                            <v-list-item-title>{{meetingSection.code}}</v-list-item-title>
+                          </v-col>
+                        </v-row>
+                      </v-col>
 
-            <v-list-item-content class="content-no-padding">
-              <v-row>
-                <v-col class="contain" cols="2">
-                  <v-row class="center-vertical">
-                    <v-col>
-                      <v-list-item-title>{{practical.code}}</v-list-item-title>
-                    </v-col>
-                  </v-row>
-                </v-col>
+                      <v-col cols="4">
+                        <v-row v-for="time in meetingSection.times" :key="time.day">
+                          <v-col>
+                            <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
 
-                <v-col cols="4">
-                  <v-row v-for="time in practical.times" :key="time.day">
-                    <v-col>
-                      <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
-                    </v-col>
-                  </v-row>
-                </v-col>
+                      <v-col>
+                        <v-row v-for="time in meetingSection.times" :key="time.day">
+                          <v-col>
+                            <div>{{time.location}}</div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
 
-                <v-col>
-                  <v-row v-for="time in practical.times" :key="time.day">
-                    <v-col>
-                      <div>{{time.location}}</div>
-                    </v-col>
-                  </v-row>
-                </v-col>
-
-                <v-col class="contain">
-                  <v-row class="center-vertical">
-                    <v-col>
-                      <v-list-item-title>TBA</v-list-item-title>
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
+                      <v-col class="contain">
+                        <v-row class="center-vertical">
+                          <v-col>
+                            <v-list-item-title
+                              v-if="activityType === 'lecture'"
+                            >{{meetingSection.instructors[0]}}</v-list-item-title>
+                            <v-list-item-title v-else>TBA</v-list-item-title>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-radio-group>
+          </div>
+        </v-container>
       </v-list>
     </v-dialog>
   </v-container>
@@ -223,20 +119,18 @@ export default {
     }
   },
   computed: {
-    lectures() {
-      return this.course.meeting_sections.filter(
-        section => section.code.charAt(0) === "L"
-      );
-    },
-    tutorials() {
-      return this.course.meeting_sections.filter(
-        section => section.code.charAt(0) === "T"
-      );
-    },
-    practicals() {
-      return this.course.meeting_sections.filter(
-        section => section.code.charAt(0) === "P"
-      );
+    activities() {
+      return {
+        lecture: this.course.meeting_sections.filter(
+          section => section.code.charAt(0) === "L"
+        ),
+        tutorial: this.course.meeting_sections.filter(
+          section => section.code.charAt(0) === "T"
+        ),
+        practical: this.course.meeting_sections.filter(
+          section => section.code.charAt(0) === "P"
+        )
+      };
     }
     // isOccupied(start, end) {
 
@@ -244,7 +138,11 @@ export default {
   },
   data() {
     return {
-      selectedLectures: [],
+      selectedMeetingSections: {
+        lecture: null,
+        tutorial: null,
+        practical: null
+      },
       course: {
         code: "CSC108H5F",
         name: "Introduction to Computer Programming",
@@ -796,7 +694,8 @@ export default {
           }
         ]
       },
-      active: false
+      active: false,
+      dialog: false
     };
   }
 };
@@ -823,7 +722,20 @@ export default {
   padding-left: 10px;
 }
 
-.header-bottom-padding {
-  padding-bottom: 5px;
+.activity-label {
+  padding-bottom: 0px;
+  font-weight: 200 !important;
+  font-size: 20px;
+}
+
+.activity-header {
+  font-size: 1.75rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.activity-divider {
+  margin: 4px 72px;
 }
 </style>
+
