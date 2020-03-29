@@ -115,7 +115,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
     combinations: [
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -144,7 +144,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'P0101',
+                code: 'CSC108H5FP0101',
                 instructors: [],
                 times: [
                     {
@@ -159,7 +159,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
         ],
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -188,7 +188,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'P0102',
+                code: 'CSC108H5FP0102',
                 instructors: [],
                 times: [
                     {
@@ -208,7 +208,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
     combinations: [
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -237,7 +237,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'T0101',
+                code: 'CSC108H5FT0101',
                 instructors: [],
                 times: [
                     {
@@ -252,7 +252,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
         ],
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -281,7 +281,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'T0102',
+                code: 'CSC108H5FT0102',
                 instructors: [],
                 times: [
                     {
@@ -300,7 +300,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
 const COURSES_SECTION_L1_P2: MeetingSection[][] = [
     [
         {
-            code: 'L0101',
+            code: 'CSC108H5FL0101',
             instructors: [
                 'A Petersen',
             ],
@@ -329,7 +329,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
             ],
         },
         {
-            code: 'P0101',
+            code: 'CSC108H5FP0101',
             instructors: [],
             times: [
                 {
@@ -344,7 +344,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
     ],
     [
         {
-            code: 'L0101',
+            code: 'CSC108H5FL0101',
             instructors: [
                 'A Petersen',
             ],
@@ -373,7 +373,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
             ],
         },
         {
-            code: 'P0102',
+            code: 'CSC108H5FP0102',
             instructors: [],
             times: [
                 {

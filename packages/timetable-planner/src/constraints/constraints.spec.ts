@@ -1,10 +1,11 @@
 import test from 'ava';
 import {timeOffs, idleTime} from './constraints';
 
-const timetables1: Timetable[] = [{
+const timetables: Timetable[] = [{
     FRIDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'FRIDAY',
             duration: 3600,
             end: 36000,
@@ -14,7 +15,8 @@ const timetables1: Timetable[] = [{
     ],
     MONDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 3600,
             end: 36000,
@@ -22,7 +24,8 @@ const timetables1: Timetable[] = [{
             start: 32400,
         },
         {
-            
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 7200,
             end: 46800,
@@ -34,105 +37,8 @@ const timetables1: Timetable[] = [{
     TUESDAY: [],
     WEDNESDAY: [
         {
-            
-            day: 'WEDNESDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-    ],
-},
-{
-    MONDAY:[],
-    THURSDAY:[],
-    TUESDAY:[],
-    WEDNESDAY:[],
-    FRIDAY:[],
-}]
-const timetables2: Timetable[] = [{
-    FRIDAY: [
-        {
-            
-            day: 'FRIDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-    ],
-    MONDAY: [
-        {
-            
-            day: 'MONDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-        {
-            
-            day: 'MONDAY',
-            duration: 7200,
-            end: 46800,
-            location: 'DH 2010',
-            start: 39600,
-        },
-    ],
-    THURSDAY: [],
-    TUESDAY: [],
-    WEDNESDAY: [
-        {
-            
-            day: 'WEDNESDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-    ],
-},
-{
-    MONDAY:[],
-    THURSDAY:[],
-    TUESDAY:[],
-    WEDNESDAY:[],
-    FRIDAY:[],
-}]
-const timetables3: Timetable[] = [{
-    FRIDAY: [
-        {
-            
-            day: 'FRIDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-    ],
-    MONDAY: [
-        {
-            
-            day: 'MONDAY',
-            duration: 3600,
-            end: 36000,
-            location: 'MN 1270',
-            start: 32400,
-        },
-        {
-            
-            day: 'MONDAY',
-            duration: 7200,
-            end: 46800,
-            location: 'DH 2010',
-            start: 39600,
-        },
-    ],
-    THURSDAY: [],
-    TUESDAY: [],
-    WEDNESDAY: [
-        {
-            
+            code: "",
+        instructors: [],
             day: 'WEDNESDAY',
             duration: 3600,
             end: 36000,
@@ -155,40 +61,12 @@ const timeOff: Timetable = {
     WEDNESDAY:[],
     FRIDAY:[],
 }
-const timeOff2: Timetable = {
-    MONDAY:[],
-    THURSDAY:[],
-    TUESDAY:[],
-    WEDNESDAY:[],
-    FRIDAY:[{
-            
-        day: 'FRIDAY',
-        duration: 3600,
-        end: 36000,
-        location: 'MN 1270',
-        start: 32400,
-    },],
-}
-const timeOffsResult2: Timetable[] = [
-{
-    MONDAY:[],
-    THURSDAY:[],
-    TUESDAY:[],
-    WEDNESDAY:[],
-    FRIDAY:[{
-            
-        day: 'FRIDAY',
-        duration: 3600,
-        end: 36000,
-        location: 'MN 1270',
-        start: 32400,
-    },],
-}]
 const timeOffsResult: Timetable[] = [
     {
     FRIDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'FRIDAY',
             duration: 3600,
             end: 36000,
@@ -198,7 +76,8 @@ const timeOffsResult: Timetable[] = [
     ],
     MONDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 3600,
             end: 36000,
@@ -206,7 +85,8 @@ const timeOffsResult: Timetable[] = [
             start: 32400,
         },
         {
-
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 7200,
             end: 46800,
@@ -218,6 +98,8 @@ const timeOffsResult: Timetable[] = [
     TUESDAY: [],
     WEDNESDAY: [
         {
+            code: "",
+        instructors: [],
             day: 'WEDNESDAY',
             duration: 3600,
             end: 36000,
@@ -236,7 +118,8 @@ const timeOffsResult: Timetable[] = [
 const idleTimeMaxResult: Timetable = {
     FRIDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'FRIDAY',
             duration: 3600,
             end: 36000,
@@ -246,7 +129,8 @@ const idleTimeMaxResult: Timetable = {
     ],
     MONDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 3600,
             end: 36000,
@@ -254,7 +138,8 @@ const idleTimeMaxResult: Timetable = {
             start: 32400,
         },
         {
-            
+            code: "",
+        instructors: [],
             day: 'MONDAY',
             duration: 7200,
             end: 46800,
@@ -266,7 +151,8 @@ const idleTimeMaxResult: Timetable = {
     TUESDAY: [],
     WEDNESDAY: [
         {
-            
+            code: "",
+        instructors: [],
             day: 'WEDNESDAY',
             duration: 3600,
             end: 36000,
@@ -284,16 +170,14 @@ const idleTimeMinResult: Timetable = {
 }
 
 test('Test timeoffs', async t => {
-    const timetable = timeOffs(timetables1, timeOff)
+    const timetable = timeOffs(timetables, timeOff)
     t.deepEqual(timetable, timeOffsResult)
-    const timetable2 = timeOffs(timetables1, timeOff2)
-    t.deepEqual(timetable2, timeOffsResult2)
 })
 test('Test max idle time', async t => {
-    const timetable = idleTime(timetables2, "MAX")
+    const timetable = idleTime(timetables, "MAX")
     t.deepEqual(timetable, idleTimeMaxResult)
 })
 test('Test min idle time', async t => {
-    const timetable = idleTime(timetables3, "MIN")
+    const timetable = idleTime(timetables, "MIN")
     t.deepEqual(timetable, idleTimeMinResult)
 })

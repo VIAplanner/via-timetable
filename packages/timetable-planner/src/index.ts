@@ -85,7 +85,10 @@ const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
     }
     for (const meetingSection of meetingSectionCombo) {
         for (const time of meetingSection.times) {
-            timetable[time.day].push(time)
+            const timetabletime: TimetableSection = {code: meetingSection.code, 
+                instructors: meetingSection.instructors,
+            ...time}
+            timetable[time.day].push(timetabletime)
         }
     }
     if (checkOverlap(timetable)) {

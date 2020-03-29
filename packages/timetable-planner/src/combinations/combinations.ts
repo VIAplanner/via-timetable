@@ -4,7 +4,9 @@ const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionC
     const practicals = course.meeting_sections.filter(section => section.code.charAt(0) === "P");
     const lec_tut_combinations = [];
     for (const lecture of lectures) {
+        lecture.code = course.code + lecture.code
         for (const tutorial of tutorials) {
+            tutorial.code = course.code + tutorial.code
             lec_tut_combinations.push([lecture, tutorial]);
         }
         if (tutorials.length === 0) {
@@ -14,6 +16,7 @@ const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionC
     let totalCombinations = []
     for (const section of lec_tut_combinations) {
         for (const practical of practicals) {
+            practical.code = course.code + practical.code
            totalCombinations.push([...section, practical])
         }
         if (practicals.length === 0){
