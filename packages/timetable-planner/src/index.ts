@@ -1,78 +1,30 @@
 import { courseCombinations, courseMeetingSectionCombinations, } from "./combinations/combinations"
 
-const checkOverlap = (timetable: Timetable): boolean => {
+const checkOverlapForDay = (timetable: Timetable, day: string) => {
     let section = 0
-    while (section < timetable.MONDAY.length) {
+    while (section < timetable[day].length) {
         let section2 = +section + +1
-        while (section2 < timetable.MONDAY.length) {
-            if ((timetable.MONDAY[section].start >= timetable.MONDAY[section2].start &&
-                timetable.MONDAY[section].start < timetable.MONDAY[section2].end) ||
-                (timetable.MONDAY[section].end > timetable.MONDAY[section2].start &&
-                    timetable.MONDAY[section].end <= timetable.MONDAY[section2].end)) {
-                return false
+        while (section2 < timetable[day].length) {
+            if ((timetable[day][section].start >= timetable[day][section2].start &&
+                timetable[day][section].start < timetable[day][section2].end) ||
+                (timetable[day][section].end > timetable[day][section2].start &&
+                    timetable[day][section].end <= timetable[day][section2].end)) {
+                return true
             }
             section2++
         }
         section++
     }
-    section = 0
-    while (section < timetable.TUESDAY.length) {
-        let section2 = +section + +1
-        while (section2 < timetable.TUESDAY.length) {
-            if ((timetable.TUESDAY[section].start >= timetable.TUESDAY[section2].start &&
-                timetable.TUESDAY[section].start < timetable.TUESDAY[section2].end) ||
-                (timetable.TUESDAY[section].end > timetable.TUESDAY[section2].start &&
-                    timetable.TUESDAY[section].end <= timetable.TUESDAY[section2].end)) {
-                return false
-            }
-            section2++
-        }
-        section++
-    }
-    section = 0
-    while (section < timetable.WEDNESDAY.length) {
-        let section2 = +section + +1
-        while (section2 < timetable.WEDNESDAY.length) {
-            if ((timetable.WEDNESDAY[section].start >= timetable.WEDNESDAY[section2].start &&
-                timetable.WEDNESDAY[section].start < timetable.WEDNESDAY[section2].end) ||
-                (timetable.WEDNESDAY[section].end > timetable.WEDNESDAY[section2].start &&
-                    timetable.WEDNESDAY[section].end <= timetable.WEDNESDAY[section2].end)) {
-                return false
-            }
-            section2++
-        }
-        section++
-    }
-    section = 0
-    while (section < timetable.THURSDAY.length) {
-        let section2 = +section + +1
-        while (section2 < timetable.THURSDAY.length) {
-            if ((timetable.THURSDAY[section].start >= timetable.THURSDAY[section2].start &&
-                timetable.THURSDAY[section].start < timetable.THURSDAY[section2].end) ||
-                (timetable.THURSDAY[section].end > timetable.THURSDAY[section2].start &&
-                    timetable.THURSDAY[section].end <= timetable.THURSDAY[section2].end)) {
-                return false
-            }
-            section2++
-        }
-        section++
-    }
-    section = 0
-    while (section < timetable.FRIDAY.length) {
-        let section2 = +section + +1
-        while (section2 < timetable.FRIDAY.length) {
-            if ((timetable.FRIDAY[section].start >= timetable.FRIDAY[section2].start &&
-                timetable.FRIDAY[section].start < timetable.FRIDAY[section2].end) ||
-                (timetable.FRIDAY[section].end > timetable.FRIDAY[section2].start &&
-                    timetable.FRIDAY[section].end <= timetable.FRIDAY[section2].end)) {
-                return false
-            }
-            section2++
-        }
-        section++
-    }
-    return true
+    return false
+}
 
+const overlapExists = (timetable: Timetable): boolean => {
+    const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
+    let exists = false
+    for (const day of days) {
+        exists = exists && checkOverlapForDay(timetable, day)
+    }
+    return exists
 }
 
 const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
@@ -88,12 +40,10 @@ const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
             timetable[time.day].push(time)
         }
     }
-    if (checkOverlap(timetable)) {
-        return timetable
-    }
-    else {
+    if (overlapExists(timetable)) {
         return null
     }
+    return timetable
 }
 
 const generateTimetables = (courses: Course[]): Timetable[] => {
@@ -116,5 +66,5 @@ const generateTimetables = (courses: Course[]): Timetable[] => {
 export {
     generateTimetables,
     createTimetable,
-    checkOverlap
+    overlapExists
 }
