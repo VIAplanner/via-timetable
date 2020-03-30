@@ -25,7 +25,7 @@ const typeDefs = gql`
         campus: String, 
         term: String,
         breadths: [Int],
-        meetingSections: [MeetingSection]
+        meeting_sections: [MeetingSection]
      }
      type MeetingSection{
         code: String,
@@ -53,11 +53,14 @@ const typeDefs = gql`
          code: String,
          type: String,
          notes: [String]!,
-         courses: [YearCourses]
+         courses: YearCourses
      }
      type YearCourses {
-         year: String,
-         courses: [String]
+         year1: [String],
+         year2: [String],
+         year3: [String],
+         year4: [String],
+    
      }
      type Query {
          courses: [Course],
@@ -68,7 +71,7 @@ const typeDefs = gql`
 /** 
  * Defining schema of mongoDB for courses and programs. 
  * Notice how the typedef are identical to the schemas
- */ 
+ */
 const CourseSchema = new Schema({
     id: String,
     code: String,
@@ -82,7 +85,7 @@ const CourseSchema = new Schema({
     campus: String,
     term: String,
     breadths: [Number],
-    meetingSections:
+    meeting_sections:
         [{
             code: String,
             instructors: [String],
@@ -105,9 +108,9 @@ const ProgramSchema = new Schema({
         name: String,
         level: String,
         code: String,
-        type: String,
-        notes: String,
-        courses: [{ Number: [String] }]
+        type: Object,
+        notes: [String],
+        courses: [{ Int: [String] }]
     }],
 });
 
@@ -118,7 +121,7 @@ const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
 /** 
  * Respond to queries by searching in the model created above, 
  * then return a json with the correct data
- */ 
+ */
 const resolvers = {
     Query: {
         courses: () => {

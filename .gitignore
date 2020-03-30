@@ -5,3 +5,4 @@ packages/unified-backend/.DS_Store
 packages/unified-backend/graphqlapp/.DS_Store
 .history
 packages/courses-scraper/output
+.vscode
