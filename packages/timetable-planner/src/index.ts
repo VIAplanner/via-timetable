@@ -22,7 +22,7 @@ const overlapExists = (timetable: Timetable): boolean => {
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
     let exists = false
     for (const day of days) {
-        exists = exists && checkOverlapForDay(timetable, day)
+        exists = exists || checkOverlapForDay(timetable, day)
     }
     return exists
 }
