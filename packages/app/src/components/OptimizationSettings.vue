@@ -3,6 +3,18 @@
 		<p class="header-style radiobutton-style">
 			Optimzation Settings
 		</p>
+		
+		<b-form-group label="Button-group style checkboxes with variant primary and large buttons" >
+			<b-form-checkbox-group
+			style="color:red !important"
+			v-model="selectedDays"
+			:options="weekdays"
+			buttons
+			button-variant="primary"
+			size="medium"
+			></b-form-checkbox-group>
+		</b-form-group>
+	
 		<v-row>
 		<v-col>
 			<v-radio-group v-model="selectedIdleOption" :mandatory="false" class="radiobutton-style" style="margin-left: 10px;">
@@ -64,7 +76,7 @@ export default {
 		margin-bottom: 0px;
 		margin-left: 10px;
 		font-size: 25px;
-		color: #3F5D79;
+		color: #3F5D79 !important;
 	}
 
 </style>
