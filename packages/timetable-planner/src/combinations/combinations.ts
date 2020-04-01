@@ -1,3 +1,9 @@
+/**
+ *
+ * Returns the combinations of sections of a single course
+ * @param {Course} course
+ * @returns {CourseMeetingSectionCombinations}
+ */
 const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionCombinations => {
     const lectures = course.meeting_sections.filter(section => section.code.charAt(0) === "L");
     const tutorials = course.meeting_sections.filter(section => section.code.charAt(0) === "T");
@@ -26,10 +32,23 @@ const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionC
     return { code: course.code, combinations: totalCombinations }
 }
 
+/**
+ *
+ * Returns the combination of courses' section combinations
+ * @param {CourseMeetingSectionCombinations[]} courseMeetingSectionCombos
+ * @returns {MeetingSection[][]}
+ */
 const courseCombinations = (courseMeetingSectionCombos: CourseMeetingSectionCombinations[]): MeetingSection[][] => {
     
     const outputs: MeetingSection[][] = [];
 
+    /**
+     *
+     * This recursive builtin starts from the first array and takes one element from each array to build the combination of arrays
+     * @param {CourseMeetingSectionCombinations[]} courseMeetingSecCombos
+     * @param {number} [whichArray=0]
+     * @param {MeetingSection[]} [output=[]]
+     */
     const permute = (courseMeetingSecCombos: CourseMeetingSectionCombinations[], whichArray=0, output:MeetingSection[] =[]) => {
         courseMeetingSecCombos[whichArray].combinations.forEach((arrayElement)=>{
             if( whichArray === courseMeetingSecCombos.length - 1 ){            

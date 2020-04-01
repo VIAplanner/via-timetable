@@ -15,6 +15,14 @@ interface MeetingSectionTime {
     location: string
 }
 
+interface Timetable {
+    MONDAY: MeetingSectionTime[],
+    TUESDAY: MeetingSectionTime[],
+    WEDNESDAY: MeetingSectionTime[],
+    THURSDAY: MeetingSectionTime[],
+    FRIDAY: MeetingSectionTime[]
+}
+
 interface Course {
     code: string,
     meeting_sections: MeetingSection[]
