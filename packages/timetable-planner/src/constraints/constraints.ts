@@ -14,7 +14,7 @@ const timeOffs = (timetables: Timetable[], timeOffs: Timetable): Timetable[] => 
         timetable.WEDNESDAY.push(...timeOffs.WEDNESDAY)
         timetable.THURSDAY.push(...timeOffs.THURSDAY)
         timetable.FRIDAY.push(...timeOffs.FRIDAY)
-        if (overlapExists(timetable)) {
+        if (!overlapExists(timetable)) {
             resultTimetables.push(timetable)
         }
     }
@@ -69,7 +69,7 @@ const idleTime = (timetables: Timetable[], option: string): Timetable => {
     if (option == "MAX") {
         return timetables[totalSumList.indexOf(Math.max(...totalSumList))]
     }
-    else if (option == "MIN") {
+    else{
         return timetables[totalSumList.indexOf(Math.min(...totalSumList))]
     }
 }
