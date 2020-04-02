@@ -69,7 +69,7 @@ const idleTime = (timetables: Timetable[], option: string): Timetable => {
     if (option == "MAX") {
         return timetables[totalSumList.indexOf(Math.max(...totalSumList))]
     }
-    else if (option == "MIN") {
+    else{
         return timetables[totalSumList.indexOf(Math.min(...totalSumList))]
     }
 }
