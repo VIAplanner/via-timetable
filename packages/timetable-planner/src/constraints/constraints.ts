@@ -14,7 +14,7 @@ const timeOffs = (timetables: Timetable[], timeOffs: Timetable): Timetable[] => 
         timetable.WEDNESDAY.push(...timeOffs.WEDNESDAY)
         timetable.THURSDAY.push(...timeOffs.THURSDAY)
         timetable.FRIDAY.push(...timeOffs.FRIDAY)
-        if (overlapExists(timetable)) {
+        if (!overlapExists(timetable)) {
             resultTimetables.push(timetable)
         }
     }
