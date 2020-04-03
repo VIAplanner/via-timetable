@@ -11,7 +11,7 @@
         <v-col cols="11">
           <v-row name="week-days-axis">
             <v-col v-for="weekday in weekdays" :key="weekday">
-              <h2 style="margin-bottom:16px;">{{weekday}}</h2>
+              <h2 class="day-label">{{weekday}}</h2>
             </v-col>
           </v-row>
           <v-row name="timetable-content">
@@ -43,22 +43,11 @@ export default {
     timetable: {
       type: Object,
     },
+    courseCodeColorMap: {
+      type: Map,
+    },
   },
   computed: {
-    courseCodeColorMap() {
-      const codeColorMap = new Map();
-      var index = 0;
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (!codeColorMap.has(event.courseCode)) {
-            codeColorMap.set(event.courseCode, this.colors[index]);
-            index++;
-          }
-        }
-      }
-      return codeColorMap;
-    },
     timetableStart() {
       var earliest = 9;
       for (let day in this.timetable) {
@@ -138,6 +127,10 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+* {
+font-family: "Montserrat", sans-serif;
+}
 .col {
   padding: 0px !important;
 }
@@ -165,5 +158,10 @@ export default {
 
 .time-label {
   text-align: right;
+}
+
+.day-label {
+  margin-bottom: 16px;
+  text-align: center;
 }
 </style>

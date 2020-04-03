@@ -89,9 +89,6 @@ export const withValidSecondYearComputerScienceStudentSchedule = () => ({
             }
         }
     },
-    template: '<timetable :timetable="timetable"/>',
-
-
-
+    template: '<timetable :timetable="timetable" :courseCodeColorMap="{CSC258H5S: "#FBB347", STA258H5S: "#83CC77", CSC207H5S: "#4C91F9", CSC290H5S: "#F26B83", CSC209H5S: "#5CD1EB"}" />',
 })
 
