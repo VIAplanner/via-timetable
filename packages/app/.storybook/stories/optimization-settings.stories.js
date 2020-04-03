@@ -7,7 +7,7 @@ export default {
   title: 'Optimization Settings'
 }
 
-export const withComputerScienceCourses = () => ({
+export const defaultSettings = () => ({
   components: { OptimizationSettings },
   template: '<optimization-settings />',
 })

@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <optimization-settings/>
+        <optimization-settings />
       </v-col>
     </v-row>
     <v-row>
@@ -95,7 +95,8 @@ export default {
           }
         }
       }
-      console.log(result)
+      console.log("WHAT I LOOK");
+      console.log(result);
       return result;
     }
   },
