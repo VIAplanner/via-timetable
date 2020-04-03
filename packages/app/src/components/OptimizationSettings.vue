@@ -2,16 +2,17 @@
   <v-container fluid class="settings-container">
     <v-row>
       <v-col class="pb-0">
-        <p class="header-style radiobutton-style">Optimzation Settings</p>
+        <p class="header-style">Optimzation Settings</p>
+        <span class="header-style" style="font-size: 18px;">Idel Time</span>
+        <span class="header-style" style="font-size: 18px; margin-left: 137px;">Days Off</span>
       </v-col>
-    </v-row>
+    </v-row>    
 
     <v-row class="pl-2">
       <v-radio-group
         hide-details
         v-model="selectedIdleOption"
         :mandatory="false"
-        class="radiobutton-style"
       >
         <v-col class="pb-0 pt-0">
           <v-radio
@@ -23,10 +24,8 @@
           ></v-radio>
         </v-col>
       </v-radio-group>
-    </v-row>
 
-    <v-row class="pl-2">
-      <v-col>
+      <v-col class="pb-0 pt-0 pl-7">
         <v-checkbox
           v-for="weekday in weekdays"
           :key="weekday"
@@ -38,6 +37,7 @@
         ></v-checkbox>
       </v-col>
     </v-row>
+    
   </v-container>
 </template>
 
@@ -58,21 +58,11 @@ export default {
 <style>
 .settings-container {
   margin: 0px;
-  width: 550px;
+  width: 375px;
+  height: 280px;
   background: #ededed;
   border: 4px solid #3f5d79;
   border-radius: 25px;
-}
-
-.checkbox-style {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 10px;
-}
-
-.radiobutton-style {
-  margin-top: 0px;
-  margin-bottom: 0px;
 }
 
 .header-style {
