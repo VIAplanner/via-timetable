@@ -2,6 +2,11 @@
   <v-container>
     <v-row>
       <v-col>
+        <optimization-settings/>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <course-search-bar v-if="!$apollo.loading" :courses="formattedCourses" />
       </v-col>
     </v-row>
@@ -25,11 +30,13 @@
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
+import OptimizationSettings from "../components/OptimizationSettings";
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 
 export default {
   components: {
+    OptimizationSettings,
     CourseSearchBar,
     Timetable,
     TimetableCourseCard
