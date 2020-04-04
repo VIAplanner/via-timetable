@@ -38,17 +38,18 @@ const switchSection = (timetable: Timetable, sectionName: string, course: Course
  */
 const lockSections = (sections: string[], timetables: Timetable[]): Timetable[] => {
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
-    const tempTimetables: Timetable[] = []
+    const timetablesWithSections: Timetable[] = []
     for (const timetable of timetables){
         for (const day of days){
             for (const section of timetable[day]){
-                if (sections.includes(section.code) && !tempTimetables.includes(timetable)){
-                    tempTimetables.push(timetable)
+                if (sections.includes(section.code) && !timetablesWithSections.includes(timetable)){
+                    timetablesWithSections.push(timetable)
                 }
             }
         }
     }
-    return tempTimetables
+    
+    return timetablesWithSections
 }
 export{
     switchSection,
