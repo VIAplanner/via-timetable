@@ -64,7 +64,7 @@ const typeDefs = gql`
      }
      type Query {
          courses: [Course],
-         programs: [Subject]
+         subjects: [Subject]
      }
     `;
 
@@ -127,7 +127,7 @@ const resolvers = {
         courses: () => {
             return CoursesModel.find();
         },
-        programs: () => {
+        subjects: () => {
             return ProgramModel.find();
         },
     },
