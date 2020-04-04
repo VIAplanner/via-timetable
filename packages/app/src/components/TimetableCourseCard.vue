@@ -32,31 +32,53 @@
           <v-col cols="3">{{meetingsection.instructorName}}</v-col>
         </v-row>
       </div>
-      <v-btn icon class="edit-button">
-        <v-icon>mdi-pencil-box-outline</v-icon>
-      </v-btn>
+      <v-dialog v-model="dialog" width="800px">
+        <template v-slot:activator="{ on }">
+          <v-btn icon class="edit-button" v-on="on">
+            <v-icon>mdi-pencil-box-outline</v-icon>
+          </v-btn>
+        </template>
+        <course-section-picker v-on:done="dialog=false" :timetable="timetable"/>
+      </v-dialog>
     </div>
   </div>
 </template>
 
 <script>
+
+import { mapState } from 'vuex'
+import CourseSectionPicker from "../components/CourseSectionPicker";
+
 export default {
-  name: "TimetableCourseCard",
+  name: "timetable-course-card",
+  components: {
+    CourseSectionPicker,
+  },
   props: {
     course: {
       type: Object,
       default: () => {}
     }
   },
+  computed: {
+    ...mapState([
+      'timetable',
+    ])
+  },
+  data() {
+    return {
+      dialog: false
+    }
+  },
   methods: {
     getFormattedTime(start, end) {
-      var s = (start/3600) % 12
+      var s = (start / 3600) % 12;
       if (s == 0) {
-        s = 12
+        s = 12;
       }
-      var e = (end / 3600) % 12
+      var e = (end / 3600) % 12;
       if (end == 0) {
-        end = 12
+        end = 12;
       }
       return `${s}:00 - ${e}:00`;
     }

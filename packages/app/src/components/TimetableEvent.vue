@@ -1,37 +1,46 @@
 <template>
   <div>
     <div v-if="event.start > 0">
-      <div
-        @mouseover="hovered = true"
-        @mouseleave="hovered = false"
-        class="event"
-        :class="durationClass(event.start, event.end)"
-        :style=" { background: color }"
-      >
-        <h4 class="course-code">{{courseCodeWithoutTerm(event.courseCode)}}</h4>
+      <v-dialog v-model="dialog" width="800px">
+        <template v-slot:activator="{ on }">
+          <div
+            @mouseover="hovered = true"
+            @mouseleave="hovered = false"
+            v-on="on"
+            class="event"
+            :class="durationClass(event.start, event.end)"
+            :style=" { background: color }"
+          >
+            <h4 class="course-code">{{courseCodeWithoutTerm(event.courseCode)}}</h4>
 
-        <div class="lock-button">
-          <v-btn dark @click="reverseLockStatus" v-if="locked" icon>
-            <v-icon>mdi-lock</v-icon>
-          </v-btn>
-          <v-btn dark @click="reverseLockStatus" v-if="!locked && hovered" icon>
-            <v-icon>mdi-lock-open</v-icon>
-          </v-btn>
-        </div>
+            <div class="lock-button">
+              <v-btn dark @click.stop="reverseLockStatus" v-if="locked" icon>
+                <v-icon>mdi-lock</v-icon>
+              </v-btn>
+              <v-btn dark @click.stop="reverseLockStatus" v-if="!locked && hovered" icon>
+                <v-icon>mdi-lock-open</v-icon>
+              </v-btn>
+            </div>
 
-        <div style="margin-left: 3px;">{{event.section}}</div>
+            <div style="margin-left: 3px;">{{event.section}}</div>
 
-        <div style="position: relative;">
-          <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
-          <div class="align-right">{{event.location}}</div>
-        </div>
-      </div>
+            <div style="position: relative;">
+              <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
+              <div class="align-right">{{event.location}}</div>
+            </div>
+          </div>
+        </template>
+        <course-section-picker v-on:done="dialog=false" :timetable="timetable" />
+      </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import CourseSectionPicker from "../components/CourseSectionPicker";
+
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
 };
@@ -47,13 +56,21 @@ export default {
       default: "#83CC77"
     }
   },
+  components: {
+    CourseSectionPicker,
+  },
   data() {
     return {
       locked: false,
-      hovered: false
+      hovered: false,
+      dialog: false
     };
   },
-
+  computed: {
+    ...mapState([
+      'timetable',
+    ])
+  },
   methods: {
     reverseLockStatus() {
       this.locked = !this.locked;
@@ -81,7 +98,7 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 * {
-font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .event {
@@ -89,10 +106,12 @@ font-family: "Montserrat", sans-serif;
   color: white;
   padding: 8px;
   position: relative;
+  cursor: pointer;
 }
 .empty-event {
   background: white !important;
   border: 0.2px solid gray;
+  cursor: default;
 }
 .one-hour {
   height: 84px;

@@ -1,14 +1,11 @@
 <template>
   <v-container>
-    <v-dialog v-model="dialog" width="800px">
-      <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Pick Section</v-btn>
-      </template>
-      <v-toolbar color="teal" dark>
+        <v-toolbar color="teal" dark>
         <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
         <v-spacer />
-        <v-btn text @click="dialog=false">Done</v-btn>
+        <v-btn text @click="$emit('done')">Done</v-btn>
       </v-toolbar>
+      <!-- <h4>{{selectedMeetingSections}}</h4> -->
       <v-list rounded subheader two-line flat>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
@@ -59,7 +56,18 @@
                       <v-col cols="4">
                         <v-row v-for="time in meetingSection.times" :key="time.day">
                           <v-col>
-                            <div>{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                            <v-tooltip top v-if="checkConflict(getProperDayName(time.day), 
+                                  time.start, time.end) != null">
+                              <template v-slot:activator="{ on }">
+                                <div
+                                  class="conflicting-time-orange" v-on="on"
+                                >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                              </template>
+                                Conflicts with {{checkConflict(getProperDayName(time.day), 
+                                time.start, time.end)}}
+                            </v-tooltip>
+                            <div v-else>{{getProperDayName(time.day)}} 
+                              {{getFormattedTime(time.start, time.end)}}</div>
                           </v-col>
                         </v-row>
                       </v-col>
@@ -90,11 +98,11 @@
           </div>
         </v-container>
       </v-list>
-    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: "course-selection-picker",
   props: {
@@ -103,6 +111,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'selectMeetingSection',  
+    ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {
@@ -116,7 +127,21 @@ export default {
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
-    }
+    },
+    checkConflict(day, start, end) {
+      const dayEvents = this.timetable[day];
+      for (var x = 0; x < dayEvents.length; x++) {
+        const event = dayEvents[x];
+        const time = this.getFormattedTime(event.start, event.end)
+        const ret = `${event.courseCode.slice(0, -3)} ${event.section}\n${time}`
+        if (event.start < start && event.end > start) {
+          return ret;
+        } else if (start <= event.start && event.start < end) {
+          return ret;
+        }
+      }
+      return null;
+    },
   },
   computed: {
     activities() {
@@ -132,9 +157,6 @@ export default {
         )
       };
     }
-    // isOccupied(start, end) {
-
-    // }
   },
   data() {
     return {
@@ -697,7 +719,32 @@ export default {
       active: false,
       dialog: false
     };
-  }
+  },
+  watch: {
+    selectedMeetingSections: {
+      deep: true, 
+      handler(sections) {
+      console.log("New Meeting Section selected")
+      this.selectMeetingSection({
+        // hardcoded
+        courseCode: "CSC108",
+        sectionType: "lecture",
+        meetingSection: sections.lecture
+      })
+      this.selectMeetingSection({
+        // hardcoded
+        courseCode: "CSC108",
+        sectionType: "tutorial",
+        meetingSection: sections.tutorial
+      })
+      this.selectMeetingSection({
+        // hardcoded
+        courseCode: "CSC108",
+        sectionType: "practical",
+        meetingSection: sections.practical
+      })
+    }}
+  },
 };
 </script>
 
@@ -736,6 +783,14 @@ export default {
 
 .activity-divider {
   margin: 4px 72px;
+}
+
+.conflicting-time-orange {
+  color: orange;
+}
+
+.bg-blue {
+  background-color: #e1edfa;
 }
 </style>
 
