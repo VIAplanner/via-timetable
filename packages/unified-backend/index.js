@@ -149,7 +149,7 @@ const server = new ApolloServer({ typeDefs, resolvers });
  * serverInfo object which has the url of the running server. We'll log a 
  * message to the console with this url value.
  */
-server.listen().then((serverInfo) => {
+server.listen(process.env.PORT || 5000).then((serverInfo) => {
     console.log(`Server is running at ${serverInfo.url}`);
 });
 
