@@ -218,7 +218,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
     combinations: [
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -247,7 +247,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'P0101',
+                code: 'CSC108H5FP0101',
                 instructors: [],
                 times: [
                     {
@@ -262,7 +262,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
         ],
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -291,7 +291,7 @@ const SECTIONS_L1_P2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'P0102',
+                code: 'CSC108H5FP0102',
                 instructors: [],
                 times: [
                     {
@@ -311,7 +311,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
     combinations: [
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -340,7 +340,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'T0101',
+                code: 'CSC108H5FT0101',
                 instructors: [],
                 times: [
                     {
@@ -355,7 +355,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
         ],
         [
             {
-                code: 'L0101',
+                code: 'CSC108H5FL0101',
                 instructors: [
                     'A Petersen',
                 ],
@@ -384,7 +384,7 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
                 ],
             },
             {
-                code: 'T0102',
+                code: 'CSC108H5FT0102',
                 instructors: [],
                 times: [
                     {
@@ -400,471 +400,471 @@ const SECTIONS_L1_T2: CourseMeetingSectionCombinations = {
     ],
 }
 const SECTIONS_L2_T2_P2: CourseMeetingSectionCombinations = {
-    code:"CSC108H5F",
+    code: 'CSC108H5F',
     combinations: [
-           [
-               {
-                 code: 'L0101',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                 code: 'L0101',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                 code: 'L0101',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-             ],
-            [
-               {
-                 code: 'L0101',
-                instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                  {
-                    day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                    start: 32400,
-                  },
-                  {
-                    day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                   location: 'MN 1270',
-                  start: 32400,
-                  },
-                 ],
-               },
-              {
-                 code: 'T0102',
-                instructors: [],
-                 times: [
-                   {
-                    day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                   start: 39600,
-                  },
-                ],
-               },
-               {
-                 code: 'P0102',
-                 instructors: [],
-                 times: [
-                  {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                code: 'L0102',
-                 instructors: [
-                   'A Petersen',
-               ],
-                times: [
-                 {
-                    day: 'MONDAY',
-                   duration: 3600,
-                    end: 36000,
-                  location: 'MN 1270',
-                    start: 32400,
-                   },
-                   {
-                    day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                 code: 'L0102',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                 code: 'L0102',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0101',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 39600,
-                     location: 'DH 2010',
-                     start: 32400,
-                   },
-                 ],
-               },
-             ],
-             [
-               {
-                 code: 'L0102',
-                 instructors: [
-                   'A Petersen',
-                 ],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'WEDNESDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                   {
-                     day: 'FRIDAY',
-                     duration: 3600,
-                     end: 36000,
-                     location: 'MN 1270',
-                     start: 32400,
-                   },
-                 ],
-               },
-               {
-                 code: 'T0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-               {
-                 code: 'P0102',
-                 instructors: [],
-                 times: [
-                   {
-                     day: 'MONDAY',
-                     duration: 7200,
-                     end: 46800,
-                     location: 'DH 2010',
-                     start: 39600,
-                   },
-                 ],
-               },
-             ],
-            ],
-}
+     [
+       {
+         code: 'CSC108H5FL0101',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0101',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0101',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0101',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0102',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0102',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0102',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0101',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 39600,
+             location: 'DH 2010',
+             start: 32400,
+           },
+         ],
+       },
+     ],
+     [
+       {
+         code: 'CSC108H5FL0102',
+         instructors: [
+           'A Petersen',
+         ],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'WEDNESDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+           {
+             day: 'FRIDAY',
+             duration: 3600,
+             end: 36000,
+             location: 'MN 1270',
+             start: 32400,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FT0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+       {
+         code: 'CSC108H5FP0102',
+         instructors: [],
+         times: [
+           {
+             day: 'MONDAY',
+             duration: 7200,
+             end: 46800,
+             location: 'DH 2010',
+             start: 39600,
+           },
+         ],
+       },
+     ],
+    ],
+  }
 
 const COURSES_SECTION_L1_P2: MeetingSection[][] = [
     [
         {
-            code: 'L0101',
+            code: 'CSC108H5FL0101',
             instructors: [
                 'A Petersen',
             ],
@@ -893,7 +893,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
             ],
         },
         {
-            code: 'P0101',
+            code: 'CSC108H5FP0101',
             instructors: [],
             times: [
                 {
@@ -908,7 +908,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
     ],
     [
         {
-            code: 'L0101',
+            code: 'CSC108H5FL0101',
             instructors: [
                 'A Petersen',
             ],
@@ -937,7 +937,7 @@ const COURSES_SECTION_L1_P2: MeetingSection[][] = [
             ],
         },
         {
-            code: 'P0102',
+            code: 'CSC108H5FP0102',
             instructors: [],
             times: [
                 {
