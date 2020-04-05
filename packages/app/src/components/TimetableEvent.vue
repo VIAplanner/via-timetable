@@ -30,7 +30,7 @@
             </div>
           </div>
         </template>
-        <course-section-picker v-on:done="dialog=false" :timetable="timetable" />
+        <course-section-picker v-on:done="dialog=false" :timetable="timetable" :code="event.courseCode"/>
       </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>

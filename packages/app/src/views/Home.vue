@@ -32,7 +32,6 @@ import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
-
 import { mapState } from 'vuex'
 
 export default {

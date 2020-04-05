@@ -38,7 +38,7 @@
             <v-icon>mdi-pencil-box-outline</v-icon>
           </v-btn>
         </template>
-        <course-section-picker v-on:done="dialog=false" :timetable="timetable"/>
+        <course-section-picker v-on:done="dialog=false" :timetable="timetable" :code="course.codeAndName.slice(0, 9)"/>
       </v-dialog>
     </div>
   </div>

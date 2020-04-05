@@ -1,0 +1,16 @@
+query {
+  courses(code:"") {
+    code, 
+    name,
+    meeting_sections {
+        code,
+        instructors,
+        times {
+            day,
+            start,
+            end,
+            location
+        }
+    }
+  }
+}
