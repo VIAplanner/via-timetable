@@ -1,1 +1,1 @@
-web:npm run deploy:api
+web: npm run deploy:api
