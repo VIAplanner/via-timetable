@@ -1,12 +1,10 @@
 {
     "name": "Anthropology",
     "degrees": [
-        "HBA",
-        "HBSc"
+        "HBA", "HBSc"
     ],
     "notes": [
-        "ANT200H5, ANT201H5, ANT202H5, ANT203H5",
-        "ANT204H5 and 0.5 from (ANT206H5 or ANT207H5)"
+        "ANT200H5, ANT201H5, ANT202H5, ANT203H5", "ANT204H5 and 0.5 from (ANT206H5 or ANT207H5)"
     ],
     "programs": [
         {
@@ -16,11 +14,10 @@
             "type": "Type 2",
             "notes": [],
             "courses": {
-                "1": [
-                    "ANT101H5",
-                    "ANT102H5"
+                "year1": [
+                    "ANT101H5", "ANT102H5"
                 ],
-                "2": [
+                "year2": [
                     "ANT200H5",
                     "ANT201H5",
                     "ANT202H5",
@@ -29,11 +26,8 @@
                     "ANT206H5",
                     "ANT207H5"
                 ],
-                "3": [],
-                "4": [
-                    "HSC403H5",
-                    "HSC404H5"
-                ]
+                "year3": [],
+                "year4": ["HSC403H5", "HSC404H5"]
             }
         },
         {
@@ -43,11 +37,10 @@
             "type": "Type 2",
             "notes": [],
             "courses": {
-                "1": [
-                    "ANT101H5",
-                    "ANT102H5"
+                "year1": [
+                    "ANT101H5", "ANT102H5"
                 ],
-                "2": [
+                "year2": [
                     "ANT200H5",
                     "ANT201H5",
                     "ANT202H5",
@@ -57,11 +50,10 @@
                     "ANT207H5",
                     "JAL253H5"
                 ],
-                "3": [
-                    "JAL353H5",
-                    "JAL355H5"
+                "year3": [
+                    "JAL353H5", "JAL355H5"
                 ],
-                "4": []
+                "year4": []
             }
         },
         {
@@ -71,11 +63,10 @@
             "type": "Type 2",
             "notes": [],
             "courses": {
-                "1": [
-                    "ANT101H5",
-                    "ANT102H5"
+                "year1": [
+                    "ANT101H5", "ANT102H5"
                 ],
-                "2": [
+                "year2": [
                     "ANT200H5",
                     "ANT201H5",
                     "ANT202H5",
@@ -84,11 +75,8 @@
                     "ANT206H5",
                     "ANT207H5"
                 ],
-                "3": [],
-                "4": [
-                    "HSC403H5",
-                    "HSC404H5"
-                ]
+                "year3": [],
+                "year4": ["HSC403H5", "HSC404H5"]
             }
         },
         {
@@ -98,11 +86,10 @@
             "type": "Type 2",
             "notes": [],
             "courses": {
-                "1": [
-                    "ANT101H5",
-                    "ANT102H5"
+                "year1": [
+                    "ANT101H5", "ANT102H5"
                 ],
-                "2": [
+                "year2": [
                     "ANT200H5",
                     "ANT201H5",
                     "ANT202H5",
@@ -112,25 +99,22 @@
                     "ANT207H5",
                     "JAL253H5"
                 ],
-                "3": [
-                    "JAL353H5",
-                    "JAL355H5"
+                "year3": [
+                    "JAL353H5", "JAL355H5"
                 ],
-                "4": []
+                "year4": []
             }
-        },
-        {
+        }, {
             "name": "Anthropology (Arts)",
             "level": "Minor",
             "code": "ERMIN1775",
             "type": "Type 1",
             "notes": [],
             "courses": {
-                "1": [
-                    "ANT101H5",
-                    "ANT102H5"
+                "year1": [
+                    "ANT101H5", "ANT102H5"
                 ],
-                "2": [
+                "year2": [
                     "ANT200H5",
                     "ANT201H5",
                     "ANT202H5",
@@ -140,14 +124,10 @@
                     "ANT207H5",
                     "JAL253H5"
                 ],
-                "3": [
-                    "JAL353H5",
-                    "JAL355H5"
+                "year3": [
+                    "JAL353H5", "JAL355H5"
                 ],
-                "4": [
-                    "HSC403H5",
-                    "HSC404H5"
-                ]
+                "year4": ["HSC403H5", "HSC404H5"]
             }
         }
     ]
