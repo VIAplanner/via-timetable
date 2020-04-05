@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://uoftcoursetools.tech/" target="_blank">
-    <img alt="UofT Course Tool Icon" width="300" src="https://github.com/UTM-Hacklab/UofTCourseTools/blob/master/assets/UofT%20ZCour%20(4)%20(1).png">
+    <img alt="UofT Course Tool Icon" width="300" src="./logo.png">
   </a>
 </p>
 

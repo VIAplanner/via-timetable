@@ -14,6 +14,23 @@ interface MeetingSectionTime {
     duration: number,
     location: string
 }
+interface TimetableSection {
+    code: String,
+    day: string,
+    start: number,
+    end: number,
+    duration: number,
+    instructors: String[],
+    location: string
+}
+
+interface Timetable {
+    MONDAY: TimetableSection[],
+    TUESDAY: TimetableSection[],
+    WEDNESDAY: TimetableSection[],
+    THURSDAY: TimetableSection[],
+    FRIDAY: TimetableSection[]
+}
 
 interface Course {
     code: string,
