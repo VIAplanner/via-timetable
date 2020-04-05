@@ -124,8 +124,8 @@ const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
  */
 const resolvers = {
     Query: {
-        courses: (_, { code = "all" }) => {
-            if (code == "all") { return CoursesModel.find(); }
+        courses: (_, { code }) => {
+            if (!code) { return CoursesModel.find(); }
             else { return CoursesModel.find({ code }); }
         },
         subjects: () => {
