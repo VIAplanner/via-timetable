@@ -124,8 +124,8 @@ const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
  */
 const resolvers = {
     Query: {
-        courses: (_, { code = "all" }) => {
-            if (code == "all") { return CoursesModel.find(); }
+        courses: (_, { code }) => {
+            if (!code) { return CoursesModel.find(); }
             else { return CoursesModel.find({ code }); }
         },
         subjects: () => {
@@ -139,7 +139,12 @@ const resolvers = {
  * Server instance. To do so, we'll import and use the ApolloServer constructor
  * function from the apollo-server library.
  */
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    introspection: true,
+    playground: true
+});
 
 /**
  * With the Apollo server instance now available to us, we can start 
