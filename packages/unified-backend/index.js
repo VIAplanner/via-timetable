@@ -63,9 +63,9 @@ const typeDefs = gql`
     
      }
      type Query {
-         courses: [Course],
-         subjects: [Subject]
-     }
+        courses(code: String!): [Course]!,
+        programs: [Subject]
+    }
     `;
 
 /** 
@@ -124,10 +124,11 @@ const ProgramModel = uoftDb.model('Subject', ProgramSchema, "Subjects");
  */
 const resolvers = {
     Query: {
-        courses: () => {
-            return CoursesModel.find();
+        courses: (_, { code = "all" }) => {
+            if (code == "all") { return CoursesModel.find(); }
+            else { return CoursesModel.find({ code }); }
         },
-        subjects: () => {
+        programs: () => {
             return ProgramModel.find();
         },
     },
