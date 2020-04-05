@@ -66,16 +66,13 @@
             "node": true
         },
         "extends": [
-            "plugin:vue/essential",
-            "eslint:recommended"
+            "plugin:vue/essential", "eslint:recommended"
         ],
         "parserOptions": {
-            "parser": "babel-eslint"
+            "parser": "babel-eslint",
+            "sourceType": "module"
         },
         "rules": {}
     },
-    "browserslist": [
-        "> 1%",
-        "last 2 versions"
-    ]
+    "browserslist": ["> 1%", "last 2 versions"]
 }

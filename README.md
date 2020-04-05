@@ -19,4 +19,8 @@ The fundamental problem we are trying to solve :
 
 ## Installation
 
-## Packages Overview
+```sh
+git clone https://github.com/UTM-Hacklab/UofTCourseTools
+cd UofTCourseTools
+npm run setup
+```
