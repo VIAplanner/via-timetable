@@ -9,7 +9,7 @@
             v-on="on"
             class="event"
             :class="durationClass(event.start, event.end)"
-            :style=" { background: color }"
+            :style=" { background: getCourseColor(event.code) }"
           >
             <h4 class="course-code">{{courseCodeWithoutTerm(event.code)}}</h4>
 
@@ -22,7 +22,7 @@
               </v-btn>
             </div>
 
-            <div style="margin-left: 3px;">{{event.section}}</div>
+            <div style="margin-left: 3px;">{{event.sectionCode}}</div>
 
             <div style="position: relative;">
               <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </template>
-        <course-section-picker v-on:done="dialog=false" :code="event.code"/>
+        <course-section-picker v-on:done="dialog=false" :code="event.code" />
       </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
@@ -39,24 +39,22 @@
 
 <script>
 import CourseSectionPicker from "../components/CourseSectionPicker";
+import { mapGetters } from 'vuex'
 
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
 };
+
 export default {
   name: "timetable-event",
   props: {
     event: {
       type: Object,
       default: () => {}
-    },
-    color: {
-      type: String,
-      default: "#83CC77"
     }
   },
   components: {
-    CourseSectionPicker,
+    CourseSectionPicker
   },
   data() {
     return {
@@ -64,6 +62,9 @@ export default {
       hovered: false,
       dialog: false
     };
+  },
+  computed: {
+    ...mapGetters(["getCourseColor"])
   },
   methods: {
     reverseLockStatus() {
@@ -80,13 +81,13 @@ export default {
       }
     },
     getFormattedTime(start, end) {
-      var s = (start / 3600) % 12
-      var e = (end / 3600) % 12
+      var s = (start / 3600) % 12;
+      var e = (end / 3600) % 12;
       if (s == 0) {
-        s = 12
+        s = 12;
       }
       if (e == 0) {
-        e = 12
+        e = 12;
       }
       return `${s}:00 - ${e}:00`;
     },

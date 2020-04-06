@@ -4,18 +4,12 @@ const courseMeetingSectionCombinations = (course) => {
     const practicals = course.meeting_sections.filter(section => section.code.charAt(0) === "P");
     for (const lecture of lectures) {
         lecture.code = course.code + lecture.code;
-        lecture.meetingSectionCode = lecture.code;
-
     }
     for (const tutorial of tutorials) {
         tutorial.code = course.code + tutorial.code;
-        tutorial.meetingSectionCode = tutorial.code;
-
     }
     for (const practical of practicals) {
         practical.code = course.code + practical.code;
-        practical.meetingSectionCode = practical.code;
-
     }
     const lecTutCombinations = [];
     for (const lecture of lectures) {

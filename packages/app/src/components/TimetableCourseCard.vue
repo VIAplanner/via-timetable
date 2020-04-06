@@ -23,7 +23,7 @@
           </v-col>
         </v-row>
       </div>
-      <div class="sections-info">
+      <!-- <div class="sections-info">
         <div v-for="sectionType in ['lecture', 'tutorial', 'practical']" :key="sectionType">
           <div v-if="course.selectedMeetingSections[sectionType] != null">
             <v-row
@@ -42,6 +42,15 @@
             </v-row>
           </div>
         </div>
+      </div> -->
+      <div class="sections-info">
+        <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
+          <v-col cols="3">{{meetingsection.sectionCode}}</v-col>
+          <v-col>{{meetingsection.day}}</v-col>
+          <v-col>{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
+          <v-col cols="3">{{meetingsection.location}}</v-col>
+          <v-col cols="3">{{meetingsection.instructorName}}</v-col>
+        </v-row>
       </div>
       <v-dialog v-model="dialog" width="800px">
         <template v-slot:activator="{ on }">
@@ -65,17 +74,40 @@ export default {
     CourseSectionPicker
   },
   props: {
-    code: {
-      type: String,
+    course: {
+      type: Object,
       default: () => {}
     }
   },
   computed: {
-    ...mapGetters(["timetable", "courseCodeColorMap", "selectedCourses"]),
-    course() {
-      console.log(this.selectedCourses[this.code]);
-      return this.selectedCourses[this.code];
-    }
+    ...mapGetters(["timetable", "selectedCourses"]),
+    // course() {
+    //   console.log(this.selectedCourses[this.code]);
+    //   return this.selectedCourses[this.code];
+    // },
+    meetingSections() {
+      var ret = []
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        console.log(dayEvents)
+        for (let event of dayEvents) {
+          // console.log(event.courseCode)
+          // console.log(this.course.code)
+          if (event.courseCode == this.course.code) {
+            ret.push({
+              sectionCode: event.sectionCode,
+              day: day,
+              start: event.start,
+              end: event.end,
+              location: event.location,
+              instructorName: event.instructorName
+            })
+          }
+        }
+      }
+      console.log(ret)
+      return ret
+    },
   },
   data() {
     return {

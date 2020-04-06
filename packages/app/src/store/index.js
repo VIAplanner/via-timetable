@@ -52,7 +52,10 @@ export default new Vuex.Store({
           ...payload.course
         }
       })
-      const timetables = generateTimetables(Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code]))
+      const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
+      console.log(courses)
+      const timetables = generateTimetables(courses)
+      console.log(timetables)
       context.commit("setTimetables", { timetables })
     }
   },
@@ -65,18 +68,10 @@ export default new Vuex.Store({
     timetable: state => {
       return state.timetables[0]
     },
-    courseCodeColorMap: state => {
-      const codeColorMap = new Map();
-      var index = 0;
-      console.log
-      for (let course in state.selectedCourses) {
-        console.log(course)
-        if (!codeColorMap.has(course.code)) {
-          codeColorMap.set(course.code, state.colors[index]);
-          index++;
-        }
-      }
-      return codeColorMap;
-    },
+    getCourseColor: (state) => (code) => {
+      console.log(code)
+      console.log(state.selectedCourses[code])
+      return state.selectedCourses[code].color
+    }
   }
 })

@@ -17,7 +17,7 @@
           <v-row name="timetable-content">
             <v-col v-for="(meetingSections, day) in timetable" :key="day">
               <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
-                <timetable-event :event="event" :color="courseCodeColorMap.get(event.courseCode)" />
+                <timetable-event :event="event" />
               </div>
             </v-col>
           </v-row>
@@ -29,7 +29,6 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
-import { mapGetters } from 'vuex'
 
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
@@ -41,14 +40,12 @@ export default {
     TimetableEvent
   },
   props: {
-    courseCodeColorMap: {
-      type: Map,
+    timetable: {
+      type: Object
     },
   },
   computed: {
-    ...mapGetters([
-      'timetable',
-    ]),
+
     timetableStart() {
       var earliest = 9;
       for (let day in this.timetable) {

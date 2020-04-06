@@ -16,7 +16,7 @@ interface MeetingSectionTime {
 }
 interface TimetableSection {
     code: string,
-    meetingSectionCode: string,
+    sectionCode: string,
     day: string,
     start: number,
     end: number,

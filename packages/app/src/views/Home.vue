@@ -11,7 +11,7 @@
           class="my-4"
           v-for="(course, code) in selectedCourses"
           :key="code"
-          :code="code"
+          :course="course"
         />
       </v-col>
     </v-row>
@@ -22,7 +22,7 @@
     </v-row>
     <v-row style="background: #E5E5E5;">
       <v-col>
-        <timetable :timetable="timetable" :courseCodeColorMap="courseCodeColorMap" />
+        <timetable :timetable="timetable" />
       </v-col>
     </v-row>
   </v-container>
@@ -47,44 +47,6 @@ export default {
     formattedCourses() {
       return this.courses.map(course => `${course.code}: ${course.name}`);
     },
-    formattedCoursesForCourseCards() {
-      const result = {};
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          //If result doesn't already have event.courseCode
-          if (!(event.courseCode in result)) {
-            result[event.courseCode] = {
-              codeAndName: this.getFormattedCodeAndName(
-                event.courseCode,
-                event.courseName
-              ),
-              color: this.courseCodeColorMap.get(event.courseCode),
-              meetingSections: [
-                {
-                  section: event.section,
-                  day: day,
-                  start: event.start,
-                  end: event.end,
-                  location: event.location,
-                  instructorName: event.instructorName
-                }
-              ]
-            };
-          } else {
-            result[event.courseCode].meetingSections.push({
-              section: event.section,
-              day: day,
-              start: event.start,
-              end: event.end,
-              location: event.location,
-              instructorName: event.instructorName
-            });
-          }
-        }
-      }
-      return result;
-    }
   },
   apollo: {
     courses: COURSES_SEARCH_BAR_QUERY
