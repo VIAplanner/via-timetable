@@ -9,7 +9,7 @@ To see an example usage of the scraper, run
 python3 program_scraper.py
 `
 
-The hieracy of the data is:
+The hierarchy of the data is:
 `
 subjects
 {
