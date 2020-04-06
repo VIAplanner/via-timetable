@@ -15,5 +15,6 @@ subjects_directory = "../output/subjects/"
 # adding all JSON from local to server
 for subject in tqdm(os.listdir(subjects_directory)):
     with open(subjects_directory + subject) as f:
+        print(f)
         file_data = json.load(f)
     collection.insert_one(file_data)

@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.9.16",
-    "mongoose": "^5.8.11"
+    "apollo-server": "^2.11.0",
+    "mongoose": "^5.9.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

@@ -2,25 +2,34 @@ const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionC
     const lectures = course.meeting_sections.filter(section => section.code.charAt(0) === "L");
     const tutorials = course.meeting_sections.filter(section => section.code.charAt(0) === "T");
     const practicals = course.meeting_sections.filter(section => section.code.charAt(0) === "P");
-    const lec_tut_combinations = [];
+    for (const lecture of lectures){
+        lecture.code = course.code + lecture.code
+    }
+    for (const tutorial of tutorials){
+        tutorial.code = course.code + tutorial.code
+    }
+    for (const practical of practicals){
+        practical.code = course.code + practical.code
+    }
+    const lecTutCombinations = [];
     for (const lecture of lectures) {
         for (const tutorial of tutorials) {
-            lec_tut_combinations.push([lecture, tutorial]);
+            lecTutCombinations.push([lecture, tutorial]);
         }
         if (tutorials.length === 0) {
-            lec_tut_combinations.push([lecture]);
-        }
-    }
-    let totalCombinations = []
-    for (const section of lec_tut_combinations) {
-        for (const practical of practicals) {
-           totalCombinations.push([...section, practical])
-        }
-        if (practicals.length === 0){
-            totalCombinations = lec_tut_combinations
+            lecTutCombinations.push([lecture]);
         }
     }
 
+    let totalCombinations = []
+    for (const section of lecTutCombinations) {
+        for (const practical of practicals) {
+            totalCombinations.push([...section, practical])
+        }
+        if (practicals.length === 0){
+            totalCombinations = lecTutCombinations
+        }
+    }
     return { code: course.code, combinations: totalCombinations }
 }
 
@@ -44,6 +53,7 @@ const courseCombinations = (courseMeetingSectionCombos: CourseMeetingSectionComb
             }
         });/*  forEach() */
     }
+
     permute(courseMeetingSectionCombos);
     return outputs;
 }

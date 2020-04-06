@@ -2,13 +2,14 @@
     "name": "uoftcoursetools",
     "version": "0.0.1",
     "description": "The monorepo for UofTCourseTools",
-    "main": "packages/unified-backend/index.js",
     "scripts": {
         "deploy:api": "npm i --prefix ./packages/unified-backend; npm start --prefix ./packages/unified-backend",
-        "setup": "npm ci; npm ci --prefix packages/docs",
+        "setup": "lerna bootstrap; lerna link",
+        "reset": "lerna clean -y; lerna bootstrap",
         "build-docs": "npm run build --prefix packages/docs"
     },
     "devDependencies": {
+        "lerna": "^3.20.2",
         "nodemon": "^2.0.2",
         "vue-cli-plugin-apollo": "^0.21.3",
         "vuepress": "^1.4.0"
