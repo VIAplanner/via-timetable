@@ -167,15 +167,36 @@ export default {
     },
     course() {
       return this.courses[0]
+    },
+    selectedMeetingSections() {
+      let lec
+      let pra
+      let tut
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          if (event.courseCode == this.code) {
+            if (event.section.charAt(0) == "L") {
+              lec= event.section
+            }
+            else if (event.section.charAt(0) == "P") {
+              pra = event.section
+            }
+            else {
+              tut = event.section
+            }
+          }
+        }
+      }
+      return {
+        lecture: lec,
+        practical: pra,
+        tutorial: tut
+      }
     }
   },
   data() {
     return {
-      selectedMeetingSections: {
-        lecture: null,
-        tutorial: null,
-        practical: null
-      },
       active: false,
       dialog: false,
     };

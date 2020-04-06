@@ -17,6 +17,15 @@ export default new Vuex.Store({
           instructorName: "Andrew Petersen"
         },
         {
+          courseCode: "CSC207H5F",
+          courseName: "Software Design",
+          section: "P0107",
+          start: 43200,
+          end: 46800,
+          location: "DH 2026",
+          instructorName: "TBA"
+        },
+        {
           courseCode: "STA258H5S",
           courseName: "Statistics with Prob",
           section: "L0101",
@@ -24,11 +33,12 @@ export default new Vuex.Store({
           end: 61200,
           location: "MN 1210",
           instructorName: "Alvaro Nosedal Sanchez"
-        }
-      ],
+        },
+      ]
+      ,
       Tuesday: [
         {
-          courseCode: "CSC207H5S",
+          courseCode: "CSC207H5F",
           courseName: "Software Design",
           section: "L0101",
           start: 39600,

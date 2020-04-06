@@ -86,7 +86,15 @@ export default {
       }
     },
     getFormattedTime(start, end) {
-      return `${(start / 3600) % 12}:00 - ${(end / 3600) % 12}:00`;
+      var s = (start / 3600) % 12
+      var e = (end / 3600) % 12
+      if (s == 0) {
+        s = 12
+      }
+      if (e == 0) {
+        e = 12
+      }
+      return `${s}:00 - ${s}:00`;
     },
     courseCodeWithoutTerm(code) {
       return code.substring(0, code.length - 1);
