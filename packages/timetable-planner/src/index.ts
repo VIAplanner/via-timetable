@@ -66,6 +66,12 @@ const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
     if (overlapExists(timetable)) {
         return null
     }
+    const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
+    for (const day of days){
+        timetable[day].sort(function(a, b){
+            return a.start - b.start
+        })
+    }
     return timetable
 }
 
