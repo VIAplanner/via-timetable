@@ -11,7 +11,7 @@
             :class="durationClass(event.start, event.end)"
             :style=" { background: color }"
           >
-            <h4 class="course-code">{{courseCodeWithoutTerm(event.courseCode)}}</h4>
+            <h4 class="course-code">{{courseCodeWithoutTerm(event.code)}}</h4>
 
             <div class="lock-button">
               <v-btn dark @click.stop="reverseLockStatus" v-if="locked" icon>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </template>
-        <course-section-picker v-on:done="dialog=false" :timetable="timetable" :code="event.courseCode"/>
+        <course-section-picker v-on:done="dialog=false" :code="event.code"/>
       </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import CourseSectionPicker from "../components/CourseSectionPicker";
 
 const convertSecondsToHours = seconds => {
@@ -66,11 +65,6 @@ export default {
       dialog: false
     };
   },
-  computed: {
-    ...mapState([
-      'timetable',
-    ])
-  },
   methods: {
     reverseLockStatus() {
       this.locked = !this.locked;
@@ -94,7 +88,7 @@ export default {
       if (e == 0) {
         e = 12
       }
-      return `${s}:00 - ${s}:00`;
+      return `${s}:00 - ${e}:00`;
     },
     courseCodeWithoutTerm(code) {
       return code.substring(0, code.length - 1);

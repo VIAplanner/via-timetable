@@ -15,12 +15,13 @@ interface MeetingSectionTime {
     location: string
 }
 interface TimetableSection {
-    code: String,
+    code: string,
+    meetingSectionCode: string,
     day: string,
     start: number,
     end: number,
     duration: number,
-    instructors: String[],
+    instructors: string[],
     location: string
 }
 

@@ -29,6 +29,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import { mapGetters } from 'vuex'
 
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
@@ -40,14 +41,14 @@ export default {
     TimetableEvent
   },
   props: {
-    timetable: {
-      type: Object,
-    },
     courseCodeColorMap: {
       type: Map,
     },
   },
   computed: {
+    ...mapGetters([
+      'timetable',
+    ]),
     timetableStart() {
       var earliest = 9;
       for (let day in this.timetable) {
@@ -99,7 +100,13 @@ export default {
       const result = [];
       let currTime = this.timetableStart;
       let invalidStart = -1;
-
+      if (meetingSections.length === 0) {
+        for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
+          result.push({ start: invalidStart });
+          invalidStart--;
+        }
+        return result
+      }
       for (let i = 0; i < meetingSections.length; i++) {
         const event = meetingSections[i];
         const eventStart = convertSecondsToHours(event.start);
@@ -120,6 +127,7 @@ export default {
           }
         }
       }
+      console.log(result)
       return result;
     }
   }

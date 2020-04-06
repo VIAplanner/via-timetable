@@ -1,11 +1,10 @@
 <template>
-  <v-container v-if="!$apollo.loading">
+  <div v-if="!$apollo.loading">
     <v-toolbar color="teal" dark>
       <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
       <v-spacer />
       <v-btn text @click="$emit('done')">Done</v-btn>
     </v-toolbar>
-    <h4>{{selectedMeetingSections}}</h4>
     <v-list rounded subheader two-line flat>
       <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
         <div v-if="meetingSections.length > 0">
@@ -101,19 +100,18 @@
         </div>
       </v-container>
     </v-list>
-  </v-container>
+  </div>
 </template>
 
 <script>
 import { mapMutations } from "vuex";
 import gql from "graphql-tag";
+import { mapGetters } from "vuex";
+
 // import COURSE_SECTION_PICKER_QUERY from "../graphql/CourseSectionPicker.gql";
 export default {
   name: "course-section-picker",
   props: {
-    timetable: {
-      type: Object
-    },
     code: {
       type: String
     }
@@ -152,7 +150,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["timetable"]),
     activities() {
+      console.log(this.course.meeting_sections)
       return {
         lecture: this.course.meeting_sections.filter(
           section => section.code.charAt(0) === "L"
@@ -166,24 +166,22 @@ export default {
       };
     },
     course() {
-      return this.courses[0]
+      return this.courses[0];
     },
     selectedMeetingSections() {
-      let lec
-      let pra
-      let tut
+      let lec;
+      let pra;
+      let tut;
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
         for (let event of dayEvents) {
           if (event.courseCode == this.code) {
             if (event.section.charAt(0) == "L") {
-              lec= event.section
-            }
-            else if (event.section.charAt(0) == "P") {
-              pra = event.section
-            }
-            else {
-              tut = event.section
+              lec = event.section;
+            } else if (event.section.charAt(0) == "P") {
+              pra = event.section;
+            } else {
+              tut = event.section;
             }
           }
         }
@@ -192,13 +190,13 @@ export default {
         lecture: lec,
         practical: pra,
         tutorial: tut
-      }
+      };
     }
   },
   data() {
     return {
       active: false,
-      dialog: false,
+      dialog: false
     };
   },
   apollo: {
@@ -206,24 +204,25 @@ export default {
       query: gql`
         query getCourse($code: String!) {
           courses(code: $code) {
-            code,
-            name,
+            code
+            name
             meeting_sections {
-              code,
-              instructors,
+              code
+              instructors
               times {
-                day,
-                start,
-                end,
+                day
+                start
+                end
                 location
               }
-            } 
+            }
           }
-        }`,
+        }
+      `,
       variables() {
         return {
           code: this.code
-        }
+        };
       }
     }
   },

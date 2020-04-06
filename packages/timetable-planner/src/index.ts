@@ -57,9 +57,11 @@ const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
     }
     for (const meetingSection of meetingSectionCombo) {
         for (const time of meetingSection.times) {
-            const timetabletime: TimetableSection = {code: meetingSection.code, 
+            const timetabletime: TimetableSection = {
+                code: meetingSection.meetingSectionCode,
                 instructors: meetingSection.instructors,
-            ...time}
+                ...time
+            }
             timetable[time.day].push(timetabletime)
         }
     }
@@ -67,8 +69,8 @@ const createTimetable = (meetingSectionCombo: MeetingSection[]): Timetable => {
         return null
     }
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
-    for (const day of days){
-        timetable[day].sort(function(a, b){
+    for (const day of days) {
+        timetable[day].sort((a, b) => {
             return a.start - b.start
         })
     }

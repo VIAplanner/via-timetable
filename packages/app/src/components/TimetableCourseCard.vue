@@ -2,9 +2,9 @@
   <div>
     <div class="course-info-card">
       <div class="course-card-header" :style="{ background: course.color }">
-        <h3 class="course-card-title">{{course.codeAndName}}</h3>
-        <div class="details-button">
-          <v-btn text>Details</v-btn>
+        <h3 class="course-card-title">{{ course.code }} {{ course.name }}</h3>
+        <div class="delete-button">
+          <v-btn @click="removeCourse({code: course.code})" text>Delete</v-btn>
         </div>
       </div>
       <div class="course-info-header">
@@ -24,13 +24,24 @@
         </v-row>
       </div>
       <div class="sections-info">
-        <v-row v-for="meetingsection in course.meetingSections" :key="meetingsection.section">
-          <v-col cols="3">{{meetingsection.section}}</v-col>
-          <v-col>{{meetingsection.day}}</v-col>
-          <v-col>{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
-          <v-col cols="3">{{meetingsection.location}}</v-col>
-          <v-col cols="3">{{meetingsection.instructorName}}</v-col>
-        </v-row>
+        <div v-for="sectionType in ['lecture', 'tutorial', 'practical']" :key="sectionType">
+          <div v-if="course.selectedMeetingSections[sectionType] != null">
+            <v-row
+              v-for="time in course.selectedMeetingSections[sectionType].times"
+              :key="`${time.day} ${time.start} ${time.end}`"
+            >
+              <v-col cols="3">{{course.selectedMeetingSections[sectionType].code}}</v-col>
+              <v-col>{{ time.day }}</v-col>
+              <v-col>{{ getFormattedTime(time.start, time.end) }}</v-col>
+              <v-col cols="3">{{ time.location }}</v-col>
+              <v-col
+                cols="3"
+                v-if="course.selectedMeetingSections[sectionType].instructors == []"
+              >TBA</v-col>
+              <v-col v-else>{{course.selectedMeetingSections[sectionType].instructors[0]}}</v-col>
+            </v-row>
+          </div>
+        </div>
       </div>
       <v-dialog v-model="dialog" width="800px">
         <template v-slot:activator="{ on }">
@@ -38,39 +49,43 @@
             <v-icon>mdi-pencil-box-outline</v-icon>
           </v-btn>
         </template>
-        <course-section-picker v-on:done="dialog=false" :timetable="timetable" :code="course.codeAndName.slice(0, 9)"/>
+        <course-section-picker v-on:done="dialog = false" :code="course.code" />
       </v-dialog>
     </div>
   </div>
 </template>
 
 <script>
-
-import { mapState } from 'vuex'
+import { mapGetters, mapMutations } from "vuex";
 import CourseSectionPicker from "../components/CourseSectionPicker";
 
 export default {
   name: "timetable-course-card",
   components: {
-    CourseSectionPicker,
+    CourseSectionPicker
   },
   props: {
-    course: {
-      type: Object,
+    code: {
+      type: String,
       default: () => {}
     }
   },
   computed: {
-    ...mapState([
-      'timetable',
-    ])
+    ...mapGetters(["timetable", "courseCodeColorMap", "selectedCourses"]),
+    course() {
+      console.log(this.selectedCourses[this.code]);
+      return this.selectedCourses[this.code];
+    }
   },
   data() {
     return {
       dialog: false
-    }
+    };
   },
   methods: {
+    ...mapMutations([
+      "removeCourse" //also supports payload `this.nameOfMutation(amount)`
+    ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {
@@ -85,7 +100,7 @@ export default {
   }
 };
 </script>
-    
+
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 * {
@@ -109,7 +124,7 @@ export default {
   left: 10px;
 }
 
-.details-button {
+.delete-button {
   position: absolute;
   right: 10px;
 }

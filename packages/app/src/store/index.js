@@ -1,129 +1,82 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { generateTimetables } from "../timetable-planner"
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    timetable: {
-      Monday: [
-        {
-          courseCode: "CSC258H5S",
-          courseName: "Computer Organizaion",
-          section: "L0101",
-          start: 32400,
-          end: 39600,
-          location: "IB 345",
-          instructorName: "Andrew Petersen"
-        },
-        {
-          courseCode: "CSC207H5F",
-          courseName: "Software Design",
-          section: "P0107",
-          start: 43200,
-          end: 46800,
-          location: "DH 2026",
-          instructorName: "TBA"
-        },
-        {
-          courseCode: "STA258H5S",
-          courseName: "Statistics with Prob",
-          section: "L0101",
-          start: 54000,
-          end: 61200,
-          location: "MN 1210",
-          instructorName: "Alvaro Nosedal Sanchez"
-        },
-      ]
-      ,
-      Tuesday: [
-        {
-          courseCode: "CSC207H5F",
-          courseName: "Software Design",
-          section: "L0101",
-          start: 39600,
-          end: 46800,
-          location: "MN 1270",
-          instructorName: "Arnold Rosenbloom"
-        },
-        {
-          courseCode: "CSC258H5S",
-          courseName: "Computer Organizaion",
-          section: "P0109",
-          start: 61200,
-          end: 64800,
-          location: "DH 2026",
-          instructorName: "TBA"
-        }
-      ],
-      Wednesday: [
-        {
-          courseCode: "CSC290H5S",
-          courseName: "Communication Skills for CSC",
-          section: "L0101",
-          start: 50400,
-          end: 57600,
-          location: "MN 1270",
-          instructorName: "Paul Virbik"
-        },
-        {
-          courseCode: "STA258H5S",
-          courseName: "Statistics with Prob",
-          section: "T0105",
-          start: 61200,
-          end: 64800,
-          location: "DH 2080",
-          instructorName: "TBA"
-        }
-      ],
-      Thursday: [
-        {
-          courseCode: "CSC290H5S",
-          courseName: "Communication Skills for CSC",
-          section: "T0101",
-          start: 39600,
-          end: 46800,
-          location: "MN 1270",
-          instructorName: "TBA"
-        },
-        {
-          courseCode: "CSC209H5S",
-          courseName: "Soft Tools & Sys Prog",
-          section: "P0111",
-          start: 61200,
-          end: 64800,
-          location: "DH 2026",
-          instructorName: "TBA"
-        }
-      ],
-      Friday: [
-        {
-          courseCode: "CSC209H5S",
-          courseName: "Soft Tools & Sys Prog",
-          section: "L0104",
-          start: 50400,
-          end: 57600,
-          location: "MN 1270",
-          instructorName: "Andrew Petersen"
-        }
-      ]
-    },
-    selectedCourses: {
-      CSC108: {
-        lecture: null,
-        tutorial: null,
-        practical: null}
-    },
+    selectedCourses: {},
+    timetables: [{
+      MONDAY: [],
+      TUESDAY: [],
+      WEDNESDAY: [],
+      THURSDAY: [],
+      FRIDAY: [],
+
+    }],
+    colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
+    takenColors: []
   },
   mutations: {
     selectMeetingSection(state, payload) {
       console.log("Selecting meeting section: " + payload)
       console.log(payload)
       state.selectedCourses[payload.courseCode][payload.sectionType] = payload.meetingSection
+    },
+    setTimetables(state, payload) {
+      state.timetables = payload.timetables
+    },
+    addCourse(state, payload) {
+      state.selectedCourses[payload.course.code] = payload.course
+      state.takenColors.push(payload.course.color)
+    },
+    removeCourse(state, payload) {
+      state.colors.push(state.selectedCourses[payload.code].color)
+      state.takenColors.splice(state.takenColors.indexOf(state.selectedCourses[payload.code].color), 1);
+      Vue.delete(state.selectedCourses, payload.code)
     }
   },
   actions: {
+    selectCourse(context, payload) {
+      const color = context.state.colors.pop()
+      context.commit("addCourse", {
+        course: {
+          selectedMeetingSections: {
+            lecture: null,
+            tutorial: null,
+            practical: null
+          },
+          color,
+          ...payload.course
+        }
+      })
+      const timetables = generateTimetables(Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code]))
+      context.commit("setTimetables", { timetables })
+    }
   },
   modules: {
+  },
+  getters: {
+    selectedCourses: state => {
+      return state.selectedCourses
+    },
+    timetable: state => {
+      return state.timetables[0]
+    },
+    courseCodeColorMap: state => {
+      const codeColorMap = new Map();
+      var index = 0;
+      console.log
+      for (let course in state.selectedCourses) {
+        console.log(course)
+        if (!codeColorMap.has(course.code)) {
+          codeColorMap.set(course.code, state.colors[index]);
+          index++;
+        }
+      }
+      return codeColorMap;
+    },
   }
 })

@@ -2,27 +2,27 @@
   <v-container>
     <v-row>
       <v-col>
-        <optimization-settings />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
         <course-search-bar v-if="!$apollo.loading" :courses="formattedCourses" />
-      </v-col>
-    </v-row>
-    <v-row style="background: #E5E5E5;">
-      <v-col>
-        <timetable :timetable="timetable" :courseCodeColorMap="courseCodeColorMap" />
       </v-col>
     </v-row>
     <v-row style="background: #E5E5E5;">
       <v-col>
         <timetable-course-card
           class="my-4"
-          v-for="(courseInfo, courseCode) in formattedCoursesForCourseCards"
-          :key="courseCode"
-          :course="courseInfo"
+          v-for="(course, code) in selectedCourses"
+          :key="code"
+          :code="code"
         />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <optimization-settings />
+      </v-col>
+    </v-row>
+    <v-row style="background: #E5E5E5;">
+      <v-col>
+        <timetable :timetable="timetable" :courseCodeColorMap="courseCodeColorMap" />
       </v-col>
     </v-row>
   </v-container>
@@ -34,35 +34,18 @@ import Timetable from "../components/Timetable";
 import OptimizationSettings from "../components/OptimizationSettings";
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
-import { mapState } from 'vuex'
-
+import { mapGetters } from "vuex";
 export default {
   components: {
     OptimizationSettings,
     CourseSearchBar,
     Timetable,
-    TimetableCourseCard,
+    TimetableCourseCard
   },
   computed: {
-    ...mapState([
-      'timetable',
-    ]),
+    ...mapGetters(["selectedCourses", "timetable", "courseCodeColorMap"]),
     formattedCourses() {
       return this.courses.map(course => `${course.code}: ${course.name}`);
-    },
-    courseCodeColorMap() {
-      const codeColorMap = new Map();
-      var index = 0;
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (!codeColorMap.has(event.courseCode)) {
-            codeColorMap.set(event.courseCode, this.colors[index]);
-            index++;
-          }
-        }
-      }
-      return codeColorMap;
     },
     formattedCoursesForCourseCards() {
       const result = {};
@@ -102,11 +85,6 @@ export default {
       }
       return result;
     }
-  },
-  data() {
-    return {
-      colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
-    };
   },
   apollo: {
     courses: COURSES_SEARCH_BAR_QUERY
