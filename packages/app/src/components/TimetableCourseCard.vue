@@ -32,7 +32,7 @@
           <v-col cols="3">{{meetingsection.instructorName}}</v-col>
         </v-row>
       </div>
-      <v-dialog v-model="dialog" width="800px">
+      <v-dialog v-model="dialog" scrollable width="800px">
         <template v-slot:activator="{ on }">
           <v-btn icon class="edit-button" v-on="on">
             <v-icon>mdi-pencil-box-outline</v-icon>
