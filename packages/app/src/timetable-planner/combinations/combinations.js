@@ -1,7 +1,8 @@
 const courseMeetingSectionCombinations = (course) => {
-    const lectures = course.meeting_sections.filter(section => section.code.charAt(0) === "L");
-    const tutorials = course.meeting_sections.filter(section => section.code.charAt(0) === "T");
-    const practicals = course.meeting_sections.filter(section => section.code.charAt(0) === "P");
+    const lectures = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "L");
+    const tutorials = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "T");
+    const practicals = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "P");
+    console.log(lectures)
     for (const lecture of lectures) {
         lecture.code = course.code + lecture.code;
     }
