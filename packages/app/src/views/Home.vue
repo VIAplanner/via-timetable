@@ -3,9 +3,10 @@
     <v-row v-if="!$apollo.loading">
       <v-col class="py-0">
         <v-toolbar dark color="#012B5C">
-          <v-toolbar-title class="mr-4">Course Cart</v-toolbar-title>
+          <v-icon class="mr-2">mdi-calendar</v-icon>
+          <v-toolbar-title class="mr-4">Timetable Planner</v-toolbar-title>
           <course-search-bar :courses="formattedCourses" class="mx-4"/>
-          <v-dialog width="350px" v-model="optimazationOpen">
+          <v-dialog width="420px" v-model="optimazationOpen">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark v-on="on" @click.stop="dialog = true">Optimize</v-btn>
             </template>

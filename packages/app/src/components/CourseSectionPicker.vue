@@ -7,7 +7,6 @@
     </v-toolbar>
     <v-card-text height="600px">
       <v-list rounded subheader two-line flat>
-        <h4>{{selectedMeetingSections}}</h4>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
             <v-radio-group
@@ -60,11 +59,11 @@
                             <v-tooltip
                               top
                               v-if="checkConflict(time.day, 
-                                  time.start, time.end) != null"
+                                  time.start, time.end) != null && meetingSection.code.slice(-5) != timetableSelectedMeetingSections[activityType]"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
-                                  class="conflicting-time-orange"
+                                  class="conflicting-time-orange "
                                   v-on="on"
                                 >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
                               </template>
@@ -121,13 +120,22 @@ export default {
       type: String
     }
   },
+  mounted() {
+    this.setTimetableSelectedMeetingSections({ code: this.code });
+    this.selectedMeetingSections.lecture = this.timetableSelectedMeetingSections.lecture;
+    this.selectedMeetingSections.tutorial = this.timetableSelectedMeetingSections.tutorial;
+    this.selectedMeetingSections.practical = this.timetableSelectedMeetingSections.practical;
+  },
   computed: {
-    ...mapGetters(["timetable", "selectedCourses"]),
+    ...mapGetters([
+      "timetable",
+      "selectedCourses",
+      "timetableSelectedMeetingSections"
+    ]),
     course() {
       return this.selectedCourses[this.code];
     },
     activities() {
-      // console.log(this.course.meeting_sections[0]);
       return {
         lecture: this.course.meeting_sections.filter(
           section => section.code.charAt(section.code.length - 5) === "L"
@@ -139,31 +147,14 @@ export default {
           section => section.code.charAt(section.code.length - 5) === "P"
         )
       };
-    },
-    DefaultMeetingSections() {
-      let sections = {
-        lecture: null,
-        practical: null,
-        tutorial: null
-      };
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (event.code == this.course.code) {
-            if (event.sectionCode.charAt(0) == "L") {
-              sections.lecture = event.sectionCode;
-            } else if (event.sectionCode.charAt(0) == "P") {
-              sections.practical = event.sectionCode;
-            } else sections.tutorial = event.sectionCode;
-          }
-        }
-      }
-      return sections;
-    },
+    }
   },
 
   methods: {
-    ...mapMutations(["selectMeetingSection"]),
+    ...mapMutations([
+      "selectMeetingSection",
+      "setTimetableSelectedMeetingSections"
+    ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {
@@ -195,7 +186,7 @@ export default {
     onClickDone() {
       this.$emit("done");
       // updateTimetable()
-    },
+    }
     // updateTimetable() {
 
     // },
@@ -210,33 +201,7 @@ export default {
       active: false,
       dialog: false
     };
-  },
-  // watch: {
-  //   selectedMeetingSections: {
-  //     deep: true,
-  //     handler(sections) {
-  //       console.log("New Meeting Section selected");
-  //       this.selectMeetingSection({
-  //         // hardcoded
-  //         courseCode: "CSC108",
-  //         sectionType: "lecture",
-  //         meetingSection: sections.lecture
-  //       });
-  //       this.selectMeetingSection({
-  //         // hardcoded
-  //         courseCode: "CSC108",
-  //         sectionType: "tutorial",
-  //         meetingSection: sections.tutorial
-  //       });
-  //       this.selectMeetingSection({
-  //         // hardcoded
-  //         courseCode: "CSC108",
-  //         sectionType: "practical",
-  //         meetingSection: sections.practical
-  //       });
-  //     }
-  //   }
-  // }
+  }
 };
 </script>
 
