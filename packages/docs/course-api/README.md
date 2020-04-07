@@ -11,7 +11,6 @@ The way to use the playground is illustrated in the following images. Refer to [
 ![Example 1](./playgroundEx1.png)
 ![Example 2](./playgroundEx2.png)
 
-Refer to [**Data Structures 1-6**](#_1-course) for the available data that the API can provide.
 
 If you are curious on how the API was built and want to know more about GraphQL  , [click here](https://www.howtographql.com/basics/0-introduction/).
 ## High-level overview
