@@ -27,7 +27,7 @@ export default {
     ...mapActions(["selectCourse"]),
     onCourseSelected() {
       if (!this.selectedCourse) return;
-      console.log("About to fetch")
+      // console.log("About to fetch")
       this.$apollo
         .query({
           query: gql`
@@ -53,7 +53,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response);
+          // console.log(response);
           if (response.data.courses) {
             this.selectCourse({ course: response.data.courses[0] });
           }

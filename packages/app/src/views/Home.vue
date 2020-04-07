@@ -57,7 +57,7 @@ export default {
     TimetableCourseCard
   },
   computed: {
-    ...mapGetters(["selectedCourses", "timetable", "courseCodeColorMap"]),
+    ...mapGetters(["selectedCourses", "timetable"]),
     formattedCourses() {
       return this.courses.map(course => `${course.code}: ${course.name}`);
     }

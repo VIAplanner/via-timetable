@@ -16,7 +16,7 @@
             </v-dialog>
           </v-col>
           <v-col cols="0.5" class=" pl-0">
-            <v-btn color="white" @click="removeCourse({code: course.code})" icon>
+            <v-btn color="white" @click="deleteCourse({code: course.code})" icon>
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-col>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import CourseSectionPicker from "../components/CourseSectionPicker";
 
 export default {
@@ -76,7 +76,7 @@ export default {
           if (event.code == this.course.code) {
             const instructor = event.instructors.length === 0 ? "TBA" : event.instructors[0]
             sections.push({
-              sectionCode: event.sectionCode,
+              sectionCode: event.sectionCode.slice(-5),
               day: day,
               start: event.start,
               end: event.end,
@@ -95,9 +95,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations([
-      "removeCourse" //also supports payload `this.nameOfMutation(amount)`
-    ]),
+    ...mapActions(["deleteCourse"]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {
@@ -137,11 +135,11 @@ export default {
 .course-info-header {
   background: white;
   border-bottom: 1px solid black;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 
 .sections-info {
-  padding-left: 10px;
+  padding-left: 15px;
   background: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
