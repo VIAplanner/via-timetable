@@ -41,6 +41,16 @@ export default new Vuex.Store({
   actions: {
     selectCourse(context, payload) {
       const color = context.state.colors.pop()
+            payload.course.meeting_sections = payload.course.meeting_sections.map(
+              meetingSection => {
+                console.log(meetingSection.code.substring(meetingSection.code.length - 5))
+                return {
+                  code: meetingSection.code.substring(meetingSection.code.length - 5),
+                  ...meetingSection
+                }
+              }
+            );
+            console.log(payload.course)
       context.commit("addCourse", {
         course: {
           selectedMeetingSections: {
