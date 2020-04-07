@@ -45,7 +45,6 @@ export default {
     },
   },
   computed: {
-
     timetableStart() {
       var earliest = 9;
       for (let day in this.timetable) {

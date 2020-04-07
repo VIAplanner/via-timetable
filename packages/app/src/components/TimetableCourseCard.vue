@@ -23,26 +23,6 @@
           </v-col>
         </v-row>
       </div>
-      <!-- <div class="sections-info">
-        <div v-for="sectionType in ['lecture', 'tutorial', 'practical']" :key="sectionType">
-          <div v-if="course.selectedMeetingSections[sectionType] != null">
-            <v-row
-              v-for="time in course.selectedMeetingSections[sectionType].times"
-              :key="`${time.day} ${time.start} ${time.end}`"
-            >
-              <v-col cols="3">{{course.selectedMeetingSections[sectionType].code}}</v-col>
-              <v-col>{{ time.day }}</v-col>
-              <v-col>{{ getFormattedTime(time.start, time.end) }}</v-col>
-              <v-col cols="3">{{ time.location }}</v-col>
-              <v-col
-                cols="3"
-                v-if="course.selectedMeetingSections[sectionType].instructors == []"
-              >TBA</v-col>
-              <v-col v-else>{{course.selectedMeetingSections[sectionType].instructors[0]}}</v-col>
-            </v-row>
-          </div>
-        </div>
-      </div> -->
       <div class="sections-info">
         <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
           <v-col cols="3">{{meetingsection.sectionCode}}</v-col>
@@ -81,31 +61,23 @@ export default {
   },
   computed: {
     ...mapGetters(["timetable", "selectedCourses"]),
-    // course() {
-    //   console.log(this.selectedCourses[this.code]);
-    //   return this.selectedCourses[this.code];
-    // },
     meetingSections() {
       var ret = []
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
-        console.log(dayEvents)
         for (let event of dayEvents) {
-          // console.log(event.courseCode)
-          // console.log(this.course.code)
-          if (event.courseCode == this.course.code) {
+          if (event.code == this.course.code) {
             ret.push({
               sectionCode: event.sectionCode,
               day: day,
               start: event.start,
               end: event.end,
               location: event.location,
-              instructorName: event.instructorName
+              instructorName: event.instructors[0]
             })
           }
         }
       }
-      console.log(ret)
       return ret
     },
   },

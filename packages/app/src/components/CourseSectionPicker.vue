@@ -54,7 +54,7 @@
                         <v-col>
                           <v-tooltip
                             top
-                            v-if="checkConflict(getProperDayName(time.day), 
+                            v-if="checkConflict(time.day, 
                                   time.start, time.end) != null"
                           >
                             <template v-slot:activator="{ on }">
@@ -63,7 +63,7 @@
                                 v-on="on"
                               >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
                             </template>
-                            Conflicts with {{checkConflict(getProperDayName(time.day),
+                            Conflicts with {{checkConflict(time.day,
                             time.start, time.end)}}
                           </v-tooltip>
                           <div v-else>
@@ -108,7 +108,6 @@ import { mapMutations } from "vuex";
 import gql from "graphql-tag";
 import { mapGetters } from "vuex";
 
-// import COURSE_SECTION_PICKER_QUERY from "../graphql/CourseSectionPicker.gql";
 export default {
   name: "course-section-picker",
   props: {
@@ -137,8 +136,8 @@ export default {
       for (var x = 0; x < dayEvents.length; x++) {
         const event = dayEvents[x];
         const time = this.getFormattedTime(event.start, event.end);
-        const ret = `${event.courseCode.slice(0, -3)} ${
-          event.section
+        const ret = `${event.code.slice(0, 6)} ${
+          event.sectionCode
         }\n${time}`;
         if (event.start < start && event.end > start) {
           return ret;
@@ -150,53 +149,58 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["timetable"]),
-    activities() {
-      console.log(this.course.meeting_sections)
-      return {
-        lecture: this.course.meeting_sections.filter(
-          section => section.code.charAt(0) === "L"
-        ),
-        tutorial: this.course.meeting_sections.filter(
-          section => section.code.charAt(0) === "T"
-        ),
-        practical: this.course.meeting_sections.filter(
-          section => section.code.charAt(0) === "P"
-        )
-      };
-    },
+    ...mapGetters(["timetable", "selectedCourses"]),
     course() {
       return this.courses[0];
     },
-    selectedMeetingSections() {
-      let lec;
-      let pra;
-      let tut;
-      for (let day in this.timetable) {
-        const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (event.courseCode == this.code) {
-            if (event.section.charAt(0) == "L") {
-              lec = event.section;
-            } else if (event.section.charAt(0) == "P") {
-              pra = event.section;
-            } else {
-              tut = event.section;
-            }
-          }
-        }
-      }
+    activities() {
+      console.log(this.course.meeting_sections[0])
       return {
-        lecture: lec,
-        practical: pra,
-        tutorial: tut
+        lecture: this.course.meeting_sections.filter(
+          section => section.code.charAt(section.code.length - 5) === "L"
+        ),
+        tutorial: this.course.meeting_sections.filter(
+          section => section.code.charAt(section.code.length - 5) === "T"
+        ),
+        practical: this.course.meeting_sections.filter(
+          section => section.code.charAt(section.code.length - 5) === "P"
+        )
       };
-    }
+    },
+    // selectedMeetingSections() {
+    //   let lec;
+    //   let pra;
+    //   let tut;
+    //   for (let day in this.timetable) {
+    //     const dayEvents = this.timetable[day];
+    //     for (let event of dayEvents) {
+    //       if (event.courseCode == this.code) {
+    //         if (event.section.charAt(0) == "L") {
+    //           lec = event.section;
+    //         } else if (event.section.charAt(0) == "P") {
+    //           pra = event.section;
+    //         } else {
+    //           tut = event.section;
+    //         }
+    //       }
+    //     }
+    //   }
+    //   return {
+    //     lecture: lec,
+    //     practical: pra,
+    //     tutorial: tut
+    //   };
+    // }
   },
   data() {
     return {
       active: false,
-      dialog: false
+      dialog: false,
+      selectedMeetingSections: {
+        lecture: null,
+        practical: null,
+        tutorial: null
+      }
     };
   },
   apollo: {

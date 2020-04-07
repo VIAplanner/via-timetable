@@ -11,7 +11,6 @@
 <script>
 import { mapActions } from "vuex";
 import gql from "graphql-tag";
-
 export default {
   name: "course-search-bar",
   props: {
