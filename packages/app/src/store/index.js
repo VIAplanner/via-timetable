@@ -21,8 +21,8 @@ export default new Vuex.Store({
   },
   mutations: {
     selectMeetingSection(state, payload) {
-      console.log("Selecting meeting section: " + payload)
-      console.log(payload)
+      // console.log("Selecting meeting section: " + payload)
+      // console.log(payload)
       state.selectedCourses[payload.courseCode][payload.sectionType] = payload.meetingSection
     },
     setTimetables(state, payload) {
@@ -41,6 +41,16 @@ export default new Vuex.Store({
   actions: {
     selectCourse(context, payload) {
       const color = context.state.colors.pop()
+      // payload.course.meeting_sections = payload.course.meeting_sections.map(
+      //   meetingSection => {
+      //     console.log(meetingSection.code.substring(meetingSection.code.length - 5))
+      //     return {
+      //       code: meetingSection.code.substring(meetingSection.code.length - 5),
+      //       ...meetingSection
+      //     }
+      //   }
+      // );
+      // console.log(payload.course)
       context.commit("addCourse", {
         course: {
           selectedMeetingSections: {
@@ -52,10 +62,12 @@ export default new Vuex.Store({
           ...payload.course
         }
       })
+      console.log(payload.course)
+      console.log(this.state.selectedCourses[payload.course.code])
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
-      console.log(courses)
+      // console.log(courses)
       const timetables = generateTimetables(courses)
-      console.log(timetables)
+      // console.log(timetables)
       context.commit("setTimetables", { timetables })
     }
   },
@@ -69,8 +81,8 @@ export default new Vuex.Store({
       return state.timetables[0]
     },
     getCourseColor: (state) => (code) => {
-      console.log(code)
-      console.log(state.selectedCourses[code])
+      // console.log(code)
+      // console.log(state.selectedCourses[code])
       return state.selectedCourses[code].color
     }
   }

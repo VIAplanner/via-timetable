@@ -1,11 +1,26 @@
 <template>
   <div>
     <div class="course-info-card">
-      <div class="course-card-header" :style="{ background: course.color }">
-        <h3 class="course-card-title">{{ course.code }} {{ course.name }}</h3>
-        <div class="delete-button">
-          <v-btn @click="removeCourse({code: course.code})" text>Delete</v-btn>
-        </div>
+      <div class="course-card-header pb-4" :style="{ background: course.color }">
+        <v-row class="pl-2 mb-2">
+          <v-col class=" ml-2" cols="10">{{ course.code }} {{ course.name }}</v-col>
+          <v-spacer />
+          <v-col cols="0.5" class="pr-0">
+            <v-dialog v-model="dialog" scrollable width="800px">
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on" color="white">
+                  <v-icon>mdi-pencil-box-outline</v-icon>
+                </v-btn>
+              </template>
+              <course-section-picker v-on:done="dialog = false" :code="course.code" />
+            </v-dialog>
+          </v-col>
+          <v-col cols="0.5" class=" pl-0">
+            <v-btn color="white" @click="removeCourse({code: course.code})" icon>
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
       </div>
       <div class="course-info-header">
         <v-row>
@@ -23,26 +38,6 @@
           </v-col>
         </v-row>
       </div>
-      <!-- <div class="sections-info">
-        <div v-for="sectionType in ['lecture', 'tutorial', 'practical']" :key="sectionType">
-          <div v-if="course.selectedMeetingSections[sectionType] != null">
-            <v-row
-              v-for="time in course.selectedMeetingSections[sectionType].times"
-              :key="`${time.day} ${time.start} ${time.end}`"
-            >
-              <v-col cols="3">{{course.selectedMeetingSections[sectionType].code}}</v-col>
-              <v-col>{{ time.day }}</v-col>
-              <v-col>{{ getFormattedTime(time.start, time.end) }}</v-col>
-              <v-col cols="3">{{ time.location }}</v-col>
-              <v-col
-                cols="3"
-                v-if="course.selectedMeetingSections[sectionType].instructors == []"
-              >TBA</v-col>
-              <v-col v-else>{{course.selectedMeetingSections[sectionType].instructors[0]}}</v-col>
-            </v-row>
-          </div>
-        </div>
-      </div> -->
       <div class="sections-info">
         <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
           <v-col cols="3">{{meetingsection.sectionCode}}</v-col>
@@ -52,14 +47,6 @@
           <v-col cols="3">{{meetingsection.instructorName}}</v-col>
         </v-row>
       </div>
-      <v-dialog v-model="dialog" width="800px">
-        <template v-slot:activator="{ on }">
-          <v-btn icon class="edit-button" v-on="on">
-            <v-icon>mdi-pencil-box-outline</v-icon>
-          </v-btn>
-        </template>
-        <course-section-picker v-on:done="dialog = false" :code="course.code" />
-      </v-dialog>
     </div>
   </div>
 </template>
@@ -81,33 +68,26 @@ export default {
   },
   computed: {
     ...mapGetters(["timetable", "selectedCourses"]),
-    // course() {
-    //   console.log(this.selectedCourses[this.code]);
-    //   return this.selectedCourses[this.code];
-    // },
     meetingSections() {
-      var ret = []
+      const sections = [];
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
-        console.log(dayEvents)
         for (let event of dayEvents) {
-          // console.log(event.courseCode)
-          // console.log(this.course.code)
-          if (event.courseCode == this.course.code) {
-            ret.push({
+          if (event.code == this.course.code) {
+            const instructor = event.instructors.length === 0 ? "TBA" : event.instructors[0]
+            sections.push({
               sectionCode: event.sectionCode,
               day: day,
               start: event.start,
               end: event.end,
               location: event.location,
-              instructorName: event.instructorName
-            })
+              instructorName: instructor
+            });
           }
         }
       }
-      console.log(ret)
-      return ret
-    },
+      return sections;
+    }
   },
   data() {
     return {
@@ -141,24 +121,17 @@ export default {
 
 .course-info-card {
   position: relative;
+  box-shadow: 0 20px 50px #E5E5E5E5;
+  border-radius: 12px;
 }
 
 .course-card-header {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   position: relative;
-  height: 35px;
-}
-
-.course-card-title {
-  position: absolute;
-  top: 5px;
-  left: 10px;
-}
-
-.delete-button {
-  position: absolute;
-  right: 10px;
+  height: 56px;
+  color: white;
+  font-size: 20px;
 }
 
 .course-info-header {
