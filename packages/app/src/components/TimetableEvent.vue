@@ -72,11 +72,11 @@ export default {
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
-      if (duration === 1) {
+      if (duration <= 1) {
         return "one-hour";
-      } else if (duration === 2) {
+      } else if (duration <= 2) {
         return "two-hours";
-      } else if (duration === 3) {
+      } else if (duration <= 3) {
         return "three-hours";
       }
     },
@@ -88,6 +88,10 @@ export default {
       }
       if (e == 0) {
         e = 12;
+      }
+      if(Number.isInteger(e)==false){
+        e = Math.floor(e);
+        return `${s}:00 - ${e}:30`;
       }
       return `${s}:00 - ${e}:00`;
     },
