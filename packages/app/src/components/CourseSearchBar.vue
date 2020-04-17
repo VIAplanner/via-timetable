@@ -3,15 +3,19 @@
     @change="onCourseSelected()"
     v-model="selectedCourse"
     :items="courses"
-    dense
-    label="Search Course"
+    cache-items
+      class="mx-4"
+      flat
+      hide-no-data
+      hide-details
+      label="Search for a Course"
+      solo-inverted
   ></v-autocomplete>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import gql from "graphql-tag";
-
 export default {
   name: "course-search-bar",
   props: {
@@ -23,7 +27,7 @@ export default {
     ...mapActions(["selectCourse"]),
     onCourseSelected() {
       if (!this.selectedCourse) return;
-      console.log("About to fetch")
+      // console.log("About to fetch")
       this.$apollo
         .query({
           query: gql`
@@ -49,7 +53,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response);
+          // console.log(response);
           if (response.data.courses) {
             this.selectCourse({ course: response.data.courses[0] });
           }

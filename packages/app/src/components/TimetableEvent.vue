@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="event.start > 0">
-      <v-dialog v-model="dialog" width="800px">
+      <v-dialog v-model="dialog" scrollable width="800px">
         <template v-slot:activator="{ on }">
           <div
             @mouseover="hovered = true"
@@ -22,7 +22,7 @@
               </v-btn>
             </div>
 
-            <div style="margin-left: 3px;">{{event.sectionCode}}</div>
+            <div style="margin-left: 3px;">{{event.sectionCode.substring(event.sectionCode.length - 5)}}</div>
 
             <div style="position: relative;">
               <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
