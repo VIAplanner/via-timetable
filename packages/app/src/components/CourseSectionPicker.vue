@@ -6,6 +6,7 @@
       <v-btn text @click="onClickDone">Done</v-btn>
     </v-toolbar>
     <v-card-text height="600px">
+      <!-- <h4>{{selectedMeetingSections}}</h4> -->
       <v-list rounded subheader two-line flat>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
@@ -20,7 +21,7 @@
               >{{activityType}}s</v-subheader>
               <v-row class="activity-label">
                 <v-col>
-                  <h4 style="margin-left: 80px;">Activity</h4>
+                  <h4 style="margin-left: 70px;">Activity</h4>
                 </v-col>
                 <v-col class="activity-label">
                   <h4 style="margin-left: 50px">Time</h4>
@@ -121,16 +122,13 @@ export default {
     }
   },
   mounted() {
-    this.setTimetableSelectedMeetingSections({ code: this.code });
-    this.selectedMeetingSections.lecture = this.timetableSelectedMeetingSections.lecture;
-    this.selectedMeetingSections.tutorial = this.timetableSelectedMeetingSections.tutorial;
-    this.selectedMeetingSections.practical = this.timetableSelectedMeetingSections.practical;
+    console.log('mounted')
+    this.resetSelectedMeetingSections()
   },
   computed: {
     ...mapGetters([
       "timetable",
-      "selectedCourses",
-      "timetableSelectedMeetingSections"
+      "selectedCourses"
     ]),
     course() {
       return this.selectedCourses[this.code];
@@ -147,6 +145,9 @@ export default {
           section => section.code.charAt(section.code.length - 5) === "P"
         )
       };
+    },
+    timetableSelectedMeetingSections () {
+      return this.getTimetableMeetingSections()
     }
   },
 
@@ -161,8 +162,8 @@ export default {
         s = 12;
       }
       var e = (end / 3600) % 12;
-      if (end == 0) {
-        end = 12;
+      if (e == 0) {
+        e = 12;
       }
       return `${s}:00 - ${e}:00`;
     },
@@ -186,10 +187,33 @@ export default {
     onClickDone() {
       this.$emit("done");
       // updateTimetable()
-    }
+    },
     // updateTimetable() {
 
     // },
+    resetSelectedMeetingSections() {
+      this.selectedMeetingSections = this.getTimetableMeetingSections()
+    },
+    getTimetableMeetingSections() {
+      let selectedMeetingSections = {
+        lecture: null,
+        practical: null,
+        tutorial: null
+      };
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          if (event.code === this.course.code) {
+            if (event.sectionCode.charAt(0) == "L") {
+              selectedMeetingSections.lecture = event.sectionCode.slice(-5);
+            } else if (event.sectionCode.charAt(0) == "P") {
+              selectedMeetingSections.practical = event.sectionCode.slice(-5);
+            } else selectedMeetingSections.tutorial = event.sectionCode.slice(-5);
+          }
+        }
+      }
+      return selectedMeetingSections
+    }
   },
   data() {
     return {

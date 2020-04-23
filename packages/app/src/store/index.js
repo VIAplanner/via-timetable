@@ -61,17 +61,16 @@ export default new Vuex.Store({
           if (event.code === payload.code) {
             console.log("Found")
             if (event.sectionCode.charAt(0) == "L") {
-              selectedMeetingSections.lecture = event.sectionCode;
+              selectedMeetingSections.lecture = event.sectionCode.slice(-5);
             } else if (event.sectionCode.charAt(0) == "P") {
-              selectedMeetingSections.practical = event.sectionCode;
-            } else selectedMeetingSections.tutorial = event.sectionCode;
+              selectedMeetingSections.practical = event.sectionCode.slice(-5);
+            } else selectedMeetingSections.tutorial = event.sectionCode.slice(-5);
           }
         }
       }
       state.timetableSelectedMeetingSections.lecture = selectedMeetingSections.lecture
       state.timetableSelectedMeetingSections.tutorial = selectedMeetingSections.tutorial
       state.timetableSelectedMeetingSections.practical = selectedMeetingSections.practical   
-      
     }
   },
   actions: {
