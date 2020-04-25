@@ -30,12 +30,12 @@ export default {
       this.$apollo
         .query({
           query: gql`
-            query getCourse($courseCode: String!) {
-              courses(code: $courseCode) {
-                code
+            query getCourse($code: String!) {
+              courses(code: $code) {
+                courseCode: code
                 name
                 meeting_sections {
-                  code
+                  sectionCode: code
                   instructors
                   times {
                     day
@@ -48,7 +48,7 @@ export default {
             }
           `,
           variables: {
-            courseCode: this.selectedCourse.slice(
+            code: this.selectedCourse.slice(
               0,
               this.selectedCourse.indexOf(":")
             )

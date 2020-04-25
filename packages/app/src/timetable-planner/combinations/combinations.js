@@ -1,16 +1,16 @@
 const courseMeetingSectionCombinations = (course) => {
-    const lectures = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "L");
-    const tutorials = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "T");
-    const practicals = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "P");
+    const lectures = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "L");
+    const tutorials = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "T");
+    const practicals = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "P");
     console.log(lectures)
     for (const lecture of lectures) {
-        lecture.code = course.code + lecture.code;
+        lecture.comboCode = course.courseCode + lecture.sectionCode;
     }
     for (const tutorial of tutorials) {
-        tutorial.code = course.code + tutorial.code;
+        tutorial.comboCode = course.courseCode + tutorial.sectionCode;
     }
     for (const practical of practicals) {
-        practical.code = course.code + practical.code;
+        practical.comboCode = course.courseCode + practical.sectionCode;
     }
     const lecTutCombinations = [];
     for (const lecture of lectures) {
@@ -30,7 +30,7 @@ const courseMeetingSectionCombinations = (course) => {
             totalCombinations = lecTutCombinations;
         }
     }
-    return { code: course.code, combinations: totalCombinations };
+    return { code: course.courseCode, combinations: totalCombinations };
 };
 const courseCombinations = (courseMeetingSectionCombos) => {
     const outputs = [];
