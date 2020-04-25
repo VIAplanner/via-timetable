@@ -37,11 +37,11 @@
               <v-list-item-group>
                 <v-list-item
                   v-for="meetingSection in meetingSections"
-                  :key="meetingSection.code"
+                  :key="meetingSection.sectionCode"
                   style="margin-bottom: 0px;"
                 >
                   <v-list-item-action>
-                    <v-radio :value="meetingSection.code.slice(-5)"></v-radio>
+                    <v-radio :value="meetingSection.sectionCode"></v-radio>
                   </v-list-item-action>
 
                   <v-list-item-content class="content-no-padding">
@@ -49,7 +49,7 @@
                       <v-col class="contain" cols="2">
                         <v-row class="center-vertical">
                           <v-col>
-                            <v-list-item-title>{{meetingSection.code.slice(-5)}}</v-list-item-title>
+                            <v-list-item-title>{{meetingSection.sectionCode}}</v-list-item-title>
                           </v-col>
                         </v-row>
                       </v-col>
@@ -60,7 +60,7 @@
                             <v-tooltip
                               top
                               v-if="checkConflict(time.day, 
-                                  time.start, time.end) != null && meetingSection.code.slice(-5) != timetableSelectedMeetingSections[activityType]"
+                                  time.start, time.end) != null && meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
@@ -136,13 +136,13 @@ export default {
     activities() {
       return {
         lecture: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "L"
+          section => section.sectionCode.charAt(0) === "L"
         ),
         tutorial: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "T"
+          section => section.sectionCode.charAt(0) === "T"
         ),
         practical: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "P"
+          section => section.sectionCode.charAt(0) === "P"
         )
       };
     },
@@ -203,12 +203,12 @@ export default {
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
         for (let event of dayEvents) {
-          if (event.code === this.course.code) {
+          if (event.code === this.course.courseCode) {
             if (event.sectionCode.charAt(0) == "L") {
-              selectedMeetingSections.lecture = event.sectionCode.slice(-5);
+              selectedMeetingSections.lecture = event.sectionCode;
             } else if (event.sectionCode.charAt(0) == "P") {
-              selectedMeetingSections.practical = event.sectionCode.slice(-5);
-            } else selectedMeetingSections.tutorial = event.sectionCode.slice(-5);
+              selectedMeetingSections.practical = event.sectionCode;
+            } else selectedMeetingSections.tutorial = event.sectionCode;
           }
         }
       }

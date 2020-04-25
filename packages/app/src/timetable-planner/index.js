@@ -54,8 +54,8 @@ const createTimetable = (meetingSectionCombo) => {
     for (const meetingSection of meetingSectionCombo) {
         for (const time of meetingSection.times) {
             const timetableSection = {
-                code: meetingSection.code.substring(0, 9),
-                sectionCode: meetingSection.code.substring(9),
+                code: meetingSection.comboCode.substring(0, meetingSection.comboCode.length - 5),
+                sectionCode: meetingSection.sectionCode,
                 instructors: meetingSection.instructors,
                 ...time,
             };
@@ -94,6 +94,7 @@ const generateTimetables = (courses) => {
             timetables.push(timetable);
         }
     }
+    console.log(timetables)
     return timetables;
 };
 export { generateTimetables, createTimetable, overlapExists };

@@ -39,7 +39,7 @@ export default new Vuex.Store({
       state.timetables = payload.timetables
     },
     addCourse(state, payload) {
-      state.selectedCourses[payload.course.code] = payload.course
+      state.selectedCourses[payload.course.courseCode] = payload.course
       state.takenColors.push(payload.course.color)
     },
     removeCourse(state, payload) {
@@ -90,6 +90,7 @@ export default new Vuex.Store({
       })
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
       const timetables = generateTimetables(courses)
+      console.log(timetables.length)
       context.commit("setTimetables", { timetables })
       context.commit("setTimetable", { timetable: context.state.timetables[0] })
     },

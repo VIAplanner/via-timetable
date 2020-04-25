@@ -22,7 +22,7 @@
               </v-btn>
             </div>
 
-            <div style="margin-left: 3px;">{{event.sectionCode.substring(event.sectionCode.length - 5)}}</div>
+            <div style="margin-left: 3px;">{{event.sectionCode}}</div>
 
             <div style="position: relative;">
               <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
