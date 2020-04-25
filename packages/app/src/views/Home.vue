@@ -6,7 +6,7 @@
           <v-icon class="mr-2">mdi-calendar</v-icon>
           <v-toolbar-title class="mr-4">Timetable Planner</v-toolbar-title>
           <course-search-bar :courses="formattedCourses" class="mx-4"/>
-          <v-dialog width="420px" v-model="optimazationOpen">
+          <v-dialog width="420px" v-model="optimizationOpen">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark v-on="on" @click.stop="dialog = true">Optimize</v-btn>
             </template>
@@ -65,8 +65,8 @@ export default {
   },
   data() {
     return {
-      OptimizationOpen: false
-    };
+      optimizationOpen: false
+    }
   },
   apollo: {
     courses: COURSES_SEARCH_BAR_QUERY
