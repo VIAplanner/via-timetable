@@ -65,7 +65,7 @@ export default {
   },
   data() {
     return {
-      OptimizationOpen: false
+      optimizationOpen: false
     }
   },
   apollo: {
