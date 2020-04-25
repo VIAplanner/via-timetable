@@ -111,9 +111,11 @@ export default {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
     },
     atInput() {
-      console.log('pop up toggled')
+      // console.log('pop up toggled')
       var courseSectionPicker = this.$refs.popUp;
-      courseSectionPicker.resetSelectedMeetingSections()
+      if (typeof courseSectionPicker != 'undefined') {
+        courseSectionPicker.resetSelectedMeetingSections()
+      }
     },
   }
 };

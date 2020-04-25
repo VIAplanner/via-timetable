@@ -71,9 +71,11 @@ export default {
       this.locked = !this.locked;
     },
     atInput() {
-      console.log('pop up toggled')
+      // console.log('pop up toggled')
       var courseSectionPicker = this.$refs.popUp;
-      courseSectionPicker.resetSelectedMeetingSections()
+      if (typeof courseSectionPicker != 'undefined') {
+        courseSectionPicker.resetSelectedMeetingSections()
+      }
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
