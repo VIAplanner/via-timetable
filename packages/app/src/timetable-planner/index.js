@@ -1,4 +1,4 @@
-import { courseCombinations, sortCourseSection, } from "./combinations/combinations";
+import { sortCourseSection, } from "./combinations/combinations";
 /**
  *
  * Helper function for OverlapExist
@@ -51,10 +51,13 @@ const createTimetable = (courseSection) => {
         THURSDAY: [],
         FRIDAY: []
     };
+    console.log(timetable, 1)
     // loop through each course for their lecture and check if the lectures are valid
     const lectureCombo = (courseSection, whichArray = 0, output = []) => {
-        courseSection[whichArray].lecture.forEach((arrayElement) => {
+        courseSection[whichArray].lecture.some((arrayElement) => {
             if (whichArray === courseSection.length - 1) {
+                const prevTimetable = Object.assign({}, timetable)
+                const prevOutput = output.slice()
                 // Base case...
                 const temp = [...output];
                 temp.push(arrayElement);
@@ -69,31 +72,29 @@ const createTimetable = (courseSection) => {
                         timetable[time.day].push(timetableSection);
                     }
                 }
+                console.log(temp, 2)
                 //if its invalid, clear the timetable and start again
                 if (overlapExists(timetable)) {
-                    timetable = {
-                        MONDAY: [],
-                        TUESDAY: [],
-                        WEDNESDAY: [],
-                        THURSDAY: [],
-                        FRIDAY: []
-                    };
+                    timetable = prevTimetable
+                    output = prevOutput
                 }
                 else {
-                    //check if any course in the combo contains practical
-                    let pra = 0
+                    // check if any course in the combo contains practical
+                    let pra = -1
                     for (const section of courseSection) {
                         if (section.practical.length != 0) {
                             pra = courseSection.indexOf(section)
                             break
                         }
                     }
-                    if (pra) {
+                    if (pra >= 0) {
+                        console.log(pra)
                         //loop through each course for their practical and check if the practicals are valid with the lecture above
                         const practicalCombo = (courseSection, whichArray2 = pra, output2 = []) => {
-                            const lecTimetable = Object.assign({}, timetable)
-                            courseSection[whichArray2].practical.forEach((arrayElement2) => {
+                            courseSection[whichArray2].practical.some((arrayElement2) => {
                                 if (whichArray2 === courseSection.length - 1) {
+                                    const prevTimetable = Object.assign({}, timetable)
+                                    const prevOutput = output.slice()
                                     // Base case...
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
@@ -108,55 +109,62 @@ const createTimetable = (courseSection) => {
                                             timetable[time.day].push(timetableSection);
                                         }
                                     }
+                                    console.log(timetable, 3)
                                     if (overlapExists(timetable)) {
-                                        timetable = lecTimetable
+                                        timetable = prevTimetable
+                                        output = prevOutput
                                     }
                                     else {
-                                        let tut = 0
+                                        let tut = -1
                                         for (const section of courseSection) {
                                             if (section.tutorial.length != 0) {
                                                 tut = courseSection.indexOf(section)
                                                 break
                                             }
                                         }
-                                        if(tut){
-                                        const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                                            const lecTimetable = Object.assign({}, timetable)
-                                            courseSection[whichArray3].tutorial.forEach((arrayElement3) => {
-                                                if (whichArray3 === courseSection.length - 1) {
-                                                    // Base case...
-                                                    const temp = [...output3];
-                                                    temp.push(arrayElement3);
-                                                    for (const tut of temp) {
-                                                        for (const time of pra.times) {
-                                                            const timetableSection = {
-                                                                code: pra.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                sectionCode: tut.sectionCode,
-                                                                instructors: tut.instructors,
-                                                                ...time,
-                                                            };
-                                                            timetable[time.day].push(timetableSection);
+                                        if (tut >= 0) {
+                                            const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
+                                                courseSection[whichArray3].tutorial.some((arrayElement3) => {
+                                                    if (whichArray3 === courseSection.length - 1) {
+                                                        const prevTimetable = Object.assign({}, timetable)
+                                                        const prevOutput = output.slice()
+                                                        // Base case...
+                                                        const temp = [...output3];
+                                                        temp.push(arrayElement3);
+                                                        for (const tut of temp) {
+                                                            for (const time of pra.times) {
+                                                                const timetableSection = {
+                                                                    code: pra.comboCode.substring(0, tut.comboCode.length - 5),
+                                                                    sectionCode: tut.sectionCode,
+                                                                    instructors: tut.instructors,
+                                                                    ...time,
+                                                                };
+                                                                timetable[time.day].push(timetableSection);
+                                                            }
                                                         }
+                                                        console.log(timetable, 4)
+                                                        if (overlapExists(timetable)) {
+                                                            timetable = prevTimetable
+                                                            output = prevOutput
+                                                        }
+                                                        else {
+                                                            return
+                                                        }
+                                                    } else {
+                                                        // Recursive case...
+                                                        const temp = [...output3];
+                                                        temp.push(arrayElement3);
+                                                        tutorialCombo(courseSection, whichArray3 + 1, temp);
                                                     }
-                                                    if (overlapExists(timetable)) {
-                                                        timetable = lecTimetable
-                                                    }
-                                                    else {
-                                                        return
-                                                    }
-                                                } else {
-                                                    // Recursive case...
-                                                    const temp = [...output3];
-                                                    temp.push(arrayElement3);
-                                                    tutorialCombo(courseSection, whichArray3 + 1, temp);
-                                                }
-                                            })
+                                                })
+                                            }
+                                            if (tutorialCombo(courseSection)) {
+                                                return 1
+                                            }
                                         }
-                                    }
-                                    else{
-                                        return
-                                    }
-                                        tutorialCombo(courseSection)
+                                        else {
+                                            return
+                                        }
                                     }
                                 } else {
                                     // Recursive case...
@@ -166,7 +174,9 @@ const createTimetable = (courseSection) => {
                                 }
                             })
                         }
-                        practicalCombo(courseSection)
+                        if (practicalCombo(courseSection)) {
+                            return
+                        }
                     } else {
                         let tut = 0
                         for (const section of courseSection) {
@@ -177,9 +187,10 @@ const createTimetable = (courseSection) => {
                         }
                         //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
                         const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                            const lecTimetable = Object.assign({}, timetable)
-                            courseSection[whichArray3].tutorial.forEach((arrayElement3) => {
+                            courseSection[whichArray3].tutorial.some((arrayElement3) => {
                                 if (whichArray3 === courseSection.length - 1) {
+                                    const prevTimetable = Object.assign({}, timetable)
+                                    const prevOutput = output.slice()
                                     // Base case...
                                     const temp = [...output3];
                                     temp.push(arrayElement3);
@@ -194,8 +205,10 @@ const createTimetable = (courseSection) => {
                                             timetable[time.day].push(timetableSection);
                                         }
                                     }
+                                    console.log(timetable, 5)
                                     if (overlapExists(timetable)) {
-                                        timetable = lecTimetable
+                                        timetable = prevTimetable
+                                        output = prevOutput
                                     }
                                     else {
                                         return
@@ -208,7 +221,9 @@ const createTimetable = (courseSection) => {
                                 }
                             })
                         }
-                        tutorialCombo(courseSection)
+                        if (tutorialCombo(courseSection)) {
+                            return
+                        }
                     }
                 }
             }
@@ -220,7 +235,6 @@ const createTimetable = (courseSection) => {
             }
         });
     };
-
     lectureCombo(courseSection);
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
     for (const day of days) {
@@ -228,6 +242,7 @@ const createTimetable = (courseSection) => {
             return a.start - b.start;
         });
     }
+    return timetable
 };
 /**
  *
@@ -242,7 +257,10 @@ const createTimetable = (courseSection) => {
 const generateTimetables = (courses) => {
     // Generate all valid combinations of MeetingSections for a course
     const courseSections = courses.map(course => sortCourseSection(course));
-    return createTimetable(courseSections);
+    console.log(courseSections)
+    const timetable = createTimetable(courseSections)
+    console.log(timetable)
+    return [timetable];
 };
 export { generateTimetables, createTimetable, overlapExists };
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLGtCQUFrQixFQUFFLGdDQUFnQyxHQUFHLE1BQU0sNkJBQTZCLENBQUE7QUFFbkc7Ozs7OztHQU1HO0FBQ0gsTUFBTSxrQkFBa0IsR0FBRyxDQUFDLFNBQW9CLEVBQUUsR0FBVyxFQUFFLEVBQUU7SUFDN0QsSUFBSSxPQUFPLEdBQUcsQ0FBQyxDQUFBO0lBQ2YsT0FBTyxPQUFPLEdBQUcsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE1BQU0sRUFBRTtRQUNwQyxJQUFJLFFBQVEsR0FBRyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQTtRQUM1QixPQUFPLFFBQVEsR0FBRyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsTUFBTSxFQUFFO1lBQ3JDLElBQUksQ0FBQyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsT0FBTyxDQUFDLENBQUMsS0FBSyxJQUFJLFNBQVMsQ0FBQyxHQUFHLENBQUMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxLQUFLO2dCQUNoRSxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsT0FBTyxDQUFDLENBQUMsS0FBSyxHQUFHLFNBQVMsQ0FBQyxHQUFHLENBQUMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxHQUFHLENBQUM7Z0JBQzdELENBQUMsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxDQUFDLEdBQUcsR0FBRyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsUUFBUSxDQUFDLENBQUMsS0FBSztvQkFDekQsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxDQUFDLEdBQUcsSUFBSSxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsUUFBUSxDQUFDLENBQUMsR0FBRyxDQUFDLEVBQUU7Z0JBQ2xFLE9BQU8sSUFBSSxDQUFBO2FBQ2Q7WUFDRCxRQUFRLEVBQUUs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
