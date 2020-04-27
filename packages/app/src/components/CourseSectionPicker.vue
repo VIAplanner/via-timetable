@@ -6,6 +6,7 @@
       <v-btn text @click="onClickDone">Done</v-btn>
     </v-toolbar>
     <v-card-text height="600px">
+      <!-- <h4>{{selectedMeetingSections}}</h4> -->
       <v-list rounded subheader two-line flat>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
@@ -20,7 +21,7 @@
               >{{activityType}}s</v-subheader>
               <v-row class="activity-label">
                 <v-col>
-                  <h4 style="margin-left: 80px;">Activity</h4>
+                  <h4 style="margin-left: 70px;">Activity</h4>
                 </v-col>
                 <v-col class="activity-label">
                   <h4 style="margin-left: 50px">Time</h4>
@@ -36,11 +37,11 @@
               <v-list-item-group>
                 <v-list-item
                   v-for="meetingSection in meetingSections"
-                  :key="meetingSection.code"
+                  :key="meetingSection.sectionCode"
                   style="margin-bottom: 0px;"
                 >
                   <v-list-item-action>
-                    <v-radio :value="meetingSection.code.slice(-5)"></v-radio>
+                    <v-radio :value="meetingSection.sectionCode"></v-radio>
                   </v-list-item-action>
 
                   <v-list-item-content class="content-no-padding">
@@ -48,7 +49,7 @@
                       <v-col class="contain" cols="2">
                         <v-row class="center-vertical">
                           <v-col>
-                            <v-list-item-title>{{meetingSection.code.slice(-5)}}</v-list-item-title>
+                            <v-list-item-title>{{meetingSection.sectionCode}}</v-list-item-title>
                           </v-col>
                         </v-row>
                       </v-col>
@@ -59,7 +60,7 @@
                             <v-tooltip
                               top
                               v-if="checkConflict(time.day, 
-                                  time.start, time.end) != null && meetingSection.code.slice(-5) != timetableSelectedMeetingSections[activityType]"
+                                  time.start, time.end) != null && meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
@@ -121,16 +122,13 @@ export default {
     }
   },
   mounted() {
-    this.setTimetableSelectedMeetingSections({ code: this.code });
-    this.selectedMeetingSections.lecture = this.timetableSelectedMeetingSections.lecture;
-    this.selectedMeetingSections.tutorial = this.timetableSelectedMeetingSections.tutorial;
-    this.selectedMeetingSections.practical = this.timetableSelectedMeetingSections.practical;
+    console.log('mounted')
+    this.resetSelectedMeetingSections()
   },
   computed: {
     ...mapGetters([
       "timetable",
-      "selectedCourses",
-      "timetableSelectedMeetingSections"
+      "selectedCourses"
     ]),
     course() {
       return this.selectedCourses[this.code];
@@ -138,15 +136,18 @@ export default {
     activities() {
       return {
         lecture: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "L"
+          section => section.sectionCode.charAt(0) === "L"
         ),
         tutorial: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "T"
+          section => section.sectionCode.charAt(0) === "T"
         ),
         practical: this.course.meeting_sections.filter(
-          section => section.code.charAt(section.code.length - 5) === "P"
+          section => section.sectionCode.charAt(0) === "P"
         )
       };
+    },
+    timetableSelectedMeetingSections () {
+      return this.getTimetableMeetingSections()
     }
   },
 
@@ -161,8 +162,8 @@ export default {
         s = 12;
       }
       var e = (end / 3600) % 12;
-      if (end == 0) {
-        end = 12;
+      if (e == 0) {
+        e = 12;
       }
       return `${s}:00 - ${e}:00`;
     },
@@ -186,10 +187,33 @@ export default {
     onClickDone() {
       this.$emit("done");
       // updateTimetable()
-    }
+    },
     // updateTimetable() {
 
     // },
+    resetSelectedMeetingSections() {
+      this.selectedMeetingSections = this.getTimetableMeetingSections()
+    },
+    getTimetableMeetingSections() {
+      let selectedMeetingSections = {
+        lecture: null,
+        practical: null,
+        tutorial: null
+      };
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          if (event.code === this.course.courseCode) {
+            if (event.sectionCode.charAt(0) == "L") {
+              selectedMeetingSections.lecture = event.sectionCode;
+            } else if (event.sectionCode.charAt(0) == "P") {
+              selectedMeetingSections.practical = event.sectionCode;
+            } else selectedMeetingSections.tutorial = event.sectionCode;
+          }
+        }
+      }
+      return selectedMeetingSections
+    }
   },
   data() {
     return {

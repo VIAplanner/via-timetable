@@ -2,7 +2,7 @@ declare interface SymbolConstructor {
     readonly observable: symbol;
 }
 interface MeetingSection {
-    code: string;
+    sectionCode: string;
     instructors: string[];
     times: MeetingSectionTime[];
 }
@@ -31,7 +31,7 @@ interface Timetable {
     FRIDAY: TimetableSection[];
 }
 interface Course {
-    code: string;
+    courseCode: string;
     meeting_sections: MeetingSection[];
 }
 interface CourseMeetingSectionCombinations {

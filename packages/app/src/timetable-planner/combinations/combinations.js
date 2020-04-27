@@ -1,53 +1,32 @@
 const courseMeetingSectionCombinations = (course) => {
-    const lectures = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "L");
-    const tutorials = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "T");
-    const practicals = course.meeting_sections.filter(section => section.code.charAt(section.code.length - 5) === "P");
-    console.log(lectures)
+    const lectures = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "L");
+    const tutorials = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "T");
+    const practicals = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "P");
     for (const lecture of lectures) {
-        lecture.code = course.code + lecture.code;
+        lecture.comboCode = course.courseCode + lecture.sectionCode;
     }
     for (const tutorial of tutorials) {
-        tutorial.code = course.code + tutorial.code;
+        tutorial.comboCode = course.courseCode + tutorial.sectionCode;
     }
     for (const practical of practicals) {
-        practical.code = course.code + practical.code;
+        practical.comboCode = course.courseCode + practical.sectionCode;
     }
-    const lecTutCombinations = [];
-    for (const lecture of lectures) {
-        // for (const tutorial of tutorials) {
-        //     lecTutCombinations.push([lecture, tutorial]);
-        // }
-        // if (tutorials.length === 0) {
-            lecTutCombinations.push([lecture]);
-        // }
-    }
-    const tutPraList = [];
-    
-    // let totalCombinations = [];
-    // for (const section of lecTutCombinations) {
-    //     for (const practical of practicals) {
-    //         totalCombinations.push([...section, practical]);
-    //     }
-    //     if (practicals.length === 0) {
-    //         totalCombinations = lecTutCombinations;
-    //     }
-    // }
-    return { code: course.code, combinations: lecTutCombinations };
+    return {code: course.courseCode, lecture: lectures, tutorial:tutorials, practical:practicals};
 };
 const courseCombinations = (courseMeetingSectionCombos) => {
     const outputs = [];
     const permute = (courseMeetingSecCombos, whichArray = 0, output = []) => {
-        courseMeetingSecCombos[whichArray].combinations.forEach((arrayElement) => {
+        courseMeetingSecCombos[whichArray].lecture.forEach((arrayElement) => {
             if (whichArray === courseMeetingSecCombos.length - 1) {
                 // Base case...
                 const temp = [...output];
-                temp.push(...arrayElement);
+                temp.push(arrayElement);
                 outputs.push(temp);
             }
             else {
                 // Recursive case...
                 const temp = [...output];
-                temp.push(...arrayElement);
+                temp.push(arrayElement);
                 permute(courseMeetingSecCombos, whichArray + 1, temp);
             }
         }); /*  forEach() */

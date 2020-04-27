@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="event.start > 0">
-      <v-dialog v-model="dialog" scrollable width="800px">
+      <v-dialog v-model="dialog" scrollable width="810px" @input="atInput">
         <template v-slot:activator="{ on }">
           <div
             @mouseover="hovered = true"
@@ -22,7 +22,7 @@
               </v-btn>
             </div>
 
-            <div style="margin-left: 3px;">{{event.sectionCode.substring(event.sectionCode.length - 5)}}</div>
+            <div style="margin-left: 3px;">{{event.sectionCode}}</div>
 
             <div style="position: relative;">
               <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </template>
-        <course-section-picker v-on:done="dialog=false" :code="event.code" />
+        <course-section-picker v-on:done="dialog=false" :code="event.code" ref="popUp"/>
       </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
@@ -69,6 +69,13 @@ export default {
   methods: {
     reverseLockStatus() {
       this.locked = !this.locked;
+    },
+    atInput() {
+      // console.log('pop up toggled')
+      var courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker != 'undefined') {
+        courseSectionPicker.resetSelectedMeetingSections()
+      }
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
