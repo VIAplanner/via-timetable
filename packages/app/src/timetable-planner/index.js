@@ -152,11 +152,11 @@ const createTimetable = (courseSection) => {
                                                 }
                                             })
                                         }
+                                        tutorialCombo(courseSection)
                                     }
                                     else{
                                         return
                                     }
-                                        tutorialCombo(courseSection)
                                     }
                                 } else {
                                     // Recursive case...
