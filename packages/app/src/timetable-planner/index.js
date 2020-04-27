@@ -80,9 +80,16 @@ const createTimetable = (meetingSectionCombo) => {
                     };
                 }
                 else {
-                    //loop through each course for their practical and check if the practicals are valid
-                    //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have practical
-                    if (meetingSectionCombo.practical.length !== 0) {
+                    //check if any course in the combo contains practical
+                    let pra = false
+                    for (const section of meetingSectionCombo) {
+                        if (section.practical.length != 0) {
+                            pra = true
+                            break
+                        }
+                    }
+                    if (pra) {
+                        //loop through each course for their practical and check if the practicals are valid with the lecture above
                         const practicalCombo = (meetingSectionCombo, whichArray2 = 0, output2 = []) => {
                             const lecTimetable = Object.assign({}, timetable)
                             meetingSectionCombo[whichArray2].practical.forEach((arrayElement2) => {
@@ -105,45 +112,39 @@ const createTimetable = (meetingSectionCombo) => {
                                         timetable = lecTimetable
                                     }
                                     else {
-                                        //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have tutorial
-                                        if (meetingSectionCombo.tutorial.length !== 0) {
-                                            const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
-                                                const lecTimetable = Object.assign({}, timetable)
-                                                meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
-                                                    if (whichArray3 === meetingSectionCombo.length - 1) {
-                                                        // Base case...
-                                                        const temp = [...output3];
-                                                        temp.push(arrayElement3);
-                                                        for (const tut of temp) {
-                                                            for (const time of pra.times) {
-                                                                const timetableSection = {
-                                                                    code: pra.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                    sectionCode: tut.sectionCode,
-                                                                    instructors: tut.instructors,
-                                                                    ...time,
-                                                                };
-                                                                timetable[time.day].push(timetableSection);
-                                                            }
+                                        const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
+                                            const lecTimetable = Object.assign({}, timetable)
+                                            meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
+                                                if (whichArray3 === meetingSectionCombo.length - 1) {
+                                                    // Base case...
+                                                    const temp = [...output3];
+                                                    temp.push(arrayElement3);
+                                                    for (const tut of temp) {
+                                                        for (const time of pra.times) {
+                                                            const timetableSection = {
+                                                                code: pra.comboCode.substring(0, tut.comboCode.length - 5),
+                                                                sectionCode: tut.sectionCode,
+                                                                instructors: tut.instructors,
+                                                                ...time,
+                                                            };
+                                                            timetable[time.day].push(timetableSection);
                                                         }
-                                                        if (overlapExists(timetable)) {
-                                                            timetable = lecTimetable
-                                                        }
-                                                        else{
-                                                            return timetable
-                                                        }
-                                                    } else {
-                                                        // Recursive case...
-                                                        const temp = [...output3];
-                                                        temp.push(arrayElement3);
-                                                        permute(meetingSectionCombo, whichArray3 + 1, temp);
                                                     }
-                                                })
-                                            }
-                                            return tutorialCombo(meetingSectionCombo)
+                                                    if (overlapExists(timetable)) {
+                                                        timetable = lecTimetable
+                                                    }
+                                                    else {
+                                                        return timetable
+                                                    }
+                                                } else {
+                                                    // Recursive case...
+                                                    const temp = [...output3];
+                                                    temp.push(arrayElement3);
+                                                    permute(meetingSectionCombo, whichArray3 + 1, temp);
+                                                }
+                                            })
                                         }
-                                        else{
-                                            return timetable
-                                        }
+                                        tutorialCombo(meetingSectionCombo)
                                     }
                                 } else {
                                     // Recursive case...
@@ -153,11 +154,9 @@ const createTimetable = (meetingSectionCombo) => {
                                 }
                             })
                         }
-                        timetable = practicalCombo(meetingSectionCombo)
-                    }
-                    //loop through each course for their tutorial and check if the tutorials are valid
-                    //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have tutorial
-                    else if (meetingSectionCombo.tutorial.length !== 0) {
+                        practicalCombo(meetingSectionCombo)
+                    } else {
+                        //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
                         const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
                             const lecTimetable = Object.assign({}, timetable)
                             meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
@@ -179,7 +178,7 @@ const createTimetable = (meetingSectionCombo) => {
                                     if (overlapExists(timetable)) {
                                         timetable = lecTimetable
                                     }
-                                    else{
+                                    else {
                                         return timetable
                                     }
                                 } else {
@@ -190,7 +189,7 @@ const createTimetable = (meetingSectionCombo) => {
                                 }
                             })
                         }
-                        timetable = tutorialCombo(meetingSectionCombo)
+                        tutorialCombo(meetingSectionCombo)
                     }
                 }
             }
