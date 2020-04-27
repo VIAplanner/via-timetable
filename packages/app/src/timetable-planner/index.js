@@ -44,34 +44,172 @@ const overlapExists = (timetable) => {
  * @returns {Timetable}
  */
 const createTimetable = (meetingSectionCombo) => {
-    const timetable = {
+    let timetable = {
         MONDAY: [],
         TUESDAY: [],
         WEDNESDAY: [],
         THURSDAY: [],
         FRIDAY: []
     };
-    for (const meetingSection of meetingSectionCombo) {
-        for (const time of meetingSection.times) {
-            const timetableSection = {
-                code: meetingSection.comboCode.substring(0, meetingSection.comboCode.length - 5),
-                sectionCode: meetingSection.sectionCode,
-                instructors: meetingSection.instructors,
-                ...time,
-            };
-            timetable[time.day].push(timetableSection);
-        }
-    }
-    if (overlapExists(timetable)) {
-        return null;
-    }
+    // loop through each course for their lecture and check if the lectures are valid
+    const lectureCombo = (meetingSectionCombo, whichArray = 0, output = []) => {
+        meetingSectionCombo[whichArray].lecture.forEach((arrayElement) => {
+            if (whichArray === meetingSectionCombo.length - 1) {
+                // Base case...
+                const temp = [...output];
+                temp.push(arrayElement);
+                for (const lec of temp) {
+                    for (const time of lec.times) {
+                        const timetableSection = {
+                            code: lec.comboCode.substring(0, lec.comboCode.length - 5),
+                            sectionCode: lec.sectionCode,
+                            instructors: lec.instructors,
+                            ...time,
+                        };
+                        timetable[time.day].push(timetableSection);
+                    }
+                }
+                //if its invalid, clear the timetable and start again
+                if (overlapExists(timetable)) {
+                    timetable = {
+                        MONDAY: [],
+                        TUESDAY: [],
+                        WEDNESDAY: [],
+                        THURSDAY: [],
+                        FRIDAY: []
+                    };
+                }
+                else {
+                    //loop through each course for their practical and check if the practicals are valid
+                    //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have practical
+                    if (meetingSectionCombo.practical.length !== 0) {
+                        const practicalCombo = (meetingSectionCombo, whichArray2 = 0, output2 = []) => {
+                            const lecTimetable = Object.assign({}, timetable)
+                            meetingSectionCombo[whichArray2].practical.forEach((arrayElement2) => {
+                                if (whichArray2 === meetingSectionCombo.length - 1) {
+                                    // Base case...
+                                    const temp = [...output2];
+                                    temp.push(arrayElement2);
+                                    for (const pra of temp) {
+                                        for (const time of pra.times) {
+                                            const timetableSection = {
+                                                code: pra.comboCode.substring(0, pra.comboCode.length - 5),
+                                                sectionCode: pra.sectionCode,
+                                                instructors: pra.instructors,
+                                                ...time,
+                                            };
+                                            timetable[time.day].push(timetableSection);
+                                        }
+                                    }
+                                    if (overlapExists(timetable)) {
+                                        timetable = lecTimetable
+                                    }
+                                    else {
+                                        //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have tutorial
+                                        if (meetingSectionCombo.tutorial.length !== 0) {
+                                            const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
+                                                const lecTimetable = Object.assign({}, timetable)
+                                                meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
+                                                    if (whichArray3 === meetingSectionCombo.length - 1) {
+                                                        // Base case...
+                                                        const temp = [...output3];
+                                                        temp.push(arrayElement3);
+                                                        for (const tut of temp) {
+                                                            for (const time of pra.times) {
+                                                                const timetableSection = {
+                                                                    code: pra.comboCode.substring(0, tut.comboCode.length - 5),
+                                                                    sectionCode: tut.sectionCode,
+                                                                    instructors: tut.instructors,
+                                                                    ...time,
+                                                                };
+                                                                timetable[time.day].push(timetableSection);
+                                                            }
+                                                        }
+                                                        if (overlapExists(timetable)) {
+                                                            timetable = lecTimetable
+                                                        }
+                                                        else{
+                                                            return timetable
+                                                        }
+                                                    } else {
+                                                        // Recursive case...
+                                                        const temp = [...output3];
+                                                        temp.push(arrayElement3);
+                                                        permute(meetingSectionCombo, whichArray3 + 1, temp);
+                                                    }
+                                                })
+                                            }
+                                            return tutorialCombo(meetingSectionCombo)
+                                        }
+                                        else{
+                                            return timetable
+                                        }
+                                    }
+                                } else {
+                                    // Recursive case...
+                                    const temp = [...output2];
+                                    temp.push(arrayElement2);
+                                    permute(meetingSectionCombo, whichArray2 + 1, temp);
+                                }
+                            })
+                        }
+                        timetable = practicalCombo(meetingSectionCombo)
+                    }
+                    //loop through each course for their tutorial and check if the tutorials are valid
+                    //TODO: this check for length is invalid, need to loop through the courses and check for each course if they have tutorial
+                    else if (meetingSectionCombo.tutorial.length !== 0) {
+                        const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
+                            const lecTimetable = Object.assign({}, timetable)
+                            meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
+                                if (whichArray3 === meetingSectionCombo.length - 1) {
+                                    // Base case...
+                                    const temp = [...output3];
+                                    temp.push(arrayElement3);
+                                    for (const tut of temp) {
+                                        for (const time of pra.times) {
+                                            const timetableSection = {
+                                                code: tut.comboCode.substring(0, tut.comboCode.length - 5),
+                                                sectionCode: tut.sectionCode,
+                                                instructors: tut.instructors,
+                                                ...time,
+                                            };
+                                            timetable[time.day].push(timetableSection);
+                                        }
+                                    }
+                                    if (overlapExists(timetable)) {
+                                        timetable = lecTimetable
+                                    }
+                                    else{
+                                        return timetable
+                                    }
+                                } else {
+                                    // Recursive case...
+                                    const temp = [...output3];
+                                    temp.push(arrayElement3);
+                                    permute(meetingSectionCombo, whichArray3 + 1, temp);
+                                }
+                            })
+                        }
+                        timetable = tutorialCombo(meetingSectionCombo)
+                    }
+                }
+            }
+            else {
+                // Recursive case...
+                const temp = [...output];
+                temp.push(arrayElement);
+                permute(meetingSectionCombo, whichArray + 1, temp);
+            }
+        });
+    };
+
+    lectureCombo(meetingSectionCombo);
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
     for (const day of days) {
         timetable[day].sort((a, b) => {
             return a.start - b.start;
         });
     }
-    return timetable;
 };
 /**
  *
@@ -86,16 +224,7 @@ const createTimetable = (meetingSectionCombo) => {
 const generateTimetables = (courses) => {
     // Generate all valid combinations of MeetingSections for a course
     const courseMeetingSectionCombos = courses.map(course => courseMeetingSectionCombinations(course));
-    const coursesCombinations = courseCombinations(courseMeetingSectionCombos);
-    const timetables = [];
-    for (const coursesCombo of coursesCombinations) {
-        const timetable = createTimetable(coursesCombo);
-        if (timetable != null) {
-            timetables.push(timetable);
-        }
-    }
-    console.log(timetables)
-    return timetables;
+    return createTimetable(courseMeetingSectionCombos);
 };
 export { generateTimetables, createTimetable, overlapExists };
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLGtCQUFrQixFQUFFLGdDQUFnQyxHQUFHLE1BQU0sNkJBQTZCLENBQUE7QUFFbkc7Ozs7OztHQU1HO0FBQ0gsTUFBTSxrQkFBa0IsR0FBRyxDQUFDLFNBQW9CLEVBQUUsR0FBVyxFQUFFLEVBQUU7SUFDN0QsSUFBSSxPQUFPLEdBQUcsQ0FBQyxDQUFBO0lBQ2YsT0FBTyxPQUFPLEdBQUcsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE1BQU0sRUFBRTtRQUNwQyxJQUFJLFFBQVEsR0FBRyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQTtRQUM1QixPQUFPLFFBQVEsR0FBRyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsTUFBTSxFQUFFO1lBQ3JDLElBQUksQ0FBQyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsT0FBTyxDQUFDLENBQUMsS0FBSyxJQUFJLFNBQVMsQ0FBQyxHQUFHLENBQUMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxLQUFLO2dCQUNoRSxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsT0FBTyxDQUFDLENBQUMsS0FBSyxHQUFHLFNBQVMsQ0FBQyxHQUFHLENBQUMsQ0FBQyxRQUFRLENBQUMsQ0FBQyxHQUFHLENBQUM7Z0JBQzdELENBQUMsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxDQUFDLEdBQUcsR0FBRyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsUUFBUSxDQUFDLENBQUMsS0FBSztvQkFDekQsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxDQUFDLEdBQUcsSUFBSSxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsUUFBUSxDQUFDLENBQUMsR0FBRyxDQUFDLEVBQUU7Z0JBQ2xFLE9BQU8sSUFBSSxDQUFBO2FBQ2Q7WUFDRCxRQUFRLEVBQUUs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

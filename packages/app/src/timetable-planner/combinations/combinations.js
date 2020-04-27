@@ -2,7 +2,6 @@ const courseMeetingSectionCombinations = (course) => {
     const lectures = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "L");
     const tutorials = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "T");
     const practicals = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "P");
-    console.log(lectures)
     for (const lecture of lectures) {
         lecture.comboCode = course.courseCode + lecture.sectionCode;
     }
@@ -12,40 +11,22 @@ const courseMeetingSectionCombinations = (course) => {
     for (const practical of practicals) {
         practical.comboCode = course.courseCode + practical.sectionCode;
     }
-    const lecTutCombinations = [];
-    for (const lecture of lectures) {
-        for (const tutorial of tutorials) {
-            lecTutCombinations.push([lecture, tutorial]);
-        }
-        if (tutorials.length === 0) {
-            lecTutCombinations.push([lecture]);
-        }
-    }
-    let totalCombinations = [];
-    for (const section of lecTutCombinations) {
-        for (const practical of practicals) {
-            totalCombinations.push([...section, practical]);
-        }
-        if (practicals.length === 0) {
-            totalCombinations = lecTutCombinations;
-        }
-    }
-    return { code: course.courseCode, combinations: totalCombinations };
+    return {code: course.courseCode, lecture: lectures, tutorial:tutorials, practical:practicals};
 };
 const courseCombinations = (courseMeetingSectionCombos) => {
     const outputs = [];
     const permute = (courseMeetingSecCombos, whichArray = 0, output = []) => {
-        courseMeetingSecCombos[whichArray].combinations.forEach((arrayElement) => {
+        courseMeetingSecCombos[whichArray].lecture.forEach((arrayElement) => {
             if (whichArray === courseMeetingSecCombos.length - 1) {
                 // Base case...
                 const temp = [...output];
-                temp.push(...arrayElement);
+                temp.push(arrayElement);
                 outputs.push(temp);
             }
             else {
                 // Recursive case...
                 const temp = [...output];
-                temp.push(...arrayElement);
+                temp.push(arrayElement);
                 permute(courseMeetingSecCombos, whichArray + 1, temp);
             }
         }); /*  forEach() */
