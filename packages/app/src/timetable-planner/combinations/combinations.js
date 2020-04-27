@@ -14,23 +14,25 @@ const courseMeetingSectionCombinations = (course) => {
     }
     const lecTutCombinations = [];
     for (const lecture of lectures) {
-        for (const tutorial of tutorials) {
-            lecTutCombinations.push([lecture, tutorial]);
-        }
-        if (tutorials.length === 0) {
+        // for (const tutorial of tutorials) {
+        //     lecTutCombinations.push([lecture, tutorial]);
+        // }
+        // if (tutorials.length === 0) {
             lecTutCombinations.push([lecture]);
-        }
+        // }
     }
-    let totalCombinations = [];
-    for (const section of lecTutCombinations) {
-        for (const practical of practicals) {
-            totalCombinations.push([...section, practical]);
-        }
-        if (practicals.length === 0) {
-            totalCombinations = lecTutCombinations;
-        }
-    }
-    return { code: course.code, combinations: totalCombinations };
+    const tutPraList = [];
+    
+    // let totalCombinations = [];
+    // for (const section of lecTutCombinations) {
+    //     for (const practical of practicals) {
+    //         totalCombinations.push([...section, practical]);
+    //     }
+    //     if (practicals.length === 0) {
+    //         totalCombinations = lecTutCombinations;
+    //     }
+    // }
+    return { code: course.code, combinations: lecTutCombinations };
 };
 const courseCombinations = (courseMeetingSectionCombos) => {
     const outputs = [];
@@ -51,6 +53,7 @@ const courseCombinations = (courseMeetingSectionCombos) => {
         }); /*  forEach() */
     };
     permute(courseMeetingSectionCombos);
+    console.log(outputs);
     return outputs;
 };
 export { courseMeetingSectionCombinations, courseCombinations };

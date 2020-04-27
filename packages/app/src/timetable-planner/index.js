@@ -94,6 +94,7 @@ const generateTimetables = (courses) => {
             timetables.push(timetable);
         }
     }
+    
     return timetables;
 };
 export { generateTimetables, createTimetable, overlapExists };

@@ -111,6 +111,7 @@ export default new Vuex.Store({
       }
       else {
         const timetables = generateTimetables(courses)
+        console.log(timetables)
         context.commit("setTimetables", { timetables })
       }
 
