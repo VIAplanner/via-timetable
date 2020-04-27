@@ -1,4 +1,4 @@
-import { courseCombinations, sortCourseSection, } from "./combinations/combinations";
+import { sortCourseSection, } from "./combinations/combinations";
 /**
  *
  * Helper function for OverlapExist
