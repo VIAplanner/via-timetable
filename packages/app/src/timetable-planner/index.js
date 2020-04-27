@@ -81,16 +81,16 @@ const createTimetable = (meetingSectionCombo) => {
                 }
                 else {
                     //check if any course in the combo contains practical
-                    let pra = false
+                    let pra = 0
                     for (const section of meetingSectionCombo) {
                         if (section.practical.length != 0) {
-                            pra = true
+                            pra = meetingSectionCombo.indexOf(section)
                             break
                         }
                     }
                     if (pra) {
                         //loop through each course for their practical and check if the practicals are valid with the lecture above
-                        const practicalCombo = (meetingSectionCombo, whichArray2 = 0, output2 = []) => {
+                        const practicalCombo = (meetingSectionCombo, whichArray2 = pra, output2 = []) => {
                             const lecTimetable = Object.assign({}, timetable)
                             meetingSectionCombo[whichArray2].practical.forEach((arrayElement2) => {
                                 if (whichArray2 === meetingSectionCombo.length - 1) {
@@ -140,7 +140,7 @@ const createTimetable = (meetingSectionCombo) => {
                                                     // Recursive case...
                                                     const temp = [...output3];
                                                     temp.push(arrayElement3);
-                                                    permute(meetingSectionCombo, whichArray3 + 1, temp);
+                                                    tutorialCombo(meetingSectionCombo, whichArray3 + 1, temp);
                                                 }
                                             })
                                         }
@@ -150,12 +150,19 @@ const createTimetable = (meetingSectionCombo) => {
                                     // Recursive case...
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
-                                    permute(meetingSectionCombo, whichArray2 + 1, temp);
+                                    practicalCombo(meetingSectionCombo, whichArray2 + 1, temp);
                                 }
                             })
                         }
                         practicalCombo(meetingSectionCombo)
                     } else {
+                        let tut = 0
+                    for (const section of meetingSectionCombo) {
+                        if (section.tutorial.length != 0) {
+                            tut = meetingSectionCombo.indexOf(section)
+                            break
+                        }
+                    }
                         //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
                         const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
                             const lecTimetable = Object.assign({}, timetable)
@@ -185,7 +192,7 @@ const createTimetable = (meetingSectionCombo) => {
                                     // Recursive case...
                                     const temp = [...output3];
                                     temp.push(arrayElement3);
-                                    permute(meetingSectionCombo, whichArray3 + 1, temp);
+                                    tutorialCombo(meetingSectionCombo, whichArray3 + 1, temp);
                                 }
                             })
                         }
