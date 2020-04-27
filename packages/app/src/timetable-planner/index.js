@@ -112,7 +112,14 @@ const createTimetable = (meetingSectionCombo) => {
                                         timetable = lecTimetable
                                     }
                                     else {
-                                        const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
+                                        let tut = 0
+                                        for (const section of meetingSectionCombo) {
+                                            if (section.tutorial.length != 0) {
+                                                tut = meetingSectionCombo.indexOf(section)
+                                                break
+                                            }
+                                        }
+                                        const tutorialCombo = (meetingSectionCombo, whichArray3 = tut, output3 = []) => {
                                             const lecTimetable = Object.assign({}, timetable)
                                             meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
                                                 if (whichArray3 === meetingSectionCombo.length - 1) {
@@ -157,14 +164,14 @@ const createTimetable = (meetingSectionCombo) => {
                         practicalCombo(meetingSectionCombo)
                     } else {
                         let tut = 0
-                    for (const section of meetingSectionCombo) {
-                        if (section.tutorial.length != 0) {
-                            tut = meetingSectionCombo.indexOf(section)
-                            break
+                        for (const section of meetingSectionCombo) {
+                            if (section.tutorial.length != 0) {
+                                tut = meetingSectionCombo.indexOf(section)
+                                break
+                            }
                         }
-                    }
                         //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
-                        const tutorialCombo = (meetingSectionCombo, whichArray3 = 0, output3 = []) => {
+                        const tutorialCombo = (meetingSectionCombo, whichArray3 = tut, output3 = []) => {
                             const lecTimetable = Object.assign({}, timetable)
                             meetingSectionCombo[whichArray2].tutorial.forEach((arrayElement3) => {
                                 if (whichArray3 === meetingSectionCombo.length - 1) {
@@ -204,7 +211,7 @@ const createTimetable = (meetingSectionCombo) => {
                 // Recursive case...
                 const temp = [...output];
                 temp.push(arrayElement);
-                permute(meetingSectionCombo, whichArray + 1, temp);
+                lectureCombo(meetingSectionCombo, whichArray + 1, temp);
             }
         });
     };
