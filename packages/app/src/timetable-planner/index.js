@@ -57,7 +57,6 @@ const createTimetable = (courseSection) => {
         courseSection[whichArray].lecture.some((arrayElement) => {
             if (whichArray === courseSection.length - 1) {
                 const prevTimetable = Object.assign({}, timetable)
-                const prevOutput = output.slice()
                 // Base case...
                 const temp = [...output];
                 temp.push(arrayElement);
@@ -76,7 +75,6 @@ const createTimetable = (courseSection) => {
                 //if its invalid, clear the timetable and start again
                 if (overlapExists(timetable)) {
                     timetable = prevTimetable
-                    output = prevOutput
                 }
                 else {
                     // check if any course in the combo contains practical
@@ -91,10 +89,9 @@ const createTimetable = (courseSection) => {
                         console.log(pra)
                         //loop through each course for their practical and check if the practicals are valid with the lecture above
                         const practicalCombo = (courseSection, whichArray2 = pra, output2 = []) => {
-                            courseSection[whichArray2].practical.some((arrayElement2) => {
+                            return courseSection[whichArray2].practical.some((arrayElement2) => {
                                 if (whichArray2 === courseSection.length - 1) {
                                     const prevTimetable = Object.assign({}, timetable)
-                                    const prevOutput = output.slice()
                                     // Base case...
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
@@ -112,7 +109,6 @@ const createTimetable = (courseSection) => {
                                     console.log(timetable, 3)
                                     if (overlapExists(timetable)) {
                                         timetable = prevTimetable
-                                        output = prevOutput
                                     }
                                     else {
                                         let tut = -1
@@ -124,10 +120,9 @@ const createTimetable = (courseSection) => {
                                         }
                                         if (tut >= 0) {
                                             const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                                                courseSection[whichArray3].tutorial.some((arrayElement3) => {
+                                                return courseSection[whichArray3].tutorial.some((arrayElement3) => {
                                                     if (whichArray3 === courseSection.length - 1) {
                                                         const prevTimetable = Object.assign({}, timetable)
-                                                        const prevOutput = output.slice()
                                                         // Base case...
                                                         const temp = [...output3];
                                                         temp.push(arrayElement3);
@@ -145,10 +140,9 @@ const createTimetable = (courseSection) => {
                                                         console.log(timetable, 4)
                                                         if (overlapExists(timetable)) {
                                                             timetable = prevTimetable
-                                                            output = prevOutput
                                                         }
                                                         else {
-                                                            return
+                                                            return true
                                                         }
                                                     } else {
                                                         // Recursive case...
@@ -159,11 +153,12 @@ const createTimetable = (courseSection) => {
                                                 })
                                             }
                                             if (tutorialCombo(courseSection)) {
-                                                return 1
+                                                return true
                                             }
                                         }
                                         else {
-                                            return
+                                            console.log(tut)
+                                            return true
                                         }
                                     }
                                 } else {
@@ -175,7 +170,8 @@ const createTimetable = (courseSection) => {
                             })
                         }
                         if (practicalCombo(courseSection)) {
-                            return
+                            console.log("hi 2")
+                            return true
                         }
                     } else {
                         let tut = 0
@@ -187,10 +183,9 @@ const createTimetable = (courseSection) => {
                         }
                         //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
                         const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                            courseSection[whichArray3].tutorial.some((arrayElement3) => {
+                            return courseSection[whichArray3].tutorial.some((arrayElement3) => {
                                 if (whichArray3 === courseSection.length - 1) {
                                     const prevTimetable = Object.assign({}, timetable)
-                                    const prevOutput = output.slice()
                                     // Base case...
                                     const temp = [...output3];
                                     temp.push(arrayElement3);
@@ -208,10 +203,9 @@ const createTimetable = (courseSection) => {
                                     console.log(timetable, 5)
                                     if (overlapExists(timetable)) {
                                         timetable = prevTimetable
-                                        output = prevOutput
                                     }
                                     else {
-                                        return
+                                        return true
                                     }
                                 } else {
                                     // Recursive case...
@@ -222,7 +216,7 @@ const createTimetable = (courseSection) => {
                             })
                         }
                         if (tutorialCombo(courseSection)) {
-                            return
+                            return true
                         }
                     }
                 }
