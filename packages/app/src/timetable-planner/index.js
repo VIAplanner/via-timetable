@@ -1,5 +1,19 @@
 import { sortCourseSection, } from "./combinations/combinations";
 
+const addSectionToTimetable = (sections, timetable) => {
+    for (const section of sections) {
+        for (const time of section.times) {
+            const timetableSection = {
+                code: section.comboCode.substring(0, section.comboCode.length - 5),
+                sectionCode: section.sectionCode,
+                instructors: section.instructors,
+                ...time,
+            };
+            timetable[time.day].push(timetableSection);
+        }
+    }
+}
+
 const createShallowCopyOfTimetable = (timetable) => {
     let shallowCopy = {
         MONDAY: [],
@@ -75,17 +89,7 @@ const createTimetable = (courseSection) => {
                 // Base case...
                 const temp = [...output];
                 temp.push(arrayElement);
-                for (const lec of temp) {
-                    for (const time of lec.times) {
-                        const timetableSection = {
-                            code: lec.comboCode.substring(0, lec.comboCode.length - 5),
-                            sectionCode: lec.sectionCode,
-                            instructors: lec.instructors,
-                            ...time,
-                        };
-                        timetable[time.day].push(timetableSection);
-                    }
-                }
+                addSectionToTimetable(temp, timetable)
                 //if its invalid, clear the timetable and start again
                 if (overlapExists(timetable)) {
                     timetable = {
@@ -133,17 +137,7 @@ const createTimetable = (courseSection) => {
                                     }
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
-                                    for (const pra of temp) {
-                                        for (const time of pra.times) {
-                                            const timetableSection = {
-                                                code: pra.comboCode.substring(0, pra.comboCode.length - 5),
-                                                sectionCode: pra.sectionCode,
-                                                instructors: pra.instructors,
-                                                ...time,
-                                            };
-                                            timetable[time.day].push(timetableSection);
-                                        }
-                                    }
+                                    addSectionToTimetable(temp, timetable)
                                     if (overlapExists(timetable)) {
                                         timetable = createShallowCopyOfTimetable(prevTimetable)
                                     }
@@ -176,36 +170,13 @@ const createTimetable = (courseSection) => {
                                                     }
                                                     if (tut2 != -1) {
                                                         return courseSection[whichArray2].tutorial.some((arrayElement2) => {
-                                                            if (whichArray2 === courseSection.length - 1) {
-                                                                // Base case...
-                                                                const temp = [...output2];
-                                                                temp.push(arrayElement2);
-                                                                for (const tut of temp) {
-                                                                    for (const time of tut.times) {
-                                                                        const timetableSection = {
-                                                                            code: tut.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                            sectionCode: tut.sectionCode,
-                                                                            instructors: tut.instructors,
-                                                                            ...time,
-                                                                        };
-                                                                        timetable[time.day].push(timetableSection);
-                                                                    }
-                                                                }
-                                                                if (overlapExists(timetable)) {
-                                                                    timetable = createShallowCopyOfTimetable(prevTimetable)
-                                                                }
-                                                                else {
-                                                                    return true
-                                                                }
-                                                            } else {
-                                                                // Recursive case...
-                                                                if (lectureCombo.founded == 1) {
-                                                                    return true
-                                                                }
-                                                                const temp = [...output2];
-                                                                temp.push(arrayElement2);
-                                                                tutorialCombo(courseSection, tut2, temp);
+                                                            // Recursive case...
+                                                            if (lectureCombo.founded == 1) {
+                                                                return true
                                                             }
+                                                            const temp = [...output2];
+                                                            temp.push(arrayElement2);
+                                                            tutorialCombo(courseSection, tut2, temp);
                                                         })
                                                     } else {
                                                         return courseSection[whichArray2].tutorial.some((arrayElement2) => {
@@ -214,17 +185,7 @@ const createTimetable = (courseSection) => {
                                                             }
                                                             const temp = [...output2];
                                                             temp.push(arrayElement2);
-                                                            for (const tut of temp) {
-                                                                for (const time of tut.times) {
-                                                                    const timetableSection = {
-                                                                        code: tut.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                        sectionCode: tut.sectionCode,
-                                                                        instructors: tut.instructors,
-                                                                        ...time,
-                                                                    };
-                                                                    timetable[time.day].push(timetableSection);
-                                                                }
-                                                            }
+                                                            addSectionToTimetable(temp, timetable)
                                                             if (overlapExists(timetable)) {
                                                                 timetable = prevTimetable
                                                             }
@@ -285,17 +246,7 @@ const createTimetable = (courseSection) => {
                                             // Base case...
                                             const temp = [...output2];
                                             temp.push(arrayElement2);
-                                            for (const tut of temp) {
-                                                for (const time of tut.times) {
-                                                    const timetableSection = {
-                                                        code: tut.comboCode.substring(0, tut.comboCode.length - 5),
-                                                        sectionCode: tut.sectionCode,
-                                                        instructors: tut.instructors,
-                                                        ...time,
-                                                    };
-                                                    timetable[time.day].push(timetableSection);
-                                                }
-                                            }
+                                            addSectionToTimetable(temp, timetable)
                                             if (overlapExists(timetable)) {
                                                 timetable = createShallowCopyOfTimetable(prevTimetable)
                                             }
