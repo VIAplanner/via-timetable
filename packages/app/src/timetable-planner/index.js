@@ -1,4 +1,20 @@
 import { sortCourseSection, } from "./combinations/combinations";
+
+const createShallowCopyOfTimetable = (timetable) => {
+    let shallowCopy = {
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: []
+    }
+    const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+    for (const day of days){
+        shallowCopy[day].push(...timetable[day])
+    }
+    return shallowCopy
+}
+
 /**
  *
  * Helper function for OverlapExist
@@ -95,8 +111,8 @@ const createTimetable = (courseSection) => {
                     }
                     if (pra >= 0) {
                         //loop through each course for their practical and check if the practicals are valid with the lecture above
+                        const prevTimetable = createShallowCopyOfTimetable(timetable)
                         const practicalCombo = (courseSection, whichArray2 = pra, output2 = []) => {
-                            const prevTimetable = Object.assign({}, timetable)
                             let pra2 = -1
                             for (const section of courseSection) {
                                 if (section.practical.length != 0 && courseSection.indexOf(section) > whichArray2) {
@@ -107,77 +123,6 @@ const createTimetable = (courseSection) => {
                             console.log("pra2", pra2)
                             if (pra2 != -1) {
                                 return courseSection[whichArray2].practical.some((arrayElement2) => {
-                                    if (whichArray2 === courseSection.length - 1) {
-                                        // Base case...
-                                        const temp = [...output2];
-                                        temp.push(arrayElement2);
-                                        for (const pra of temp) {
-                                            for (const time of pra.times) {
-                                                const timetableSection = {
-                                                    code: pra.comboCode.substring(0, pra.comboCode.length - 5),
-                                                    sectionCode: pra.sectionCode,
-                                                    instructors: pra.instructors,
-                                                    ...time,
-                                                };
-                                                timetable[time.day].push(timetableSection);
-                                            }
-                                        }
-                                        console.log("timetable with pra", timetable)
-                                        if (overlapExists(timetable)) {
-                                            timetable = prevTimetable
-                                        }
-                                        else {
-                                            let tut = -1
-                                            for (const section of courseSection) {
-                                                if (section.tutorial.length != 0) {
-                                                    tut = courseSection.indexOf(section)
-                                                    break
-                                                }
-                                            }
-                                            if (tut >= 0) {
-                                                const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                                                    const prevTimetable = Object.assign({}, timetable)
-                                                    return courseSection[whichArray3].tutorial.some((arrayElement3) => {
-                                                        if (whichArray3 === courseSection.length - 1) {
-                                                            // Base case...
-                                                            const temp = [...output3];
-                                                            temp.push(arrayElement3);
-                                                            for (const tut of temp) {
-                                                                for (const time of pra.times) {
-                                                                    const timetableSection = {
-                                                                        code: pra.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                        sectionCode: tut.sectionCode,
-                                                                        instructors: tut.instructors,
-                                                                        ...time,
-                                                                    };
-                                                                    timetable[time.day].push(timetableSection);
-                                                                }
-                                                            }
-                                                            console.log("timetable with pra and tut", timetable)
-                                                            if (overlapExists(timetable)) {
-                                                                timetable = prevTimetable
-                                                            }
-                                                            else {
-                                                                return true
-                                                            }
-                                                        } else {
-                                                            // Recursive case...
-                                                            const temp = [...output3];
-                                                            temp.push(arrayElement3);
-                                                            tutorialCombo(courseSection, whichArray3 + 1, temp);
-                                                        }
-                                                    })
-                                                }
-                                                if (tutorialCombo(courseSection)) {
-                                                    return true
-                                                }
-                                            }
-                                            else {
-                                                console.log("tut index", tut)
-                                                return true
-                                            }
-                                        }
-                                    } else {
                                         // Recursive case...
                                         if (lectureCombo.founded == 1) {
                                             console.log("founded in recur pra")
@@ -186,7 +131,6 @@ const createTimetable = (courseSection) => {
                                         const temp = [...output2];
                                         temp.push(arrayElement2);
                                         practicalCombo(courseSection, pra2, temp);
-                                    }
                                 })
                             } else {
                                 return courseSection[whichArray2].practical.some((arrayElement2) => {
@@ -194,6 +138,7 @@ const createTimetable = (courseSection) => {
                                         console.log("founded in pra 2")
                                         return true
                                     }
+                                    console.log("prevtimetable with pra before modify timetable", prevTimetable)
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
                                     for (const pra of temp) {
@@ -209,9 +154,11 @@ const createTimetable = (courseSection) => {
                                     }
                                     console.log("temp of pra 2", temp)
                                     console.log("timetable with pra 2", timetable)
+                                    console.log("prevtimetable with pra", prevTimetable)
                                     if (overlapExists(timetable)) {
                                         timetable = prevTimetable
-                                        console.log("overlap in pra")
+                                        console.log("overlap in pra timetable", timetable)
+                                        console.log("prevtimetable with pra after overlap", prevTimetable)
                                     }
                                     else {
                                         console.log("no overlap in pra")
@@ -223,40 +170,104 @@ const createTimetable = (courseSection) => {
                                             }
                                         }
                                         if (tut >= 0) {
-                                            const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                                                const prevTimetable = Object.assign({}, timetable)
-                                                return courseSection[whichArray3].tutorial.some((arrayElement3) => {
-                                                    if (whichArray3 === courseSection.length - 1) {
-                                                        // Base case...
-                                                        const temp = [...output3];
-                                                        temp.push(arrayElement3);
-                                                        for (const tut of temp) {
-                                                            for (const time of pra.times) {
-                                                                const timetableSection = {
-                                                                    code: pra.comboCode.substring(0, tut.comboCode.length - 5),
-                                                                    sectionCode: tut.sectionCode,
-                                                                    instructors: tut.instructors,
-                                                                    ...time,
-                                                                };
-                                                                timetable[time.day].push(timetableSection);
-                                                            }
-                                                        }
-                                                        console.log("timetable with pra and tut 2", timetable)
-                                                        if (overlapExists(timetable)) {
-                                                            timetable = prevTimetable
-                                                        }
-                                                        else {
-                                                            return true
-                                                        }
-                                                    } else {
-                                                        // Recursive case...
-                                                        const temp = [...output3];
-                                                        temp.push(arrayElement3);
-                                                        tutorialCombo(courseSection, whichArray3 + 1, temp);
-                                                    }
-                                                })
+                                            let tut = -1
+                                            for (const section of courseSection) {
+                                                if (section.tutorial.length != 0) {
+                                                    tut = courseSection.indexOf(section)
+                                                    break
+                                                }
                                             }
-                                            if (tutorialCombo(courseSection)) {
+                                            if (tut >= 0) {
+                                                //loop through each course for their practical and check if the practicals are valid with the lecture above
+                                                const prevTimetable = createShallowCopyOfTimetable(timetable)
+                                                const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
+                                                    let tut2 = -1
+                                                    for (const section of courseSection) {
+                                                        if (section.tutorial.length != 0 && courseSection.indexOf(section) > whichArray2) {
+                                                            tut2 = courseSection.indexOf(section)
+                                                            break
+                                                        }
+                                                    }
+                                                    console.log("tut2", tut2)
+                                                    if (tut2 != -1) {
+                                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                                            if (whichArray2 === courseSection.length - 1) {
+                                                                // Base case...
+                                                                const temp = [...output2];
+                                                                temp.push(arrayElement2);
+                                                                for (const tut of temp) {
+                                                                    for (const time of tut.times) {
+                                                                        const timetableSection = {
+                                                                            code: tut.comboCode.substring(0, tut.comboCode.length - 5),
+                                                                            sectionCode: tut.sectionCode,
+                                                                            instructors: tut.instructors,
+                                                                            ...time,
+                                                                        };
+                                                                        timetable[time.day].push(timetableSection);
+                                                                    }
+                                                                }
+                                                                console.log("timetable with tut", timetable)
+                                                                if (overlapExists(timetable)) {
+                                                                    timetable = prevTimetable
+                                                                }
+                                                                else {
+                                                                    return true
+                                                                }
+                                                            } else {
+                                                                // Recursive case...
+                                                                if (lectureCombo.founded == 1) {
+                                                                    console.log("founded in recur tut")
+                                                                    return true
+                                                                }
+                                                                const temp = [...output2];
+                                                                temp.push(arrayElement2);
+                                                                tutorialCombo(courseSection, tut2, temp);
+                                                            }
+                                                        })
+                                                    } else {
+                                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                                            if (lectureCombo.founded == 1) {
+                                                                console.log("founded in tut 2")
+                                                                return true
+                                                            }
+                                                            const temp = [...output2];
+                                                            temp.push(arrayElement2);
+                                                            for (const tut of temp) {
+                                                                for (const time of tut.times) {
+                                                                    const timetableSection = {
+                                                                        code: tut.comboCode.substring(0, tut.comboCode.length - 5),
+                                                                        sectionCode: tut.sectionCode,
+                                                                        instructors: tut.instructors,
+                                                                        ...time,
+                                                                    };
+                                                                    timetable[time.day].push(timetableSection);
+                                                                }
+                                                            }
+                                                            console.log("temp of tut 2", temp)
+                                                            console.log("timetable with tut 2", timetable)
+                                                            if (overlapExists(timetable)) {
+                                                                timetable = prevTimetable
+                                                                console.log("overlap in tut")
+                                                            }
+                                                            else {
+                                                                return true
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                                const tutResult = tutorialCombo(courseSection)
+                                                console.log("tut result", tutResult)
+                                                if (tutResult) {
+                                                    console.log("tut end")
+                                                    lectureCombo.founded = 1
+                                                    return true
+                                                }
+                                            }
+                                            else {
+                                                return true
+                                            }
+                                            if (lectureCombo.founded == 1) {
+                                                console.log("founded in basecase")
                                                 return true
                                             }
                                         }
@@ -286,16 +297,62 @@ const createTimetable = (courseSection) => {
                             }
                         }
                         if (tut >= 0) {
-                            //loop through each course for their tutorial and check if the tutorials are valid with the lecture above
-                            const tutorialCombo = (courseSection, whichArray3 = tut, output3 = []) => {
-                                const prevTimetable = Object.assign({}, timetable)
-                                return courseSection[whichArray3].tutorial.some((arrayElement3) => {
-                                    if (whichArray3 === courseSection.length - 1) {
-                                        // Base case...
-                                        const temp = [...output3];
-                                        temp.push(arrayElement3);
+                            //loop through each course for their practical and check if the practicals are valid with the lecture above
+                            const prevTimetable = createShallowCopyOfTimetable(timetable)
+                            const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
+                                let tut2 = -1
+                                for (const section of courseSection) {
+                                    if (section.tutorial.length != 0 && courseSection.indexOf(section) > whichArray2) {
+                                        tut2 = courseSection.indexOf(section)
+                                        break
+                                    }
+                                }
+                                console.log("tut2", tut2)
+                                if (tut2 != -1) {
+                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                        if (whichArray2 === courseSection.length - 1) {
+                                            // Base case...
+                                            const temp = [...output2];
+                                            temp.push(arrayElement2);
+                                            for (const tut of temp) {
+                                                for (const time of tut.times) {
+                                                    const timetableSection = {
+                                                        code: tut.comboCode.substring(0, tut.comboCode.length - 5),
+                                                        sectionCode: tut.sectionCode,
+                                                        instructors: tut.instructors,
+                                                        ...time,
+                                                    };
+                                                    timetable[time.day].push(timetableSection);
+                                                }
+                                            }
+                                            console.log("timetable with tut", timetable)
+                                            if (overlapExists(timetable)) {
+                                                timetable = prevTimetable
+                                            }
+                                            else {
+                                                return true
+                                            }
+                                        } else {
+                                            // Recursive case...
+                                            if (lectureCombo.founded == 1) {
+                                                console.log("founded in recur tut")
+                                                return true
+                                            }
+                                            const temp = [...output2];
+                                            temp.push(arrayElement2);
+                                            tutorialCombo(courseSection, tut2, temp);
+                                        }
+                                    })
+                                } else {
+                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                        if (lectureCombo.founded == 1) {
+                                            console.log("founded in tut 2")
+                                            return true
+                                        }
+                                        const temp = [...output2];
+                                        temp.push(arrayElement2);
                                         for (const tut of temp) {
-                                            for (const time of pra.times) {
+                                            for (const time of tut.times) {
                                                 const timetableSection = {
                                                     code: tut.comboCode.substring(0, tut.comboCode.length - 5),
                                                     sectionCode: tut.sectionCode,
@@ -305,22 +362,23 @@ const createTimetable = (courseSection) => {
                                                 timetable[time.day].push(timetableSection);
                                             }
                                         }
-                                        console.log("timetable with tut", timetable)
+                                        console.log("temp of tut 2", temp)
+                                        console.log("timetable with tut 2", timetable)
                                         if (overlapExists(timetable)) {
                                             timetable = prevTimetable
+                                            console.log("overlap in tut")
                                         }
                                         else {
                                             return true
                                         }
-                                    } else {
-                                        // Recursive case...
-                                        const temp = [...output3];
-                                        temp.push(arrayElement3);
-                                        tutorialCombo(courseSection, whichArray3 + 1, temp);
-                                    }
-                                })
+                                    })
+                                }
                             }
-                            if (tutorialCombo(courseSection)) {
+                            const tutResult = tutorialCombo(courseSection)
+                            console.log("tut result", tutResult)
+                            if (tutResult) {
+                                console.log("tut end")
+                                lectureCombo.founded = 1
                                 return true
                             }
                         }
@@ -376,9 +434,10 @@ const createTimetable = (courseSection) => {
  */
 const generateTimetables = (courses) => {
     // Generate all valid combinations of MeetingSections for a course
+    console.log("courses", courses)
     const courseSections = courses.map(course => sortCourseSection(course));
     const timetable = createTimetable(courseSections)
-    console.log(timetable)
+    console.log("final timetable", timetable)
     return [timetable];
 };
 export { generateTimetables, createTimetable, overlapExists };
