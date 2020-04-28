@@ -77,6 +77,7 @@ const createTimetable = (courseSection) => {
                 const temp = [...output];
                 temp.push(arrayElement);
                 console.log("here",temp);
+                console.log(arrayElement);
                 for (const lec of temp) {
                     for (const time of lec.times) {
                         const timetableSection = {
