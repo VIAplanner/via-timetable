@@ -1,19 +1,15 @@
 <template>
-  <v-container fluid class="settings-container">
+  <v-card class="pb-8 pl-4 pt-4 mr-4">
     <v-row>
       <v-col class="pb-0">
-        <p class="header-style">Optimzation Settings</p>
-        <span class="header-style" style="font-size: 18px;">Idel Time</span>
+        <p class="header-style">Optimization Settings</p>
+        <span class="header-style" style="font-size: 18px;">Idle Time</span>
         <span class="header-style" style="font-size: 18px; margin-left: 137px;">Days Off</span>
       </v-col>
-    </v-row>    
+    </v-row>
 
     <v-row class="pl-2">
-      <v-radio-group
-        hide-details
-        v-model="selectedIdleOption"
-        :mandatory="false"
-      >
+      <v-radio-group hide-details v-model="selectedIdleOption" :mandatory="false">
         <v-col class="pb-0 pt-0">
           <v-radio
             v-for="message in idleOptions"
@@ -37,8 +33,7 @@
         ></v-checkbox>
       </v-col>
     </v-row>
-    
-  </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -57,7 +52,6 @@ export default {
 
 <style>
 .settings-container {
-  margin: 0px;
   width: 375px;
   height: 280px;
   background: #ededed;

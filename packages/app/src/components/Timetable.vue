@@ -1,30 +1,28 @@
 <template>
-  <div>
-    <v-container class="background">
-      <v-row>
-        <v-col class="time-axis">
-          <div class="top-margin"></div>
-          <div v-for="time in timeRange" :key="time" class="time-axis-number">
-            <h3 class="time-label">{{time}}</h3>
-          </div>
-        </v-col>
-        <v-col cols="11">
-          <v-row name="week-days-axis">
-            <v-col v-for="weekday in weekdays" :key="weekday">
-              <h2 class="day-label">{{weekday}}</h2>
-            </v-col>
-          </v-row>
-          <v-row name="timetable-content">
-            <v-col v-for="(meetingSections, day) in timetable" :key="day">
-              <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
-                <timetable-event :event="event" :color="courseCodeColorMap.get(event.courseCode)" />
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+  <v-container class="background">
+    <v-row>
+      <v-col class="time-axis">
+        <div class="top-margin"></div>
+        <div v-for="time in timeRange" :key="time" class="time-axis-number">
+          <h3 class="time-label">{{time}}</h3>
+        </div>
+      </v-col>
+      <v-col cols="11">
+        <v-row name="week-days-axis">
+          <v-col v-for="weekday in weekdays" :key="weekday">
+            <h2 class="day-label">{{weekday}}</h2>
+          </v-col>
+        </v-row>
+        <v-row name="timetable-content">
+          <v-col v-for="(meetingSections, day) in timetable" :key="day">
+            <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
+              <timetable-event :event="event" />
+            </div>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -41,11 +39,8 @@ export default {
   },
   props: {
     timetable: {
-      type: Object,
-    },
-    courseCodeColorMap: {
-      type: Map,
-    },
+      type: Object
+    }
   },
   computed: {
     timetableStart() {
@@ -91,7 +86,7 @@ export default {
   data() {
     return {
       colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
-      weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     };
   },
   methods: {
@@ -99,7 +94,13 @@ export default {
       const result = [];
       let currTime = this.timetableStart;
       let invalidStart = -1;
-
+      if (meetingSections.length === 0) {
+        for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
+          result.push({ start: invalidStart });
+          invalidStart--;
+        }
+        return result;
+      }
       for (let i = 0; i < meetingSections.length; i++) {
         const event = meetingSections[i];
         const eventStart = convertSecondsToHours(event.start);
@@ -120,6 +121,7 @@ export default {
           }
         }
       }
+      // console.log(result);
       return result;
     }
   }
@@ -129,15 +131,15 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 * {
-font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 .col {
   padding: 0px !important;
 }
 
 .background {
-    border: 0.2px solid gray;
-    background-color: white;
+  background-color: white;
+  border-radius: 16px;
 }
 
 .container {

@@ -1,62 +1,81 @@
 <template>
   <div>
     <div v-if="event.start > 0">
-      <div
-        @mouseover="hovered = true"
-        @mouseleave="hovered = false"
-        class="event"
-        :class="durationClass(event.start, event.end)"
-        :style=" { background: color }"
-      >
-        <h4 class="course-code">{{courseCodeWithoutTerm(event.courseCode)}}</h4>
+      <v-dialog v-model="dialog" scrollable width="810px" @input="atInput">
+        <template v-slot:activator="{ on }">
+          <div
+            @mouseover="hovered = true"
+            @mouseleave="hovered = false"
+            v-on="on"
+            class="event"
+            :class="durationClass(event.start, event.end)"
+            :style=" { background: getCourseColor(event.code) }"
+          >
+            <h4 class="course-code">{{courseCodeWithoutTerm(event.code)}}</h4>
 
-        <div class="lock-button">
-          <v-btn dark @click="reverseLockStatus" v-if="locked" icon>
-            <v-icon>mdi-lock</v-icon>
-          </v-btn>
-          <v-btn dark @click="reverseLockStatus" v-if="!locked && hovered" icon>
-            <v-icon>mdi-lock-open</v-icon>
-          </v-btn>
-        </div>
+            <div class="lock-button">
+              <v-btn dark @click.stop="reverseLockStatus" v-if="locked" icon>
+                <v-icon>mdi-lock</v-icon>
+              </v-btn>
+              <v-btn dark @click.stop="reverseLockStatus" v-if="!locked && hovered" icon>
+                <v-icon>mdi-lock-open</v-icon>
+              </v-btn>
+            </div>
 
-        <div style="margin-left: 3px;">{{event.section}}</div>
+            <div style="margin-left: 3px;">{{event.sectionCode}}</div>
 
-        <div style="position: relative;">
-          <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
-          <div class="align-right">{{event.location}}</div>
-        </div>
-      </div>
+            <div style="position: relative;">
+              <div class="align-left">{{getFormattedTime(event.start, event.end)}}</div>
+              <div class="align-right">{{event.location}}</div>
+            </div>
+          </div>
+        </template>
+        <course-section-picker v-on:done="dialog=false" :code="event.code" ref="popUp"/>
+      </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
   </div>
 </template>
 
 <script>
+import CourseSectionPicker from "../components/CourseSectionPicker";
+import { mapGetters } from 'vuex'
+
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
 };
+
 export default {
   name: "timetable-event",
   props: {
     event: {
       type: Object,
       default: () => {}
-    },
-    color: {
-      type: String,
-      default: "#83CC77"
     }
+  },
+  components: {
+    CourseSectionPicker
   },
   data() {
     return {
       locked: false,
-      hovered: false
+      hovered: false,
+      dialog: false
     };
   },
-
+  computed: {
+    ...mapGetters(["getCourseColor"])
+  },
   methods: {
     reverseLockStatus() {
       this.locked = !this.locked;
+    },
+    atInput() {
+      // console.log('pop up toggled')
+      var courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker != 'undefined') {
+        courseSectionPicker.resetSelectedMeetingSections()
+      }
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
@@ -69,7 +88,15 @@ export default {
       }
     },
     getFormattedTime(start, end) {
-      return `${(start / 3600) % 12}:00 - ${(end / 3600) % 12}:00`;
+      var s = (start / 3600) % 12;
+      var e = (end / 3600) % 12;
+      if (s == 0) {
+        s = 12;
+      }
+      if (e == 0) {
+        e = 12;
+      }
+      return `${s}:00 - ${e}:00`;
     },
     courseCodeWithoutTerm(code) {
       return code.substring(0, code.length - 1);
@@ -81,7 +108,7 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 * {
-font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .event {
@@ -89,10 +116,12 @@ font-family: "Montserrat", sans-serif;
   color: white;
   padding: 8px;
   position: relative;
+  cursor: pointer;
 }
 .empty-event {
   background: white !important;
   border: 0.2px solid gray;
+  cursor: default;
 }
 .one-hour {
   height: 84px;

@@ -1,5 +1,5 @@
 query {
-  courses {
+  courses(code: "") {
     code, 
     name
   }
