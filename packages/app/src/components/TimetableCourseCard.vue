@@ -3,20 +3,20 @@
     <div class="course-info-card">
       <div class="course-card-header pb-4" :style="{ background: course.color }">
         <v-row class="pl-2 mb-2">
-          <v-col class=" ml-2" cols="10">{{ course.code }} {{ course.name }}</v-col>
+          <v-col class=" ml-2" cols="10">{{ course.courseCode }} {{ course.name }}</v-col>
           <v-spacer />
           <v-col cols="0.5" class="pr-0">
-            <v-dialog v-model="dialog" scrollable width="800px">
+            <v-dialog v-model="dialog" scrollable width="810px" @input="atInput">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on" color="white">
                   <v-icon>mdi-pencil-box-outline</v-icon>
                 </v-btn>
               </template>
-              <course-section-picker v-on:done="dialog = false" :code="course.code" />
+              <course-section-picker v-on:done="dialog = false" :code="course.courseCode" ref="popUp"/>
             </v-dialog>
           </v-col>
           <v-col cols="0.5" class=" pl-0">
-            <v-btn color="white" @click="deleteCourse({code: course.code})" icon>
+            <v-btn color="white" @click="deleteCourse({code: course.courseCode})" icon>
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-col>
@@ -41,7 +41,7 @@
       <div class="sections-info">
         <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
           <v-col cols="3">{{meetingsection.sectionCode}}</v-col>
-          <v-col>{{meetingsection.day}}</v-col>
+          <v-col>{{getProperDayName(meetingsection.day)}}</v-col>
           <v-col>{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
           <v-col cols="3">{{meetingsection.location}}</v-col>
           <v-col cols="3">{{meetingsection.instructorName}}</v-col>
@@ -73,10 +73,10 @@ export default {
       for (let day in this.timetable) {
         const dayEvents = this.timetable[day];
         for (let event of dayEvents) {
-          if (event.code == this.course.code) {
+          if (event.code == this.course.courseCode) {
             const instructor = event.instructors.length === 0 ? "TBA" : event.instructors[0]
             sections.push({
-              sectionCode: event.sectionCode.slice(-5),
+              sectionCode: event.sectionCode,
               day: day,
               start: event.start,
               end: event.end,
@@ -102,11 +102,21 @@ export default {
         s = 12;
       }
       var e = (end / 3600) % 12;
-      if (end == 0) {
-        end = 12;
+      if (e == 0) {
+        e = 12;
       }
       return `${s}:00 - ${e}:00`;
-    }
+    },
+    getProperDayName(day) {
+      return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+    },
+    atInput() {
+      // console.log('pop up toggled')
+      var courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker != 'undefined') {
+        courseSectionPicker.resetSelectedMeetingSections()
+      }
+    },
   }
 };
 </script>

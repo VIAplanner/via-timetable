@@ -39,7 +39,7 @@ export default new Vuex.Store({
       state.timetables = payload.timetables
     },
     addCourse(state, payload) {
-      state.selectedCourses[payload.course.code] = payload.course
+      state.selectedCourses[payload.course.courseCode] = payload.course
       state.takenColors.push(payload.course.color)
     },
     removeCourse(state, payload) {
@@ -61,17 +61,16 @@ export default new Vuex.Store({
           if (event.code === payload.code) {
             console.log("Found")
             if (event.sectionCode.charAt(0) == "L") {
-              selectedMeetingSections.lecture = event.sectionCode;
+              selectedMeetingSections.lecture = event.sectionCode.slice(-5);
             } else if (event.sectionCode.charAt(0) == "P") {
-              selectedMeetingSections.practical = event.sectionCode;
-            } else selectedMeetingSections.tutorial = event.sectionCode;
+              selectedMeetingSections.practical = event.sectionCode.slice(-5);
+            } else selectedMeetingSections.tutorial = event.sectionCode.slice(-5);
           }
         }
       }
       state.timetableSelectedMeetingSections.lecture = selectedMeetingSections.lecture
       state.timetableSelectedMeetingSections.tutorial = selectedMeetingSections.tutorial
       state.timetableSelectedMeetingSections.practical = selectedMeetingSections.practical   
-      
     }
   },
   actions: {
@@ -91,6 +90,7 @@ export default new Vuex.Store({
       })
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
       const timetables = generateTimetables(courses)
+      console.log(timetables.length)
       context.commit("setTimetables", { timetables })
       context.commit("setTimetable", { timetable: context.state.timetables[0] })
     },

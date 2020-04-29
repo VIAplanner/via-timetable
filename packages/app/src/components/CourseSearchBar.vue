@@ -4,12 +4,12 @@
     v-model="selectedCourse"
     :items="courses"
     cache-items
-      class="mx-4"
-      flat
-      hide-no-data
-      hide-details
-      label="Search for a Course"
-      solo-inverted
+    class="mx-4"
+    flat
+    hide-no-data
+    hide-details
+    label="Search for a Course"
+    solo-inverted
   ></v-autocomplete>
 </template>
 
@@ -27,16 +27,15 @@ export default {
     ...mapActions(["selectCourse"]),
     onCourseSelected() {
       if (!this.selectedCourse) return;
-      // console.log("About to fetch")
       this.$apollo
         .query({
           query: gql`
             query getCourse($code: String!) {
               courses(code: $code) {
-                code
+                courseCode: code
                 name
                 meeting_sections {
-                  code
+                  sectionCode: code
                   instructors
                   times {
                     day
@@ -49,11 +48,14 @@ export default {
             }
           `,
           variables: {
-            code: this.selectedCourse.slice(0, this.selectedCourse.indexOf(":"))
+            code: this.selectedCourse.slice(
+              0,
+              this.selectedCourse.indexOf(":")
+            )
           }
         })
         .then(response => {
-          // console.log(response);
+          console.log(response);
           if (response.data.courses) {
             this.selectCourse({ course: response.data.courses[0] });
           }
