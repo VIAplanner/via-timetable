@@ -244,6 +244,7 @@ const createTimetable = (courseSection) => {
                             const prevTimetable = createShallowCopyOfTimetable(timetable)
                             const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
                                 let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
+                                console.log(tut2)
                                 if (tut2 != -1) {
                                     return courseSection[whichArray2].tutorial.some((arrayElement2) => {
                                             // Recursive case...
@@ -264,7 +265,7 @@ const createTimetable = (courseSection) => {
                                         temp.push(arrayElement2);
                                         addSectionToTimetable(temp, timetable)
                                         if (overlapExists(timetable)) {
-                                            timetable = prevTimetable
+                                            timetable = createShallowCopyOfTimetable(prevTimetable)
                                         }
                                         else {
                                             return true
