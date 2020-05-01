@@ -209,9 +209,10 @@ const createTimetable = (courseSection) => {
                                                         temp.push(arrayElement2);
                                                         addSectionToTimetable(temp, timetable)
                                                         if (overlapExists(timetable)) {
-                                                            timetable = prevTimetable
+                                                            timetable = createShallowCopyOfTimetable(prevTimetable)
                                                         }
                                                         else {
+                                                            lectureCombo.founded = 1
                                                             return true
                                                         }
                                                     })
@@ -219,7 +220,6 @@ const createTimetable = (courseSection) => {
                                             }
                                             const tutResult = tutorialCombo(courseSection)
                                             if (tutResult) {
-                                                lectureCombo.founded = 1
                                                 return true
                                             }
                                             if (lectureCombo.founded == 1) {
