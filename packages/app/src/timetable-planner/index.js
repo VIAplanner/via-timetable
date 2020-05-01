@@ -139,6 +139,7 @@ const createTimetable = (courseSection) => {
     const lectureCombo = (courseSection, whichArray = 0, output = []) => {
         lectureCombo.founded = 0
         return courseSection[whichArray].lecture.some((arrayElement) => {
+            console.log(arrayElement)
             if (whichArray === courseSection.length - 1) {
                 // Base case...
                 const temp = [...output];
@@ -331,8 +332,36 @@ const createTimetable = (courseSection) => {
  */
 const generateTimetables = (courses) => {
     // Generate all valid combinations of MeetingSections for a course
+    const lockSections = []
     const courseSections = courses.map(course => sortCourseSection(course));
-    const timetable = createTimetable(courseSections)
+    for (const course of courseSections){
+        for (const section of lockSections){
+            if (course.code === section.slice(0,section.length-5)){
+                if (section[section.length-5] == 'L'){
+                    for (const lecture of course.lecture){
+                        if (lecture.sectionCode === section.slice(section.length-5)){ 
+                            course.lecture = [lecture]
+                        }
+                    }
+                }
+                if (section[section.length-5] == 'T'){
+                    for (const tutorial of course.tutorial){
+                        if (tutorial.sectionCode === section.slice(section.length-5)){ 
+                            course.tutorial = [tutorial]
+                        }
+                    }
+                }
+                if (section[section.length-5] == 'P'){
+                    for (const practical of course.practical){
+                        if (practical.sectionCode === section.slice(section.length-5)){ 
+                            course.practical = [practical]
+                        }
+                    }
+                }
+            }
+        }
+    }
+    const timetable = createTimetable(courseSections, lockSections)
     return [timetable];
 };
 export { generateTimetables, createTimetable, overlapExists };
