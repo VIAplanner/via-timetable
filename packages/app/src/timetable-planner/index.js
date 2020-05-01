@@ -49,6 +49,7 @@ const addSectionToTimetable = (sections, timetable) => {
         }
     }
 }
+
 /**
  * Make a complete shallow copy of a timetable
  * @param {*} timetable 
