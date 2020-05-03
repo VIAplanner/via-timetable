@@ -1,12 +1,11 @@
 <template>
   <v-card v-if="!$apollo.loading">
-    <v-toolbar color="teal" dark>
-      <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
+    <v-toolbar :color="course.color" dark>
+      <v-toolbar-title class="text-wrap">{{course.courseCode}} {{course.name}}</v-toolbar-title>
       <v-spacer />
       <v-btn text @click="onClickDone">Done</v-btn>
     </v-toolbar>
     <v-card-text height="600px">
-      <!-- <h4>{{selectedMeetingSections}}</h4> -->
       <v-list rounded subheader two-line flat>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
