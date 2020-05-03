@@ -138,7 +138,8 @@ const createTimetable = (courseSection) => {
     // but a valid timetable is already found
     const lectureCombo = (courseSection, whichArray = 0, output = []) => {
         lectureCombo.founded = 0
-        return courseSection[whichArray].lecture.some((arrayElement) => { 
+        return courseSection[whichArray].lecture.some((arrayElement) => {
+            // console.log(arrayElement)
             if (whichArray === courseSection.length - 1) {
                 // Base case...
                 const temp = [...output];
@@ -245,7 +246,7 @@ const createTimetable = (courseSection) => {
                             const prevTimetable = createShallowCopyOfTimetable(timetable)
                             const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
                                 let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
-                                console.log(tut2)
+                                // console.log(tut2)
                                 if (tut2 != -1) {
                                     return courseSection[whichArray2].tutorial.some((arrayElement2) => {
                                             // Recursive case...
@@ -265,13 +266,13 @@ const createTimetable = (courseSection) => {
                                         const temp = [...output2];
                                         temp.push(arrayElement2);
                                         addSectionToTimetable(temp, timetable)
-                                        console.log(timetable)
+                                        // console.log(timetable)
                                         if (overlapExists(timetable)) {
-                                            console.log("overlap")
+                                            // console.log("overlap")
                                             timetable = createShallowCopyOfTimetable(prevTimetable)
                                         }
                                         else {
-                                            console.log("no overlap")
+                                            // console.log("no overlap")
                                             lectureCombo.founded = 1
                                             return true
                                         }
@@ -280,7 +281,7 @@ const createTimetable = (courseSection) => {
                             }
                             const tutResult = tutorialCombo(courseSection)
                             if (tutResult) {
-                                console.log("tut good")
+                                // console.log("tut good")
                                 lectureCombo.founded = 1
                                 return true
                             }
@@ -331,8 +332,37 @@ const createTimetable = (courseSection) => {
  */
 const generateTimetables = (courses) => {
     // Generate all valid combinations of MeetingSections for a course
+    const lockSections = []
     const courseSections = courses.map(course => sortCourseSection(course));
-    const timetable = createTimetable(courseSections)
+    for (const course of courseSections){
+        for (const section of lockSections){
+            if (course.code === section.slice(0,section.length-5)){
+                if (section[section.length-5] == 'L'){
+                    for (const lecture of course.lecture){
+                        if (lecture.sectionCode === section.slice(section.length-5)){ 
+                            course.lecture = [lecture]
+                        }
+                    }
+                }
+                if (section[section.length-5] == 'T'){
+                    for (const tutorial of course.tutorial){
+                        if (tutorial.sectionCode === section.slice(section.length-5)){ 
+                            course.tutorial = [tutorial]
+                        }
+                    }
+                }
+                if (section[section.length-5] == 'P'){
+                    for (const practical of course.practical){
+                        if (practical.sectionCode === section.slice(section.length-5)){ 
+                            course.practical = [practical]
+                        }
+                    }
+                }
+            }
+        }
+    }
+    const timetable = createTimetable(courseSections, lockSections)
+    // console.log("did it return? ", timetable)
     return [timetable];
 };
 export { generateTimetables, createTimetable, overlapExists };
