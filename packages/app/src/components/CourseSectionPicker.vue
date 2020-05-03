@@ -64,7 +64,7 @@
                             >
                               <template v-slot:activator="{ on }">
                                 <div
-                                  class="conflicting-time-orange "
+                                  class="conflicting-time-orange"
                                   v-on="on"
                                 >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
                               </template>
@@ -122,14 +122,11 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted')
-    this.resetSelectedMeetingSections()
+    console.log("mounted");
+    this.resetSelectedMeetingSections();
   },
   computed: {
-    ...mapGetters([
-      "timetable",
-      "selectedCourses"
-    ]),
+    ...mapGetters(["timetable", "selectedCourses"]),
     course() {
       return this.selectedCourses[this.code];
     },
@@ -146,8 +143,8 @@ export default {
         )
       };
     },
-    timetableSelectedMeetingSections () {
-      return this.getTimetableMeetingSections()
+    timetableSelectedMeetingSections() {
+      return this.getTimetableMeetingSections();
     }
   },
 
@@ -158,12 +155,21 @@ export default {
     ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
+      var se = ((start / 3600)-s) / 12;
       if (s == 0) {
         s = 12;
       }
       var e = (end / 3600) % 12;
+      var er = ((end / 3600)-e) / 12;
       if (e == 0) {
         e = 12;
+      }
+      if (er == se && se == 0) {
+        return `${s}:00AM- ${e}:00AM`;
+      } else if (er == se && se == 1) {
+        return `${s}:00PM- ${e}:00PM`;
+      } else if (er > se) {
+        return `${s}:00AM- ${e}:00PM`;
       }
       return `${s}:00 - ${e}:00`;
     },
@@ -192,7 +198,7 @@ export default {
 
     // },
     resetSelectedMeetingSections() {
-      this.selectedMeetingSections = this.getTimetableMeetingSections()
+      this.selectedMeetingSections = this.getTimetableMeetingSections();
     },
     getTimetableMeetingSections() {
       let selectedMeetingSections = {
@@ -212,7 +218,7 @@ export default {
           }
         }
       }
-      return selectedMeetingSections
+      return selectedMeetingSections;
     }
   },
   data() {
