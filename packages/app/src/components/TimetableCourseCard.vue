@@ -158,7 +158,7 @@ export default {
 }
 
 .sections-info {
-  padding-left: 20px;
+  padding-left: 15px;
   background: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
