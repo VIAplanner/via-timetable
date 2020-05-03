@@ -79,11 +79,6 @@ export default new Vuex.Store({
       const color = context.state.colors.pop()
       context.commit("addCourse", {
         course: {
-          selectedMeetingSections: {
-            lecture: null,
-            tutorial: null,
-            practical: null
-          },
           color,
           ...payload.course
         }

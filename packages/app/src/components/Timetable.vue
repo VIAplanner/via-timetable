@@ -16,7 +16,9 @@
         <v-row name="timetable-content">
           <v-col v-for="(meetingSections, day) in timetable" :key="day">
             <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
-              <timetable-event :event="event" />
+              <timetable-event :event="event" ref="timetableEvent" 
+              @toggleLock="onLockToggle" v-if="event.start > 0"/>
+              <timetable-event :event="event" v-else/>
             </div>
           </v-col>
         </v-row>
@@ -90,6 +92,13 @@ export default {
     };
   },
   methods: {
+    onLockToggle(event) {
+      for (var ref of this.$refs.timetableEvent) {
+        if (ref.event.code == event.code && ref.event.sectionCode == event.sectionCode) {
+          ref.reverseLockStatus()
+        }
+      }
+    },
     getEventsForDay(meetingSections) {
       const result = [];
       let currTime = this.timetableStart;
