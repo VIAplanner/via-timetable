@@ -59,8 +59,9 @@
                           <v-col>
                             <v-tooltip
                               top
-                              v-if="checkConflict(time.day, 
-                                  time.start, time.end) != null && meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
+                              v-if="checkConflict(time.day, time.start, time.end) != null && 
+                                  checkConflict(time.day, time.start, time.end).slice(7, 12) != timetableSelectedMeetingSections[activityType] &&
+                                  meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
