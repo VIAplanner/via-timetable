@@ -93,6 +93,7 @@ const checkOverlapForDay = (timetable, day) => {
     }
     return false;
 };
+
 /**
  *
  * Checks overlap of course times for each day in a timetable
@@ -107,6 +108,7 @@ const overlapExists = (timetable) => {
     }
     return exists;
 };
+
 /**
  *
  * Creates timetable by parse the meetingSections into each day and check for validity
@@ -361,8 +363,7 @@ const generateTimetables = (courses) => {
             }
         }
     }
-    const timetable = createTimetable(courseSections, lockSections)
-    // console.log("did it return? ", timetable)
+    const timetable = createTimetable(courseSections)
     return [timetable];
 };
 export { generateTimetables, createTimetable, overlapExists };
