@@ -11,13 +11,13 @@
             :class="durationClass(event.start, event.end)"
             :style=" { background: getCourseColor(event.code) }"
           >
-            <h4 class="course-code">{{courseCodeWithoutTerm(event.code)}}</h4>
+            <h4 class="course-code">{{event.code}}</h4>
 
             <div class="lock-button">
-              <v-btn dark @click.stop="reverseLockStatus" v-if="locked" icon>
+              <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
                 <v-icon>mdi-lock</v-icon>
               </v-btn>
-              <v-btn dark @click.stop="reverseLockStatus" v-if="!locked && hovered" icon>
+              <v-btn dark @click.stop="lockToggle" v-if="!locked && hovered" icon>
                 <v-icon>mdi-lock-open</v-icon>
               </v-btn>
             </div>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </template>
-        <course-section-picker v-on:done="dialog=false" :code="event.code" ref="popUp"/>
+        <course-section-picker v-on:done="dialog=false" :code="event.code" ref="popUp"/>,
       </v-dialog>
     </div>
     <div class="event empty-event one-hour" v-else></div>
@@ -67,15 +67,17 @@ export default {
     ...mapGetters(["getCourseColor"])
   },
   methods: {
-    reverseLockStatus() {
-      this.locked = !this.locked;
-    },
     atInput() {
-      // console.log('pop up toggled')
       var courseSectionPicker = this.$refs.popUp;
       if (typeof courseSectionPicker != 'undefined') {
         courseSectionPicker.resetSelectedMeetingSections()
       }
+    },
+    reverseLockStatus() {
+      this.locked = !this.locked;
+    },
+    lockToggle() {
+      this.$emit('toggleLock', this.event)
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
@@ -98,9 +100,9 @@ export default {
       }
       return `${s}:00 - ${e}:00`;
     },
-    courseCodeWithoutTerm(code) {
-      return code.substring(0, code.length - 1);
-    }
+    // courseCodeWithoutTerm(code) {
+    //   return code.substring(0, code.length - 1);
+    // }
   }
 };
 </script>
