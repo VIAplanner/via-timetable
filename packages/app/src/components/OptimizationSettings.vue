@@ -31,12 +31,13 @@
                     </v-row>
                     <v-row justify="start" align="center">
                         <h4 style="margin: 10px">Days Off:</h4>
-                        <v-btn-toggle v-model="selectedDaysOptions" multiple>
+                        <v-btn-toggle v-model="selectedDaysOptions" multiple style="margin-left: 5px">
                             <v-btn
                                 v-for="option in daysOptions"
                                 :key="option"
                                 outlined
                                 small
+                                width="53.4"
                             >
                                 {{ option }}
                             </v-btn>
