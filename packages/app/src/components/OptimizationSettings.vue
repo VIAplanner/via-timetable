@@ -2,7 +2,7 @@
     <v-dialog width="390" v-model="optimizationOpen">
         <template v-slot:activator="{ on }">
             <v-btn color="primary" dark v-on="on">
-                <v-icon md>mdi-settings-outline</v-icon>
+                <v-icon md>mdi-cog-outline</v-icon>
             </v-btn>
         </template>
         <v-card>
