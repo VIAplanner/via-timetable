@@ -332,9 +332,8 @@ const createTimetable = (courseSection) => {
  * @param {Course[]} courses
  * @returns {Timetable[]}
  */
-const generateTimetables = (courses) => {
+const generateTimetables = (courses, lockSections) => {
     // Generate all valid combinations of MeetingSections for a course
-    const lockSections = []
     const courseSections = courses.map(course => sortCourseSection(course));
     for (const course of courseSections){
         for (const section of lockSections){
