@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="event.start > 0">
-      <v-dialog v-model="dialog" scrollable width="810px" @input="atInput">
+      <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
         <template v-slot:activator="{ on }">
           <div
             @mouseover="hovered = true"
