@@ -6,7 +6,7 @@
           <v-col class=" ml-2" cols="10">{{ course.courseCode }} {{ course.name }}</v-col>
           <v-spacer />
           <v-col cols="0.5" class="pr-0">
-            <v-dialog v-model="dialog" scrollable width="810px" @input="atInput">
+            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on" color="white">
                   <v-icon>mdi-pencil-box-outline</v-icon>
@@ -27,10 +27,10 @@
           <v-col>
             <h4>Activity</h4>
           </v-col>
-          <v-col>
+          <v-col cols="4">
             <h4>Time</h4>
           </v-col>
-          <v-col>
+          <v-col style="margin-left: 10px">
             <h4>Location</h4>
           </v-col>
           <v-col>
@@ -40,11 +40,11 @@
       </div>
       <div class="sections-info">
         <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
-          <v-col cols="3">{{meetingsection.sectionCode}}</v-col>
-          <v-col>{{getProperDayName(meetingsection.day)}}</v-col>
-          <v-col>{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
-          <v-col cols="3">{{meetingsection.location}}</v-col>
-          <v-col cols="3">{{meetingsection.instructorName}}</v-col>
+          <v-col>{{meetingsection.sectionCode}}</v-col>
+          <v-col cols="1">{{getProperDayName(meetingsection.day)}}</v-col>
+          <v-col cols="3" style="margin-left: 15px">{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
+          <v-col>{{meetingsection.location}}</v-col>
+          <v-col>{{meetingsection.instructorName}}</v-col>
         </v-row>
       </div>
     </div>

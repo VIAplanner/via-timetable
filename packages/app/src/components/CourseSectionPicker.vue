@@ -22,14 +22,14 @@
                 <v-col>
                   <h4 style="margin-left: 70px;">Activity</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 50px">Time</h4>
+                <v-col>
+                  <h4 style="margin-left: 60px">Time</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 25px">Location</h4>
+                <v-col>
+                  <h4 style="margin-left: 80px">Location</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 5px">Instructor</h4>
+                <v-col>
+                  <h4 style="margin-left: 15px">Instructor</h4>
                 </v-col>
               </v-row>
               <v-divider class="activity-divider" />
@@ -53,7 +53,7 @@
                         </v-row>
                       </v-col>
 
-                      <v-col cols="4">
+                      <v-col cols="5">
                         <v-row v-for="time in meetingSection.times" :key="time.day">
                           <v-col>
                             <v-tooltip
@@ -66,20 +66,20 @@
                                 <div
                                   class="conflicting-time-orange"
                                   v-on="on"
-                                >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                                >{{getProperDayName(time.day).slice(0,3)}} {{getFormattedTime(time.start, time.end)}}</div>
                               </template>
                               Conflicts with {{checkConflict(time.day,
                               time.start, time.end)}}
                             </v-tooltip>
                             <div v-else>
-                              {{getProperDayName(time.day)}}
+                              {{getProperDayName(time.day).slice(0,3)}}
                               {{getFormattedTime(time.start, time.end)}}
                             </div>
                           </v-col>
                         </v-row>
                       </v-col>
 
-                      <v-col>
+                      <v-col cols="2">
                         <v-row v-for="time in meetingSection.times" :key="time.day">
                           <v-col>
                             <div>{{time.location}}</div>
@@ -89,11 +89,11 @@
 
                       <v-col class="contain">
                         <v-row class="center-vertical">
-                          <v-col>
-                            <v-list-item-title
-                              v-if="activityType === 'lecture'"
-                            >{{meetingSection.instructors[0]}}</v-list-item-title>
-                            <v-list-item-title v-else>TBA</v-list-item-title>
+                          <v-col style="margin-left: 15px">
+                            <v-list-item-title v-if="activityType === 'lecture'" class="text-wrap">
+                              {{meetingSection.instructors[0]}}
+                            </v-list-item-title>
+                            <v-list-item-title v-else class="text-wrap">TBA</v-list-item-title>
                           </v-col>
                         </v-row>
                       </v-col>
@@ -155,23 +155,16 @@ export default {
     ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
-      var se = ((start / 3600)-s) / 12;
       if (s == 0) {
         s = 12;
       }
+      var startPeriod = start / 3600 < 12 ? 'AM':'PM'
       var e = (end / 3600) % 12;
-      var er = ((end / 3600)-e) / 12;
       if (e == 0) {
         e = 12;
       }
-      if (er == se && se == 0) {
-        return `${s}:00AM- ${e}:00AM`;
-      } else if (er == se && se == 1) {
-        return `${s}:00PM- ${e}:00PM`;
-      } else if (er > se) {
-        return `${s}:00AM- ${e}:00PM`;
-      }
-      return `${s}:00 - ${e}:00`;
+      var endPeriod = end / 3600 < 12 ? 'AM':'PM'
+      return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
@@ -269,15 +262,11 @@ export default {
 }
 
 .activity-divider {
-  margin: 4px 72px;
+  margin: 0px 5px;
 }
 
 .conflicting-time-orange {
   color: orange;
-}
-
-.bg-blue {
-  background-color: #e1edfa;
 }
 </style>
 
