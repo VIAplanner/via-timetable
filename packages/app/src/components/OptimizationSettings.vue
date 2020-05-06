@@ -20,7 +20,7 @@
                         <v-btn-toggle v-model="selectedIdleOption">
                             <v-btn
                                 v-for="option in idleOptions"
-                                :key="option"
+                                :key="option.text"
                                 :color="option.color"
                                 outlined
                                 small
