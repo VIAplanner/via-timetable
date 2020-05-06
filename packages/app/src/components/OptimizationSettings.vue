@@ -1,77 +1,69 @@
 <template>
-  <v-card class="pb-8 pl-4 pt-4 mr-4">
-    <v-row>
-      <v-col class="pb-0">
-        <p class="header-style">Optimization Settings</p>
-        <span class="header-style" style="font-size: 18px;">Idle Time</span>
-        <span class="header-style" style="font-size: 18px; margin-left: 137px;">Days Off</span>
-      </v-col>
-    </v-row>
-
-    <v-row class="pl-2">
-      <v-radio-group hide-details v-model="selectedIdleOption" :mandatory="false">
-        <v-col class="pb-0 pt-0">
-          <v-radio
-            v-for="message in idleOptions"
-            :key="message"
-            :label="message"
-            :value="message"
-            color="#3F5D79"
-          ></v-radio>
-        </v-col>
-      </v-radio-group>
-
-      <v-col class="pb-0 pt-0 pl-7">
-        <v-checkbox
-          v-for="weekday in weekdays"
-          :key="weekday"
-          hide-details
-          v-model="selected"
-          :label="weekday"
-          :value="weekday"
-          color="#3F5D79"
-        ></v-checkbox>
-      </v-col>
-    </v-row>
-  </v-card>
+    <v-dialog width="390" v-model="optimizationOpen">
+        <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">
+                <v-icon md>mdi-cog-outline</v-icon>
+            </v-btn>
+        </template>
+        <v-card>
+            <v-card-title class="headline grey lighten-2" primary-title>
+                Optimization Settings
+                <v-spacer></v-spacer>
+                <v-btn icon @click="optimizationOpen = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-card-title>
+            <v-card-actions>
+                <v-container fluid>
+                    <v-row justify="start" align="center">
+                        <h4 style="margin: 10px">Idle Time:</h4>
+                        <v-btn-toggle v-model="selectedIdleOption">
+                            <v-btn
+                                v-for="option in idleOptions"
+                                :key="option"
+                                :color="option.color"
+                                outlined
+                                small
+                            >
+                                {{ option.text }}
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-row>
+                    <v-row justify="start" align="center">
+                        <h4 style="margin: 10px">Days Off:</h4>
+                        <v-btn-toggle v-model="selectedDaysOptions" multiple style="margin-left: 5px">
+                            <v-btn
+                                v-for="option in daysOptions"
+                                :key="option"
+                                outlined
+                                small
+                                width="53.4"
+                            >
+                                {{ option }}
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-row>
+                </v-container>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>
 export default {
-  name: "optimization-settings",
-  data() {
-    return {
-      selectedDays: [],
-      weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      idleOptions: ["Maximize Idle Time", "Minimize Idle Time"],
-      selectedIdleOption: ""
-    };
-  }
+    name: "optimization-settings",
+    data() {
+        return {
+            optimizationOpen: false,
+            idleOptions: [
+                { text: "Minimize", color: "#F26B83" },
+                { text: "Netural", color: "#FBB347" },
+                { text: "Maximize", color: "#83CC77" },
+            ],
+            daysOptions: ["MO", "TU", "WE", "TH", "FR"],
+            selectedIdleOption: 1,
+            selectedDaysOptions: [],
+        };
+    },
 };
 </script>
-
-<style>
-.settings-container {
-  width: 375px;
-  height: 280px;
-  background: #ededed;
-  border: 4px solid #3f5d79;
-  border-radius: 25px;
-}
-
-.header-style {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 10px;
-  font-size: 25px;
-  color: #3f5d79 !important;
-}
-
-label {
-  margin-bottom: 0px !important;
-}
-
-.v-input--selection-controls {
-  margin-top: 0px !important;
-}
-</style>
