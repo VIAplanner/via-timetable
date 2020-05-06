@@ -1,12 +1,11 @@
 <template>
   <v-card v-if="!$apollo.loading">
-    <v-toolbar color="teal" dark>
-      <v-toolbar-title>{{course.code}} {{course.name}}</v-toolbar-title>
+    <v-toolbar :color="course.color" dark>
+      <v-toolbar-title class="text-wrap">{{course.courseCode}} {{course.name}}</v-toolbar-title>
       <v-spacer />
       <v-btn text @click="onClickDone">Done</v-btn>
     </v-toolbar>
     <v-card-text height="600px">
-      <!-- <h4>{{selectedMeetingSections}}</h4> -->
       <v-list rounded subheader two-line flat>
         <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
           <div v-if="meetingSections.length > 0">
@@ -23,14 +22,14 @@
                 <v-col>
                   <h4 style="margin-left: 70px;">Activity</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 50px">Time</h4>
+                <v-col>
+                  <h4 style="margin-left: 60px">Time</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 25px">Location</h4>
+                <v-col>
+                  <h4 style="margin-left: 80px">Location</h4>
                 </v-col>
-                <v-col class="activity-label">
-                  <h4 style="margin-left: 5px">Instructor</h4>
+                <v-col>
+                  <h4 style="margin-left: 15px">Instructor</h4>
                 </v-col>
               </v-row>
               <v-divider class="activity-divider" />
@@ -54,32 +53,33 @@
                         </v-row>
                       </v-col>
 
-                      <v-col cols="4">
+                      <v-col cols="5">
                         <v-row v-for="time in meetingSection.times" :key="time.day">
                           <v-col>
                             <v-tooltip
                               top
-                              v-if="checkConflict(time.day, 
-                                  time.start, time.end) != null && meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
+                              v-if="checkConflict(time.day, time.start, time.end) != null && 
+                                  checkConflict(time.day, time.start, time.end).slice(7, 12) != timetableSelectedMeetingSections[activityType] &&
+                                  meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
-                                  class="conflicting-time-orange "
+                                  class="conflicting-time-orange"
                                   v-on="on"
-                                >{{getProperDayName(time.day)}} {{getFormattedTime(time.start, time.end)}}</div>
+                                >{{getProperDayName(time.day).slice(0,3)}} {{getFormattedTime(time.start, time.end)}}</div>
                               </template>
                               Conflicts with {{checkConflict(time.day,
                               time.start, time.end)}}
                             </v-tooltip>
                             <div v-else>
-                              {{getProperDayName(time.day)}}
+                              {{getProperDayName(time.day).slice(0,3)}}
                               {{getFormattedTime(time.start, time.end)}}
                             </div>
                           </v-col>
                         </v-row>
                       </v-col>
 
-                      <v-col>
+                      <v-col cols="2">
                         <v-row v-for="time in meetingSection.times" :key="time.day">
                           <v-col>
                             <div>{{time.location}}</div>
@@ -89,11 +89,11 @@
 
                       <v-col class="contain">
                         <v-row class="center-vertical">
-                          <v-col>
-                            <v-list-item-title
-                              v-if="activityType === 'lecture'"
-                            >{{meetingSection.instructors[0]}}</v-list-item-title>
-                            <v-list-item-title v-else>TBA</v-list-item-title>
+                          <v-col style="margin-left: 15px">
+                            <v-list-item-title v-if="activityType === 'lecture'" class="text-wrap">
+                              {{meetingSection.instructors[0]}}
+                            </v-list-item-title>
+                            <v-list-item-title v-else class="text-wrap">TBA</v-list-item-title>
                           </v-col>
                         </v-row>
                       </v-col>
@@ -122,14 +122,11 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted')
-    this.resetSelectedMeetingSections()
+    console.log("mounted");
+    this.resetSelectedMeetingSections();
   },
   computed: {
-    ...mapGetters([
-      "timetable",
-      "selectedCourses"
-    ]),
+    ...mapGetters(["timetable", "selectedCourses"]),
     course() {
       return this.selectedCourses[this.code];
     },
@@ -146,8 +143,8 @@ export default {
         )
       };
     },
-    timetableSelectedMeetingSections () {
-      return this.getTimetableMeetingSections()
+    timetableSelectedMeetingSections() {
+      return this.getTimetableMeetingSections();
     }
   },
 
@@ -161,11 +158,13 @@ export default {
       if (s == 0) {
         s = 12;
       }
+      var startPeriod = start / 3600 < 12 ? 'AM':'PM'
       var e = (end / 3600) % 12;
       if (e == 0) {
         e = 12;
       }
-      return `${s}:00 - ${e}:00`;
+      var endPeriod = end / 3600 < 12 ? 'AM':'PM'
+      return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
@@ -192,7 +191,7 @@ export default {
 
     // },
     resetSelectedMeetingSections() {
-      this.selectedMeetingSections = this.getTimetableMeetingSections()
+      this.selectedMeetingSections = this.getTimetableMeetingSections();
     },
     getTimetableMeetingSections() {
       let selectedMeetingSections = {
@@ -212,7 +211,7 @@ export default {
           }
         }
       }
-      return selectedMeetingSections
+      return selectedMeetingSections;
     }
   },
   data() {
@@ -263,15 +262,11 @@ export default {
 }
 
 .activity-divider {
-  margin: 4px 72px;
+  margin: 0px 5px;
 }
 
 .conflicting-time-orange {
   color: orange;
-}
-
-.bg-blue {
-  background-color: #e1edfa;
 }
 </style>
 
