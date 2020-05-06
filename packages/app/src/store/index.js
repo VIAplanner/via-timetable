@@ -25,11 +25,7 @@ export default new Vuex.Store({
     },
     colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
     takenColors: [],
-    timetableSelectedMeetingSections: {
-      lecture: null,
-      practical: null,
-      tutorial: null
-    }
+    lockedSections: []
   },
   mutations: {
     setTimetable(state, payload) {
@@ -47,34 +43,14 @@ export default new Vuex.Store({
       state.takenColors.splice(state.takenColors.indexOf(state.selectedCourses[payload.code].color), 1);
       Vue.delete(state.selectedCourses, payload.code)
     },
-    setTimetableSelectedMeetingSections(state, payload) {
-      console.log(payload.code)
-      let selectedMeetingSections = {
-        lecture: null,
-        practical: null,
-        tutorial: null
-      };
-      for (let day in state.timetable) {
-        const dayEvents = state.timetable[day];
-        for (let event of dayEvents) {
-          console.log(event.code, payload.code)
-          if (event.code === payload.code) {
-            console.log("Found")
-            if (event.sectionCode.charAt(0) == "L") {
-              selectedMeetingSections.lecture = event.sectionCode.slice(-5);
-            } else if (event.sectionCode.charAt(0) == "P") {
-              selectedMeetingSections.practical = event.sectionCode.slice(-5);
-            } else selectedMeetingSections.tutorial = event.sectionCode.slice(-5);
-          }
-        }
-      }
-      state.timetableSelectedMeetingSections.lecture = selectedMeetingSections.lecture
-      state.timetableSelectedMeetingSections.tutorial = selectedMeetingSections.tutorial
-      state.timetableSelectedMeetingSections.practical = selectedMeetingSections.practical   
+    lockSection(state, payload) {
+      state.lockedSections.push(payload)
+    },
+    unlockSection(state, payload) {
+      state.lockedSections.splice(state.lockedSections.indexOf(payload), 1)
     }
   },
   actions: {
-    
     selectCourse(context, payload) {
       const color = context.state.colors.pop()
       context.commit("addCourse", {

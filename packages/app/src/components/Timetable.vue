@@ -29,6 +29,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import { mapMutations } from "vuex";
 
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
@@ -92,12 +93,21 @@ export default {
     };
   },
   methods: {
-    onLockToggle(event) {
+    ...mapMutations([
+      "lockSection",
+      "unlockSection"
+    ]),
+    onLockToggle(payload) {
       for (var ref of this.$refs.timetableEvent) {
-        if (ref.event.code == event.code && ref.event.sectionCode == event.sectionCode) {
+        if (ref.event.code == payload.event.code && ref.event.sectionCode == payload.event.sectionCode) {
           ref.reverseLockStatus()
         }
       }
+      if (payload.status == true) {
+        this.unlockSection(`${payload.event.code}${payload.event.sectionCode}`)
+      }
+      else {
+        this.lockSection(`${payload.event.code}${payload.event.sectionCode}`)      }
     },
     getEventsForDay(meetingSections) {
       const result = [];

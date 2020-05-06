@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+// import { mapMutations } from "vuex";
 // import gql from "graphql-tag";
 import { mapGetters } from "vuex";
 
@@ -149,10 +149,10 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
-      "selectMeetingSection",
-      "setTimetableSelectedMeetingSections"
-    ]),
+    // ...mapMutations([
+    //   "selectMeetingSection",
+    //   "setTimetableSelectedMeetingSections"
+    // ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {

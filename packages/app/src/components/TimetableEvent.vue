@@ -77,7 +77,7 @@ export default {
       this.locked = !this.locked;
     },
     lockToggle() {
-      this.$emit('toggleLock', this.event)
+      this.$emit('toggleLock', {event: this.event, status: this.locked})
     },
     durationClass(start, end) {
       const duration = convertSecondsToHours(end - start);
@@ -100,9 +100,6 @@ export default {
       }
       return `${s}:00 - ${e}:00`;
     },
-    // courseCodeWithoutTerm(code) {
-    //   return code.substring(0, code.length - 1);
-    // }
   }
 };
 </script>
