@@ -56,6 +56,10 @@ export default {
   components: {
     CourseSectionPicker
   },
+  destroyed() {
+    console.log('destroyed')
+    this.locked = false;
+  },
   data() {
     return {
       locked: false,

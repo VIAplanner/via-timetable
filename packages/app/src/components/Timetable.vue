@@ -98,6 +98,7 @@ export default {
       "unlockSection"
     ]),
     onLockToggle(payload) {
+      console.log('lock toggles')
       for (var ref of this.$refs.timetableEvent) {
         if (ref.event.code == payload.event.code && ref.event.sectionCode == payload.event.sectionCode) {
           ref.reverseLockStatus()

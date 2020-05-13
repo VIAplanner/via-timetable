@@ -8,14 +8,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     selectedCourses: {},
-    timetables: [{
-      MONDAY: [],
-      TUESDAY: [],
-      WEDNESDAY: [],
-      THURSDAY: [],
-      FRIDAY: [],
-
-    }],
     timetable: {
       MONDAY: [],
       TUESDAY: [],
@@ -29,10 +21,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setTimetable(state, payload) {
-      state.timetable = payload.timetable
-     },
-    setTimetables(state, payload) {
-      state.timetables = payload.timetables
+      state.timetable = payload
     },
     addCourse(state, payload) {
       state.selectedCourses[payload.course.courseCode] = payload.course
@@ -45,10 +34,15 @@ export default new Vuex.Store({
     },
     lockSection(state, payload) {
       state.lockedSections.push(payload)
+      // console.log(state.lockedSections)
     },
     unlockSection(state, payload) {
-      state.lockedSections.splice(state.lockedSections.indexOf(payload), 1)
-    }
+      const index = state.lockedSections.indexOf(payload)
+      if ( index != -1) {
+        state.lockedSections.splice(index, 1)
+      }
+      console.log(state.lockedSections)
+    },
   },
   actions: {
     selectCourse(context, payload) {
@@ -60,32 +54,52 @@ export default new Vuex.Store({
         }
       })
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
-      const timetables = generateTimetables(courses)
-      console.log(timetables.length)
-      context.commit("setTimetables", { timetables })
-      context.commit("setTimetable", { timetable: context.state.timetables[0] })
+      const timetable = generateTimetables(courses, context.state.lockedSections)
+      context.commit("setTimetable", timetable)
     },
     deleteCourse(context, payload) {
       context.commit("removeCourse", payload)
-      const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
-      if (courses.length == 0) {
-        context.commit("setTimetables", {
-          timetables: [{
-            MONDAY: [],
-            TUESDAY: [],
-            WEDNESDAY: [],
-            THURSDAY: [],
-            FRIDAY: [],
-          }]
+      //Unlock all sections of deleted course
+      for (var lockedSection of context.state.lockedSections) {
+        if (lockedSection.includes(payload.code)) {
+          context.commit("unlockSection", lockedSection)
         }
-        )
       }
-      else {
-        const timetables = generateTimetables(courses)
-        context.commit("setTimetables", { timetables })
+      console.log(context.state.lockedSections)
+      const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
+      const timetable = generateTimetables(courses, context.state.lockedSections)
+      context.commit("setTimetable", timetable)
+    },
+    resetTimetable(context) {
+      const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
+      const timetable = generateTimetables(courses, context.state.lockedSections)
+      console.log(timetable)
+      context.commit("setTimetable", timetable)
+    },
+    switchSection(context, payload) {
+      //Remove old section from locked sections
+      context.commit("unlockSection", `${payload.old.courseCode}${payload.old.lectureCode}`)
+      //Remove old section from timetable
+      for (let d in context.state.timetable) {
+        let day = context.state.timetable[d]
+        for (let event of day) {
+          if (`${event.code}${event.sectionCode}` == `${payload.old.courseCode}${payload.old.sectionCode}`){
+            day.splice(day.indexOf(event), 1)
+          }
+        }
       }
-
-      context.commit("setTimetable", { timetable: context.state.timetables[0] })
+      //Add new section into timetable
+      for (var time of payload.new.times) {
+        context.state.timetable[time.day].push({
+          code: payload.old.courseCode,
+          sectionCode: payload.new.sectionCode,
+          instructors: payload.new.instructors,
+          ...time,
+        })
+        context.state.timetable[time.day].sort((a, b) => {
+          return a.start - b.start;
+        });
+      }
     }
   },
   modules: {

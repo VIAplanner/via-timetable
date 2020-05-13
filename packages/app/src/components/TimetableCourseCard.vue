@@ -98,23 +98,16 @@ export default {
     ...mapActions(["deleteCourse"]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
-      var se = ((start / 3600)-s) / 12;
       if (s == 0) {
         s = 12;
       }
+      var startPeriod = start / 3600 < 12 ? 'AM':'PM'
       var e = (end / 3600) % 12;
-      var er = ((end / 3600)-e) / 12;
       if (e == 0) {
         e = 12;
       }
-      if(er == se && se == 0){
-        return `${s}:00AM- ${e}:00AM`;
-      }else if(er == se && se == 1){
-        return `${s}:00PM- ${e}:00PM`;
-      }else if(er>se){
-        return `${s}:00AM- ${e}:00PM`;
-      }
-      return `${s}:00 - ${e}:00`;
+      var endPeriod = end / 3600 < 12 ? 'AM':'PM'
+      return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
