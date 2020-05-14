@@ -53,7 +53,7 @@ export default {
         },
     },
     updated() {
-        this.updateSectionStatus();
+        this.updateSectionLockStatus();
     },
     computed: {
         ...mapGetters(["getLockedSections"]),
@@ -105,7 +105,7 @@ export default {
     },
     methods: {
         ...mapMutations(["lockSection", "unlockSection"]),
-        updateSectionStatus() {
+        updateSectionLockStatus() {
             for (var ref of this.$refs.timetableEvent) {
                 ref.locked = false;
                 for (var lockedSection of this.getLockedSections) {
