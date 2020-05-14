@@ -1,12 +1,7 @@
 <template>
     <div>
         <div v-if="event.start > 0">
-            <v-dialog
-                v-model="dialog"
-                scrollable
-                width="825px"
-                @input="atInput"
-            >
+            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
                 <template v-slot:activator="{ on }">
                     <div
                         @mouseover="hovered = true"
@@ -19,12 +14,7 @@
                         <h4 class="course-code">{{ event.code }}</h4>
 
                         <div class="lock-button">
-                            <v-btn
-                                dark
-                                @click.stop="lockToggle"
-                                v-if="locked"
-                                icon
-                            >
+                            <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
                             <v-btn
@@ -74,11 +64,7 @@
                     <v-col>
                         <p class="center">Lock This Time</p>
                         <div style=" text-align:center;">
-                            <v-btn
-                                v-if="locked"
-                                @click.stop="addLockSection"
-                                icon
-                            >
+                            <v-btn v-if="locked" @click.stop="addLockSection" icon>
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
                             <v-btn v-else @click.stop="addLockSection" icon>
@@ -120,7 +106,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["getCourseColor"]),
+        ...mapGetters(["getCourseColor", "getLockedSections"]),
     },
     methods: {
         ...mapActions(["selectCourse"]),
@@ -134,7 +120,10 @@ export default {
             this.locked = !this.locked;
         },
         lockToggle() {
-            this.$emit("toggleLock", this.event);
+            this.$emit("toggleLock", {
+                event: this.event,
+                status: this.locked,
+            });
         },
         durationClass(start, end) {
             const duration = convertSecondsToHours(end - start);

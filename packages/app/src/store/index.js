@@ -34,14 +34,12 @@ export default new Vuex.Store({
     },
     lockSection(state, payload) {
       state.lockedSections.push(payload)
-      // console.log(state.lockedSections)
     },
     unlockSection(state, payload) {
       const index = state.lockedSections.indexOf(payload)
       if ( index != -1) {
         state.lockedSections.splice(index, 1)
       }
-      console.log(state.lockedSections)
     },
   },
   actions: {
@@ -65,7 +63,6 @@ export default new Vuex.Store({
           context.commit("unlockSection", lockedSection)
         }
       }
-      console.log(context.state.lockedSections)
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
       const timetable = generateTimetables(courses, context.state.lockedSections)
       context.commit("setTimetable", timetable)
@@ -73,7 +70,6 @@ export default new Vuex.Store({
     resetTimetable(context) {
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
       const timetable = generateTimetables(courses, context.state.lockedSections)
-      console.log(timetable)
       context.commit("setTimetable", timetable)
     },
     switchSection(context, payload) {
@@ -116,6 +112,9 @@ export default new Vuex.Store({
     },
     timetableSelectedMeetingSections: (state) => {
       return state.timetableSelectedMeetingSections
+    },
+    getLockedSections: state => {
+      return state.lockedSections
     }
   }
 })
