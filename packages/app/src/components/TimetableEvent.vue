@@ -76,16 +76,12 @@
                         <div style=" text-align:center;">
                             <v-btn
                                 v-if="locked"
-                                @click.stop="reverseLockStatus"
+                                @click.stop="addLockSection"
                                 icon
                             >
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
-                            <v-btn
-                                v-else
-                                @click.stop="reverseLockStatus"
-                                icon
-                            >
+                            <v-btn v-else @click.stop="addLockSection" icon>
                                 <v-icon>mdi-lock-open</v-icon>
                             </v-btn>
                         </div>
@@ -98,7 +94,7 @@
 
 <script>
 import CourseSectionPicker from "../components/CourseSectionPicker";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
     return seconds / 3600;
@@ -127,6 +123,7 @@ export default {
         ...mapGetters(["getCourseColor"]),
     },
     methods: {
+        ...mapActions(["selectCourse"]),
         atInput() {
             var courseSectionPicker = this.$refs.popUp;
             if (typeof courseSectionPicker != "undefined") {
@@ -159,6 +156,29 @@ export default {
                 e = 12;
             }
             return `${s}:00 - ${e}:00`;
+        },
+        addLockSection() {
+            var data = {
+                name: "Test Lock",
+                courseCode: "CSC108H5F",
+                meeting_sections: [
+                    {
+                        sectionCode: "L0101",
+                        instructors: ["A Petersen"],
+                        times: [
+                            {
+                                day: "MONDAY",
+                                start: 32400,
+                                end: 36000,
+                                location: "MN 1270",
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            this.selectCourse({ course: data });
+            this.lockToggle();
         },
     },
 };
