@@ -84,7 +84,7 @@
                             >
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
-                            <v-btn v-else @click.stop="addLockSection" icon>
+                            <v-btn v-else @click.stop="removeLockSection" icon>
                                 <v-icon>mdi-lock-open</v-icon>
                             </v-btn>
                         </div>
@@ -97,7 +97,7 @@
 
 <script>
 import CourseSectionPicker from "../components/CourseSectionPicker";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
     return seconds / 3600;
@@ -132,6 +132,7 @@ export default {
     },
     methods: {
         ...mapActions(["selectCourse"]),
+        ...mapMutations(["lockSection", "unlockSection"]),
         atInput() {
             var courseSectionPicker = this.$refs.popUp;
             if (typeof courseSectionPicker != "undefined") {
@@ -140,12 +141,6 @@ export default {
         },
         reverseLockStatus() {
             this.locked = !this.locked;
-            if (this.locked){
-                this.dynamicText = "Unblock This Time"
-            } 
-            else{
-                this.dynamicText = "Block This Time"
-            }
         },
         lockToggle() {
             this.$emit("toggleLock", {
@@ -175,27 +170,32 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
-            // var data = {
-            //     name: "Test Lock",
-            //     courseCode: "CSC108H5F",
-            //     meeting_sections: [
-            //         {
-            //             sectionCode: "L0101",
-            //             instructors: ["A Petersen"],
-            //             times: [
-            //                 {
-            //                     day: this.currDay,
-            //                     start: this.event.currStart * 3600,
-            //                     end: this.event.currStart * 3600 + 3600,
-            //                     location: "MN 1270",
-            //                 },
-            //             ],
-            //         },
-            //     ],
-            // };
+            var data = {
+                name: `Locked Section`,
+                courseCode: `${this.currDay}${this.event.currStart}`,
+                meeting_sections: [
+                    {
+                        sectionCode: "L0001",
+                        instructors: ["NA"],
+                        times: [
+                            {
+                                day: this.currDay,
+                                start: this.event.currStart * 3600,
+                                end: this.event.currStart * 3600 + 3600,
+                                location: "NA",
+                            },
+                        ],
+                    },
+                ],
+            };
 
-            // this.selectCourse({ course: data });
             this.reverseLockStatus();
+            this.dynamicText = "Unblock This Time";
+            this.selectCourse({ course: data });
+        },
+        removeLockSection() {
+            this.reverseLockStatus();
+            this.dynamicText = "Block This Time";
         },
     },
 };
