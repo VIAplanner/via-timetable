@@ -16,7 +16,9 @@
         <v-row name="timetable-content">
           <v-col v-for="(meetingSections, day) in timetable" :key="day">
             <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
-              <timetable-event :event="event" />
+              <timetable-event :event="event" ref="timetableEvent" 
+              @toggleLock="onLockToggle" v-if="event.start > 0"/>
+              <timetable-event :event="event" v-else/>
             </div>
           </v-col>
         </v-row>
@@ -27,6 +29,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import { mapMutations } from "vuex";
 
 const convertSecondsToHours = seconds => {
   return seconds / 3600;
@@ -90,6 +93,23 @@ export default {
     };
   },
   methods: {
+    ...mapMutations([
+      "lockSection",
+      "unlockSection"
+    ]),
+    onLockToggle(payload) {
+      console.log('lock toggles')
+      for (var ref of this.$refs.timetableEvent) {
+        if (ref.event.code == payload.event.code && ref.event.sectionCode == payload.event.sectionCode) {
+          ref.reverseLockStatus()
+        }
+      }
+      if (payload.status == true) {
+        this.unlockSection(`${payload.event.code}${payload.event.sectionCode}`)
+      }
+      else {
+        this.lockSection(`${payload.event.code}${payload.event.sectionCode}`)      }
+    },
     getEventsForDay(meetingSections) {
       const result = [];
       let currTime = this.timetableStart;

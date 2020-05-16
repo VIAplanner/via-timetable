@@ -1,3 +1,9 @@
+/**
+ * Sort the course sections into object. 
+ * So that object.lecture is the lectures of the course, object.tutorial is the tutorials, and object.practical is the practicals
+ * 
+ * @param {Course} course 
+ */
 const sortCourseSection = (course) => {
     const lectures = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "L");
     const tutorials = course.meeting_sections.filter(section => section.sectionCode.charAt(0) === "T");
