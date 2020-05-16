@@ -1,7 +1,12 @@
 <template>
     <div>
         <div v-if="event.start > 0">
-            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
+            <v-dialog
+                v-model="dialog"
+                scrollable
+                width="825px"
+                @input="atInput"
+            >
                 <template v-slot:activator="{ on }">
                     <div
                         @mouseover="hovered = true"
@@ -14,7 +19,12 @@
                         <h4 class="course-code">{{ event.code }}</h4>
 
                         <div class="lock-button">
-                            <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
+                            <v-btn
+                                dark
+                                @click.stop="lockToggle"
+                                v-if="locked"
+                                icon
+                            >
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
                             <v-btn
@@ -55,16 +65,23 @@
                 hovered = true;
             "
             @mouseleave="
-                dynamicColor = { background: 'white' };
+                if (!locked) {
+                    dynamicColor = { background: 'white' };
+                }
                 hovered = false;
             "
+            @click="addLockSection"
         >
-            <div v-if="hovered">
+            <div v-if="hovered || locked">
                 <v-row>
                     <v-col>
-                        <p class="center">Lock This Time</p>
+                        <p class="center">{{ dynamicText }}</p>
                         <div style=" text-align:center;">
-                            <v-btn v-if="locked" @click.stop="addLockSection" icon>
+                            <v-btn
+                                v-if="locked"
+                                @click.stop="addLockSection"
+                                icon
+                            >
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
                             <v-btn v-else @click.stop="addLockSection" icon>
@@ -95,8 +112,8 @@ export default {
         },
         currDay: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
     components: {
         CourseSectionPicker,
@@ -107,6 +124,7 @@ export default {
             hovered: false,
             dialog: false,
             dynamicColor: { background: "white" },
+            dynamicText: "Block This Time",
         };
     },
     computed: {
@@ -122,6 +140,12 @@ export default {
         },
         reverseLockStatus() {
             this.locked = !this.locked;
+            if (this.locked){
+                this.dynamicText = "Unblock This Time"
+            } 
+            else{
+                this.dynamicText = "Block This Time"
+            }
         },
         lockToggle() {
             this.$emit("toggleLock", {
@@ -151,27 +175,27 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
-            var data = {
-                name: "Test Lock",
-                courseCode: "CSC108H5F",
-                meeting_sections: [
-                    {
-                        sectionCode: "L0101",
-                        instructors: ["A Petersen"],
-                        times: [
-                            {
-                                day: this.currDay,
-                                start: this.event.currStart * 3600,
-                                end: this.event.currStart * 3600 + 3600,
-                                location: "MN 1270",
-                            },
-                        ],
-                    },
-                ],
-            };
+            // var data = {
+            //     name: "Test Lock",
+            //     courseCode: "CSC108H5F",
+            //     meeting_sections: [
+            //         {
+            //             sectionCode: "L0101",
+            //             instructors: ["A Petersen"],
+            //             times: [
+            //                 {
+            //                     day: this.currDay,
+            //                     start: this.event.currStart * 3600,
+            //                     end: this.event.currStart * 3600 + 3600,
+            //                     location: "MN 1270",
+            //                 },
+            //             ],
+            //         },
+            //     ],
+            // };
 
-            this.selectCourse({ course: data });
-            this.lockToggle();
+            // this.selectCourse({ course: data });
+            this.reverseLockStatus();
         },
     },
 };
