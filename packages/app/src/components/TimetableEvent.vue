@@ -93,6 +93,10 @@ export default {
             type: Object,
             default: () => {},
         },
+        currDay: {
+            type: String,
+            default: ""
+        }
     },
     components: {
         CourseSectionPicker,
@@ -156,9 +160,9 @@ export default {
                         instructors: ["A Petersen"],
                         times: [
                             {
-                                day: "MONDAY",
-                                start: 32400,
-                                end: 36000,
+                                day: this.currDay,
+                                start: this.event.currStart * 3600,
+                                end: this.event.currStart * 3600 + 3600,
                                 location: "MN 1270",
                             },
                         ],

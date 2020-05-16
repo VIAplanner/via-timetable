@@ -25,7 +25,7 @@
                                 @toggleLock="onLockToggle"
                                 v-if="event.start > 0"
                             />
-                            <timetable-event :event="event" v-else />
+                            <timetable-event :event="event" v-else :currDay="day"/>
                         </div>
                     </v-col>
                 </v-row>
@@ -141,7 +141,7 @@ export default {
             let invalidStart = -1;
             if (meetingSections.length === 0) {
                 for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
-                    result.push({ start: invalidStart });
+                    result.push({ start: invalidStart, currStart: currTime + j });
                     invalidStart--;
                 }
                 return result;
@@ -152,7 +152,7 @@ export default {
                 const eventEnd = convertSecondsToHours(event.end);
                 // Pad empty events before the start of the first class
                 for (let j = 0; j < eventStart - currTime; j++) {
-                    result.push({ start: invalidStart });
+                    result.push({ start: invalidStart, currStart: currTime + j });
                     invalidStart--;
                 }
                 result.push(event);
@@ -161,12 +161,12 @@ export default {
                 //If last event, pad empty events after it
                 if (i === meetingSections.length - 1) {
                     for (let k = 0; k < this.timetableEnd - currTime; k++) {
-                        result.push({ start: invalidStart });
+                        result.push({ start: invalidStart, currStart: currTime + k });
                         invalidStart--;
                     }
                 }
             }
-            // console.log(result);
+            console.log(result);
             return result;
         },
     },
