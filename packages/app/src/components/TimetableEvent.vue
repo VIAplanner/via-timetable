@@ -70,7 +70,6 @@
                 }
                 hovered = false;
             "
-            @click="addLockSection"
         >
             <div v-if="hovered || locked">
                 <v-row>
@@ -79,12 +78,12 @@
                         <div style=" text-align:center;">
                             <v-btn
                                 v-if="locked"
-                                @click.stop="addLockSection"
+                                @click.stop="removeLockSection"
                                 icon
                             >
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
-                            <v-btn v-else @click.stop="removeLockSection" icon>
+                            <v-btn v-else @click.stop="addLockSection" icon>
                                 <v-icon>mdi-lock-open</v-icon>
                             </v-btn>
                         </div>
@@ -125,13 +124,31 @@ export default {
             dialog: false,
             dynamicColor: { background: "white" },
             dynamicText: "Block This Time",
+            data : {
+                name: `Locked Section`,
+                courseCode: `Lock${this.currDay}${this.event.currStart}`,
+                meeting_sections: [
+                    {
+                        sectionCode: "L0001",
+                        instructors: ["NA"],
+                        times: [
+                            {
+                                day: this.currDay,
+                                start: this.event.currStart * 3600,
+                                end: this.event.currStart * 3600 + 3600,
+                                location: "NA",
+                            },
+                        ],
+                    },
+                ],
+            }
         };
     },
     computed: {
         ...mapGetters(["getCourseColor", "getLockedSections"]),
     },
     methods: {
-        ...mapActions(["selectCourse"]),
+        ...mapActions(["selectCourse", "deleteCourse"]),
         ...mapMutations(["lockSection", "unlockSection"]),
         atInput() {
             var courseSectionPicker = this.$refs.popUp;
@@ -170,32 +187,16 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
-            var data = {
-                name: `Locked Section`,
-                courseCode: `${this.currDay}${this.event.currStart}`,
-                meeting_sections: [
-                    {
-                        sectionCode: "L0001",
-                        instructors: ["NA"],
-                        times: [
-                            {
-                                day: this.currDay,
-                                start: this.event.currStart * 3600,
-                                end: this.event.currStart * 3600 + 3600,
-                                location: "NA",
-                            },
-                        ],
-                    },
-                ],
-            };
-
             this.reverseLockStatus();
             this.dynamicText = "Unblock This Time";
-            this.selectCourse({ course: data });
+            this.selectCourse({ course: this.data });
+            this.lockSection(`${this.data.courseCode}${this.data.meeting_sections[0].sectionCode}`)
         },
         removeLockSection() {
             this.reverseLockStatus();
             this.dynamicText = "Block This Time";
+            this.unlockSection(`${this.data.courseCode}${this.data.meeting_sections[0].sectionCode}`)
+            this.deleteCourse({code: this.data.courseCode})
         },
     },
 };
