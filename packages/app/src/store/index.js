@@ -17,7 +17,7 @@ export default new Vuex.Store({
         colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
         takenColors: [],
         lockedSections: [],
-        conflictPopup: true,
+        conflictPopup: false,
     },
     mutations: {
         setTimetable(state, payload) {
