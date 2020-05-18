@@ -57,7 +57,6 @@ export default {
     CourseSectionPicker
   },
   destroyed() {
-    console.log('destroyed')
     this.locked = false;
   },
   data() {

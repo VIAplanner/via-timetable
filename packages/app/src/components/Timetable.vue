@@ -1,6 +1,7 @@
 <template>
   <v-container class="background">
     <v-row>
+      <conflict-popup></conflict-popup>
       <v-col class="time-axis">
         <div class="top-margin"></div>
         <div v-for="time in timeRange" :key="time" class="time-axis-number">
@@ -29,6 +30,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import ConflictPopup from "./ConflictPopUp"
 import { mapMutations } from "vuex";
 
 const convertSecondsToHours = seconds => {
@@ -38,7 +40,8 @@ const convertSecondsToHours = seconds => {
 export default {
   name: "Timetable",
   components: {
-    TimetableEvent
+    TimetableEvent,
+    ConflictPopup
   },
   props: {
     timetable: {
