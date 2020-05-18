@@ -55,7 +55,6 @@ export default new Vuex.Store({
           ...payload.course
         }
       })
-      
       const courses = Object.keys(context.state.selectedCourses).map(code => context.state.selectedCourses[code])
       const timetable = generateTimetables(courses, context.state.lockedSections)
       context.commit("setTimetable", timetable)
