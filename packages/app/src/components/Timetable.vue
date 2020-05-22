@@ -145,7 +145,7 @@ export default {
                 for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
                     result.push({
                         start: invalidStart,
-                        currStart: currTime + j,
+                        currStart: (currTime + j) * 3600,
                     });
                     invalidStart--;
                 }
@@ -159,11 +159,11 @@ export default {
                 for (let j = 0; j < eventStart - currTime; j++) {
                     result.push({
                         start: invalidStart,
-                        currStart: currTime + j,
+                        currStart: (currTime + j) * 3600,
                     });
                     invalidStart--;
                 }
-                // if the section is a user locked section, don't include it
+                // if the section is a user locked section, pass it in as a locked event
                 if (event.code.includes("Lock")) {
                     result.push({
                         start: invalidStart,
@@ -173,8 +173,6 @@ export default {
                 } else {
                     result.push(event);
                 }
-                console.log(event.start);
-                // result.push(event);
                 currTime = eventEnd;
 
                 //If last event, pad empty events after it
@@ -182,7 +180,7 @@ export default {
                     for (let k = 0; k < this.timetableEnd - currTime; k++) {
                         result.push({
                             start: invalidStart,
-                            currStart: currTime + k,
+                            currStart: (currTime + k) * 3600,
                         });
                         invalidStart--;
                     }

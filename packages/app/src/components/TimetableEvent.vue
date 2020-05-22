@@ -124,7 +124,7 @@ export default {
             dialog: false,
             dynamicColor: { background: "white" },
             dynamicText: "Block This Time",
-            data : {
+            data: {
                 name: `Locked Section`,
                 courseCode: `Lock${this.currDay}${this.event.currStart}`,
                 meeting_sections: [
@@ -134,14 +134,14 @@ export default {
                         times: [
                             {
                                 day: this.currDay,
-                                start: this.event.currStart * 3600,
-                                end: this.event.currStart * 3600 + 3600,
+                                start: this.event.currStart,
+                                end: this.event.currStart + 3600,
                                 location: "NA",
                             },
                         ],
                     },
                 ],
-            }
+            },
         };
     },
     computed: {
@@ -187,16 +187,15 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
+            console.log(this.data);
             this.reverseLockStatus();
             this.dynamicText = "Unblock This Time";
             this.selectCourse({ course: this.data });
-            this.lockSection(`${this.data.courseCode}${this.data.meeting_sections[0].sectionCode}`)
         },
         removeLockSection() {
             this.reverseLockStatus();
             this.dynamicText = "Block This Time";
-            this.unlockSection(`${this.data.courseCode}${this.data.meeting_sections[0].sectionCode}`)
-            this.deleteCourse({code: this.data.courseCode})
+            this.deleteCourse({ code: this.data.courseCode });
         },
     },
 };
