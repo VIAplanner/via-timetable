@@ -59,6 +59,18 @@ const courses = [
                     },
                 ],
             },
+            {
+                sectionCode: "P0101",
+                instructors: ["NA"],
+                times: [
+                    {
+                        day: "THURSDAY",
+                        start: 32400,
+                        end: 36000,
+                        location: "NA",
+                    },
+                ],
+            },
         ],
     },
 ];

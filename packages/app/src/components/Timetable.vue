@@ -52,9 +52,6 @@ export default {
             type: Object,
         },
     },
-    updated() {
-        this.updateSectionLockStatus();
-    },
     computed: {
         ...mapGetters(["getLockedSections"]),
         timetableStart() {
@@ -105,23 +102,6 @@ export default {
     },
     methods: {
         ...mapMutations(["lockSection", "unlockSection"]),
-        updateSectionLockStatus() {
-            if (Object.keys(this.$refs).length !== 0) {
-                for (var ref of this.$refs.timetableEvent) {
-                    ref.locked = false;
-                    for (var lockedSection of this.getLockedSections) {
-                        if (
-                            lockedSection.localeCompare(
-                                `${ref.event.code}${ref.event.sectionCode}`
-                            ) == 0
-                        ) {
-                            ref.locked = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        },
         onLockToggle(payload) {
             for (var ref of this.$refs.timetableEvent) {
                 if (
@@ -171,6 +151,7 @@ export default {
                     });
                     invalidStart--;
                 } else {
+                    event["currStart"] = event.start
                     result.push(event);
                 }
                 currTime = eventEnd;
@@ -186,6 +167,7 @@ export default {
                     }
                 }
             }
+
             return result;
         },
     },

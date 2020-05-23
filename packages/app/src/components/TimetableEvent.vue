@@ -119,12 +119,16 @@ export default {
     },
     data() {
         return {
-            locked: false,
             hovered: false,
             dialog: false,
             dynamicColor: { background: "white" },
             dynamicText: "Block This Time",
-            data: {
+        };
+    },
+    computed: {
+        ...mapGetters(["getCourseColor", "getLockedSections"]),
+        currSecData() {
+            return {
                 name: `Locked Section`,
                 courseCode: `Lock${this.currDay}${this.event.currStart}`,
                 meeting_sections: [
@@ -141,11 +145,20 @@ export default {
                         ],
                     },
                 ],
-            },
-        };
-    },
-    computed: {
-        ...mapGetters(["getCourseColor", "getLockedSections"]),
+            };
+        },
+        locked() {
+            for (var section of this.getLockedSections) {
+                if (
+                    section === `${this.event.code}${this.event.sectionCode}` ||
+                    section === `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
     },
     methods: {
         ...mapActions(["selectCourse", "deleteCourse"]),
@@ -187,15 +200,20 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
-            console.log(this.data);
             this.reverseLockStatus();
             this.dynamicText = "Unblock This Time";
-            this.selectCourse({ course: this.data });
+            this.lockSection(
+                `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
+            );
+            this.selectCourse({ course: this.currSecData });
         },
         removeLockSection() {
             this.reverseLockStatus();
             this.dynamicText = "Block This Time";
-            this.deleteCourse({ code: this.data.courseCode });
+            this.unlockSection(
+                `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
+            );
+            this.deleteCourse({ code: this.currSecData.courseCode });
         },
     },
 };
