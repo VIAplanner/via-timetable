@@ -3,18 +3,25 @@
         <v-row>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
-                <div v-for="time in timeRange" :key="time" class="time-axis-number">
+                <div
+                    v-for="time in timeRange"
+                    :key="time"
+                    class="time-axis-number"
+                >
                     <h3 class="time-label">{{ time }}</h3>
                 </div>
             </v-col>
             <v-col cols="11">
                 <v-row name="week-days-axis">
                     <v-col v-for="weekday in weekdays" :key="weekday">
-                        <h2 class="day-label">{{ weekday }}</h2>
+                        <weekday-switch :weekday="weekday"></weekday-switch>
                     </v-col>
                 </v-row>
                 <v-row name="timetable-content">
-                    <v-col v-for="(meetingSections, day) in timetable" :key="day">
+                    <v-col
+                        v-for="(meetingSections, day) in timetable"
+                        :key="day"
+                    >
                         <div
                             v-for="event in getEventsForDay(meetingSections)"
                             :key="event.start"
@@ -23,7 +30,11 @@
                                 :event="event"
                                 v-if="event.start > 0"
                             />
-                            <timetable-event :event="event" v-else :currDay="day" />
+                            <timetable-event
+                                :event="event"
+                                v-else
+                                :currDay="day"
+                            />
                         </div>
                     </v-col>
                 </v-row>
@@ -34,6 +45,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import WeekdaySwitch from "./WeekdaySwitch"
 import { mapMutations, mapGetters } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
@@ -44,6 +56,7 @@ export default {
     name: "Timetable",
     components: {
         TimetableEvent,
+        WeekdaySwitch
     },
     props: {
         timetable: {
@@ -105,7 +118,11 @@ export default {
             let currTime = this.timetableStart;
             let invalidStart = -1;
             if (meetingSections.length === 0) {
-                for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
+                for (
+                    let j = 0;
+                    j < this.timetableEnd - this.timetableStart;
+                    j++
+                ) {
                     result.push({
                         start: invalidStart,
                         currStart: (currTime + j) * 3600,
@@ -134,7 +151,7 @@ export default {
                     });
                     invalidStart--;
                 } else {
-                    event["currStart"] = event.start
+                    event["currStart"] = event.start;
                     result.push(event);
                 }
                 currTime = eventEnd;
@@ -189,10 +206,5 @@ export default {
 
 .time-label {
     text-align: right;
-}
-
-.day-label {
-    margin-bottom: 16px;
-    text-align: center;
 }
 </style>

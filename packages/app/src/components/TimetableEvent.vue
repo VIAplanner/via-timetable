@@ -117,11 +117,13 @@ export default {
         return {
             hovered: false,
             dialog: false,
-            dynamicText: "Block This Time",
         };
     },
     computed: {
         ...mapGetters(["getCourseColor", "getLockedSections"]),
+        dynamicText(){
+            return !this.locked ? "Block This Time": "Unblock This Time" 
+        },
         // change the color in the event so it correct based on hovering or locked
         dynamicColor() {
             if (this.locked) {
@@ -210,7 +212,6 @@ export default {
         },
         addLockSection() {
             // if the user clicks on an empty timeslot, it will be added as a course in vuex
-            this.dynamicText = "Unblock This Time";
             this.lockSection(
                 `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
             );
@@ -218,7 +219,6 @@ export default {
         },
         removeLockSection() {
             // if the user clicks on a lock timeslot, it will be removed
-            this.dynamicText = "Block This Time";
             this.deleteCourse({ code: this.currSecData.courseCode });
         },
     },
