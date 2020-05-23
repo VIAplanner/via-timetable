@@ -69,6 +69,18 @@ export default {
             this.lockToggle();
         },
         unlockDay() {
+            for (let i = 0; i < 12; i++) {
+                this.currStart = 32400 + i * 3600;
+                for (var lockedCourse of this.getLockedSections) {
+                    if (lockedCourse.includes(this.weekday.toUpperCase())) {
+                        this.deleteCourse({
+                            code: lockedCourse.slice(0, lockedCourse.length - 5),
+                        });
+                        continue
+                    }
+                }
+            }
+
             this.lockToggle();
         },
         validLockSection() {
