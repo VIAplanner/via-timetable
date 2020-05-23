@@ -4,10 +4,10 @@
             v-model="toggle"
             :labels="{ checked: 'Fall', unchecked: 'Winter' }"
             :color="{ checked: '#F26B83', unchecked: '#4C91F9' }"
-            font-size="14"
-            width="83"
-            height="30"
-            speed="150"
+            :font-size="14"
+            :width="83"
+            :height="30"
+            :speed="150"
         />
     </div>
 </template>
@@ -27,12 +27,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.v-switch-label {
-    width: 80px !important;
-}
-
+<style>
 .v-left {
-    margin-left: 18px !important;
+    margin-left: 11px;
 }
 </style>
