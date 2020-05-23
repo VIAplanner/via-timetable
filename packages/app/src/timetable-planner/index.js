@@ -151,12 +151,9 @@ const createTimetable = (courseSection) => {
                     // Base case...
                     const temp = [...output];
                     temp.push(arrayElement);
-                    console.log(temp)
                     addSectionToTimetable(temp, timetable)
-                    console.log(timetable)
                     //if its invalid, clear the timetable and start again
                     if (overlapExists(timetable)) {
-                        console.log("overlap in lec")
                         timetable = {
                             MONDAY: [],
                             TUESDAY: [],
