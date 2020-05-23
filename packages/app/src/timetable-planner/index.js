@@ -143,13 +143,20 @@ const createTimetable = (courseSection) => {
     const lectureCombo = (courseSection, whichArray = 0, output = []) => {
             lectureCombo.founded = 0
             return courseSection[whichArray].lecture.some((arrayElement) => {
+                if (lectureCombo.founded == 1) {
+                    return true
+                }
                 if (whichArray === courseSection.length - 1) {
+                    
                     // Base case...
                     const temp = [...output];
                     temp.push(arrayElement);
+                    console.log(temp)
                     addSectionToTimetable(temp, timetable)
+                    console.log(timetable)
                     //if its invalid, clear the timetable and start again
                     if (overlapExists(timetable)) {
+                        console.log("overlap in lec")
                         timetable = {
                             MONDAY: [],
                             TUESDAY: [],
@@ -285,6 +292,7 @@ const createTimetable = (courseSection) => {
                                 }
                             }
                             else {
+                                lectureCombo.founded = 1
                                 return true
                             }
                             if (lectureCombo.founded == 1) {

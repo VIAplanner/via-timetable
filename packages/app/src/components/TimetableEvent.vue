@@ -151,7 +151,8 @@ export default {
             for (var section of this.getLockedSections) {
                 if (
                     section === `${this.event.code}${this.event.sectionCode}` ||
-                    section === `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
+                    section ===
+                        `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                 ) {
                     return true;
                 }
@@ -169,14 +170,14 @@ export default {
                 courseSectionPicker.resetSelectedMeetingSections();
             }
         },
-        reverseLockStatus() {
-            this.locked = !this.locked;
-        },
         lockToggle() {
-            this.$emit("toggleLock", {
-                event: this.event,
-                status: this.locked,
-            });
+            !this.locked
+                ? this.lockSection(
+                      `${this.event.code}${this.event.sectionCode}`
+                  )
+                : this.unlockSection(
+                      `${this.event.code}${this.event.sectionCode}`
+                  );
         },
         durationClass(start, end) {
             const duration = convertSecondsToHours(end - start);
@@ -200,19 +201,14 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
-            this.reverseLockStatus();
             this.dynamicText = "Unblock This Time";
             this.lockSection(
-                `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
+                `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
             );
             this.selectCourse({ course: this.currSecData });
         },
         removeLockSection() {
-            this.reverseLockStatus();
             this.dynamicText = "Block This Time";
-            this.unlockSection(
-                `${this.currSecData.courseCode}${this.currSecData.sectionCode}`
-            );
             this.deleteCourse({ code: this.currSecData.courseCode });
         },
     },

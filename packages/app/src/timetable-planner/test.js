@@ -3,7 +3,7 @@ const generateTimetables = require("./index").generateTimetables;
 const courses = [
     {
         name: `Locked Section`,
-        courseCode: `LockMONDAY15`,
+        courseCode: `LockMONDAY57600`,
         meeting_sections: [
             {
                 sectionCode: "L0001",
@@ -20,8 +20,8 @@ const courses = [
         ],
     },
     {
-        name: "Anthro",
-        courseCode: "ANT101H5S",
+        name: "Introduction to Sociocultural and Linguistic Anthropology",
+        courseCode: "ANT102H5F",
         meeting_sections: [
             {
                 sectionCode: "L0101",
@@ -31,13 +31,13 @@ const courses = [
                         day: "MONDAY",
                         start: 54000,
                         end: 57600,
-                        location: "NA",
+                        location: "IB110",
                     },
                     {
                         day: "WEDNESDAY",
                         start: 54000,
                         end: 57600,
-                        location: "NA",
+                        location: "IB110",
                     },
                 ],
             },
@@ -49,25 +49,13 @@ const courses = [
                         day: "MONDAY",
                         start: 57600,
                         end: 61200,
-                        location: "NA",
+                        location: "IB110",
                     },
                     {
                         day: "WEDNESDAY",
                         start: 57600,
                         end: 61200,
-                        location: "NA",
-                    },
-                ],
-            },
-            {
-                sectionCode: "P0101",
-                instructors: ["NA"],
-                times: [
-                    {
-                        day: "THURSDAY",
-                        start: 32400,
-                        end: 36000,
-                        location: "NA",
+                        location: "IB110",
                     },
                 ],
             },
@@ -75,5 +63,5 @@ const courses = [
     },
 ];
 
-const timeTable = generateTimetables(courses, []);
+const timeTable = generateTimetables(courses, ["LockMONDAY57600L0001"]);
 console.log(timeTable)

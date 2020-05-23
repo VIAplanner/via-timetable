@@ -110,9 +110,6 @@ export default new Vuex.Store({
     getCourseColor: (state) => (code) => {
       return state.selectedCourses[code].color
     },
-    timetableSelectedMeetingSections: (state) => {
-      return state.timetableSelectedMeetingSections
-    },
     getLockedSections: state => {
       return state.lockedSections
     }
