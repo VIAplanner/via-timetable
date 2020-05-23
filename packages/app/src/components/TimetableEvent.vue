@@ -127,6 +127,7 @@ export default {
     },
     computed: {
         ...mapGetters(["getCourseColor", "getLockedSections"]),
+        // stores the info of the current section
         currSecData() {
             return {
                 name: `Locked Section`,
@@ -147,6 +148,7 @@ export default {
                 ],
             };
         },
+        // lock the status of the current section
         locked() {
             for (var section of this.getLockedSections) {
                 if (
@@ -171,6 +173,7 @@ export default {
             }
         },
         lockToggle() {
+            // modifies vuex based on the current section lock status
             !this.locked
                 ? this.lockSection(
                       `${this.event.code}${this.event.sectionCode}`
@@ -201,6 +204,7 @@ export default {
             return `${s}:00 - ${e}:00`;
         },
         addLockSection() {
+            // if the user clicks on an empty timeslot, it will be added as a course in vuex
             this.dynamicText = "Unblock This Time";
             this.lockSection(
                 `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
@@ -208,6 +212,7 @@ export default {
             this.selectCourse({ course: this.currSecData });
         },
         removeLockSection() {
+            // if the user clicks on a lock timeslot, it will be removed
             this.dynamicText = "Block This Time";
             this.deleteCourse({ code: this.currSecData.courseCode });
         },

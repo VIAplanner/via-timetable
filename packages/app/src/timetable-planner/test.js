@@ -1,3 +1,6 @@
+// this is a test file for the algo
+
+
 const generateTimetables = require("./index").generateTimetables;
 
 const courses = [
