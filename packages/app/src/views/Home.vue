@@ -11,18 +11,7 @@
                         :courses="formattedCourses"
                         class="mx-4"
                     />
-                    <v-dialog width="420px" v-model="optimizationOpen">
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                color="primary"
-                                dark
-                                v-on="on"
-                                @click.stop="dialog = true"
-                                >Optimize</v-btn
-                            >
-                        </template>
-                        <optimization-settings />
-                    </v-dialog>
+                    <switch-time />
                 </v-toolbar>
             </v-col>
         </v-row>
@@ -41,7 +30,9 @@
                 <v-col>
                     <timetable-course-card
                         class="my-4"
-                        v-for="(course, code) in getSelectedCourses(selectedCourses)"
+                        v-for="(course, code) in getSelectedCourses(
+                            selectedCourses
+                        )"
                         :key="code"
                         :course="course"
                     />
@@ -59,13 +50,13 @@
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
-import OptimizationSettings from "../components/OptimizationSettings";
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
+import SwitchTime from "../components/SwitchTime";
 import { mapGetters } from "vuex";
 export default {
     components: {
-        OptimizationSettings,
+        SwitchTime,
         CourseSearchBar,
         Timetable,
         TimetableCourseCard,
