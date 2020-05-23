@@ -61,13 +61,9 @@
             class="event empty-event one-hour"
             :style="dynamicColor"
             @mouseover="
-                dynamicColor = { background: '#e6e6e6' };
                 hovered = true;
             "
             @mouseleave="
-                if (!locked) {
-                    dynamicColor = { background: 'white' };
-                }
                 hovered = false;
             "
         >
@@ -121,12 +117,21 @@ export default {
         return {
             hovered: false,
             dialog: false,
-            dynamicColor: { background: "white" },
             dynamicText: "Block This Time",
         };
     },
     computed: {
         ...mapGetters(["getCourseColor", "getLockedSections"]),
+        // change the color in the event so it correct based on hovering or locked
+        dynamicColor() {
+            if (this.locked) {
+                return { background: "#e6e6e6" };
+            } else {
+                return this.hovered
+                    ? { background: "#e6e6e6" }
+                    : { background: "white" };
+            }
+        },
         // stores the info of the current section
         currSecData() {
             return {
