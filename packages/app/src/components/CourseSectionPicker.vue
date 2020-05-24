@@ -288,7 +288,6 @@ export default {
                 }
                 // case 1, no conflicting times
                 if (conflictSections.length == 0) {
-                    console.log("no conflict");
                     this.switchSection({
                         old: {
                             sectionCode: this.timetableSelectedMeetingSections.lecture,
@@ -299,10 +298,9 @@ export default {
                 }
                 // case 2, there are conflicting time(s)
                 else {
-                    console.log("has conflict");
                     // unlock old section
                     this.unlockSection(`${this.code}${this.timetableSelectedMeetingSections.lecture}`)
-                    
+
                     // Unlock all the conflicting sections
                     for (var conflictSection of conflictSections) {
                         this.unlockSection(
