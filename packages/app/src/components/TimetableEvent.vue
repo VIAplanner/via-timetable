@@ -67,7 +67,7 @@
                 hovered = false;
             "
         >
-            <div v-if="hovered || locked">
+            <div v-if="hovered">
                 <v-row>
                     <v-col>
                         <p class="center">{{ dynamicText }}</p>
