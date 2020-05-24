@@ -83,7 +83,6 @@ export default new Vuex.Store({
         },
         switchSection(context, payload) {
             //Remove old section from locked sections
-            console.log(payload)
             context.commit(
                 "unlockSection",
                 `${payload.old.courseCode}${payload.old.sectionCode}`
