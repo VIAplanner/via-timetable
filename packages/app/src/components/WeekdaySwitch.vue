@@ -1,5 +1,9 @@
 <template>
-    <v-row @mouseover="hovered = true" @mouseleave="hovered = false" justify="center">
+    <v-row
+        @mouseover="hovered = true"
+        @mouseleave="hovered = false"
+        justify="center"
+    >
         <h2 class="day-label">
             {{ weekday }}
         </h2>
@@ -33,7 +37,9 @@ export default {
         currSecData() {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${this.weekday.toUpperCase()}${this.currStart}`,
+                courseCode: `Lock${this.weekday.toUpperCase()}${
+                    this.currStart
+                }`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",
@@ -55,7 +61,8 @@ export default {
         ...mapActions(["selectCourse", "deleteCourse"]),
         ...mapMutations(["lockSection"]),
         lockDay() {
-            for (let i = 0; i < 12; i++) {
+            let i = 0;
+            while (i < 12) {
                 this.currStart = 32400 + i * 3600;
 
                 if (this.validLockSection()) {
@@ -64,6 +71,7 @@ export default {
                     );
                     this.selectCourse({ course: this.currSecData });
                 }
+                i++
             }
 
             this.lockToggle();
@@ -74,9 +82,12 @@ export default {
                 for (var lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
-                            code: lockedCourse.slice(0, lockedCourse.length - 5),
+                            code: lockedCourse.slice(
+                                0,
+                                lockedCourse.length - 5
+                            ),
                         });
-                        continue
+                        continue;
                     }
                 }
             }
@@ -92,9 +103,8 @@ export default {
                         `${section.code}${section.sectionCode}`
                     )
                 ) {
-                    // if the course has the same start time as the current iteration of the locked course
-                    // then skip it
-                    if (section.start === this.currStart) {
+                    // if the locked course is in between another course, then skip it
+                    if (section.start <= this.currStart && this.currStart < section.end) {
                         return false;
                     }
                 }
