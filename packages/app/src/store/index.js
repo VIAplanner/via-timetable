@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { generateTimetables } from "../timetable-planner";
+import genColor from "color-generator"
 
 Vue.use(Vuex);
 
@@ -14,10 +15,7 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         },
-        colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
-        takenColors: [],
         lockedSections: [],
-        conflictPopup: false,
     },
     mutations: {
         setTimetable(state, payload) {
@@ -28,14 +26,8 @@ export default new Vuex.Store({
         },
         addCourse(state, payload) {
             state.selectedCourses[payload.course.courseCode] = payload.course;
-            state.takenColors.push(payload.course.color);
         },
         removeCourse(state, payload) {
-            state.colors.push(state.selectedCourses[payload.code].color);
-            state.takenColors.splice(
-                state.takenColors.indexOf(state.selectedCourses[payload.code].color),
-                1
-            );
             Vue.delete(state.selectedCourses, payload.code);
         },
         lockSection(state, payload) {
@@ -49,7 +41,7 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        compareTimetable(context, payload) {
+      compareTimetable(context, payload) {
             if (
                 JSON.stringify(payload) ===
                 JSON.stringify({
@@ -66,8 +58,8 @@ export default new Vuex.Store({
             }
         },
         selectCourse(context, payload) {
-            const color = context.state.colors.pop();
-            // console.log(payload.course)
+            // generate a color
+            const color = genColor(0.7, 0.85).hexString()
             context.commit("addCourse", {
                 course: {
                     color,
@@ -77,10 +69,8 @@ export default new Vuex.Store({
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
-
             const timetable = generateTimetables(courses, context.state.lockedSections);
             context.dispatch("compareTimetable", timetable)
-            
         },
         deleteCourse(context, payload) {
             context.commit("removeCourse", payload);
@@ -94,7 +84,7 @@ export default new Vuex.Store({
                 (code) => context.state.selectedCourses[code]
             );
             const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.commit("setTimetable", timetable)
+            context.commit("setTimetable", timetable);
         },
         resetTimetable(context) {
             const courses = Object.keys(context.state.selectedCourses).map(
@@ -107,7 +97,7 @@ export default new Vuex.Store({
             //Remove old section from locked sections
             context.commit(
                 "unlockSection",
-                `${payload.old.courseCode}${payload.old.lectureCode}`
+                `${payload.old.courseCode}${payload.old.sectionCode}`
             );
             //Remove old section from timetable
             for (let d in context.state.timetable) {
@@ -149,8 +139,8 @@ export default new Vuex.Store({
         getCourseColor: (state) => (code) => {
             return state.selectedCourses[code].color;
         },
-        timetableSelectedMeetingSections: (state) => {
-            return state.timetableSelectedMeetingSections;
+        getLockedSections: (state) => {
+            return state.lockedSections;
         },
     },
 });
