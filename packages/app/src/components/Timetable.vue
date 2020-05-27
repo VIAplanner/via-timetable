@@ -59,7 +59,7 @@ export default {
     name: "Timetable",
     components: {
         TimetableEvent,
-        WeekdaySwitch
+        WeekdaySwitch,
         ConflictPopup
     },
     props: {
