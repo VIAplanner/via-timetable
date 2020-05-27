@@ -10,11 +10,12 @@ import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import { createProvider } from './vue-apollo'
+import ToggleButton from 'vue-js-toggle-button'
 
 // import { generateTimetables, createTimetable } from "../../timetable-planner/build/module"
-
-
 Vue.config.productionTip = false
+
+Vue.use(ToggleButton)
 
 new Vue({
   router,
