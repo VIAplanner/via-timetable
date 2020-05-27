@@ -58,9 +58,7 @@
                           <v-col>
                             <v-tooltip
                               top
-                              v-if="checkConflict(time.day, time.start, time.end) != null && 
-                                  checkConflict(time.day, time.start, time.end).slice(7, 12) != timetableSelectedMeetingSections[activityType] &&
-                                  meetingSection.sectionCode != timetableSelectedMeetingSections[activityType]"
+                              v-if="_checkConflict(time.day, time.start, time.end, timetableSelectedMeetingSections[activityType]) != null"
                             >
                               <template v-slot:activator="{ on }">
                                 <div
@@ -69,10 +67,10 @@
                                 >{{getProperDayName(time.day).slice(0,3)}} {{getFormattedTime(time.start, time.end)}}</div>
                               </template>
                               Conflicts with {{checkConflict(time.day,
-                              time.start, time.end)}}
-                            </v-tooltip>
+                              time.start, time.end).conflictString}}
+                            </v-tooltip> 
                             <div v-else>
-                              {{getProperDayName(time.day).slice(0,3)}}
+                              {{getProperDayName(time.day)}}
                               {{getFormattedTime(time.start, time.end)}}
                             </div>
                           </v-col>
@@ -110,9 +108,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-// import gql from "graphql-tag";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "course-section-picker",
@@ -122,7 +118,6 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted");
     this.resetSelectedMeetingSections();
   },
   computed: {
@@ -149,9 +144,13 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      "switchSection",
+      "resetTimetable"
+    ]),
     ...mapMutations([
-      "selectMeetingSection",
-      "setTimetableSelectedMeetingSections"
+      "lockSection",
+      "unlockSection"
     ]),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
@@ -165,16 +164,22 @@ export default {
       }
       var endPeriod = end / 3600 < 12 ? 'AM':'PM'
       return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
-    },
+    }, 
     getProperDayName(day) {
-      return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+      var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+      return ret.slice(0,3)
     },
     checkConflict(day, start, end) {
       const dayEvents = this.timetable[day];
       for (var x = 0; x < dayEvents.length; x++) {
         const event = dayEvents[x];
         const time = this.getFormattedTime(event.start, event.end);
-        const ret = `${event.code.slice(0, 6)} ${event.sectionCode}\n${time}`;
+        const ret = {
+          courseCode: event.code,
+          sectionCode: event.sectionCode,
+          time: time,
+          conflictString: `${event.code.slice(0, 6)} ${event.sectionCode} ${time}`
+        };
         if (event.start < start && event.end > start) {
           return ret;
         } else if (start <= event.start && event.start < end) {
@@ -183,13 +188,55 @@ export default {
       }
       return null;
     },
-    onClickDone() {
-      this.$emit("done");
-      // updateTimetable()
+    _checkConflict(day, start, end, timetableSection){
+      const conflict = this.checkConflict(day, start, end) 
+      /*If there is conflict and the conflict is not the selected section on the timetable which
+        the user is trying to switch away from */
+      if (conflict != null && 
+      `${conflict.courseCode}${conflict.sectionCode}` != `${this.code}${timetableSection}`) {
+        return conflict
+      }
+      return null
     },
-    // updateTimetable() {
-
-    // },
+    onClickDone() {
+      this.updateTimetable()
+      this.$emit("done");
+    },
+    updateTimetable() {
+      if (this.selectedMeetingSections.lecture != this.timetableSelectedMeetingSections.lecture) {
+        const selectedLecture = this.course.meeting_sections.filter(
+          section => section.sectionCode === this.selectedMeetingSections.lecture
+        )[0]
+        const conflictSections = []
+        for (var currTime of selectedLecture.times) {
+          var conflictTime = this._checkConflict(currTime.day, currTime.start, currTime.end, 
+          this.timetableSelectedMeetingSections.lecture)
+          if (conflictTime != null) {
+            conflictSections.push(conflictTime);
+          } 
+        }
+        // case 1, no conflicting times
+        if (conflictSections.length == 0) {
+          console.log('no conflict')
+          this.switchSection({
+            old: {sectionCode: this.timetableSelectedMeetingSections.lecture, courseCode: this.code,},
+            new: selectedLecture
+          })
+        }
+        // case 2, there are conflicting time(s)
+        else {
+          console.log('has conflict')
+          // Unlock all the conflicting sections
+          for (var conflictSection of conflictSections) {
+            this.unlockSection(`${conflictSection.courseCode}${conflictSection.sectionCode}`)
+          }
+          // Lock the new section, regenerate timetable, and unlock the new section
+          this.lockSection(`${this.code}${this.selectedMeetingSections.lecture}`)
+          this.resetTimetable()
+          this.unlockSection(`${this.code}${this.selectedMeetingSections.lecture}`)
+        }
+      } 
+    },
     resetSelectedMeetingSections() {
       this.selectedMeetingSections = this.getTimetableMeetingSections();
     },

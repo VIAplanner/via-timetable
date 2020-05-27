@@ -11,7 +11,18 @@
                         :courses="formattedCourses"
                         class="mx-4"
                     />
-                    <optimization-settings></optimization-settings>
+                    <v-dialog width="420px" v-model="optimizationOpen">
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                color="primary"
+                                dark
+                                v-on="on"
+                                @click.stop="dialog = true"
+                                >Optimize</v-btn
+                            >
+                        </template>
+                        <optimization-settings />
+                    </v-dialog>
                 </v-toolbar>
             </v-col>
         </v-row>
@@ -30,7 +41,7 @@
                 <v-col>
                     <timetable-course-card
                         class="my-4"
-                        v-for="(course, code) in selectedCourses"
+                        v-for="(course, code) in getSelectedCourses(selectedCourses)"
                         :key="code"
                         :course="course"
                     />
@@ -67,12 +78,29 @@ export default {
             );
         },
     },
+    data() {
+        return {
+            optimizationOpen: false,
+        };
+    },
     apollo: {
         courses: COURSES_SEARCH_BAR_QUERY,
     },
     methods: {
         getFormattedCodeAndName(code, name) {
             return `${code} ${name}`;
+        },
+        // filters user lock timeslots
+        getSelectedCourses(selectedCourses) {
+            const filteredCourses = {};
+
+            for (var code in selectedCourses) {
+                if (!code.includes("Lock")) {
+                    filteredCourses[code] = selectedCourses[code];
+                }
+            }
+
+            return filteredCourses;
         },
     },
 };
