@@ -16,6 +16,7 @@ export default new Vuex.Store({
             FRIDAY: [],
         },
         lockedSections: [],
+        conflictPopup: false
     },
     mutations: {
         setTimetable(state, payload) {
