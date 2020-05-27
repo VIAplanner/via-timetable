@@ -1,4 +1,3 @@
-// import { sortCourseSection, } from "./combinations/combinations";
 const sortCourseSection = require("./combinations/combinations")
 
 /**
@@ -124,7 +123,7 @@ const createTimetable = (courseSection) => {
         THURSDAY: [],
         FRIDAY: []
     };
-    
+
     /**
      * How the following recursive work: Take a (lecture/practical/tutorial) section from a course add to a list,
        take another section from next course add to a list, repeat until the last course.
