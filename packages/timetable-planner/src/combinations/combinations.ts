@@ -1,3 +1,9 @@
+/**
+ *
+ * Creates the combination of section in a course
+ * @param {Course} course
+ * @returns {CourseMeetingSectionCombinations}
+ */
 const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionCombinations => {
     const lectures = course.meeting_sections.filter(section => section.code.charAt(0) === "L");
     const tutorials = course.meeting_sections.filter(section => section.code.charAt(0) === "T");
@@ -33,6 +39,12 @@ const courseMeetingSectionCombinations = (course: Course): CourseMeetingSectionC
     return { code: course.code, combinations: totalCombinations }
 }
 
+/**
+ *
+ * Creates the combination of courses of their section combinations
+ * @param {CourseMeetingSectionCombinations[]} courseMeetingSectionCombos
+ * @returns {MeetingSection[][]}
+ */
 const courseCombinations = (courseMeetingSectionCombos: CourseMeetingSectionCombinations[]): MeetingSection[][] => {
     
     const outputs: MeetingSection[][] = [];

@@ -11,7 +11,7 @@ We're unifying UofT's course data, and using it to build tools such as a course 
 ## Introduction
 
 The fundamental problem we are trying to solve :
-1. The current process to choose your courses and manually create a schedule without any conflicts that fit your preferences can take days to perfect.
+1. The current process is to choose your courses and manually create a schedule without any conflicts that fit your preferences can take days to perfect.
 
 2. With the help of this tool, we are making this process much faster and easier than before.
 
