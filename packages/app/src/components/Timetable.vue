@@ -1,6 +1,8 @@
 <template>
+
     <v-container class="background">
         <v-row>
+         <conflict-popup></conflict-popup>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
                 <div
@@ -45,6 +47,7 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
+import ConflictPopup from "./ConflictPopUp"
 import WeekdaySwitch from "./WeekdaySwitch"
 import { mapMutations, mapGetters } from "vuex";
 
@@ -57,6 +60,7 @@ export default {
     components: {
         TimetableEvent,
         WeekdaySwitch
+        ConflictPopup
     },
     props: {
         timetable: {

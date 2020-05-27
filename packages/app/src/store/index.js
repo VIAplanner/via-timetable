@@ -21,6 +21,9 @@ export default new Vuex.Store({
         setTimetable(state, payload) {
             state.timetable = payload;
         },
+        setConflictPopup(state, payload) {
+            state.conflictPopup = payload;
+        },
         addCourse(state, payload) {
             state.selectedCourses[payload.course.courseCode] = payload.course;
         },
@@ -38,6 +41,22 @@ export default new Vuex.Store({
         },
     },
     actions: {
+      compareTimetable(context, payload) {
+            if (
+                JSON.stringify(payload) ===
+                JSON.stringify({
+                    MONDAY: [],
+                    TUESDAY: [],
+                    WEDNESDAY: [],
+                    THURSDAY: [],
+                    FRIDAY: [],
+                })
+            ) {
+                context.commit("setConflictPopup", true);
+            } else {
+                context.commit("setTimetable", payload);
+            }
+        },
         selectCourse(context, payload) {
             // generate a color
             const color = genColor(0.7, 0.85).hexString()
@@ -47,12 +66,11 @@ export default new Vuex.Store({
                     ...payload.course,
                 },
             });
-
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
             const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.commit("setTimetable", timetable);
+            context.dispatch("compareTimetable", timetable)
         },
         deleteCourse(context, payload) {
             context.commit("removeCourse", payload);
@@ -73,7 +91,7 @@ export default new Vuex.Store({
                 (code) => context.state.selectedCourses[code]
             );
             const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.commit("setTimetable", timetable);
+            context.dispatch("compareTimetable", timetable)
         },
         switchSection(context, payload) {
             //Remove old section from locked sections
@@ -109,6 +127,9 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
+        getConflictPopup: (state) => {
+            return state.conflictPopup;
+        },
         selectedCourses: (state) => {
             return state.selectedCourses;
         },
