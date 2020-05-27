@@ -85,7 +85,7 @@ export default new Vuex.Store({
             //Remove old section from locked sections
             context.commit(
                 "unlockSection",
-                `${payload.old.courseCode}${payload.old.lectureCode}`
+                `${payload.old.courseCode}${payload.old.sectionCode}`
             );
             //Remove old section from timetable
             for (let d in context.state.timetable) {
