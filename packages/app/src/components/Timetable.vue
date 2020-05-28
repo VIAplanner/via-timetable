@@ -1,15 +1,10 @@
 <template>
-
     <v-container class="background">
         <v-row>
-         <conflict-popup></conflict-popup>
+            <conflict-popup :properties="{haveBtn: false}"></conflict-popup>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
-                <div
-                    v-for="time in timeRange"
-                    :key="time"
-                    class="time-axis-number"
-                >
+                <div v-for="time in timeRange" :key="time" class="time-axis-number">
                     <h3 class="time-label">{{ time }}</h3>
                 </div>
             </v-col>
@@ -20,23 +15,13 @@
                     </v-col>
                 </v-row>
                 <v-row name="timetable-content">
-                    <v-col
-                        v-for="(meetingSections, day) in timetable"
-                        :key="day"
-                    >
+                    <v-col v-for="(meetingSections, day) in timetable" :key="day">
                         <div
                             v-for="event in getEventsForDay(meetingSections)"
                             :key="event.start"
                         >
-                            <timetable-event
-                                :event="event"
-                                v-if="event.start > 0"
-                            />
-                            <timetable-event
-                                :event="event"
-                                v-else
-                                :currDay="day"
-                            />
+                            <timetable-event :event="event" v-if="event.start > 0" />
+                            <timetable-event :event="event" v-else :currDay="day" />
                         </div>
                     </v-col>
                 </v-row>
@@ -47,8 +32,8 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
-import ConflictPopup from "./ConflictPopUp"
-import WeekdaySwitch from "./WeekdaySwitch"
+import ConflictPopup from "./ConflictPopUp";
+import WeekdaySwitch from "./WeekdaySwitch";
 import { mapMutations, mapGetters } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
@@ -60,7 +45,7 @@ export default {
     components: {
         TimetableEvent,
         WeekdaySwitch,
-        ConflictPopup
+        ConflictPopup,
     },
     props: {
         timetable: {
@@ -122,11 +107,7 @@ export default {
             let currTime = this.timetableStart;
             let invalidStart = -1;
             if (meetingSections.length === 0) {
-                for (
-                    let j = 0;
-                    j < this.timetableEnd - this.timetableStart;
-                    j++
-                ) {
+                for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
                     result.push({
                         start: invalidStart,
                         currStart: (currTime + j) * 3600,
