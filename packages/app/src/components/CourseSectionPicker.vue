@@ -250,7 +250,7 @@ export default {
         },
         _checkConflict(day, start, end, timetableSection) {
             const conflict = this.checkConflict(day, start, end);
-            /*If there is conflict and the conflict is not the selected section on the timetable which
+            /*If there is conflict and the conflict is not with the selected section on the timetable which
         the user is trying to switch away from */
             if (
                 conflict != null &&
@@ -266,55 +266,55 @@ export default {
             this.$emit("done");
         },
         updateTimetable() {
-            if (
-                this.selectedMeetingSections.lecture !=
-                this.timetableSelectedMeetingSections.lecture
-            ) {
-                const selectedLecture = this.course.meeting_sections.filter(
-                    (section) =>
-                        section.sectionCode === this.selectedMeetingSections.lecture
-                )[0];
-                const conflictSections = [];
-                for (var currTime of selectedLecture.times) {
-                    var conflictTime = this._checkConflict(
-                        currTime.day,
-                        currTime.start,
-                        currTime.end,
-                        this.timetableSelectedMeetingSections.lecture
-                    );
-                    if (conflictTime != null) {
-                        conflictSections.push(conflictTime);
+            for (var activityType of ["lecture", "practical", "tutorial"]) {
+                //If section changed
+                if (this.selectedMeetingSections[activityType] != this.timetableSelectedMeetingSections[activityType]) {
+                    const newSection = this.course.meeting_sections.filter(
+                        (section) =>
+                            section.sectionCode === this.selectedMeetingSections[activityType]
+                    )[0];
+                    const conflictSections = [];
+                    for (var currTime of newSection.times) {
+                        var conflictTime = this._checkConflict(
+                            currTime.day,
+                            currTime.start,
+                            currTime.end,
+                            this.timetableSelectedMeetingSections[activityType]
+                        );
+                        if (conflictTime != null) {
+                            conflictSections.push(conflictTime);
+                        }
                     }
-                }
-                // case 1, no conflicting times
-                if (conflictSections.length == 0) {
-                    this.switchSection({
-                        old: {
-                            sectionCode: this.timetableSelectedMeetingSections.lecture,
-                            courseCode: this.code,
-                        },
-                        new: selectedLecture,
-                    });
-                }
-                // case 2, there are conflicting time(s)
-                else {
-                    // unlock old section
-                    this.unlockSection(`${this.code}${this.timetableSelectedMeetingSections.lecture}`)
+                    // case 1, no conflicting times
+                    if (conflictSections.length == 0) {
+                        this.switchSection({
+                            old: {
+                                sectionCode: this.timetableSelectedMeetingSections[activityType],
+                                courseCode: this.code,
+                            },
+                            new: newSection,
+                        });
+                    }
+                    // case 2, there are conflicting time(s)
+                    else {
+                        // unlock old section
+                        this.unlockSection(`${this.code}${this.timetableSelectedMeetingSections[activityType]}`)
 
-                    // Unlock all the conflicting sections
-                    for (var conflictSection of conflictSections) {
+                        // Unlock all the conflicting sections
+                        for (var conflictSection of conflictSections) {
+                            this.unlockSection(
+                                `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                            );
+                        }
+                        // Lock the new section, regenerate timetable, and unlock the new section
+                        this.lockSection(
+                            `${this.code}${this.selectedMeetingSections[activityType]}`
+                        );
+                        this.resetTimetable();
                         this.unlockSection(
-                            `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                            `${this.code}${this.selectedMeetingSections[activityType]}`
                         );
                     }
-                    // Lock the new section, regenerate timetable, and unlock the new section
-                    this.lockSection(
-                        `${this.code}${this.selectedMeetingSections.lecture}`
-                    );
-                    this.resetTimetable();
-                    this.unlockSection(
-                        `${this.code}${this.selectedMeetingSections.lecture}`
-                    );
                 }
             }
         },
