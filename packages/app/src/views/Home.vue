@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-row v-if="!$apollo.loading">
+        <v-row>
             <v-col class="py-0">
                 <v-toolbar dark color="#012B5C">
                     <v-icon class="mr-2">mdi-calendar</v-icon>
@@ -10,18 +10,10 @@
                     <course-search-bar
                         :courses="formattedCourses"
                         class="mx-4"
+                        :loading="$apollo.loading"
                     />
                     <switch-time />
                 </v-toolbar>
-            </v-col>
-        </v-row>
-
-        <v-row v-else>
-            <v-col>
-                <v-progress-linear
-                    indeterminate
-                    color="#012B5C"
-                ></v-progress-linear>
             </v-col>
         </v-row>
 
@@ -64,6 +56,9 @@ export default {
     computed: {
         ...mapGetters(["selectedCourses", "timetable"]),
         formattedCourses() {
+            if(!this.courses){
+                return []
+            }
             return this.courses.map(
                 (course) => `${course.code}: ${course.name}`
             );
@@ -78,9 +73,6 @@ export default {
         courses: COURSES_SEARCH_BAR_QUERY,
     },
     methods: {
-        getFormattedCodeAndName(code, name) {
-            return `${code} ${name}`;
-        },
         // filters user lock timeslots
         getSelectedCourses(selectedCourses) {
             const filteredCourses = {};
