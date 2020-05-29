@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { generateTimetables } from "../timetable-planner";
-import genColor from "color-generator"
+import genColor from "color-generator";
 
 Vue.use(Vuex);
 
@@ -16,9 +16,13 @@ export default new Vuex.Store({
             FRIDAY: [],
         },
         lockedSections: [],
-        conflictPopup: false
+        conflictPopup: false,
+        searchBarValue: null,
     },
     mutations: {
+        setSearchBarValue(state, payload) {
+            state.searchBarValue = payload;
+        },
         setTimetable(state, payload) {
             state.timetable = payload;
         },
@@ -42,7 +46,7 @@ export default new Vuex.Store({
         },
     },
     actions: {
-      compareTimetable(context, payload) {
+        compareTimetable(context, payload) {
             if (
                 JSON.stringify(payload) ===
                 JSON.stringify({
@@ -60,7 +64,7 @@ export default new Vuex.Store({
         },
         selectCourse(context, payload) {
             // generate a color
-            const color = genColor(0.7, 0.85).hexString()
+            const color = genColor(0.7, 0.85).hexString();
             context.commit("addCourse", {
                 course: {
                     color,
@@ -71,9 +75,10 @@ export default new Vuex.Store({
                 (code) => context.state.selectedCourses[code]
             );
             const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.dispatch("compareTimetable", timetable)
+            context.dispatch("compareTimetable", timetable);
         },
         deleteCourse(context, payload) {
+            context.commit("setSearchBarValue", null); // resets search bar value
             context.commit("removeCourse", payload);
             //Unlock all sections of deleted course
             for (var lockedSection of context.state.lockedSections) {
@@ -92,7 +97,7 @@ export default new Vuex.Store({
                 (code) => context.state.selectedCourses[code]
             );
             const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.dispatch("compareTimetable", timetable)
+            context.dispatch("compareTimetable", timetable);
         },
         switchSection(context, payload) {
             //Remove old section from locked sections
@@ -142,6 +147,9 @@ export default new Vuex.Store({
         },
         getLockedSections: (state) => {
             return state.lockedSections;
+        },
+        getSearchBarValue: (state) => {
+            return state.searchBarValue;
         },
     },
 });

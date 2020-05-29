@@ -8,14 +8,14 @@
         flat
         hide-no-data
         hide-details
-        :label="!loading ? 'Search for a Course' : 'Loading...'"
+        :label="!loading ? 'Search for a Course' : 'Loading . . .'"
         solo-inverted
         :loading="loading"
     ></v-autocomplete>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations, mapGetters} from "vuex";
 import gql from "graphql-tag";
 export default {
     name: "course-search-bar",
@@ -23,8 +23,21 @@ export default {
         loading: Boolean,
         courses: Array,
     },
+    computed: {
+        ...mapGetters(["getSearchBarValue"]),
+        selectedCourse: {
+            // used as v-model for the search bar
+            get(){
+                return this.getSearchBarValue
+            },
+            set(value){
+                this.setSearchBarValue(value)
+            }
+        }
+    },
     methods: {
         ...mapActions(["selectCourse"]),
+        ...mapMutations(["setSearchBarValue"]),
         onCourseSelected() {
             if (!this.selectedCourse) return;
             this.$apollo
@@ -55,17 +68,11 @@ export default {
                     },
                 })
                 .then((response) => {
-                    // console.log(response);
                     if (response.data.courses) {
                         this.selectCourse({ course: response.data.courses[0] });
                     }
                 });
         },
-    },
-    data() {
-        return {
-            selectedCourse: null,
-        };
     },
 };
 </script>
