@@ -36,8 +36,14 @@ export default {
         ToggleButton,
     },
     methods: {
-        ...mapMutations(["setSemesterStatus"]),
+        ...mapMutations(["setSemesterStatus", "setSearchBarValue"]),
     },
+    watch: {
+        // when toggle changes, clear the search bar
+        toggle(){
+            this.setSearchBarValue(null)
+        }
+    }
 };
 </script>
 
