@@ -21,7 +21,7 @@ export default new Vuex.Store({
         savedTimetable: {},
         savedSelectedCourses: {},
         savedLockedSections: [],
-        semesterStatus: "S",
+        semesterStatus: "F",
     },
     mutations: {
         setSemesterStatus(state, payload) {
@@ -34,6 +34,10 @@ export default new Vuex.Store({
             state.timetable = payload;
         },
         setConflictPopup(state, payload) {
+            // is there's a conflict, reset the search bar
+            if (payload) {
+                state.searchBarValue = null;
+            }
             state.conflictPopup = payload;
         },
         addCourse(state, payload) {
