@@ -78,7 +78,11 @@ export default new Vuex.Store({
             context.dispatch("compareTimetable", timetable);
         },
         deleteCourse(context, payload) {
-            context.commit("setSearchBarValue", null); // resets search bar value
+            // resets search bar value if the deleted course is the last searched course
+            console.log(context.state.searchBarValue)
+            if (context.state.searchBarValue != null && context.state.searchBarValue.includes(payload.code)) {
+                context.commit("setSearchBarValue", null);
+            }
             context.commit("removeCourse", payload);
             //Unlock all sections of deleted course
             for (var lockedSection of context.state.lockedSections) {
