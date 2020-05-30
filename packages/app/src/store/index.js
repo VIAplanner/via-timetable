@@ -79,7 +79,6 @@ export default new Vuex.Store({
         },
         deleteCourse(context, payload) {
             // resets search bar value if the deleted course is the last searched course
-            console.log(context.state.searchBarValue)
             if (context.state.searchBarValue != null && context.state.searchBarValue.includes(payload.code)) {
                 context.commit("setSearchBarValue", null);
             }
