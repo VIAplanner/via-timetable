@@ -18,6 +18,9 @@ export default new Vuex.Store({
         lockedSections: [],
         conflictPopup: false,
         searchBarValue: null,
+        savedTimetable: {},
+        savedSelectedCourses: {},
+        savedLockedSections: [],
     },
     mutations: {
         setSearchBarValue(state, payload) {
@@ -35,6 +38,12 @@ export default new Vuex.Store({
         removeCourse(state, payload) {
             Vue.delete(state.selectedCourses, payload.code);
         },
+        setLockedSections(state, payload) {
+            state.lockedSections = payload;
+        },
+        setSelectedCourses(state, payload) {
+            state.selectedCourses = payload;
+        },
         lockSection(state, payload) {
             state.lockedSections.push(payload);
         },
@@ -46,7 +55,21 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        compareTimetable(context, payload) {
+        saveTimetable(context) {
+            context.state.savedTimetable = JSON.parse(
+                JSON.stringify(context.state.timetable)
+            );
+            context.state.savedSelectedCourses = JSON.parse(
+                JSON.stringify(context.state.selectedCourses)
+            );
+            context.state.savedLockedSections = [...context.state.lockedSections];
+        },
+        revertTimetable(context) {
+            context.commit("setTimetable", context.state.savedTimetable);
+            context.commit("setSelectedCourses", context.state.savedSelectedCourses);
+            context.commit("setLockedSections", context.state.savedLockedSections);
+        },
+        validateTimetable(context, payload) {
             if (
                 JSON.stringify(payload) ===
                 JSON.stringify({
@@ -58,11 +81,18 @@ export default new Vuex.Store({
                 })
             ) {
                 context.commit("setConflictPopup", true);
+                context.dispatch("revertTimetable");
             } else {
                 context.commit("setTimetable", payload);
             }
         },
         selectCourse(context, payload) {
+            
+            // save the previous timetable by default
+            if(!payload.noSave){
+                context.dispatch("saveTimetable");
+            }
+
             // generate a color
             const color = genColor(0.7, 0.85).hexString();
             context.commit("addCourse", {
@@ -74,12 +104,18 @@ export default new Vuex.Store({
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
-            const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.dispatch("compareTimetable", timetable);
+            const timetable = generateTimetables(
+                courses,
+                context.state.lockedSections
+            );
+            context.dispatch("validateTimetable", timetable);
         },
         deleteCourse(context, payload) {
             // resets search bar value if the deleted course is the last searched course
-            if (context.state.searchBarValue != null && context.state.searchBarValue.includes(payload.code)) {
+            if (
+                context.state.searchBarValue != null &&
+                context.state.searchBarValue.includes(payload.code)
+            ) {
                 context.commit("setSearchBarValue", null);
             }
             context.commit("removeCourse", payload);
@@ -92,15 +128,21 @@ export default new Vuex.Store({
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
-            const timetable = generateTimetables(courses, context.state.lockedSections);
+            const timetable = generateTimetables(
+                courses,
+                context.state.lockedSections
+            );
             context.commit("setTimetable", timetable);
         },
         resetTimetable(context) {
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
-            const timetable = generateTimetables(courses, context.state.lockedSections);
-            context.dispatch("compareTimetable", timetable);
+            const timetable = generateTimetables(
+                courses,
+                context.state.lockedSections
+            );
+            context.dispatch("validateTimetable", timetable);
         },
         switchSection(context, payload) {
             //Remove old section from locked sections

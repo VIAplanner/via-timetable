@@ -33,13 +33,11 @@ export default {
         weekday: String,
     },
     computed: {
-        ...mapGetters(["getLockedSections", "timetable"]),
+        ...mapGetters(["getLockedSections", "timetable", "getConflictPopup"]),
         currSecData() {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${this.weekday.toUpperCase()}${
-                    this.currStart
-                }`,
+                courseCode: `Lock${this.weekday.toUpperCase()}${this.currStart}`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",
@@ -58,23 +56,36 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["selectCourse", "deleteCourse"]),
+        ...mapActions([
+            "selectCourse",
+            "deleteCourse",
+            "saveTimetable",
+            "revertTimetable",
+        ]),
         ...mapMutations(["lockSection"]),
         lockDay() {
             let i = 0;
+            this.saveTimetable();
+            this.lockToggle();
+
             while (i < 12) {
                 this.currStart = 32400 + i * 3600;
+
+                // if locking the day is impossible, revert to the previous timetable
+                if (this.getConflictPopup) {
+                    this.revertTimetable();
+                    this.lockToggle();
+                    break;
+                }
 
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                     );
-                    this.selectCourse({ course: this.currSecData });
+                    this.selectCourse({ course: this.currSecData, noSave: true });
                 }
-                i++
+                i++;
             }
-
-            this.lockToggle();
         },
         unlockDay() {
             for (let i = 0; i < 12; i++) {
@@ -82,10 +93,7 @@ export default {
                 for (var lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
-                            code: lockedCourse.slice(
-                                0,
-                                lockedCourse.length - 5
-                            ),
+                            code: lockedCourse.slice(0, lockedCourse.length - 5),
                         });
                         continue;
                     }
@@ -104,7 +112,10 @@ export default {
                     )
                 ) {
                     // if the locked course is in between another course, then skip it
-                    if (section.start <= this.currStart && this.currStart < section.end) {
+                    if (
+                        section.start <= this.currStart &&
+                        this.currStart < section.end
+                    ) {
                         return false;
                     }
                 }
