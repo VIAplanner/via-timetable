@@ -2,11 +2,9 @@
     <v-autocomplete
         @change="onCourseSelected()"
         v-model="selectedCourse"
-        :items="courses"
-        cache-items
+        :items="semCourses"
         class="mx-4"
         flat
-        hide-no-data
         hide-details
         :label="!loading ? 'Search for a Course' : 'Loading . . .'"
         solo-inverted
@@ -15,25 +13,31 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters} from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 import gql from "graphql-tag";
 export default {
     name: "course-search-bar",
     props: {
         loading: Boolean,
-        courses: Array,
+        allCourses: Array,
     },
     computed: {
-        ...mapGetters(["getSearchBarValue"]),
+        ...mapGetters(["getSearchBarValue", "getSemesterStatus"]),
         selectedCourse: {
             // used as v-model for the search bar
-            get(){
-                return this.getSearchBarValue
+            get() {
+                return this.getSearchBarValue;
             },
-            set(value){
-                this.setSearchBarValue(value)
-            }
-        }
+            set(value) {
+                this.setSearchBarValue(value);
+            },
+        },
+        semCourses() {
+            return this.allCourses.filter((courseString) => {
+                // filter courses in the selected sem
+                return courseString[8] === this.getSemesterStatus && courseString[9] === ":";
+            });
+        },
     },
     methods: {
         ...mapActions(["selectCourse"]),

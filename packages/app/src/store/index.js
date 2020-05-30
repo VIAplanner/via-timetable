@@ -21,8 +21,12 @@ export default new Vuex.Store({
         savedTimetable: {},
         savedSelectedCourses: {},
         savedLockedSections: [],
+        semesterStatus: "S",
     },
     mutations: {
+        setSemesterStatus(state, payload) {
+            state.semesterStatus = payload;
+        },
         setSearchBarValue(state, payload) {
             state.searchBarValue = payload;
         },
@@ -87,9 +91,8 @@ export default new Vuex.Store({
             }
         },
         selectCourse(context, payload) {
-            
             // save the previous timetable by default
-            if(!payload.noSave){
+            if (!payload.noSave) {
                 context.dispatch("saveTimetable");
             }
 
@@ -195,6 +198,9 @@ export default new Vuex.Store({
         },
         getSearchBarValue: (state) => {
             return state.searchBarValue;
+        },
+        getSemesterStatus: (state) => {
+            return state.semesterStatus;
         },
     },
 });

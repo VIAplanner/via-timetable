@@ -14,15 +14,29 @@
 
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
-    data() {
-        return {
-            toggle: true,
-        };
+    computed: {
+        ...mapGetters(["getSemesterStatus"]),
+        toggle: {
+            get() {
+                return this.getSemesterStatus === "F";
+            },
+            set(value) {
+                if (value) {
+                    this.setSemesterStatus("F");
+                } else {
+                    this.setSemesterStatus("S");
+                }
+            },
+        },
     },
     components: {
         ToggleButton,
+    },
+    methods: {
+        ...mapMutations(["setSemesterStatus"]),
     },
 };
 </script>
