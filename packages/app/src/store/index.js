@@ -16,14 +16,18 @@ export default new Vuex.Store({
             FRIDAY: [],
         },
         lockedSections: [],
-        conflictPopup: true
+        noTimetablePopup: false,
+        overwriteLockedSectionPopup: false
     },
     mutations: {
         setTimetable(state, payload) {
             state.timetable = payload;
         },
-        setConflictPopup(state, payload) {
-            state.conflictPopup = payload;
+        setNoTimetablePopup(state, payload) {
+            state.noTimetablePopup = payload;
+        },
+        setOverwriteLockedSectionPopup(state, payload) {
+            state.overwriteLockedSectionPopup = payload
         },
         addCourse(state, payload) {
             state.selectedCourses[payload.course.courseCode] = payload.course;
@@ -53,7 +57,7 @@ export default new Vuex.Store({
                     FRIDAY: [],
                 })
             ) {
-                context.commit("setConflictPopup", true);
+                context.commit("setNoTimetablePopup", true);
             } else {
                 context.commit("setTimetable", payload);
             }
@@ -130,8 +134,11 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
-        getConflictPopup: (state) => {
-            return state.conflictPopup;
+        getNoTimetablePopup: (state) => {
+            return state.noTimetablePopup;
+        },
+        getOverwriteLockedSectionPopup:(state) => {
+            return state.overwriteLockedSectionPopup;
         },
         selectedCourses: (state) => {
             return state.selectedCourses;
