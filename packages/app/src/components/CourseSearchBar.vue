@@ -22,7 +22,7 @@ export default {
         allCourses: Array,
     },
     computed: {
-        ...mapGetters(["getSearchBarValue", "getSemesterStatus"]),
+        ...mapGetters(["getSearchBarValue", "getSemesterStatus", "selectedCourses"]),
         selectedCourse: {
             // used as v-model for the search bar
             get() {
@@ -44,6 +44,12 @@ export default {
         ...mapMutations(["setSearchBarValue"]),
         onCourseSelected() {
             if (!this.selectedCourse) return;
+
+            // Checks if the course is already added
+            for(let courseCode in this.selectedCourses){
+                if(this.selectedCourse.includes(courseCode)) return;
+            }
+
             this.$apollo
                 .query({
                     query: gql`
