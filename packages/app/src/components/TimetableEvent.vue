@@ -116,7 +116,7 @@ export default {
             if (this.locked) {
                 return { class: "success--text" };
             } else {
-                return { class: "warning--text" };
+                return { class: "error--text" };
             }
         },
         // stores the info of the current section
