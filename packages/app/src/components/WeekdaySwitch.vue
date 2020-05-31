@@ -1,21 +1,26 @@
 <template>
-    <v-row
-        @mouseover="hovered = true"
-        @mouseleave="hovered = false"
-        justify="center"
-    >
-        <h2 class="day-label">
-            {{ weekday }}
-        </h2>
-        <div v-if="hovered || locked">
-            <v-btn @click="unlockDay" v-if="locked" icon>
-                <v-icon>mdi-lock</v-icon>
-            </v-btn>
-            <v-btn @click="lockDay" v-else icon>
-                <v-icon>mdi-lock-open</v-icon>
-            </v-btn>
-        </div>
-    </v-row>
+    <v-tooltip top>
+        <template v-slot:activator="{ on }">
+            <v-row
+                @mouseover="hovered = true"
+                @mouseleave="hovered = false"
+                justify="center"
+            >
+                <h2 class="day-label">
+                    {{ weekday }}
+                </h2>
+                <div v-if="hovered || locked" v-on="on">
+                    <v-btn @click="unlockDay" v-if="locked" icon>
+                        <v-icon>mdi-lock</v-icon>
+                    </v-btn>
+                    <v-btn @click="lockDay" v-else icon>
+                        <v-icon>mdi-lock-open</v-icon>
+                    </v-btn>
+                </div>
+            </v-row>
+        </template>
+        <span>{{ toolTipText }}</span>
+    </v-tooltip>
 </template>
 
 <script>
@@ -41,6 +46,9 @@ export default {
                 }
             }
             return count == 12;
+        },
+        toolTipText() {
+            return !this.locked ? "Block All Times" : "Unblock All Times";
         },
         currSecData() {
             return {
@@ -74,7 +82,6 @@ export default {
         lockDay() {
             let i = 0;
             this.saveTimetable();
-            this.lockToggle();
 
             while (i < 12) {
                 this.currStart = 32400 + i * 3600;
@@ -82,7 +89,6 @@ export default {
                 // if locking the day is impossible, revert to the previous timetable
                 if (this.getConflictPopup) {
                     this.revertTimetable();
-                    this.lockToggle();
                     break;
                 }
 
@@ -106,8 +112,6 @@ export default {
                     }
                 }
             }
-
-            this.lockToggle();
         },
         validLockSection() {
             const currDayTimetable = this.timetable[this.weekday.toUpperCase()];
@@ -129,9 +133,6 @@ export default {
             }
 
             return true;
-        },
-        lockToggle() {
-            this.locked = !this.locked;
         },
     },
 };
