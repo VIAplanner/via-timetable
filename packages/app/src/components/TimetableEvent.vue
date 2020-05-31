@@ -48,7 +48,7 @@
         </div>
         <div
             v-else
-            v-ripple="dynamicRipple"
+            v-ripple
             class="event empty-event one-hour"
             :style="dynamicColor"
             @mouseover="hovered = true"
@@ -58,7 +58,7 @@
             <div v-if="hovered">
                 <v-row>
                     <v-col>
-                        <p style="font-weight:bold" class="center">
+                        <p class="center unselectable">
                             {{ dynamicText }}
                         </p>
                     </v-col>
@@ -110,13 +110,6 @@ export default {
                 return this.hovered
                     ? { background: "#e6e6e6", cursor: "pointer" }
                     : { background: "white", cursor: "pointer" };
-            }
-        },
-        dynamicRipple() {
-            if (this.locked) {
-                return { class: "success--text" };
-            } else {
-                return { class: "error--text" };
             }
         },
         // stores the info of the current section
@@ -223,7 +216,14 @@ export default {
 * {
     font-family: "Montserrat", sans-serif;
 }
-
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 .center {
     color: black;
     text-align: center;
