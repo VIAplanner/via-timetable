@@ -196,17 +196,6 @@ export default {
                 this.deleteCourse({ code: this.currSecData.courseCode });
             }
         },
-        addLockSection() {
-            // if the user clicks on an empty timeslot, it will be added as a course in vuex
-            this.lockSection(
-                `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-            );
-            this.selectCourse({ course: this.currSecData });
-        },
-        removeLockSection() {
-            // if the user clicks on a lock timeslot, it will be removed
-            this.deleteCourse({ code: this.currSecData.courseCode });
-        },
     },
 };
 </script>

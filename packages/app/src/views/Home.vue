@@ -8,7 +8,7 @@
                     <course-search-bar
                         :allCourses="formattedCourses"
                         class="mx-4"
-                        :loading="$apollo.loading"
+                        :loadingParent="$apollo.loading"
                     />
                     <switch-sem />
                 </v-toolbar>

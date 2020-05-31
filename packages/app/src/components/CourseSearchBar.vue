@@ -18,7 +18,7 @@ import gql from "graphql-tag";
 export default {
     name: "course-search-bar",
     props: {
-        loading: Boolean,
+        loadingParent: Boolean,
         allCourses: Array,
     },
     computed: {
@@ -34,21 +34,37 @@ export default {
         },
         semCourses() {
             return this.allCourses.filter((courseString) => {
-                // filter courses in the selected sem
-                return courseString[8] === this.getSemesterStatus && courseString[9] === ":";
+                // filter out all summer courses
+                return courseString[9] === ":";
             });
         },
+        loading: {
+            get(){
+                return this.loading
+            },
+            set(value){
+                this.loading = value
+            }
+        }
     },
     methods: {
         ...mapActions(["selectCourse"]),
-        ...mapMutations(["setSearchBarValue"]),
+        ...mapMutations(["setSearchBarValue", "setSemesterStatus"]),
         onCourseSelected() {
             if (!this.selectedCourse) return;
 
-            // Checks if the course is already added
-            for(let courseCode in this.selectedCourses){
-                if(this.selectedCourse.includes(courseCode)) return;
+            if (this.selectedCourse[8] === "F") {
+                this.setSemesterStatus("F");
+            } else {
+                this.setSemesterStatus("S");
             }
+
+            // Checks if the course is already added
+            for (let courseCode in this.selectedCourses) {
+                if (this.selectedCourse.includes(courseCode)) return;
+            }
+
+            this.loading = true;
 
             this.$apollo
                 .query({
@@ -81,6 +97,7 @@ export default {
                     if (response.data.courses) {
                         this.selectCourse({ course: response.data.courses[0] });
                     }
+                    this.loading = false;
                 });
         },
     },
