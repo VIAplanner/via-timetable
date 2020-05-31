@@ -218,7 +218,7 @@ export default new Vuex.Store({
                     }
                 }
                 const courses = Object.keys(context.state.winterSelectedCourses).map(
-                    (code) => context.state.fallSelectedCourses[code]
+                    (code) => context.state.winterSelectedCourses[code]
                 );
                 timetable = generateTimetables(
                     courses,

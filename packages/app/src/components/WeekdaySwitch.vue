@@ -24,7 +24,6 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
     data() {
         return {
-            locked: false,
             hovered: false,
             currStart: 32400,
         };
@@ -34,6 +33,16 @@ export default {
     },
     computed: {
         ...mapGetters(["getLockedSections", "timetable", "getConflictPopup"]),
+        locked() {
+            let count = 0;
+            for (let lockedSection of this.getLockedSections) {
+                if (lockedSection.includes(this.weekday.toUpperCase())) {
+                    count++;
+                }
+            }
+            console.log(count)
+            return count == 12;
+        },
         currSecData() {
             return {
                 name: `Locked Section`,
@@ -95,7 +104,6 @@ export default {
                         this.deleteCourse({
                             code: lockedCourse.slice(0, lockedCourse.length - 5),
                         });
-                        continue;
                     }
                 }
             }
