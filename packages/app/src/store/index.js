@@ -16,7 +16,7 @@ export default new Vuex.Store({
             FRIDAY: [],
         },
         lockedSections: [],
-        conflictPopup: false
+        noTimetablePopup: true
     },
     mutations: {
         setTimetable(state, payload) {
@@ -81,6 +81,7 @@ export default new Vuex.Store({
                     context.commit("unlockSection", lockedSection);
                 }
             }
+            
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
             );
@@ -141,6 +142,7 @@ export default new Vuex.Store({
             return state.selectedCourses[code].color;
         },
         getLockedSections: (state) => {
+            console.log(state.lockedSections)
             return state.lockedSections;
         },
     },
