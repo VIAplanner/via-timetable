@@ -1,7 +1,7 @@
 <template>
     <v-container class="background">
         <v-row>
-            <conflict-popup :properties="{haveBtn: false}"></conflict-popup>
+            <conflict-popup :properties="{haveBtn: true}"></conflict-popup>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
                 <div v-for="time in timeRange" :key="time" class="time-axis-number">
