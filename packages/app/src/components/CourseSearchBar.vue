@@ -6,6 +6,7 @@
         :items="semCourses"
         class="mx-4"
         flat
+        hide-no-data
         hide-details
         hide-selected
         :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
@@ -43,7 +44,7 @@ export default {
         semCourses() {
             return this.allCourses.filter((courseString) => {
                 // filter out all summer courses
-                return courseString[9] === ":";
+                return courseString[12] === ":";
             });
         },
         loading: {
@@ -61,7 +62,7 @@ export default {
         onCourseSelected() {
             if (!this.selectedCourse) return;
 
-            if (this.selectedCourse[8] === "F") {
+            if (this.selectedCourse[11] === "F") {
                 this.setSemesterStatus("F");
             } else {
                 this.setSemesterStatus("S");
@@ -98,7 +99,7 @@ export default {
                     `,
                     variables: {
                         code: this.selectedCourse.slice(
-                            0,
+                            3,
                             this.selectedCourse.indexOf(":")
                         ),
                     },
