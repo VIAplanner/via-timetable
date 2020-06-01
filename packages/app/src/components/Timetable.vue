@@ -1,18 +1,31 @@
 <template>
-  <v-container class="background">
-    <v-row>
-      <NoTimetablePopup></NoTimetablePopup>
-      <v-col class="time-axis">
-        <div class="top-margin"></div>
-        <div v-for="time in timeRange" :key="time" class="time-axis-number">
-          <h3 class="time-label">{{ time }}</h3>
-        </div>
-      </v-col>
-      <v-col cols="11">
-        <v-row name="week-days-axis">
-          <v-col v-for="weekday in weekdays" :key="weekday">
-            <weekday-switch :weekday="weekday"></weekday-switch>
-          </v-col>
+    <v-container class="background">
+        <v-row>
+            <NoTimetablePopup></NoTimetablePopup>
+            <v-col class="time-axis">
+                <div class="top-margin"></div>
+                <div v-for="time in timeRange" :key="time" class="time-axis-number">
+                    <h3 class="time-label">{{ time }}</h3>
+                </div>
+            </v-col>
+            <v-col cols="11">
+                <v-row name="week-days-axis">
+                    <v-col v-for="weekday in weekdays" :key="weekday">
+                        <weekday-switch :weekday="weekday"></weekday-switch>
+                    </v-col>
+                </v-row>
+                <v-row name="timetable-content">
+                    <v-col v-for="(meetingSections, day) in timetable" :key="day">
+                        <div
+                            v-for="event in getEventsForDay(meetingSections)"
+                            :key="event.start"
+                        >
+                            <timetable-event :event="event" v-if="event.start > 0" />
+                            <timetable-event :event="event" v-else :currDay="day" />
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-col>
         </v-row>
         <v-row name="timetable-content">
           <v-col v-for="(meetingSections, day) in timetable" :key="day">
