@@ -1,14 +1,17 @@
 <template>
     <v-autocomplete
-        @change="onCourseSelected()"
+        ref="searchBarComponent"
+        @change="onCourseSelected"
         v-model="selectedCourse"
         :items="semCourses"
         class="mx-4"
         flat
         hide-details
-        :label="!loading ? 'Search for a Course' : 'Loading . . .'"
-        solo-inverted
+        hide-selected
+        :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
         :loading="loading"
+        :autofocus="false"
+        solo-inverted
     ></v-autocomplete>
 </template>
 
@@ -20,6 +23,11 @@ export default {
     props: {
         loadingParent: Boolean,
         allCourses: Array,
+    },
+    data(){
+        return {
+            loadingChild: false
+        }
     },
     computed: {
         ...mapGetters(["getSearchBarValue", "getSemesterStatus", "selectedCourses"]),
@@ -40,10 +48,10 @@ export default {
         },
         loading: {
             get(){
-                return this.loading
+                return this.loadingParent || this.loadingChild
             },
             set(value){
-                this.loading = value
+                this.loadingChild = value
             }
         }
     },
@@ -64,6 +72,8 @@ export default {
                 if (this.selectedCourse.includes(courseCode)) return;
             }
 
+            // unfocus the search bar
+            this.$refs.searchBarComponent.blur();
             this.loading = true;
 
             this.$apollo
