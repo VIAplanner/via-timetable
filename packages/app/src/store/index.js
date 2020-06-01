@@ -16,14 +16,18 @@ export default new Vuex.Store({
             FRIDAY: [],
         },
         lockedSections: [],
-        noTimetablePopup: true
+        noTimetablePopup: false,
+        overwriteLockedSectionPopup: false
     },
     mutations: {
         setTimetable(state, payload) {
             state.timetable = payload;
         },
-        setConflictPopup(state, payload) {
-            state.conflictPopup = payload;
+        setNoTimetablePopup(state, payload) {
+            state.noTimetablePopup = payload;
+        },
+        setOverwriteLockedSectionPopup(state, payload) {
+            state.overwriteLockedSectionPopup = payload
         },
         addCourse(state, payload) {
             state.selectedCourses[payload.course.courseCode] = payload.course;
@@ -53,7 +57,7 @@ export default new Vuex.Store({
                     FRIDAY: [],
                 })
             ) {
-                context.commit("setConflictPopup", true);
+                context.commit("setNoTimetablePopup", true);
             } else {
                 context.commit("setTimetable", payload);
             }
@@ -88,6 +92,7 @@ export default new Vuex.Store({
             const timetable = generateTimetables(courses, context.state.lockedSections);
             context.commit("setTimetable", timetable);
         },
+        //Recalculate timetable when switching sections with conflict
         resetTimetable(context) {
             const courses = Object.keys(context.state.selectedCourses).map(
                 (code) => context.state.selectedCourses[code]
@@ -95,6 +100,7 @@ export default new Vuex.Store({
             const timetable = generateTimetables(courses, context.state.lockedSections);
             context.dispatch("compareTimetable", timetable)
         },
+        //Switch a section of a course when there is no conflict
         switchSection(context, payload) {
             //Remove old section from locked sections
             context.commit(
@@ -129,8 +135,11 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
-        getConflictPopup: (state) => {
-            return state.conflictPopup;
+        getNoTimetablePopup: (state) => {
+            return state.noTimetablePopup;
+        },
+        getOverwriteLockedSectionPopup:(state) => {
+            return state.overwriteLockedSectionPopup;
         },
         selectedCourses: (state) => {
             return state.selectedCourses;
