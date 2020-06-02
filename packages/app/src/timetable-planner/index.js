@@ -140,47 +140,159 @@ const createTimetable = (courseSection) => {
     // lectureCombo.founded are used to terminate "some" function when it continues because of recursion 
     // but a valid timetable is already found
     const lectureCombo = (courseSection, whichArray = 0, output = []) => {
-            lectureCombo.founded = 0
-            return courseSection[whichArray].lecture.some((arrayElement) => {
-                if (lectureCombo.founded == 1) {
-                    return true
+        lectureCombo.founded = 0
+        return courseSection[whichArray].lecture.some((arrayElement) => {
+            if (lectureCombo.founded == 1) {
+                return true
+            }
+            if (whichArray === courseSection.length - 1) {
+
+                // Base case...
+                const temp = [...output];
+                temp.push(arrayElement);
+                addSectionToTimetable(temp, timetable)
+                //if its invalid, clear the timetable and start again
+                if (overlapExists(timetable)) {
+                    timetable = {
+                        MONDAY: [],
+                        TUESDAY: [],
+                        WEDNESDAY: [],
+                        THURSDAY: [],
+                        FRIDAY: []
+                    };
                 }
-                if (whichArray === courseSection.length - 1) {
-                    
-                    // Base case...
-                    const temp = [...output];
-                    temp.push(arrayElement);
-                    addSectionToTimetable(temp, timetable)
-                    //if its invalid, clear the timetable and start again
-                    if (overlapExists(timetable)) {
-                        timetable = {
-                            MONDAY: [],
-                            TUESDAY: [],
-                            WEDNESDAY: [],
-                            THURSDAY: [],
-                            FRIDAY: []
-                        };
-                    }
-                    else {
-                        // check if any course in the combo contains practical
-                        let pra = searchForSectionIndex(courseSection, "practical")
-                        if (pra >= 0) {
+                else {
+                    // check if any course in the combo contains practical
+                    let pra = searchForSectionIndex(courseSection, "practical")
+                    if (pra >= 0) {
+                        const prevTimetable = createShallowCopyOfTimetable(timetable)
+                        const practicalCombo = (courseSection, whichArray2 = pra, output2 = []) => {
+                            let pra2 = searchForSectionIndexContinue(courseSection, "practical", whichArray2)
+                            if (pra2 != -1) {
+                                return courseSection[whichArray2].practical.some((arrayElement2) => {
+                                    // Recursive case...
+                                    if (lectureCombo.founded == 1) {
+                                        return true
+                                    }
+                                    const temp = [...output2];
+                                    temp.push(arrayElement2);
+                                    practicalCombo(courseSection, pra2, temp);
+                                })
+                            } else {
+                                return courseSection[whichArray2].practical.some((arrayElement2) => {
+                                    // Base case when reach until the last course that has practical
+                                    if (lectureCombo.founded == 1) {
+                                        return true
+                                    }
+                                    const temp = [...output2];
+                                    temp.push(arrayElement2);
+                                    addSectionToTimetable(temp, timetable)
+                                    if (overlapExists(timetable)) {
+                                        timetable = createShallowCopyOfTimetable(prevTimetable)
+                                        let j = -1;
+                                        for (let i = 0; i < temp.length; i++) {
+                                            if (temp[i] === courseSection[i].practical[courseSection[i].practical.length - 1]) {
+                                                j++;
+                                            }
+                                        }
+                                        if (j == temp.length - 1) {
+                                            return false
+                                        }
+                                    }
+                                    else {
+                                        let tut = searchForSectionIndex(courseSection, "tutorial")
+                                        if (tut >= 0) {
+                                            const prevTimetabletut = createShallowCopyOfTimetable(timetable)
+                                            const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
+                                                let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
+                                                if (tut2 != -1) {
+                                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                                        // Recursive case...
+                                                        if (lectureCombo.founded == 1) {
+                                                            return true
+                                                        }
+                                                        const temp = [...output2];
+                                                        temp.push(arrayElement2);
+                                                        tutorialCombo(courseSection, tut2, temp);
+                                                    })
+                                                } else {
+                                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                                        // Base case when reach until the last course that has tutorial
+                                                        if (lectureCombo.founded == 1) {
+                                                            return true
+                                                        }
+                                                        const temp = [...output2];
+                                                        temp.push(arrayElement2);
+                                                        addSectionToTimetable(temp, timetable)
+                                                        if (overlapExists(timetable)) {
+                                                            timetable = createShallowCopyOfTimetable(prevTimetabletut)
+                                                            let j = -1;
+                                                            for (let i = 0; i < temp.length; i++) {
+                                                                if (temp[i] === courseSection[i].tutorial[courseSection[i].tutorial.length - 1]) {
+                                                                    j++;
+                                                                }
+                                                            }
+                                                            if (j == temp.length - 1) {
+                                                                return false
+                                                            }
+                                                        }
+                                                        else {
+                                                            lectureCombo.founded = 1
+                                                            return true
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                            const tutResult = tutorialCombo(courseSection)
+                                            if (tutResult) {
+                                                return true
+                                            }else{
+                                                timetable = prevTimetable
+                                            }
+                                            if (lectureCombo.founded == 1) {
+                                                return true
+                                            }
+                                        }
+                                        else {
+                                            lectureCombo.founded = 1
+                                            return true
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        const praResult = practicalCombo(courseSection)
+                        if (praResult) {
+                            lectureCombo.founded = 1
+                            return true
+                        } else {
+                            timetable = {
+                                MONDAY: [],
+                                TUESDAY: [],
+                                WEDNESDAY: [],
+                                THURSDAY: [],
+                                FRIDAY: []
+                            };
+                        }
+                    } else {
+                        let tut = searchForSectionIndex(courseSection, "tutorial")
+                        if (tut >= 0) {
                             const prevTimetable = createShallowCopyOfTimetable(timetable)
-                            const practicalCombo = (courseSection, whichArray2 = pra, output2 = []) => {
-                                let pra2 = searchForSectionIndexContinue(courseSection, "practical", whichArray2)
-                                if (pra2 != -1) {
-                                    return courseSection[whichArray2].practical.some((arrayElement2) => {
+                            const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
+                                let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
+                                if (tut2 != -1) {
+                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
                                         // Recursive case...
                                         if (lectureCombo.founded == 1) {
                                             return true
                                         }
                                         const temp = [...output2];
                                         temp.push(arrayElement2);
-                                        practicalCombo(courseSection, pra2, temp);
+                                        tutorialCombo(courseSection, tut2, temp);
                                     })
                                 } else {
-                                    return courseSection[whichArray2].practical.some((arrayElement2) => {
-                                        // Base case when reach until the last course that has practical
+                                    return courseSection[whichArray2].tutorial.some((arrayElement2) => {
+                                        // Base case when reach until the last course that has tutorial
                                         if (lectureCombo.founded == 1) {
                                             return true
                                         }
@@ -189,129 +301,62 @@ const createTimetable = (courseSection) => {
                                         addSectionToTimetable(temp, timetable)
                                         if (overlapExists(timetable)) {
                                             timetable = createShallowCopyOfTimetable(prevTimetable)
+                                            let j = -1;
+                                            for (let i = 0; i < temp.length; i++) {
+                                                if (temp[i] === courseSection[i].tutorial[courseSection[i].tutorial.length - 1]) {
+                                                    j++;
+                                                }
+                                            }
+                                            if (j == temp.length - 1) {
+                                                return false
+                                            }
                                         }
                                         else {
-                                            let tut = searchForSectionIndex(courseSection, "tutorial")
-                                            if (tut >= 0) {
-                                                const prevTimetable = createShallowCopyOfTimetable(timetable)
-                                                const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
-                                                    let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
-                                                    if (tut2 != -1) {
-                                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
-                                                            // Recursive case...
-                                                            if (lectureCombo.founded == 1) {
-                                                                return true
-                                                            }
-                                                            const temp = [...output2];
-                                                            temp.push(arrayElement2);
-                                                            tutorialCombo(courseSection, tut2, temp);
-                                                        })
-                                                    } else {
-                                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
-                                                            // Base case when reach until the last course that has tutorial
-                                                            if (lectureCombo.founded == 1) {
-                                                                return true
-                                                            }
-                                                            const temp = [...output2];
-                                                            temp.push(arrayElement2);
-                                                            addSectionToTimetable(temp, timetable)
-                                                            if (overlapExists(timetable)) {
-                                                                timetable = createShallowCopyOfTimetable(prevTimetable)
-                                                            }
-                                                            else {
-                                                                lectureCombo.founded = 1
-                                                                return true
-                                                            }
-                                                        })
-                                                    }
-                                                }
-                                                const tutResult = tutorialCombo(courseSection)
-                                                if (tutResult) {
-                                                    return true
-                                                }
-                                                if (lectureCombo.founded == 1) {
-                                                    return true
-                                                }
-                                            }
-                                            else {
-                                                lectureCombo.founded = 1
-                                                return true
-                                            }
+                                            lectureCombo.founded = 1
+                                            return true
                                         }
                                     })
                                 }
                             }
-                            const praResult = practicalCombo(courseSection)
-                            if (praResult) {
+                            const tutResult = tutorialCombo(courseSection)
+                            if (tutResult) {
                                 lectureCombo.founded = 1
                                 return true
-                            }
-                        } else {
-                            let tut = searchForSectionIndex(courseSection, "tutorial")
-                            if (tut >= 0) {
-                                const prevTimetable = createShallowCopyOfTimetable(timetable)
-                                const tutorialCombo = (courseSection, whichArray2 = tut, output2 = []) => {
-                                    let tut2 = searchForSectionIndexContinue(courseSection, "tutorial", whichArray2)
-                                    if (tut2 != -1) {
-                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
-                                                // Recursive case...
-                                                if (lectureCombo.founded == 1) {
-                                                    return true
-                                                }
-                                                const temp = [...output2];
-                                                temp.push(arrayElement2);
-                                                tutorialCombo(courseSection, tut2, temp);
-                                        })
-                                    } else {
-                                        return courseSection[whichArray2].tutorial.some((arrayElement2) => {
-                                            // Base case when reach until the last course that has tutorial
-                                            if (lectureCombo.founded == 1) {
-                                                return true
-                                            }
-                                            const temp = [...output2];
-                                            temp.push(arrayElement2);
-                                            addSectionToTimetable(temp, timetable)
-                                            if (overlapExists(timetable)) {
-                                                timetable = createShallowCopyOfTimetable(prevTimetable)
-                                            }
-                                            else {
-                                                lectureCombo.founded = 1
-                                                return true
-                                            }
-                                        })
-                                    }
-                                }
-                                const tutResult = tutorialCombo(courseSection)
-                                if (tutResult) {
-                                    lectureCombo.founded = 1
-                                    return true
-                                }
-                            }
-                            else {
-                                lectureCombo.founded = 1
-                                return true
-                            }
-                            if (lectureCombo.founded == 1) {
-                                return true
+                            } else {
+                                timetable = {
+                                    MONDAY: [],
+                                    TUESDAY: [],
+                                    WEDNESDAY: [],
+                                    THURSDAY: [],
+                                    FRIDAY: []
+                                };
                             }
                         }
-                    }
-                    if (lectureCombo.founded == 1) {
-                        return true
+                        else {
+                            lectureCombo.founded = 1
+                            return true
+                        }
+                        if (lectureCombo.founded == 1) {
+                            return true
+                        }
                     }
                 }
-                else {
-                    // Recursive case...
-                    if (lectureCombo.founded == 1) {
-                        return true
-                    }
-                    const temp = [...output];
-                    temp.push(arrayElement);
-                    lectureCombo(courseSection, whichArray + 1, temp);
+                if (lectureCombo.founded == 1) {
+                    return true
                 }
+            }
+            else {
+                // Recursive case...
+                if (lectureCombo.founded == 1) {
+                    return true
+                }
+                const temp = [...output];
+                temp.push(arrayElement);
+                lectureCombo(courseSection, whichArray + 1, temp);
+            }
         });
     };
-    if (courseSection.length > 0){
+    if (courseSection.length > 0) {
         lectureCombo(courseSection)
     }
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
@@ -336,26 +381,26 @@ const createTimetable = (courseSection) => {
 const generateTimetables = (courses, lockSections) => {
     // Generate all valid combinations of MeetingSections for a course
     const courseSections = courses.map(course => sortCourseSection(course));
-    for (const course of courseSections){
-        for (const section of lockSections){
-            if (course.code === section.slice(0,section.length-5)){
-                if (section[section.length-5] == 'L'){
-                    for (const lecture of course.lecture){
-                        if (lecture.sectionCode === section.slice(section.length-5)){ 
+    for (const course of courseSections) {
+        for (const section of lockSections) {
+            if (course.code === section.slice(0, section.length - 5)) {
+                if (section[section.length - 5] == 'L') {
+                    for (const lecture of course.lecture) {
+                        if (lecture.sectionCode === section.slice(section.length - 5)) {
                             course.lecture = [lecture]
                         }
                     }
                 }
-                if (section[section.length-5] == 'T'){
-                    for (const tutorial of course.tutorial){
-                        if (tutorial.sectionCode === section.slice(section.length-5)){ 
+                if (section[section.length - 5] == 'T') {
+                    for (const tutorial of course.tutorial) {
+                        if (tutorial.sectionCode === section.slice(section.length - 5)) {
                             course.tutorial = [tutorial]
                         }
                     }
                 }
-                if (section[section.length-5] == 'P'){
-                    for (const practical of course.practical){
-                        if (practical.sectionCode === section.slice(section.length-5)){ 
+                if (section[section.length - 5] == 'P') {
+                    for (const practical of course.practical) {
+                        if (practical.sectionCode === section.slice(section.length - 5)) {
                             course.practical = [practical]
                         }
                     }
