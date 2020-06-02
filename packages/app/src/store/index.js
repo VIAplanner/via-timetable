@@ -31,6 +31,8 @@ export default new Vuex.Store({
         savedSelectedCourses: {},
         savedLockedSections: [],
         semesterStatus: "F",
+        noTimetablePopup: false,
+        overwriteLockedSectionPopup: false
     },
     mutations: {
         setSemesterStatus(state, payload) {
@@ -46,12 +48,11 @@ export default new Vuex.Store({
                 state.winterTimetable = payload;
             }
         },
-        setConflictPopup(state, payload) {
-            // is there's a conflict, reset the search bar
-            if (payload) {
-                state.searchBarValue = null;
-            }
-            state.conflictPopup = payload;
+        setNoTimetablePopup(state, payload) {
+            state.noTimetablePopup = payload;
+        },
+        setOverwriteLockedSectionPopup(state, payload) {
+            state.overwriteLockedSectionPopup = payload
         },
         addCourse(state, payload) {
             if (state.semesterStatus === "F") {
@@ -144,7 +145,7 @@ export default new Vuex.Store({
                     FRIDAY: [],
                 })
             ) {
-                context.commit("setConflictPopup", true);
+                context.commit("setNoTimetablePopup", true);
                 context.dispatch("revertTimetable");
             } else {
                 context.commit("setTimetable", payload);
@@ -228,6 +229,7 @@ export default new Vuex.Store({
 
             context.commit("setTimetable", timetable);
         },
+        //Recalculate timetable when switching sections with conflict
         resetTimetable(context) {
             let timetable;
             if (context.state.semesterStatus === "F") {
@@ -250,6 +252,7 @@ export default new Vuex.Store({
 
             context.dispatch("validateTimetable", timetable);
         },
+        //Switch a section of a course when there is no conflict
         switchSection(context, payload) {
             //Remove old section from locked sections
             context.commit(
@@ -312,8 +315,11 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
-        getConflictPopup: (state) => {
-            return state.conflictPopup;
+        getNoTimetablePopup: (state) => {
+            return state.noTimetablePopup;
+        },
+        getOverwriteLockedSectionPopup:(state) => {
+            return state.overwriteLockedSectionPopup;
         },
         timetable: (state) => {
             if (state.semesterStatus === "F") {

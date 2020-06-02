@@ -1,5 +1,7 @@
 <template>
     <v-card v-if="!$apollo.loading">
+        <OverwriteLockedSectionPopup @Proceed="autoResolveConflict" @Cancel="clearTempVars">
+        </OverwriteLockedSectionPopup>
         <v-toolbar :color="course.color" dark>
             <v-toolbar-title class="text-wrap"
                 >{{ course.courseCode }} {{ course.name }}</v-toolbar-title
@@ -66,7 +68,7 @@
                                             <v-col cols="5">
                                                 <v-row
                                                     v-for="time in meetingSection.times"
-                                                    :key="time.day"
+                                                    :key="`${time.day}${time.start}`"
                                                 >
                                                     <v-col>
                                                         <v-tooltip
@@ -129,7 +131,7 @@
                                             <v-col cols="2">
                                                 <v-row
                                                     v-for="time in meetingSection.times"
-                                                    :key="time.day"
+                                                    :key="`${time.day}${time.start}`"
                                                 >
                                                     <v-col>
                                                         <div>{{ time.location }}</div>
@@ -173,9 +175,13 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
+import OverwriteLockedSectionPopup from "./OverwriteLockedSectionPopup"
 
 export default {
     name: "course-section-picker",
+    components:{
+        OverwriteLockedSectionPopup
+    },
     props: {
         code: {
             type: String,
@@ -185,7 +191,7 @@ export default {
         this.resetSelectedMeetingSections();
     },
     computed: {
-        ...mapGetters(["timetable", "selectedCourses"]),
+        ...mapGetters(["timetable", "selectedCourses", "getLockedSections"]),
         course() {
             return this.selectedCourses[this.code];
         },
@@ -209,7 +215,7 @@ export default {
 
     methods: {
         ...mapActions(["switchSection", "resetTimetable"]),
-        ...mapMutations(["lockSection", "unlockSection"]),
+        ...mapMutations(["lockSection", "unlockSection", "setOverwriteLockedSectionPopup"]),
         getFormattedTime(start, end) {
             var s = (start / 3600) % 12;
             if (s == 0) {
@@ -251,7 +257,7 @@ export default {
         _checkConflict(day, start, end, timetableSection) {
             const conflict = this.checkConflict(day, start, end);
             /*If there is conflict and the conflict is not with the selected section on the timetable which
-        the user is trying to switch away from */
+            the user is trying to switch away from */
             if (
                 conflict != null &&
                 `${conflict.courseCode}${conflict.sectionCode}` !=
@@ -268,11 +274,13 @@ export default {
         updateTimetable() {
             for (var activityType of ["lecture", "practical", "tutorial"]) {
                 //If section changed
-                if (this.selectedMeetingSections[activityType] != this.timetableSelectedMeetingSections[activityType]) {
+                if (this.selectedMeetingSections[activityType] != 
+                    this.timetableSelectedMeetingSections[activityType]) {
                     const newSection = this.course.meeting_sections.filter(
                         (section) =>
                             section.sectionCode === this.selectedMeetingSections[activityType]
                     )[0];
+                    //Find all conflicting sections
                     const conflictSections = [];
                     for (var currTime of newSection.times) {
                         var conflictTime = this._checkConflict(
@@ -297,26 +305,54 @@ export default {
                     }
                     // case 2, there are conflicting time(s)
                     else {
-                        // unlock old section
-                        this.unlockSection(`${this.code}${this.timetableSelectedMeetingSections[activityType]}`)
-
-                        // Unlock all the conflicting sections
-                        for (var conflictSection of conflictSections) {
-                            this.unlockSection(
-                                `${conflictSection.courseCode}${conflictSection.sectionCode}`
-                            );
-                        }
-                        // Lock the new section, regenerate timetable, and unlock the new section
-                        this.lockSection(
-                            `${this.code}${this.selectedMeetingSections[activityType]}`
-                        );
-                        this.resetTimetable();
-                        this.unlockSection(
-                            `${this.code}${this.selectedMeetingSections[activityType]}`
-                        );
+                        this.oldSectionsWithConflict.push(`${this.code}${this.timetableSelectedMeetingSections[activityType]}`)
+                        this.newSectionsWithConflict.push(`${this.code}${this.selectedMeetingSections[activityType]}`)
+                        this.totalConflictSections.push(...conflictSections)
                     }
                 }
             }
+            if (this.totalConflictSections.length != 0) {
+                //Find if any conflicting section(s) is locked, if so, pop up a dialog
+                var popUp = false
+                for (var conflictSection of this.totalConflictSections) {
+                    if (this.getLockedSections.indexOf(
+                        `${conflictSection.courseCode}${conflictSection.sectionCode}`) != -1) {
+                        popUp = true
+                    }
+                }
+                if (popUp){
+                    this.setOverwriteLockedSectionPopup(true)
+                }
+                else {
+                    this.autoResolveConflict()
+                }
+            }
+        },
+        autoResolveConflict() {
+            // unlock old sections regardless if they are locked
+            for (var oldSection of this.oldSectionsWithConflict) {
+                this.unlockSection(oldSection)
+            }
+            // Unlock all the conflicting sections
+            for (var conflictSection of this.totalConflictSections) {
+                this.unlockSection(
+                    `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                );
+            }
+            // Lock the new sections, regenerate timetable, and unlock the new sections
+            for (var newSection of this.newSectionsWithConflict) {
+                this.lockSection(newSection)
+            }
+            this.resetTimetable();
+            for (var newSect of this.newSectionsWithConflict) {
+                this.unlockSection(newSect)
+            }
+            this.clearTempVars()
+        },
+        clearTempVars() {
+            this.oldSectionsWithConflict = []
+            this.newSectionsWithConflict = []
+            this.totalConflictSections = []
         },
         resetSelectedMeetingSections() {
             this.selectedMeetingSections = this.getTimetableMeetingSections();
@@ -351,6 +387,9 @@ export default {
             },
             active: false,
             dialog: false,
+            oldSectionsWithConflict: [],
+            newSectionsWithConflict: [],
+            totalConflictSections: []
         };
     },
 };
