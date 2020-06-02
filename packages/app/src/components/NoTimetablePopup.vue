@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="getNoTimetablePopup" persistent max-width="290">
     <v-card>
-      <v-img height="75px" :src="logo">
+      <v-img height="75px" :src="logo" eager>
         <v-card-title class="white--text align-end cardTitle" primary-title>Warning</v-card-title>
       </v-img>
       <v-card-text class="text--primary">
