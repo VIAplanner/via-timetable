@@ -151,7 +151,6 @@ export default new Vuex.Store({
             return state.selectedCourses[code].color;
         },
         getLockedSections: (state) => {
-            console.log(state.lockedSections)
             return state.lockedSections;
         },
     },

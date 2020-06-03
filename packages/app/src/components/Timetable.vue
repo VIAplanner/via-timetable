@@ -115,8 +115,8 @@ export default {
       }
       for (let i = 0; i < meetingSections.length; i++) {
         const event = meetingSections[i];
-        const eventStart = convertSecondsToHours(event.start);
-        const eventEnd = convertSecondsToHours(event.end);
+        let eventStart = convertSecondsToHours(event.start);
+        let eventEnd = convertSecondsToHours(event.end);
         // Pad empty events before the start of the first class
         for (let j = 0; j < eventStart - currTime; j++) {
           result.push({
@@ -137,9 +137,16 @@ export default {
           result.push(event);
         }
         currTime = eventEnd;
-
         //If last event, pad empty events after it
         if (i === meetingSections.length - 1) {
+          if (!Number.isInteger(currTime)) {
+            result.push({
+              start: invalidStart,
+              currStart: currTime * 3600
+            });
+            invalidStart--;
+            currTime = currTime + 0.5;
+          }
           for (let k = 0; k < this.timetableEnd - currTime; k++) {
             result.push({
               start: invalidStart,
@@ -149,7 +156,6 @@ export default {
           }
         }
       }
-
       return result;
     }
   }

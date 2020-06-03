@@ -227,7 +227,11 @@ export default {
                 e = 12;
             }
             var endPeriod = end / 3600 < 12 ? "AM" : "PM";
-            return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
+            if(Number.isInteger(e)){
+                return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
+            }
+            e=e-0.5;
+            return `${s}:00 ${startPeriod} - ${e}:30 ${endPeriod}`;
         },
         getProperDayName(day) {
             var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
