@@ -1,21 +1,26 @@
 <template>
-    <v-row
-        @mouseover="hovered = true"
-        @mouseleave="hovered = false"
-        justify="center"
-    >
-        <h2 class="day-label">
-            {{ weekday }}
-        </h2>
-        <div v-if="hovered || locked">
-            <v-btn @click="unlockDay" v-if="locked" icon>
-                <v-icon>mdi-lock</v-icon>
-            </v-btn>
-            <v-btn @click="lockDay" v-else icon>
-                <v-icon>mdi-lock-open</v-icon>
-            </v-btn>
-        </div>
-    </v-row>
+    <v-tooltip top>
+        <template v-slot:activator="{ on }">
+            <v-row
+                @mouseover="hovered = true"
+                @mouseleave="hovered = false"
+                justify="center"
+            >
+                <h2 class="day-label">
+                    {{ weekday }}
+                </h2>
+                <div v-if="hovered || locked" v-on="on">
+                    <v-btn @click="unlockDay" v-if="locked" icon>
+                        <v-icon>mdi-lock</v-icon>
+                    </v-btn>
+                    <v-btn @click="lockDay" v-else icon>
+                        <v-icon>mdi-lock-open</v-icon>
+                    </v-btn>
+                </div>
+            </v-row>
+        </template>
+        <span>{{ toolTipText }}</span>
+    </v-tooltip>
 </template>
 
 <script>
@@ -24,7 +29,6 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
     data() {
         return {
-            locked: false,
             hovered: false,
             currStart: 32400,
         };
@@ -33,13 +37,23 @@ export default {
         weekday: String,
     },
     computed: {
-        ...mapGetters(["getLockedSections", "timetable"]),
+        ...mapGetters(["getLockedSections", "timetable", "getNoTimetablePopup"]),
+        locked() {
+            let count = 0;
+            for (let lockedSection of this.getLockedSections) {
+                if (lockedSection.includes(this.weekday.toUpperCase())) {
+                    count++;
+                }
+            }
+            return count == 12;
+        },
+        toolTipText() {
+            return !this.locked ? "Block All Times" : "Unblock All Times";
+        },
         currSecData() {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${this.weekday.toUpperCase()}${
-                    this.currStart
-                }`,
+                courseCode: `Lock${this.weekday.toUpperCase()}${this.currStart}`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",
@@ -58,23 +72,34 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["selectCourse", "deleteCourse"]),
+        ...mapActions([
+            "selectCourse",
+            "deleteCourse",
+            "saveTimetable",
+            "revertTimetable",
+        ]),
         ...mapMutations(["lockSection"]),
         lockDay() {
             let i = 0;
+            this.saveTimetable();
+
             while (i < 12) {
                 this.currStart = 32400 + i * 3600;
+
+                // if locking the day is impossible, revert to the previous timetable
+                if (this.getNoTimetablePopup) {
+                    this.revertTimetable();
+                    break;
+                }
 
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                     );
-                    this.selectCourse({ course: this.currSecData });
+                    this.selectCourse({ course: this.currSecData, noSave: true });
                 }
-                i++
+                i++;
             }
-
-            this.lockToggle();
         },
         unlockDay() {
             for (let i = 0; i < 12; i++) {
@@ -82,17 +107,11 @@ export default {
                 for (var lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
-                            code: lockedCourse.slice(
-                                0,
-                                lockedCourse.length - 5
-                            ),
+                            code: lockedCourse.slice(0, lockedCourse.length - 5),
                         });
-                        continue;
                     }
                 }
             }
-
-            this.lockToggle();
         },
         validLockSection() {
             const currDayTimetable = this.timetable[this.weekday.toUpperCase()];
@@ -104,16 +123,16 @@ export default {
                     )
                 ) {
                     // if the locked course is in between another course, then skip it
-                    if (section.start <= this.currStart && this.currStart < section.end) {
+                    if (
+                        section.start <= this.currStart &&
+                        this.currStart < section.end
+                    ) {
                         return false;
                     }
                 }
             }
 
             return true;
-        },
-        lockToggle() {
-            this.locked = !this.locked;
         },
     },
 };
