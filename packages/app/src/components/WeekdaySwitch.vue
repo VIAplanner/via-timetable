@@ -37,7 +37,7 @@ export default {
         weekday: String,
     },
     computed: {
-        ...mapGetters(["getLockedSections", "timetable", "getConflictPopup"]),
+        ...mapGetters(["getLockedSections", "timetable", "getNoTimetablePopup"]),
         locked() {
             let count = 0;
             for (let lockedSection of this.getLockedSections) {
@@ -87,7 +87,7 @@ export default {
                 this.currStart = 32400 + i * 3600;
 
                 // if locking the day is impossible, revert to the previous timetable
-                if (this.getConflictPopup) {
+                if (this.getNoTimetablePopup) {
                     this.revertTimetable();
                     break;
                 }
