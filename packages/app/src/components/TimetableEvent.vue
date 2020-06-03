@@ -258,7 +258,7 @@ export default {
       this.deleteCourse({ code: this.currSecData.courseCode });
     }
   }
-};
+  }
 </script>
 
 <style scoped>
