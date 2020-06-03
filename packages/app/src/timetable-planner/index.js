@@ -188,6 +188,7 @@ const createTimetable = (courseSection) => {
                                     temp.push(arrayElement2);
                                     addSectionToTimetable(temp, timetable)
                                     if (overlapExists(timetable)) {
+                                        
                                         timetable = createShallowCopyOfTimetable(prevTimetable)
                                         let j = -1;
                                         for (let i = 0; i < temp.length; i++) {
@@ -247,6 +248,9 @@ const createTimetable = (courseSection) => {
                                             if (tutResult) {
                                                 return true
                                             }else{
+                                                if (lectureCombo.founded == 1) {
+                                                    return true
+                                                }
                                                 timetable = prevTimetable
                                             }
                                             if (lectureCombo.founded == 1) {
@@ -266,6 +270,9 @@ const createTimetable = (courseSection) => {
                             lectureCombo.founded = 1
                             return true
                         } else {
+                            if (lectureCombo.founded == 1) {
+                                return true
+                            }
                             timetable = {
                                 MONDAY: [],
                                 TUESDAY: [],
@@ -323,6 +330,9 @@ const createTimetable = (courseSection) => {
                                 lectureCombo.founded = 1
                                 return true
                             } else {
+                                if (lectureCombo.founded == 1) {
+                                    return true
+                                }
                                 timetable = {
                                     MONDAY: [],
                                     TUESDAY: [],
