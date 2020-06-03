@@ -231,7 +231,10 @@ export default new Vuex.Store({
         },
         //Recalculate timetable when switching sections with conflict
         resetTimetable(context) {
+            // Save the timetable before it gets reset
+            context.dispatch("saveTimetable");
             let timetable;
+            
             if (context.state.semesterStatus === "F") {
                 const courses = Object.keys(context.state.fallSelectedCourses).map(
                     (code) => context.state.fallSelectedCourses[code]
