@@ -71,11 +71,9 @@
 <script>
 import CourseSectionPicker from "../components/CourseSectionPicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-
 const convertSecondsToHours = (seconds) => {
     return seconds / 3600;
 };
-
 export default {
     name: "timetable-event",
     props: {
@@ -144,7 +142,6 @@ export default {
                     return true;
                 }
             }
-
             return false;
         },
     },
@@ -218,7 +215,6 @@ export default {
     text-align: center;
     padding-top: 8px !important;
 }
-
 .event {
     border: 0.2px solid gray;
     color: white;
@@ -234,30 +230,24 @@ export default {
 .one-hour {
     height: 84px;
 }
-
 .two-hours {
     height: 168px;
 }
-
 .three-hours {
     height: 252px;
 }
-
 .course-code {
     margin-bottom: 3px;
     margin-left: 3px;
 }
-
 .align-left {
     position: absolute;
     left: 3px;
 }
-
 .align-right {
     position: absolute;
     right: 5px;
 }
-
 .lock-button {
     position: absolute;
     right: 3px;
