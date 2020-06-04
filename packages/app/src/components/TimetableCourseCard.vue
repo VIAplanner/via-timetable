@@ -110,16 +110,14 @@ export default {
         s = 12;
       }
       var startPeriod = start / 3600 < 12 ? "AM" : "PM";
+      let startHalf = Number.isInteger(s) ? "00":"30"
       var e = (end / 3600) % 12;
       if (e == 0) {
         e = 12;
       }
       var endPeriod = end / 3600 < 12 ? "AM" : "PM";
-      if (Number.isInteger(e)) {
-        return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
-      }
-      e = e - 0.5;
-      return `${s}:00 ${startPeriod} - ${e}:30 ${endPeriod}`;
+      let endHalf = Number.isInteger(e) ? "00":"30"
+      return `${s-((startHalf/6)/10)}:${startHalf} ${startPeriod} - ${e-((endHalf/6)/10)}:${endHalf} ${endPeriod}`;
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();

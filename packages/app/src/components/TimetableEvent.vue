@@ -34,6 +34,23 @@
       </v-dialog>
     </div>
     <div
+      v-else-if="!checkHalfhour(event.currStart,event.currEnd)"
+      v-ripple
+      class="event empty-event half-hour"
+      :style="dynamicColor"
+      @mouseover="hovered = true"
+      @mouseleave="hovered = false"
+      @click.stop="lockedSectionToggle"
+    >
+      <div v-if="hovered">
+        <v-row>
+          <v-col>
+            <p class="center unselectable">{{ dynamicText }}</p>
+          </v-col>
+        </v-row>
+      </div>
+    </div>
+    <div
       v-else
       v-ripple
       class="event empty-event one-hour"
@@ -139,8 +156,10 @@ export default {
         courseSectionPicker.resetSelectedMeetingSections();
       }
     },
-    checkHalfhour(currStart) {
-      if (Number.isInteger(currStart / 3600)) {
+    checkHalfhour(currStart, end) {
+      // console.log("start:", currStart);
+      // console.log("end:", end);
+      if (Number.isInteger((end - currStart) / 3600)) {
         return true;
       }
       return false;
@@ -159,6 +178,8 @@ export default {
         return "one-hour-half";
       } else if (duration === 2) {
         return "two-hours";
+      } else if (duration === 2.5) {
+        return "two-hours-half";
       } else if (duration === 3) {
         return "three-hours";
       }
@@ -172,7 +193,11 @@ export default {
       if (e == 0) {
         e = 12;
       }
-      return `${s}:00 - ${e}:00`;
+      if (Number.isInteger(e)) {
+        return `${s}:00 - ${e}:00`;
+      }
+      e = e - 0.5;
+      return `${s}:00 - ${e}:30`;
     },
     lockedSectionToggle() {
       if (!this.locked) {
@@ -231,6 +256,9 @@ export default {
 }
 .two-hours {
   height: 168px;
+}
+.two-hours-half {
+  height: 210px;
 }
 .three-hours {
   height: 252px;

@@ -107,7 +107,8 @@ export default {
         for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
           result.push({
             start: invalidStart,
-            currStart: (currTime + j) * 3600
+            currStart: (currTime + j) * 3600,
+            currEnd: (currTime + j + 1) * 3600
           });
           invalidStart--;
         }
@@ -118,10 +119,29 @@ export default {
         let eventStart = convertSecondsToHours(event.start);
         let eventEnd = convertSecondsToHours(event.end);
         // Pad empty events before the start of the first class
-        for (let j = 0; j < eventStart - currTime; j++) {
+        if (Number.isInteger(eventStart - currTime)) {
+          for (let j = 0; j < eventStart - currTime; j++) {
+            result.push({
+              start: invalidStart,
+              currStart: (currTime + j) * 3600,
+              currEnd: (currTime + j + 1) * 3600
+            });
+            invalidStart--;
+          }
+        } else {
+          //there is half hour exist
+          for (let j = 0; j < eventStart - currTime - 1; j++) {
+            result.push({
+              start: invalidStart,
+              currStart: (currTime + j) * 3600,
+              currEnd: (currTime + j + 1) * 3600
+            });
+            invalidStart--;
+          } //pushing in half hour
           result.push({
             start: invalidStart,
-            currStart: (currTime + j) * 3600
+            currStart: (eventStart - 0.5) * 3600,
+            currEnd: eventStart * 3600
           });
           invalidStart--;
         }
@@ -142,7 +162,8 @@ export default {
           if (!Number.isInteger(currTime)) {
             result.push({
               start: invalidStart,
-              currStart: currTime * 3600
+              currStart: currTime * 3600,
+              currEnd: (currTime + 0.5) * 3600
             });
             invalidStart--;
             currTime = currTime + 0.5;
@@ -150,7 +171,8 @@ export default {
           for (let k = 0; k < this.timetableEnd - currTime; k++) {
             result.push({
               start: invalidStart,
-              currStart: (currTime + k) * 3600
+              currStart: (currTime + k) * 3600,
+              currEnd: (currTime ) * 3600
             });
             invalidStart--;
           }
