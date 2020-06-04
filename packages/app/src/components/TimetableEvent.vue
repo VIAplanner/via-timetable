@@ -1,67 +1,51 @@
 <template>
-    <div>
-        <div v-if="event.start > 0">
-            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
-                <template v-slot:activator="{ on }">
-                    <div
-                        @mouseover="hovered = true"
-                        @mouseleave="hovered = false"
-                        v-on="on"
-                        class="event"
-                        :class="durationClass(event.start, event.end)"
-                        :style="{ background: getCourseColor(event.code) }"
-                    >
-                        <h4 class="course-code">{{ event.code }}</h4>
+  <div>
+    <div v-if="event.start > 0">
+      <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
+        <template v-slot:activator="{ on }">
+          <div
+            @mouseover="hovered = true"
+            @mouseleave="hovered = false"
+            v-on="on"
+            class="event"
+            :class="durationClass(event.start, event.end)"
+            :style="{ background: getCourseColor(event.code) }"
+          >
+            <h4 class="course-code">{{ event.code }}</h4>
 
-                        <div class="lock-button">
-                            <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
-                                <v-icon>mdi-lock</v-icon>
-                            </v-btn>
-                            <v-btn
-                                dark
-                                @click.stop="lockToggle"
-                                v-if="!locked && hovered"
-                                icon
-                            >
-                                <v-icon>mdi-lock-open</v-icon>
-                            </v-btn>
-                        </div>
+            <div class="lock-button">
+              <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
+                <v-icon>mdi-lock</v-icon>
+              </v-btn>
+              <v-btn dark @click.stop="lockToggle" v-if="!locked && hovered" icon>
+                <v-icon>mdi-lock-open</v-icon>
+              </v-btn>
+            </div>
 
             <div style="margin-left: 3px;">{{ event.sectionCode }}</div>
 
-                        <div style="position: relative;">
-                            <div class="align-left">
-                                {{ getFormattedTime(event.start, event.end) }}
-                            </div>
-                            <div class="align-right">{{ event.location }}</div>
-                        </div>
-                    </div>
-                </template>
-                <course-section-picker
-                    v-on:done="dialog = false"
-                    :code="event.code"
-                    ref="popUp"
-                />,
-            </v-dialog>
-        </div>
-        <div
-            v-else
-            v-ripple
-            class="event empty-event one-hour"
-            :style="dynamicColor"
-            @mouseover="hovered = true"
-            @mouseleave="hovered = false"
-            @click.stop="lockedSectionToggle"
-        >
-            <div v-if="hovered">
-                <v-row>
-                    <v-col>
-                        <p class="center unselectable">
-                            {{ dynamicText }}
-                        </p>
-                    </v-col>
-                </v-row>
+            <div style="position: relative;">
+              <div class="align-left">{{ getFormattedTime(event.start, event.end) }}</div>
+              <div class="align-right">{{ event.location }}</div>
             </div>
+          </div>
+        </template>
+        <course-section-picker v-on:done="dialog = false" :code="event.code" ref="popUp" />,
+      </v-dialog>
+    </div>
+    <div
+      v-else
+      v-ripple
+      class="event empty-event one-hour"
+      :style="dynamicColor"
+      @mouseover="hovered = true"
+      @mouseleave="hovered = false"
+      @click.stop="lockedSectionToggle"
+    >
+      <div v-if="hovered">
+        <v-row>
+          <v-col>
+            <p class="center unselectable">{{ dynamicText }}</p>
           </v-col>
         </v-row>
       </div>
@@ -106,61 +90,45 @@ export default {
     // change the color in the event so it correct based on hovering or locked
     dynamicColor() {
       if (this.locked) {
-        return { background: "#e6e6e6" };
+        return { background: "#e6e6e6", cursor: "pointer" };
       } else {
         return this.hovered
-          ? { background: "#e6e6e6" }
-          : { background: "white" };
+          ? { background: "#e6e6e6", cursor: "pointer" }
+          : { background: "white", cursor: "pointer" };
       }
     },
-    computed: {
-        ...mapGetters(["getCourseColor", "getLockedSections"]),
-        dynamicText() {
-            return !this.locked ? "Block This Time" : "Unblock This Time";
-        },
-        // change the color in the event so it correct based on hovering or locked
-        dynamicColor() {
-            if (this.locked) {
-                return { background: "#e6e6e6", cursor: "pointer" };
-            } else {
-                return this.hovered
-                    ? { background: "#e6e6e6", cursor: "pointer" }
-                    : { background: "white", cursor: "pointer" };
-            }
-        },
-        // stores the info of the current section
-        currSecData() {
-            return {
-                name: `Locked Section`,
-                courseCode: `Lock${this.currDay}${this.event.currStart}`,
-                meeting_sections: [
-                    {
-                        sectionCode: "L0001",
-                        instructors: ["NA"],
-                        times: [
-                            {
-                                day: this.currDay,
-                                start: this.event.currStart,
-                                end: this.event.currStart + 3600,
-                                location: "NA",
-                            },
-                        ],
-                    },
-                ],
-            };
-        },
-        // lock the status of the current section
-        locked() {
-            for (var section of this.getLockedSections) {
-                if (
-                    section === `${this.event.code}${this.event.sectionCode}` ||
-                    section ===
-                        `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-                ) {
-                    return true;
-                }
-            }
-
+    // stores the info of the current section
+    currSecData() {
+      return {
+        name: `Locked Section`,
+        courseCode: `Lock${this.currDay}${this.event.currStart}`,
+        meeting_sections: [
+          {
+            sectionCode: "L0001",
+            instructors: ["NA"],
+            times: [
+              {
+                day: this.currDay,
+                start: this.event.currStart,
+                end: this.event.currStart + 3600,
+                location: "NA"
+              }
+            ]
+          }
+        ]
+      };
+    },
+    // lock the status of the current section
+    locked() {
+      for (var section of this.getLockedSections) {
+        if (
+          section === `${this.event.code}${this.event.sectionCode}` ||
+          section ===
+            `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
+        ) {
+          return true;
+        }
+      }
       return false;
     }
   },
@@ -197,68 +165,31 @@ export default {
         return "three-hours";
       }
     },
-    methods: {
-        ...mapActions(["selectCourse", "deleteCourse"]),
-        ...mapMutations(["lockSection", "unlockSection"]),
-        atInput() {
-            var courseSectionPicker = this.$refs.popUp;
-            if (typeof courseSectionPicker != "undefined") {
-                courseSectionPicker.resetSelectedMeetingSections();
-            }
-        },
-        lockToggle() {
-            // modifies vuex based on the current section lock status
-            !this.locked
-                ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
-                : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
-        },
-        durationClass(start, end) {
-            const duration = convertSecondsToHours(end - start);
-            if (duration === 1) {
-                return "one-hour";
-            } else if (duration === 2) {
-                return "two-hours";
-            } else if (duration === 3) {
-                return "three-hours";
-            }
-        },
-        getFormattedTime(start, end) {
-            var s = (start / 3600) % 12;
-            var e = (end / 3600) % 12;
-            if (s == 0) {
-                s = 12;
-            }
-            if (e == 0) {
-                e = 12;
-            }
-            return `${s}:00 - ${e}:00`;
-        },
-        lockedSectionToggle() {
-            if (!this.locked) {
-                // if the user clicks on an empty timeslot, it will be added as a course in vuex
-                this.lockSection(
-                    `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-                );
-                this.selectCourse({ course: this.currSecData });
-            } else {
-                // if the user clicks on a lock timeslot, it will be removed
-                this.deleteCourse({ code: this.currSecData.courseCode });
-            }
-        },
+    getFormattedTime(start, end) {
+      var s = (start / 3600) % 12;
+      var e = (end / 3600) % 12;
+      if (s == 0) {
+        s = 12;
+      }
+      if (e == 0) {
+        e = 12;
+      }
+      return `${s}:00 - ${e}:00`;
     },
-    addLockSection() {
-      // if the user clicks on an empty timeslot, it will be added as a course in vuex
-      this.lockSection(
-        `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-      );
-      this.selectCourse({ course: this.currSecData });
-    },
-    removeLockSection() {
-      // if the user clicks on a lock timeslot, it will be removed
-      this.deleteCourse({ code: this.currSecData.courseCode });
+    lockedSectionToggle() {
+      if (!this.locked) {
+        // if the user clicks on an empty timeslot, it will be added as a course in vuex
+        this.lockSection(
+          `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
+        );
+        this.selectCourse({ course: this.currSecData });
+      } else {
+        // if the user clicks on a lock timeslot, it will be removed
+        this.deleteCourse({ code: this.currSecData.courseCode });
+      }
     }
   }
-  }
+};
 </script>
 
 <style scoped>
@@ -267,17 +198,17 @@ export default {
   font-family: "Montserrat", sans-serif;
 }
 .unselectable {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .center {
-    color: black;
-    text-align: center;
-    padding-top: 8px !important;
+  color: black;
+  text-align: center;
+  padding-top: 8px !important;
 }
 
 .event {
