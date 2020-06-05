@@ -1,21 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Mobile from '../views/Mobile.vue'
+import home from '../views/Home.vue'
+import mobile from '../views/Mobile.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'home',
+    component: home
   },
   {
     path: '/mobile',
-    name: 'Mobile',
-    component: Mobile
-  }
+    name: 'mobile',
+    component: mobile
+  },
+  {
+    path: '*',
+    redirect: {
+        name: "home"
+    }
+  },
 ]
 
 const router = new VueRouter({

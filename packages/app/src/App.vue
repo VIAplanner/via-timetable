@@ -10,7 +10,7 @@
 export default {
     created() {
         if (this.$isMobile()) {
-            this.$router.push("mobile");
+            this.$router.push({name: 'mobile'});
         }
     },
 };
