@@ -27,9 +27,7 @@
                             </v-btn>
                         </div>
 
-                        <div style="margin-left: 3px;">
-                            {{ event.sectionCode }}
-                        </div>
+                        <div style="margin-left: 3px;">{{ event.sectionCode }}</div>
 
                         <div style="position: relative;">
                             <div class="align-left">
@@ -47,6 +45,10 @@
             </v-dialog>
         </div>
         <div
+            v-else-if="checkHalfHour(event.currStart, event.currEnd)"
+            class="event empty-event half-hour"
+        />
+        <div
             v-else
             v-ripple
             class="event empty-event one-hour"
@@ -58,9 +60,7 @@
             <div v-if="hovered">
                 <v-row>
                     <v-col>
-                        <p class="center unselectable">
-                            {{ dynamicText }}
-                        </p>
+                        <p class="center unselectable">{{ dynamicText }}</p>
                     </v-col>
                 </v-row>
             </div>
@@ -71,11 +71,9 @@
 <script>
 import CourseSectionPicker from "../components/CourseSectionPicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-
 const convertSecondsToHours = (seconds) => {
     return seconds / 3600;
 };
-
 export default {
     name: "timetable-event",
     props: {
@@ -144,7 +142,6 @@ export default {
                     return true;
                 }
             }
-
             return false;
         },
     },
@@ -157,6 +154,14 @@ export default {
                 courseSectionPicker.resetSelectedMeetingSections();
             }
         },
+        checkHalfHour(currStart, end) {
+            // if one hour
+            if (Number.isInteger((end - currStart) / 3600)) {
+                return false;
+            }
+            // half hour
+            return true;
+        },
         lockToggle() {
             // modifies vuex based on the current section lock status
             !this.locked
@@ -167,8 +172,12 @@ export default {
             const duration = convertSecondsToHours(end - start);
             if (duration === 1) {
                 return "one-hour";
+            } else if (duration === 1.5) {
+                return "one-hour-half";
             } else if (duration === 2) {
                 return "two-hours";
+            } else if (duration === 2.5) {
+                return "two-hours-half";
             } else if (duration === 3) {
                 return "three-hours";
             }
@@ -182,7 +191,11 @@ export default {
             if (e == 0) {
                 e = 12;
             }
-            return `${s}:00 - ${e}:00`;
+            if (Number.isInteger(e)) {
+                return `${s}:00 - ${e}:00`;
+            }
+            e = e - 0.5;
+            return `${s}:00 - ${e}:30`;
         },
         lockedSectionToggle() {
             if (!this.locked) {
@@ -218,7 +231,6 @@ export default {
     text-align: center;
     padding-top: 8px !important;
 }
-
 .event {
     border: 0.2px solid gray;
     color: white;
@@ -231,33 +243,36 @@ export default {
     border: 0.2px solid gray;
     cursor: default;
 }
+.half-hour {
+    height: 42px;
+}
 .one-hour {
     height: 84px;
 }
-
+.one-hour-half {
+    height: 126px;
+}
 .two-hours {
     height: 168px;
 }
-
+.two-hours-half {
+    height: 210px;
+}
 .three-hours {
     height: 252px;
 }
-
 .course-code {
     margin-bottom: 3px;
     margin-left: 3px;
 }
-
 .align-left {
     position: absolute;
     left: 3px;
 }
-
 .align-right {
     position: absolute;
     right: 5px;
 }
-
 .lock-button {
     position: absolute;
     right: 3px;

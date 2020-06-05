@@ -1,79 +1,72 @@
 <template>
-    <v-card v-if="!$apollo.loading">
-        <OverwriteLockedSectionPopup @Proceed="autoResolveConflict" @Cancel="clearTempVars">
-        </OverwriteLockedSectionPopup>
-        <v-toolbar :color="course.color" dark>
-            <v-toolbar-title class="text-wrap"
-                >{{ course.courseCode }} {{ course.name }}</v-toolbar-title
+  <v-card v-if="!$apollo.loading">
+    <OverwriteLockedSectionPopup @Proceed="autoResolveConflict" @Cancel="clearTempVars"></OverwriteLockedSectionPopup>
+    <v-toolbar :color="course.color" dark>
+      <v-toolbar-title class="text-wrap">{{ course.courseCode }} {{ course.name }}</v-toolbar-title>
+      <v-spacer />
+      <v-btn text @click="onClickDone">Done</v-btn>
+    </v-toolbar>
+    <v-card-text height="600px">
+      <v-list rounded subheader two-line flat>
+        <v-container v-for="(meetingSections, activityType) in activities" :key="activityType">
+          <div v-if="meetingSections.length > 0">
+            <v-radio-group
+              v-model="selectedMeetingSections[activityType]"
+              :mandatory="false"
+              style="top-margin: 0px;"
             >
-            <v-spacer />
-            <v-btn text @click="onClickDone">Done</v-btn>
-        </v-toolbar>
-        <v-card-text height="600px">
-            <v-list rounded subheader two-line flat>
-                <v-container
-                    v-for="(meetingSections, activityType) in activities"
-                    :key="activityType"
+              <v-subheader
+                v-if="meetingSections.length > 0"
+                class="activity-header"
+              >{{ activityType }}s</v-subheader>
+              <v-row class="activity-label">
+                <v-col>
+                  <h4 style="margin-left: 70px;">Activity</h4>
+                </v-col>
+                <v-col>
+                  <h4 style="margin-left: 60px">Time</h4>
+                </v-col>
+                <v-col>
+                  <h4 style="margin-left: 80px">Location</h4>
+                </v-col>
+                <v-col>
+                  <h4 style="margin-left: 15px">Instructor</h4>
+                </v-col>
+              </v-row>
+              <v-divider class="activity-divider" />
+              <v-list-item-group>
+                <v-list-item
+                  v-for="meetingSection in meetingSections"
+                  :key="meetingSection.sectionCode"
+                  style="margin-bottom: 0px;"
                 >
-                    <div v-if="meetingSections.length > 0">
-                        <v-radio-group
-                            v-model="selectedMeetingSections[activityType]"
-                            :mandatory="false"
-                            style="top-margin: 0px;"
+                  <v-list-item-action>
+                    <v-radio :value="meetingSection.sectionCode"></v-radio>
+                  </v-list-item-action>
+
+                  <v-list-item-content class="content-no-padding">
+                    <v-row>
+                      <v-col class="contain" cols="2">
+                        <v-row class="center-vertical">
+                          <v-col>
+                            <v-list-item-title>
+                              {{
+                              meetingSection.sectionCode
+                              }}
+                            </v-list-item-title>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+
+                      <v-col cols="5">
+                        <v-row
+                          v-for="time in meetingSection.times"
+                          :key="`${time.day}${time.start}`"
                         >
-                            <v-subheader
-                                v-if="meetingSections.length > 0"
-                                class="activity-header"
-                                >{{ activityType }}s</v-subheader
-                            >
-                            <v-row class="activity-label">
-                                <v-col>
-                                    <h4 style="margin-left: 70px;">Activity</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 60px">Time</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 80px">Location</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 15px">Instructor</h4>
-                                </v-col>
-                            </v-row>
-                            <v-divider class="activity-divider" />
-                            <v-list-item-group>
-                                <v-list-item
-                                    v-for="meetingSection in meetingSections"
-                                    :key="meetingSection.sectionCode"
-                                    style="margin-bottom: 0px;"
-                                >
-                                    <v-list-item-action>
-                                        <v-radio
-                                            :value="meetingSection.sectionCode"
-                                        ></v-radio>
-                                    </v-list-item-action>
-
-                                    <v-list-item-content class="content-no-padding">
-                                        <v-row>
-                                            <v-col class="contain" cols="2">
-                                                <v-row class="center-vertical">
-                                                    <v-col>
-                                                        <v-list-item-title>{{
-                                                            meetingSection.sectionCode
-                                                        }}</v-list-item-title>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
-
-                                            <v-col cols="5">
-                                                <v-row
-                                                    v-for="time in meetingSection.times"
-                                                    :key="`${time.day}${time.start}`"
-                                                >
-                                                    <v-col>
-                                                        <v-tooltip
-                                                            top
-                                                            v-if="
+                          <v-col>
+                            <v-tooltip
+                              top
+                              v-if="
                                                                 _checkConflict(
                                                                     time.day,
                                                                     time.start,
@@ -83,356 +76,364 @@
                                                                     ]
                                                                 ) != null
                                                             "
-                                                        >
-                                                            <template
-                                                                v-slot:activator="{ on }"
-                                                            >
-                                                                <div
-                                                                    class="conflicting-time-orange"
-                                                                    v-on="on"
-                                                                >
-                                                                    {{
-                                                                        getProperDayName(
-                                                                            time.day
-                                                                        ).slice(0, 3)
-                                                                    }}
-                                                                    {{
-                                                                        getFormattedTime(
-                                                                            time.start,
-                                                                            time.end
-                                                                        )
-                                                                    }}
-                                                                </div>
-                                                            </template>
-                                                            Conflicts with
-                                                            {{
-                                                                checkConflict(
-                                                                    time.day,
-                                                                    time.start,
-                                                                    time.end
-                                                                ).conflictString
-                                                            }}
-                                                        </v-tooltip>
-                                                        <div v-else>
-                                                            {{
-                                                                getProperDayName(time.day)
-                                                            }}
-                                                            {{
-                                                                getFormattedTime(
-                                                                    time.start,
-                                                                    time.end
-                                                                )
-                                                            }}
-                                                        </div>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
+                            >
+                              <template v-slot:activator="{ on }">
+                                <div class="conflicting-time-orange" v-on="on">
+                                  {{
+                                  getProperDayName(
+                                  time.day
+                                  ).slice(0, 3)
+                                  }}
+                                  {{
+                                  getFormattedTime(
+                                  time.start,
+                                  time.end
+                                  )
+                                  }}
+                                </div>
+                              </template>
+                              Conflicts with
+                              {{
+                              checkConflict(
+                              time.day,
+                              time.start,
+                              time.end
+                              ).conflictString
+                              }}
+                            </v-tooltip>
+                            <div v-else>
+                              {{
+                              getProperDayName(time.day)
+                              }}
+                              {{
+                              getFormattedTime(
+                              time.start,
+                              time.end
+                              )
+                              }}
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
 
-                                            <v-col cols="2">
-                                                <v-row
-                                                    v-for="time in meetingSection.times"
-                                                    :key="`${time.day}${time.start}`"
-                                                >
-                                                    <v-col>
-                                                        <div>{{ time.location }}</div>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
+                      <v-col cols="2">
+                        <v-row
+                          v-for="time in meetingSection.times"
+                          :key="`${time.day}${time.start}`"
+                        >
+                          <v-col>
+                            <div>{{ time.location }}</div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
 
-                                            <v-col class="contain">
-                                                <v-row class="center-vertical">
-                                                    <v-col style="margin-left: 15px">
-                                                        <v-list-item-title
-                                                            v-if="
+                      <v-col class="contain">
+                        <v-row class="center-vertical">
+                          <v-col style="margin-left: 15px">
+                            <v-list-item-title
+                              v-if="
                                                                 activityType === 'lecture'
                                                             "
-                                                            class="text-wrap"
-                                                        >
-                                                            {{
-                                                                meetingSection
-                                                                    .instructors[0]
-                                                            }}
-                                                        </v-list-item-title>
-                                                        <v-list-item-title
-                                                            v-else
-                                                            class="text-wrap"
-                                                            >TBA</v-list-item-title
-                                                        >
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
-                                        </v-row>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list-item-group>
-                        </v-radio-group>
-                    </div>
-                </v-container>
-            </v-list>
-        </v-card-text>
-    </v-card>
+                              class="text-wrap"
+                            >
+                              {{
+                              meetingSection
+                              .instructors[0]
+                              }}
+                            </v-list-item-title>
+                            <v-list-item-title v-else class="text-wrap">TBA</v-list-item-title>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-radio-group>
+          </div>
+        </v-container>
+      </v-list>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import OverwriteLockedSectionPopup from "./OverwriteLockedSectionPopup"
+import OverwriteLockedSectionPopup from "./OverwriteLockedSectionPopup";
 
 export default {
-    name: "course-section-picker",
-    components:{
-        OverwriteLockedSectionPopup
+  name: "course-section-picker",
+  components: {
+    OverwriteLockedSectionPopup
+  },
+  props: {
+    code: {
+      type: String
+    }
+  },
+  mounted() {
+    this.resetSelectedMeetingSections();
+  },
+  computed: {
+    ...mapGetters(["timetable", "selectedCourses", "getLockedSections"]),
+    course() {
+      return this.selectedCourses[this.code];
     },
-    props: {
-        code: {
-            type: String,
-        },
+    activities() {
+      return {
+        lecture: this.course.meeting_sections.filter(
+          section => section.sectionCode.charAt(0) === "L"
+        ),
+        tutorial: this.course.meeting_sections.filter(
+          section => section.sectionCode.charAt(0) === "T"
+        ),
+        practical: this.course.meeting_sections.filter(
+          section => section.sectionCode.charAt(0) === "P"
+        )
+      };
     },
-    mounted() {
-        this.resetSelectedMeetingSections();
-    },
-    computed: {
-        ...mapGetters(["timetable", "selectedCourses", "getLockedSections"]),
-        course() {
-            return this.selectedCourses[this.code];
-        },
-        activities() {
-            return {
-                lecture: this.course.meeting_sections.filter(
-                    (section) => section.sectionCode.charAt(0) === "L"
-                ),
-                tutorial: this.course.meeting_sections.filter(
-                    (section) => section.sectionCode.charAt(0) === "T"
-                ),
-                practical: this.course.meeting_sections.filter(
-                    (section) => section.sectionCode.charAt(0) === "P"
-                ),
-            };
-        },
-        timetableSelectedMeetingSections() {
-            return this.getTimetableMeetingSections();
-        },
-    },
+    timetableSelectedMeetingSections() {
+      return this.getTimetableMeetingSections();
+    }
+  },
 
-    methods: {
-        ...mapActions(["switchSection", "resetTimetable"]),
-        ...mapMutations(["lockSection", "unlockSection", "setOverwriteLockedSectionPopup"]),
-        getFormattedTime(start, end) {
-            var s = (start / 3600) % 12;
-            if (s == 0) {
-                s = 12;
-            }
-            var startPeriod = start / 3600 < 12 ? "AM" : "PM";
-            var e = (end / 3600) % 12;
-            if (e == 0) {
-                e = 12;
-            }
-            var endPeriod = end / 3600 < 12 ? "AM" : "PM";
-            return `${s}:00 ${startPeriod} - ${e}:00 ${endPeriod}`;
-        },
-        getProperDayName(day) {
-            var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
-            return ret.slice(0, 3);
-        },
-        checkConflict(day, start, end) {
-            const dayEvents = this.timetable[day];
-            for (var x = 0; x < dayEvents.length; x++) {
-                const event = dayEvents[x];
-                const time = this.getFormattedTime(event.start, event.end);
-                const ret = {
-                    courseCode: event.code,
-                    sectionCode: event.sectionCode,
-                    time: time,
-                    conflictString: `${event.code.slice(0, 6)} ${
-                        event.sectionCode
-                    } ${time}`,
-                };
-                if (event.start < start && event.end > start) {
-                    return ret;
-                } else if (start <= event.start && event.start < end) {
-                    return ret;
-                }
-            }
-            return null;
-        },
-        _checkConflict(day, start, end, timetableSection) {
-            const conflict = this.checkConflict(day, start, end);
-            /*If there is conflict and the conflict is not with the selected section on the timetable which
-            the user is trying to switch away from */
-            if (
-                conflict != null &&
-                `${conflict.courseCode}${conflict.sectionCode}` !=
-                    `${this.code}${timetableSection}`
-            ) {
-                return conflict;
-            }
-            return null;
-        },
-        onClickDone() {
-            this.updateTimetable();
-            this.$emit("done");
-        },
-        updateTimetable() {
-            for (var activityType of ["lecture", "practical", "tutorial"]) {
-                //If section changed
-                if (this.selectedMeetingSections[activityType] != 
-                    this.timetableSelectedMeetingSections[activityType]) {
-                    const newSection = this.course.meeting_sections.filter(
-                        (section) =>
-                            section.sectionCode === this.selectedMeetingSections[activityType]
-                    )[0];
-                    //Find all conflicting sections
-                    const conflictSections = [];
-                    for (var currTime of newSection.times) {
-                        var conflictTime = this._checkConflict(
-                            currTime.day,
-                            currTime.start,
-                            currTime.end,
-                            this.timetableSelectedMeetingSections[activityType]
-                        );
-                        if (conflictTime != null) {
-                            conflictSections.push(conflictTime);
-                        }
-                    }
-                    // case 1, no conflicting times
-                    if (conflictSections.length == 0) {
-                        this.switchSection({
-                            old: {
-                                sectionCode: this.timetableSelectedMeetingSections[activityType],
-                                courseCode: this.code,
-                            },
-                            new: newSection,
-                        });
-                    }
-                    // case 2, there are conflicting time(s)
-                    else {
-                        this.oldSectionsWithConflict.push(`${this.code}${this.timetableSelectedMeetingSections[activityType]}`)
-                        this.newSectionsWithConflict.push(`${this.code}${this.selectedMeetingSections[activityType]}`)
-                        this.totalConflictSections.push(...conflictSections)
-                    }
-                }
-            }
-            if (this.totalConflictSections.length != 0) {
-                //Find if any conflicting section(s) is locked, if so, pop up a dialog
-                var popUp = false
-                for (var conflictSection of this.totalConflictSections) {
-                    if (this.getLockedSections.indexOf(
-                        `${conflictSection.courseCode}${conflictSection.sectionCode}`) != -1) {
-                        popUp = true
-                    }
-                }
-                if (popUp){
-                    this.setOverwriteLockedSectionPopup(true)
-                }
-                else {
-                    this.autoResolveConflict()
-                }
-            }
-        },
-        autoResolveConflict() {
-            // unlock old sections regardless if they are locked
-            for (var oldSection of this.oldSectionsWithConflict) {
-                this.unlockSection(oldSection)
-            }
-            // Unlock all the conflicting sections
-            for (var conflictSection of this.totalConflictSections) {
-                this.unlockSection(
-                    `${conflictSection.courseCode}${conflictSection.sectionCode}`
-                );
-            }
-            // Lock the new sections, regenerate timetable, and unlock the new sections
-            for (var newSection of this.newSectionsWithConflict) {
-                this.lockSection(newSection)
-            }
-            this.resetTimetable();
-            for (var newSect of this.newSectionsWithConflict) {
-                this.unlockSection(newSect)
-            }
-            this.clearTempVars()
-        },
-        clearTempVars() {
-            this.oldSectionsWithConflict = []
-            this.newSectionsWithConflict = []
-            this.totalConflictSections = []
-        },
-        resetSelectedMeetingSections() {
-            this.selectedMeetingSections = this.getTimetableMeetingSections();
-        },
-        getTimetableMeetingSections() {
-            let selectedMeetingSections = {
-                lecture: null,
-                practical: null,
-                tutorial: null,
-            };
-            for (let day in this.timetable) {
-                const dayEvents = this.timetable[day];
-                for (let event of dayEvents) {
-                    if (event.code === this.course.courseCode) {
-                        if (event.sectionCode.charAt(0) == "L") {
-                            selectedMeetingSections.lecture = event.sectionCode;
-                        } else if (event.sectionCode.charAt(0) == "P") {
-                            selectedMeetingSections.practical = event.sectionCode;
-                        } else selectedMeetingSections.tutorial = event.sectionCode;
-                    }
-                }
-            }
-            return selectedMeetingSections;
-        },
+  methods: {
+    ...mapActions(["switchSection", "resetTimetable"]),
+    ...mapMutations([
+      "lockSection",
+      "unlockSection",
+      "setOverwriteLockedSectionPopup"
+    ]),
+    getFormattedTime(start, end) {
+      var s = (start / 3600) % 12;
+      if (s == 0) {
+        s = 12;
+      }
+      var startPeriod = start / 3600 < 12 ? "AM" : "PM";
+      var e = (end / 3600) % 12;
+      if (e == 0) {
+        e = 12;
+      }
+      var endPeriod = end / 3600 < 12 ? "AM" : "PM";
+      let startHalf = Number.isInteger(s) ? "00":"30"
+      let endHalf = Number.isInteger(e) ? "00" : "30";
+      return `${s - startHalf / 6 / 10}:${startHalf} ${startPeriod} - ${e -
+        endHalf / 6 / 10}:${endHalf} ${endPeriod}`;
     },
-    data() {
-        return {
-            selectedMeetingSections: {
-                lecture: null,
-                practical: null,
-                tutorial: null,
-            },
-            active: false,
-            dialog: false,
-            oldSectionsWithConflict: [],
-            newSectionsWithConflict: [],
-            totalConflictSections: []
+    getProperDayName(day) {
+      var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+      return ret.slice(0, 3);
+    },
+    checkConflict(day, start, end) {
+      const dayEvents = this.timetable[day];
+      for (var x = 0; x < dayEvents.length; x++) {
+        const event = dayEvents[x];
+        const time = this.getFormattedTime(event.start, event.end);
+        const ret = {
+          courseCode: event.code,
+          sectionCode: event.sectionCode,
+          time: time,
+          conflictString: `${event.code.slice(0, 6)} ${
+            event.sectionCode
+          } ${time}`
         };
+        if (event.start < start && event.end > start) {
+          return ret;
+        } else if (start <= event.start && event.start < end) {
+          return ret;
+        }
+      }
+      return null;
     },
+    _checkConflict(day, start, end, timetableSection) {
+      const conflict = this.checkConflict(day, start, end);
+      /*If there is conflict and the conflict is not with the selected section on the timetable which
+            the user is trying to switch away from */
+      if (
+        conflict != null &&
+        `${conflict.courseCode}${conflict.sectionCode}` !=
+          `${this.code}${timetableSection}`
+      ) {
+        return conflict;
+      }
+      return null;
+    },
+    onClickDone() {
+      this.updateTimetable();
+      this.$emit("done");
+    },
+    updateTimetable() {
+      for (var activityType of ["lecture", "practical", "tutorial"]) {
+        //If section changed
+        if (
+          this.selectedMeetingSections[activityType] !=
+          this.timetableSelectedMeetingSections[activityType]
+        ) {
+          const newSection = this.course.meeting_sections.filter(
+            section =>
+              section.sectionCode === this.selectedMeetingSections[activityType]
+          )[0];
+          //Find all conflicting sections
+          const conflictSections = [];
+          for (var currTime of newSection.times) {
+            var conflictTime = this._checkConflict(
+              currTime.day,
+              currTime.start,
+              currTime.end,
+              this.timetableSelectedMeetingSections[activityType]
+            );
+            if (conflictTime != null) {
+              conflictSections.push(conflictTime);
+            }
+          }
+          // case 1, no conflicting times
+          if (conflictSections.length == 0) {
+            this.switchSection({
+              old: {
+                sectionCode: this.timetableSelectedMeetingSections[
+                  activityType
+                ],
+                courseCode: this.code
+              },
+              new: newSection
+            });
+          }
+          // case 2, there are conflicting time(s)
+          else {
+            this.oldSectionsWithConflict.push(
+              `${this.code}${this.timetableSelectedMeetingSections[activityType]}`
+            );
+            this.newSectionsWithConflict.push(
+              `${this.code}${this.selectedMeetingSections[activityType]}`
+            );
+            this.totalConflictSections.push(...conflictSections);
+          }
+        }
+      }
+      if (this.totalConflictSections.length != 0) {
+        //Find if any conflicting section(s) is locked, if so, pop up a dialog
+        var popUp = false;
+        for (var conflictSection of this.totalConflictSections) {
+          if (
+            this.getLockedSections.indexOf(
+              `${conflictSection.courseCode}${conflictSection.sectionCode}`
+            ) != -1
+          ) {
+            popUp = true;
+          }
+        }
+        if (popUp) {
+          this.setOverwriteLockedSectionPopup(true);
+        } else {
+          this.autoResolveConflict();
+        }
+      }
+    },
+    autoResolveConflict() {
+      // unlock old sections regardless if they are locked
+      for (var oldSection of this.oldSectionsWithConflict) {
+        this.unlockSection(oldSection);
+      }
+      // Unlock all the conflicting sections
+      for (var conflictSection of this.totalConflictSections) {
+        this.unlockSection(
+          `${conflictSection.courseCode}${conflictSection.sectionCode}`
+        );
+      }
+      // Lock the new sections, regenerate timetable, and unlock the new sections
+      for (var newSection of this.newSectionsWithConflict) {
+        this.lockSection(newSection);
+      }
+      this.resetTimetable();
+      for (var newSect of this.newSectionsWithConflict) {
+        this.unlockSection(newSect);
+      }
+      this.clearTempVars();
+    },
+    clearTempVars() {
+      this.oldSectionsWithConflict = [];
+      this.newSectionsWithConflict = [];
+      this.totalConflictSections = [];
+    },
+    resetSelectedMeetingSections() {
+      this.selectedMeetingSections = this.getTimetableMeetingSections();
+    },
+    getTimetableMeetingSections() {
+      let selectedMeetingSections = {
+        lecture: null,
+        practical: null,
+        tutorial: null
+      };
+      for (let day in this.timetable) {
+        const dayEvents = this.timetable[day];
+        for (let event of dayEvents) {
+          if (event.code === this.course.courseCode) {
+            if (event.sectionCode.charAt(0) == "L") {
+              selectedMeetingSections.lecture = event.sectionCode;
+            } else if (event.sectionCode.charAt(0) == "P") {
+              selectedMeetingSections.practical = event.sectionCode;
+            } else selectedMeetingSections.tutorial = event.sectionCode;
+          }
+        }
+      }
+      return selectedMeetingSections;
+    }
+  },
+  data() {
+    return {
+      selectedMeetingSections: {
+        lecture: null,
+        practical: null,
+        tutorial: null
+      },
+      active: false,
+      dialog: false,
+      oldSectionsWithConflict: [],
+      newSectionsWithConflict: [],
+      totalConflictSections: []
+    };
+  }
 };
 </script>
 
 <style>
 .contain {
-    position: relative;
+  position: relative;
 }
 
 .center-vertical {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .content-no-padding {
-    padding: 0px;
+  padding: 0px;
 }
 
 .container-no-padding {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 
 .activity-label {
-    padding-bottom: 0px;
-    font-weight: 200 !important;
-    font-size: 20px;
+  padding-bottom: 0px;
+  font-weight: 200 !important;
+  font-size: 20px;
 }
 
 .activity-header {
-    font-size: 1.75rem;
-    font-weight: bold;
-    text-transform: capitalize;
+  font-size: 1.75rem;
+  font-weight: bold;
+  text-transform: capitalize;
 }
 
 .activity-divider {
-    margin: 0px 5px;
+  margin: 0px 5px;
 }
 
 .conflicting-time-orange {
-    color: orange;
+  color: orange;
 }
 </style>

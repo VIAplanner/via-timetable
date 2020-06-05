@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        fallLockedDayStatus: {"Monday": false, "Tuesday": false, "Wednesday": false, "Thursday": false, "Friday": false},
         fallSelectedCourses: {},
         fallLockedSections: [],
         fallTimetable: {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         },
+        winterLockedDayStatus: {"Monday": false, "Tuesday": false, "Wednesday": false, "Thursday": false, "Friday": false},
+        winterSelectedCourses: {},
+        winterLockedSections: [],
         winterTimetable: {
             MONDAY: [],
             TUESDAY: [],
@@ -23,8 +27,6 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         },
-        winterSelectedCourses: {},
-        winterLockedSections: [],
         conflictPopup: false,
         searchBarValue: null,
         savedTimetable: {},
@@ -32,9 +34,16 @@ export default new Vuex.Store({
         savedLockedSections: [],
         semesterStatus: "F",
         noTimetablePopup: false,
-        overwriteLockedSectionPopup: false
+        overwriteLockedSectionPopup: false,
     },
     mutations: {
+        setLockedDayStatus(state, payload) {
+            if (state.semesterStatus === "F") {
+                state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[payload]
+            } else {
+                state.winterLockedDayStatus[payload] = !state.winterLockedDayStatus[payload]
+            }
+        },
         setSemesterStatus(state, payload) {
             state.semesterStatus = payload;
         },
@@ -52,7 +61,7 @@ export default new Vuex.Store({
             state.noTimetablePopup = payload;
         },
         setOverwriteLockedSectionPopup(state, payload) {
-            state.overwriteLockedSectionPopup = payload
+            state.overwriteLockedSectionPopup = payload;
         },
         addCourse(state, payload) {
             if (state.semesterStatus === "F") {
@@ -226,7 +235,6 @@ export default new Vuex.Store({
                     context.state.winterLockedSections
                 );
             }
-
             context.commit("setTimetable", timetable);
         },
         //Recalculate timetable when switching sections with conflict
@@ -234,7 +242,7 @@ export default new Vuex.Store({
             // Save the timetable before it gets reset
             context.dispatch("saveTimetable");
             let timetable;
-            
+
             if (context.state.semesterStatus === "F") {
                 const courses = Object.keys(context.state.fallSelectedCourses).map(
                     (code) => context.state.fallSelectedCourses[code]
@@ -321,7 +329,7 @@ export default new Vuex.Store({
         getNoTimetablePopup: (state) => {
             return state.noTimetablePopup;
         },
-        getOverwriteLockedSectionPopup:(state) => {
+        getOverwriteLockedSectionPopup: (state) => {
             return state.overwriteLockedSectionPopup;
         },
         timetable: (state) => {
@@ -357,6 +365,13 @@ export default new Vuex.Store({
         },
         getSemesterStatus: (state) => {
             return state.semesterStatus;
+        },
+        getLockedDayStatus: (state) => {
+            if (state.semesterStatus === "F") {
+                return state.fallLockedDayStatus;
+            } else {
+                return state.winterLockedDayStatus;
+            }
         },
     },
 });
