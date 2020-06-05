@@ -46,21 +46,8 @@
         </div>
         <div
             v-else-if="checkHalfHour(event.currStart, event.currEnd)"
-            v-ripple
             class="event empty-event half-hour"
-            :style="dynamicColor"
-            @mouseover="hovered = true"
-            @mouseleave="hovered = false"
-            @click.stop="lockedSectionToggle"
-        >
-            <div v-if="hovered">
-                <v-row>
-                    <v-col>
-                        <p class="center unselectable">{{ dynamicText }}</p>
-                    </v-col>
-                </v-row>
-            </div>
-        </div>
+        />
         <div
             v-else
             v-ripple

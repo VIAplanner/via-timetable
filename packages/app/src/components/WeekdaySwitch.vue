@@ -37,15 +37,14 @@ export default {
         weekday: String,
     },
     computed: {
-        ...mapGetters(["getLockedSections", "timetable", "getNoTimetablePopup"]),
+        ...mapGetters([
+            "getLockedSections",
+            "timetable",
+            "getNoTimetablePopup",
+            "getLockedDayStatus",
+        ]),
         locked() {
-            let count = 0;
-            for (let lockedSection of this.getLockedSections) {
-                if (lockedSection.includes(this.weekday.toUpperCase())) {
-                    count++;
-                }
-            }
-            return count == 12;
+            return this.getLockedDayStatus[this.weekday]
         },
         toolTipText() {
             return !this.locked ? "Block All Times" : "Unblock All Times";
@@ -78,10 +77,11 @@ export default {
             "saveTimetable",
             "revertTimetable",
         ]),
-        ...mapMutations(["lockSection"]),
+        ...mapMutations(["lockSection", "setLockedDayStatus"]),
         lockDay() {
             let i = 0;
             this.saveTimetable();
+            this.setLockedDayStatus(this.weekday);
 
             while (i < 12) {
                 this.currStart = 32400 + i * 3600;
@@ -102,6 +102,7 @@ export default {
             }
         },
         unlockDay() {
+            this.setLockedDayStatus(this.weekday);
             for (let i = 0; i < 12; i++) {
                 this.currStart = 32400 + i * 3600;
                 for (var lockedCourse of this.getLockedSections) {
@@ -135,6 +136,11 @@ export default {
             return true;
         },
     },
+    watch: {
+        getLockedDayStatus() {
+            this.locked = true
+        }
+    }
 };
 </script>
 
