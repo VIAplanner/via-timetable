@@ -11,11 +11,12 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import { createProvider } from './vue-apollo'
 import ToggleButton from 'vue-js-toggle-button'
+import VueMobileDetection from "vue-mobile-detection";
 
-// import { generateTimetables, createTimetable } from "../../timetable-planner/build/module"
 Vue.config.productionTip = false
 
 Vue.use(ToggleButton)
+Vue.use(VueMobileDetection);
 
 new Vue({
   router,
