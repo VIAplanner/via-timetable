@@ -44,7 +44,7 @@ export default {
             "getLockedDayStatus",
         ]),
         locked() {
-            return this.getLockedDayStatus[this.weekday]
+            return this.getLockedDayStatus[this.weekday];
         },
         toolTipText() {
             return !this.locked ? "Block All Times" : "Unblock All Times";
@@ -125,8 +125,10 @@ export default {
                 ) {
                     // if the locked course is in between another course, then skip it
                     if (
-                        section.start <= this.currStart &&
-                        this.currStart < section.end
+                        (section.start <= this.currStart &&
+                            this.currStart < section.end) ||
+                        (section.start < this.currStart + 3600 &&
+                            this.currStart + 3600 < section.end)
                     ) {
                         return false;
                     }
@@ -138,9 +140,9 @@ export default {
     },
     watch: {
         getLockedDayStatus() {
-            this.locked = true
-        }
-    }
+            this.locked = true;
+        },
+    },
 };
 </script>
 
