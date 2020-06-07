@@ -57,9 +57,11 @@ export default {
       }
       return this.courses.map(course => {
         if (course.code[8] === "F") {
-          return `🍂 ${course.code}: ${course.name}`;
+          return `🍂   ${course.code}: ${course.name}`;
+        } else if(course.code[8] === "S") {
+          return `❄️   ${course.code}: ${course.name}`;
         } else {
-          return `❄️ ${course.code}: ${course.name}`;
+          return `🍂❄️ ${course.code}: ${course.name}`; 
         }
       });
     }
