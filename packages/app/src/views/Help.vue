@@ -14,6 +14,11 @@
                     GitHub
                 </v-btn>
             </v-toolbar>
+            <v-container>
+                <v-row>
+                    <v-img src="../assets/img1.png"></v-img>
+                </v-row>
+            </v-container>
         </v-content>
     </v-app>
 </template>
