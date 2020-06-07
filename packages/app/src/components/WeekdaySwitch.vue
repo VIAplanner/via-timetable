@@ -137,12 +137,7 @@ export default {
 
             return true;
         },
-    },
-    watch: {
-        getLockedDayStatus() {
-            this.locked = true;
-        },
-    },
+    }
 };
 </script>
 

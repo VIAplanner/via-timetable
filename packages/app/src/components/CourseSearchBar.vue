@@ -44,7 +44,7 @@ export default {
         semCourses() {
             return this.allCourses.filter((courseString) => {
                 // filter out all summer courses
-                return courseString[12] === ":";
+                return courseString[14] === ":";
             });
         },
         loading: {
@@ -63,7 +63,7 @@ export default {
             if (!this.selectedCourse) return;
 
             // Switch the semester based on the course
-            if (this.selectedCourse[11] === "F") {
+            if (this.selectedCourse[13] === "F") {
                 this.setSemesterStatus("F");
             } else {
                 this.setSemesterStatus("S");
@@ -100,7 +100,7 @@ export default {
                     `,
                     variables: {
                         code: this.selectedCourse.slice(
-                            3,
+                            5,
                             this.selectedCourse.indexOf(":")
                         ),
                     },
