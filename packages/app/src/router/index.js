@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import home from '../views/Home.vue'
 import mobile from '../views/Mobile.vue'
+import help from '../views/Help.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/mobile',
     name: 'mobile',
     component: mobile
+  },
+  {
+    path: '/help',
+    name: 'help',
+    component: help
   },
   {
     path: '*',
