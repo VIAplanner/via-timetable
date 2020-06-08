@@ -131,11 +131,11 @@
                 </v-row>
                 <v-row
                     justify="center"
-                    style="height: 650px; background-color: #FCFCFC"
+                    style=" background-color: #FCFCFC"
                 >
                     <v-col style="text-align: center" cols="8">
-                        <h1 class="ma-3">How to Use</h1>
-                        <v-carousel cycle height="500" show-arrows-on-hover>
+                        <h1 class="ma-3">Features</h1>
+                        <v-carousel show-arrows-on-hover>
                             <v-carousel-item v-for="(path, text) in slideData" :key=text>
                                 <v-sheet color="white">
                                     <v-row>
@@ -145,7 +145,7 @@
                                             </p>
                                             <v-img
                                                 class="center"
-                                                :src=""
+                                                :src="path"
                                             />
                                         </v-col>
                                     </v-row>
@@ -164,7 +164,10 @@ export default {
     data(){
         return {
             slideData: {
-                "Search for a course": "slide1.gif"
+                "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
+                "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
+                "Block Times: can't go to class during a time? Just block it": require("../assets/slide3.gif"),
+                "Lock Sections: lock specific sections and we won't touch it": require("../assets/slide4.gif"),
             }
         }
     }
