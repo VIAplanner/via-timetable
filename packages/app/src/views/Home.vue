@@ -43,31 +43,33 @@ import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import { mapGetters } from "vuex";
 export default {
-  created() {
-      if (this.$isMobile()) {
-          this.$router.push({ name: "mobile" });
-      }
-  },
-  components: {
-    SwitchSem,
-    CourseSearchBar,
-    Timetable,
-    TimetableCourseCard
-  },
-  computed: {
-    ...mapGetters(["selectedCourses", "timetable"]),
-    formattedCourses() {
-      if (!this.courses) {
-        return [];
-      }
-      return this.courses.map(course => {
-        if (course.code[8] === "F") {
-          return `🍂   ${course.code}: ${course.name}`;
-        } else if(course.code[8] === "S") {
-          return `❄️   ${course.code}: ${course.name}`;
-        } else {
-          return `🍂❄️ ${course.code}: ${course.name}`; 
+    created() {
+        if (this.$isMobile()) {
+            this.$router.push({ name: "mobile" });
         }
+    },
+    components: {
+        SwitchSem,
+        CourseSearchBar,
+        Timetable,
+        TimetableCourseCard,
+    },
+    computed: {
+        ...mapGetters(["selectedCourses", "timetable"]),
+        formattedCourses() {
+            if (!this.courses) {
+                return [];
+            }
+            return this.courses.map((course) => {
+                if (course.code[8] === "F") {
+                    return `🍂   ${course.code}: ${course.name}`;
+                } else if (course.code[8] === "S") {
+                    return `❄️   ${course.code}: ${course.name}`;
+                } else {
+                    return `🍂❄️ ${course.code}: ${course.name}`;
+                }
+            });
+        },
     },
     data() {
         return {
