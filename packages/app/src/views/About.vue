@@ -3,7 +3,13 @@
         <v-content style="background-color: #F3F3F3" class="pt-0">
             <v-app-bar app dark color="#012B5C" :hide-on-scroll="$isMobile()">
                 <v-icon class="mr-2">mdi-calendar</v-icon>
-                <v-toolbar-title :class=" $isMobile() ? ['body-1', 'font-regular'] : ['display-1', 'font-regular']">
+                <v-toolbar-title
+                    :class="
+                        $isMobile()
+                            ? ['body-1', 'font-regular']
+                            : ['display-1', 'font-regular']
+                    "
+                >
                     Viaplanner
                     <span v-if="!$isMobile()" class="title font-weight-light"
                         >at the University of Toronto</span
@@ -25,7 +31,7 @@
             </v-app-bar>
             <v-container fluid>
                 <v-row :justify="$isMobile() ? 'center' : 'start'">
-                    <v-col cols="12" lg="7" class="pb-0">
+                    <v-col cols="12" lg="7" md="7" class="pb-0">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -34,7 +40,7 @@
                             ></v-img>
                         </div>
                     </v-col>
-                    <v-col cols="11" lg="4" class="pb-0">
+                    <v-col cols="11" lg="4" md="4" class="pb-0">
                         <v-row align="center" style="min-height: 450px">
                             <div style="text-align: center">
                                 <h1>Making Your Timetable,</h1>
@@ -71,7 +77,13 @@
                     justify="center"
                     class="pt-12"
                 >
-                    <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
+                    <v-col
+                        cols="12"
+                        lg="5"
+                        class="pb-0"
+                        order="2"
+                        order-lg="1"
+                    >
                         <v-row
                             align="center"
                             :justify="$isMobile() ? 'center' : 'end'"
@@ -100,7 +112,7 @@
                             </div>
                         </v-row>
                     </v-col>
-                    <v-col class="pb-0" order="1" order-lg="2">
+                    <v-col cols=12 lg=7 class="pb-0" order="1" order-lg="2">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -111,7 +123,7 @@
                     </v-col>
                 </v-row>
                 <v-row justify="center" class="pt-12">
-                    <v-col class="pb-0">
+                    <v-col class="pb-0" cols=12 lg=7>
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -124,7 +136,7 @@
                         <v-row
                             align="center"
                             :justify="$isMobile() ? 'center' : 'start'"
-                            style="min-height: 450px;"
+                            style="min-height: 430px;"
                         >
                             <div :style="$isMobile() ? 'text-align: center' : ''">
                                 <h3>Flexibility</h3>
