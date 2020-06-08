@@ -1,9 +1,13 @@
 <template>
     <v-app>
-        <v-content>
+        <v-content style="background-color: #F3F3F3">
             <v-app-bar app dark color="#012B5C">
-                <v-icon class="mr-2">mdi-calendar</v-icon>
-                <v-toolbar-title class="mr-4">Timetable Planner</v-toolbar-title>
+                <v-toolbar-title class="display-1 font-regular">
+                    Viaplanner
+                    <span class="title font-weight-light"
+                        >at the University of Toronto</span
+                    >
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn text href="https://uoftcoursetools.tech/" target="blank">
                     <v-icon left>mdi-file-document</v-icon>
@@ -18,7 +22,7 @@
                     GitHub
                 </v-btn>
             </v-app-bar>
-            <v-container fluid>
+            <v-container fluid >
                 <v-row>
                     <v-col cols="7">
                         <div style="text-align:center">
@@ -29,21 +33,29 @@
                             ></v-img>
                         </div>
                     </v-col>
-                    <v-col>
+                    <v-col cols="4">
                         <v-row align="center" style="height: 450px;">
                             <div>
-                                <h1>Your timetable,</h1>
-                                <h1 style="margin-bottom: 40px">Via us</h1>
-                                <h3 style="margin-bottom: 40px">
+                                <h1>Making Your Timetable,</h1>
+                                <h1 style="margin-bottom: 40px">
+                                    Should Never Be a Chore
+                                </h1>
+                                <h3 style="margin-bottom: 40px" class="font-weight-medium">
                                     Have you always dreaded making your timetable?
-                                    Scowering through Acorn deperstatly trying to fit
+                                    Searching through Acorn desperately trying to fit
                                     together your courses? Well, we built a solution
                                     for that. Through just a few clicks, our
-                                    timetable generator will be able to provide you
-                                    an ideal schedule. Just select your courses, and
-                                    we will take care of the rest!
+                                    timetable generator will provide you an ideal
+                                    schedule. Just select your courses, and we will
+                                    take care of the rest!
                                 </h3>
-                                <v-btn dark large color="#012B5C">
+                                <v-btn
+                                    class="text-none"
+                                    dark
+                                    large
+                                    color="#012B5C"
+                                    @click="$router.push({ name: 'home' })"
+                                >
                                     Try it Now
                                 </v-btn>
                             </div>
