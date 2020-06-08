@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-content style="background-color: #F3F3F3">
-            <v-app-bar app dark color="#012B5C">
+        <v-content style="background-color: #F3F3F3" class="pt-0">
+            <v-app-bar app dark color="#012B5C" :hide-on-scroll="$isMobile()">
                 <v-toolbar-title class="display-1 font-regular">
                     Viaplanner
                     <span class="title font-weight-light"
@@ -23,8 +23,8 @@
                 </v-btn>
             </v-app-bar>
             <v-container fluid>
-                <v-row>
-                    <v-col cols="7" class="pb-0">
+                <v-row :justify="$isMobile() ? 'center' : 'start'">
+                    <v-col cols="12" lg="7" class="pb-0">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -33,15 +33,15 @@
                             ></v-img>
                         </div>
                     </v-col>
-                    <v-col cols="4" class="pb-0">
-                        <v-row align="center" style="height: 450px;">
-                            <div>
+                    <v-col cols="11" lg="4" class="pb-0">
+                        <v-row align="center" style="min-height: 450px">
+                            <div style="text-align: center">
                                 <h1>Making Your Timetable,</h1>
                                 <h1 style="margin-bottom: 40px">
                                     Should Never Be a Chore
                                 </h1>
                                 <h3
-                                    style="margin-bottom: 40px"
+                                    style="margin-bottom: 20px"
                                     class="font-weight-medium"
                                 >
                                     Have you always dreaded making your timetable?
@@ -53,7 +53,7 @@
                                     take care of the rest!
                                 </h3>
                                 <v-btn
-                                    class="text-none"
+                                    class="text-none mb-1"
                                     dark
                                     large
                                     color="#012B5C"
@@ -70,9 +70,19 @@
                     justify="center"
                     class="pt-12"
                 >
-                    <v-col cols="5" class="pb-0">
-                        <v-row align="center" justify="end" style="height: 450px;">
-                            <div style="text-align: right">
+                    <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
+                        <v-row
+                            align="center"
+                            :justify="$isMobile() ? 'center' : 'end'"
+                            style="min-height:450px"
+                        >
+                            <div
+                                :style="
+                                    $isMobile()
+                                        ? 'text-align: center'
+                                        : 'text-align: right'
+                                "
+                            >
                                 <h3>Generate</h3>
                                 <h1 style="margin-bottom: 20px">
                                     Schedule Automatically
@@ -89,7 +99,7 @@
                             </div>
                         </v-row>
                     </v-col>
-                    <v-col class="pb-0">
+                    <v-col class="pb-0" order="1" order-lg="2">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -109,9 +119,13 @@
                             ></v-img>
                         </div>
                     </v-col>
-                    <v-col cols="5" class="pb-0">
-                        <v-row align="center" justify="start" style="height: 450px;">
-                            <div>
+                    <v-col cols="11" lg="5" class="pb-0">
+                        <v-row
+                            align="center"
+                            :justify="$isMobile() ? 'center' : 'start'"
+                            style="min-height: 450px;"
+                        >
+                            <div :style="$isMobile() ? 'text-align: center' : ''">
                                 <h3>Flexibility</h3>
                                 <h1 style="margin-bottom: 20px">
                                     Block Times Off
@@ -151,7 +165,7 @@
                         </v-carousel>
                     </v-col>
                 </v-row>
-                <v-row justify="center" align="center" style="height: 400px">
+                <v-row justify="center" align="center" style="min-height: 400px">
                     <v-col style="text-align: center" cols="5">
                         <h1>Open Source</h1>
                         <h3 class="font-weight-medium ma-5">
@@ -162,9 +176,9 @@
                         <h3 class="font-weight-medium">
                             That's why we need your help. At Viaplanner, we are
                             strong believer in collaboration. Thus, we've decided to
-                            display all of our source code. If you have any ideas that
-                            you think would be useful, please don't hesitate to make
-                            it happen.
+                            display all of our source code. If you have any ideas
+                            that you think would be useful, please don't hesitate to
+                            make it happen.
                         </h3>
                         <v-btn
                             href="https://uoftcoursetools.tech/"
@@ -186,12 +200,7 @@
                             <v-icon left>mdi-github</v-icon>
                             GitHub
                         </v-btn>
-                        <v-btn
-                            target="blank"
-                            color="#00A1FF"
-                            dark
-                            class="ma-4"
-                        >
+                        <v-btn target="blank" color="#00A1FF" dark class="ma-4">
                             <v-icon left>mdi-account-box</v-icon>
                             Contact Us
                         </v-btn>
