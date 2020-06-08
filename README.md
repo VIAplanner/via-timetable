@@ -17,7 +17,7 @@ The fundamental problem we are trying to solve :
 
 3. Furthermore, this will improve UofT's reputation since this tool will modernize a crucial part of a student's life.
 
-## Installation
+## Installation Using NPM
 
 ```sh
 git clone https://github.com/UTM-Hacklab/UofTCourseTools
