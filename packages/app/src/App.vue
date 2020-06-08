@@ -6,15 +6,6 @@
     </v-app>
 </template>
 
-<script>
-export default {
-    created() {
-        if (this.$isMobile()) {
-            this.$router.push({name: 'mobile'});
-        }
-    },
-};
-</script>
 <style>
 html, body {
     max-width: 100%;

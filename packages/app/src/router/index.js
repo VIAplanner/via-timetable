@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import home from '../views/Home.vue'
 import mobile from '../views/Mobile.vue'
-import help from '../views/Help.vue'
+import about from '../views/About.vue'
 
 Vue.use(VueRouter)
 
@@ -18,9 +18,9 @@ const routes = [
     component: mobile
   },
   {
-    path: '/help',
-    name: 'help',
-    component: help
+    path: '/about',
+    name: 'about',
+    component: about
   },
   {
     path: '*',
