@@ -66,7 +66,7 @@
                     </v-col>
                 </v-row>
                 <v-row
-                    style="background-color: #FCFCFC"
+                    style="background-color: #FEFEFE"
                     justify="center"
                     class="pt-12"
                 >
@@ -78,7 +78,7 @@
                                     Schedule Automatically
                                 </h1>
                                 <h3 class="font-weight-medium">
-                                    Simply choose the course on the search bar
+                                    Simply choose a course on the search bar
                                 </h3>
                                 <h3
                                     style="margin-bottom: 40px;"
@@ -129,7 +129,7 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row justify="center" style=" background-color: #FCFCFC">
+                <v-row justify="center" style=" background-color: #FEFEFE">
                     <v-col style="text-align: center" cols="8">
                         <h1 class="ma-3">Features</h1>
                         <v-carousel show-arrows-on-hover>
@@ -162,7 +162,7 @@
                         <h3 class="font-weight-medium">
                             That's why we need your help. At Viaplanner, we are
                             strong believer in collaboration. Thus, we've decided to
-                            display all of our source code. If you have any idea that
+                            display all of our source code. If you have any ideas that
                             you think would be useful, please don't hesitate to make
                             it happen.
                         </h3>
@@ -186,6 +186,15 @@
                             <v-icon left>mdi-github</v-icon>
                             GitHub
                         </v-btn>
+                        <v-btn
+                            target="blank"
+                            color="#00A1FF"
+                            dark
+                            class="ma-4"
+                        >
+                            <v-icon left>mdi-account-box</v-icon>
+                            Contact Us
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -201,7 +210,8 @@ export default {
                 "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
                 "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
                 "Block Times: can't go to class during a time? Just block it": require("../assets/slide3.gif"),
-                "Lock Sections: lock specific sections and we won't touch it": require("../assets/slide4.gif"),
+                "Lock Sections: lock specific sections and we won't change it": require("../assets/slide4.gif"),
+                "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
         };
     },
