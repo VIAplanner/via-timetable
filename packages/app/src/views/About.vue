@@ -2,9 +2,10 @@
     <v-app>
         <v-content style="background-color: #F3F3F3" class="pt-0">
             <v-app-bar app dark color="#012B5C" :hide-on-scroll="$isMobile()">
-                <v-toolbar-title class="display-1 font-regular">
+                <v-icon class="mr-2">mdi-calendar</v-icon>
+                <v-toolbar-title :class=" $isMobile() ? ['body-1', 'font-regular'] : ['display-1', 'font-regular']">
                     Viaplanner
-                    <span class="title font-weight-light"
+                    <span v-if="!$isMobile()" class="title font-weight-light"
                         >at the University of Toronto</span
                     >
                 </v-toolbar-title>
@@ -143,10 +144,13 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row justify="center" style=" background-color: #FEFEFE">
-                    <v-col style="text-align: center" cols="8">
+                <v-row justify="center" style="background-color: #FEFEFE;">
+                    <v-col style="text-align: center">
                         <h1 class="ma-3">Features</h1>
-                        <v-carousel show-arrows-on-hover>
+                        <v-carousel
+                            show-arrows-on-hover
+                            :height="$isMobile() ? 350 : 600"
+                        >
                             <v-carousel-item
                                 v-for="(path, text) in slideData"
                                 :key="text"
@@ -166,7 +170,7 @@
                     </v-col>
                 </v-row>
                 <v-row justify="center" align="center" style="min-height: 400px">
-                    <v-col style="text-align: center" cols="5">
+                    <v-col style="text-align: center" cols="12" lg="5">
                         <h1>Open Source</h1>
                         <h3 class="font-weight-medium ma-5">
                             This is a platform built for students, by students.
@@ -180,30 +184,31 @@
                             that you think would be useful, please don't hesitate to
                             make it happen.
                         </h3>
-                        <v-btn
-                            href="https://uoftcoursetools.tech/"
-                            target="blank"
-                            dark
-                            color="#012B5C"
-                            class="ma-4"
-                        >
-                            <v-icon left>mdi-file-document</v-icon>
-                            API Docs
-                        </v-btn>
-                        <v-btn
-                            href="https://github.com/UTM-Hacklab/UofTCourseTools"
-                            target="blank"
-                            color="#7C007C"
-                            dark
-                            class="ma-4"
-                        >
-                            <v-icon left>mdi-github</v-icon>
-                            GitHub
-                        </v-btn>
-                        <v-btn target="blank" color="#00A1FF" dark class="ma-4">
-                            <v-icon left>mdi-account-box</v-icon>
-                            Contact Us
-                        </v-btn>
+                        <div class="mt-3">
+                            <v-btn
+                                href="https://uoftcoursetools.tech/"
+                                target="blank"
+                                dark
+                                color="#012B5C"
+                            >
+                                <v-icon left>mdi-file-document</v-icon>
+                                API Docs
+                            </v-btn>
+                            <v-btn
+                                href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                                target="blank"
+                                color="#7C007C"
+                                dark
+                                class="ma-1"
+                            >
+                                <v-icon left>mdi-github</v-icon>
+                                GitHub
+                            </v-btn>
+                            <v-btn target="blank" color="#00A1FF" dark>
+                                <v-icon left>mdi-account-box</v-icon>
+                                Contact
+                            </v-btn>
+                        </div>
                     </v-col>
                 </v-row>
             </v-container>
