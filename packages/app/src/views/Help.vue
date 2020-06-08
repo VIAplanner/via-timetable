@@ -129,29 +129,63 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row
-                    justify="center"
-                    style=" background-color: #FCFCFC"
-                >
+                <v-row justify="center" style=" background-color: #FCFCFC">
                     <v-col style="text-align: center" cols="8">
                         <h1 class="ma-3">Features</h1>
                         <v-carousel show-arrows-on-hover>
-                            <v-carousel-item v-for="(path, text) in slideData" :key=text>
+                            <v-carousel-item
+                                v-for="(path, text) in slideData"
+                                :key="text"
+                            >
                                 <v-sheet color="white">
                                     <v-row>
                                         <v-col>
                                             <p style="color: black">
-                                                {{text}}
+                                                {{ text }}
                                             </p>
-                                            <v-img
-                                                class="center"
-                                                :src="path"
-                                            />
+                                            <v-img class="center" :src="path" />
                                         </v-col>
                                     </v-row>
                                 </v-sheet>
                             </v-carousel-item>
                         </v-carousel>
+                    </v-col>
+                </v-row>
+                <v-row justify="center" align="center" style="height: 400px">
+                    <v-col style="text-align: center" cols="5">
+                        <h1>Open Source</h1>
+                        <h3 class="font-weight-medium ma-5">
+                            This is a platform built for students, by students.
+                            Universities can't always keep up with the cutting-edge,
+                            but we have made it our mission to do so.
+                        </h3>
+                        <h3 class="font-weight-medium">
+                            That's why we need your help. At Viaplanner, we are
+                            strong believer in collaboration. Thus, we've decided to
+                            display all of our source code. If you have any idea that
+                            you think would be useful, please don't hesitate to make
+                            it happen.
+                        </h3>
+                        <v-btn
+                            href="https://uoftcoursetools.tech/"
+                            target="blank"
+                            dark
+                            color="#012B5C"
+                            class="ma-4"
+                        >
+                            <v-icon left>mdi-file-document</v-icon>
+                            API Docs
+                        </v-btn>
+                        <v-btn
+                            href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                            target="blank"
+                            color="#7C007C"
+                            dark
+                            class="ma-4"
+                        >
+                            <v-icon left>mdi-github</v-icon>
+                            GitHub
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -161,16 +195,16 @@
 
 <script>
 export default {
-    data(){
+    data() {
         return {
             slideData: {
                 "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
                 "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
                 "Block Times: can't go to class during a time? Just block it": require("../assets/slide3.gif"),
                 "Lock Sections: lock specific sections and we won't touch it": require("../assets/slide4.gif"),
-            }
-        }
-    }
+            },
+        };
+    },
 };
 </script>
 
