@@ -112,7 +112,7 @@
                             </div>
                         </v-row>
                     </v-col>
-                    <v-col cols=7 class="pb-0" order="1" order-lg="2">
+                    <v-col cols=12 lg=7 class="pb-0" order="1" order-lg="2">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -123,7 +123,7 @@
                     </v-col>
                 </v-row>
                 <v-row justify="center" class="pt-12">
-                    <v-col class="pb-0" cols=7>
+                    <v-col class="pb-0" cols=12 lg=7>
                         <div style="text-align:center">
                             <v-img
                                 class="center"
