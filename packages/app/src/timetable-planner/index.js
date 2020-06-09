@@ -50,6 +50,19 @@ const addSectionToTimetable = (sections, timetable) => {
     }
 }
 
+const createCopyOfCourseSection = (courseSections) => {
+    const copy = []
+    for (const courseSection of courseSections) {
+        const temp = {}
+        temp.code = courseSection.code
+        temp.lecture = [...courseSection.lecture]
+        temp.practical = [...courseSection.practical]
+        temp.tutorial = [...courseSection.tutorial]
+        copy.push(temp)
+    }
+    return copy
+}
+
 /**
  * Make a complete shallow copy of a timetable
  * @param {*} timetable 
@@ -288,8 +301,9 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                                     yearLocked.append(section.code)
                                                                 }
                                                             }
-                                                            lockSectionOfCourse(winterCourseSection, yearLocked)
-                                                            winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")[1]
+                                                            const temp = createCopyOfCourseSection(winterCourseSection)
+                                                            lockSectionOfCourse(temp, yearLocked)
+                                                            winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
                                                             if (JSON.stringify(winterTimetable) === JSON.stringify({
                                                                 MONDAY: [],
                                                                 TUESDAY: [],
@@ -335,33 +349,34 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                         const praResult = practicalCombo(courseSection)
                         if (praResult) {
                             const yearLocked = []
-                                for (const section of temp) {
-                                    if (section.code.charAt(section.code.length - 6) === "Y") {
-                                        yearLocked.append(section.code)
-                                    }
+                            for (const section of temp) {
+                                if (section.code.charAt(section.code.length - 6) === "Y") {
+                                    yearLocked.append(section.code)
                                 }
-                                lockSectionOfCourse(winterCourseSection, yearLocked)
-                                winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")[1]
-                                if (JSON.stringify(winterTimetable) === JSON.stringify({
+                            }
+                            const temp = createCopyOfCourseSection(winterCourseSection)
+                            lockSectionOfCourse(temp, yearLocked)
+                            winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
+                            if (JSON.stringify(winterTimetable) === JSON.stringify({
+                                MONDAY: [],
+                                TUESDAY: [],
+                                WEDNESDAY: [],
+                                THURSDAY: [],
+                                FRIDAY: [],
+                            })) {
+                                fallTimetable = {
                                     MONDAY: [],
                                     TUESDAY: [],
                                     WEDNESDAY: [],
                                     THURSDAY: [],
-                                    FRIDAY: [],
-                                })) {
-                                    fallTimetable = {
-                                        MONDAY: [],
-                                        TUESDAY: [],
-                                        WEDNESDAY: [],
-                                        THURSDAY: [],
-                                        FRIDAY: []
-                                    };
-                                }
-                                else {
-                                    fallLectureCombo.founded = 1
-                                    //founds a valid timetable
-                                    return true
-                                }
+                                    FRIDAY: []
+                                };
+                            }
+                            else {
+                                fallLectureCombo.founded = 1
+                                //founds a valid timetable
+                                return true
+                            }
                         } else {
                             if (fallLectureCombo.founded == 1) {
                                 return true
@@ -426,8 +441,9 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                         yearLocked.append(section.code)
                                     }
                                 }
-                                lockSectionOfCourse(winterCourseSection, yearLocked)
-                                winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")[1]
+                                const temp = createCopyOfCourseSection(winterCourseSection)
+                                lockSectionOfCourse(temp, yearLocked)
+                                winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
                                 if (JSON.stringify(winterTimetable) === JSON.stringify({
                                     MONDAY: [],
                                     TUESDAY: [],
@@ -468,8 +484,9 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                     yearLocked.append(section.code)
                                 }
                             }
-                            lockSectionOfCourse(winterCourseSection, yearLocked)
-                            winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")[1]
+                            const temp = createCopyOfCourseSection(winterCourseSection)
+                            lockSectionOfCourse(temp, yearLocked)
+                            winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
                             if (JSON.stringify(winterTimetable) === JSON.stringify({
                                 MONDAY: [],
                                 TUESDAY: [],
