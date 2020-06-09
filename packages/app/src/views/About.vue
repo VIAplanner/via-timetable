@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-content style="background-color: #F3F3F3" class="pt-0">
-            <v-app-bar app dark color="#012B5C" :hide-on-scroll="$isMobile()">
+            <v-app-bar app dark color="#012B5C">
                 <v-icon class="mr-2">mdi-calendar</v-icon>
                 <v-toolbar-title
                     :class="
