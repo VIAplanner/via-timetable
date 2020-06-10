@@ -1,24 +1,20 @@
 <template>
     <v-app>
         <v-content style="background-color: #F3F3F3" class="pt-0">
-            <v-app-bar app dark color="#012B5C">
-                <v-icon class="mr-2">mdi-calendar</v-icon>
-                <v-toolbar-title
-                    :class="
-                        $isMobile()
-                            ? ['body-1', 'font-regular']
-                            : ['display-1', 'font-regular']
-                    "
-                >
-                    Viaplanner
-                    <span v-if="!$isMobile()" class="title font-weight-light"
-                        >at the University of Toronto</span
-                    >
-                </v-toolbar-title>
+            <v-app-bar app dark color="#012B5C" class="pa-0">
+                <v-img
+                    src="../assets/VIA-Planner-White.png"
+                    :max-width="$isMobile() ? 100 : 130"
+                    contain
+                />
                 <v-spacer></v-spacer>
-                <v-btn text href="https://uoftcoursetools.tech/" target="blank">
+                <v-btn
+                    text
+                    href="https://uoftcoursetools.tech/"
+                    target="blank"
+                >
                     <v-icon left>mdi-file-document</v-icon>
-                    API Docs
+                    Docs
                 </v-btn>
                 <v-btn
                     text
@@ -77,13 +73,7 @@
                     justify="center"
                     class="pt-12"
                 >
-                    <v-col
-                        cols="12"
-                        lg="5"
-                        class="pb-0"
-                        order="2"
-                        order-lg="1"
-                    >
+                    <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
                         <v-row
                             align="center"
                             :justify="$isMobile() ? 'center' : 'end'"
@@ -112,7 +102,7 @@
                             </div>
                         </v-row>
                     </v-col>
-                    <v-col cols=12 lg=7 class="pb-0" order="1" order-lg="2">
+                    <v-col cols="12" lg="7" class="pb-0" order="1" order-lg="2">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -123,7 +113,7 @@
                     </v-col>
                 </v-row>
                 <v-row justify="center" class="pt-12">
-                    <v-col class="pb-0" cols=12 lg=7>
+                    <v-col class="pb-0" cols="12" lg="7">
                         <div style="text-align:center">
                             <v-img
                                 class="center"
@@ -244,7 +234,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .center {
     margin-left: auto;
     margin-right: auto;
