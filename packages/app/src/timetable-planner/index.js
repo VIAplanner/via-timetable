@@ -310,7 +310,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                                 WEDNESDAY: [],
                                                                 THURSDAY: [],
                                                                 FRIDAY: [],
-                                                            })) {
+                                                            }) && winterCourseSection.length > 0) {
                                                                 fallTimetable = createShallowCopyOfTimetable(prevTimetabletut)
                                                             }
                                                             else {
@@ -363,7 +363,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                 WEDNESDAY: [],
                                 THURSDAY: [],
                                 FRIDAY: [],
-                            })) {
+                            }) && winterCourseSection.length > 0) {
                                 fallTimetable = {
                                     MONDAY: [],
                                     TUESDAY: [],
@@ -450,7 +450,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                     WEDNESDAY: [],
                                     THURSDAY: [],
                                     FRIDAY: [],
-                                })) {
+                                }) && winterCourseSection.length > 0) {
                                     fallTimetable = {
                                         MONDAY: [],
                                         TUESDAY: [],
@@ -493,7 +493,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                 WEDNESDAY: [],
                                 THURSDAY: [],
                                 FRIDAY: [],
-                            })) {
+                            }) && winterCourseSection.length > 0) {
                                 fallTimetable = {
                                     MONDAY: [],
                                     TUESDAY: [],
