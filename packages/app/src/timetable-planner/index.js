@@ -767,7 +767,10 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
     if (fallCourseSection.length > 0 && state === "F") {
         fallLectureCombo(fallCourseSection)
     }
-    else if (winterCourseSection.length > 0 && state === "W") {
+    else if (fallCourseSection.length == 0 && state === "F"){
+        fallTimetable, winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")
+    }
+    if (winterCourseSection.length > 0 && state === "W") {
         winterLectureCombo(winterLockSection)
     }
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
@@ -800,6 +803,21 @@ const generateTimetables = (fallCourses, fallLockSections, winterCourses, winter
     lockSectionOfCourse(fallCourseSections, fallLockSections)
     lockSectionOfCourse(winterCourseSections, winterLockSections)
     const timetables = createTimetable(fallCourseSections, winterCourseSections, "F")
+    if(JSON.stringify(timetables[0]) === JSON.stringify({
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: [],
+    }) || JSON.stringify(timetables[1]) === JSON.stringify({
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: [],
+    })){
+        timetable = null
+    }
     return timetables;
 };
 // export { generateTimetables, createTimetable, overlapExists };
