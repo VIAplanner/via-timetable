@@ -175,7 +175,7 @@ export default {
     this.resetSelectedMeetingSections();
   },
   computed: {
-    ...mapGetters(["timetable", "selectedCourses", "getLockedSections"]),
+    ...mapGetters(["timetable","otherTimetable","selectedCourses", "getLockedSections"]),
     course() {
       return this.selectedCourses[this.code];
     },

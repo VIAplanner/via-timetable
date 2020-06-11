@@ -391,6 +391,24 @@ const createTimetable = (courseSection) => {
 const generateTimetables = (courses, lockSections) => {
     // Generate all valid combinations of MeetingSections for a course
     const courseSections = courses.map(course => sortCourseSection(course));
+    // const translate = {
+    //     L: "lecture",
+    //     P: "practical",
+    //     T: "tutorial"
+    // }
+    //For every locked section, make it the only meeting section of its type in its course
+    // for (const lockSection of lockSections) {
+    //     if (lockSection.slice(0, 4) != "Lock") {
+    //         for (const course of courseSections) {
+    //             if (course.code === lockSection.slice(0, lockSection.length - 5)) {
+    //                 course[translate[lockSection[lockSection.length - 5]]] = 
+    //                 course[translate[lockSection[lockSection.length - 5]]].filter(section =>
+    //                     section.sectionCode === lockSection.slice(section.length - 5)
+    //                 )
+    //             }
+    //         }
+    //     }
+    // }
     for (const course of courseSections) {
         for (const section of lockSections) {
             if (course.code === section.slice(0, section.length - 5)) {
