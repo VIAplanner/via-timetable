@@ -20,7 +20,7 @@
                                 class="ml-3"
                                 fab
                                 dark
-                                small
+                                x-small
                                 color="primary"
                                 v-bind="attrs"
                                 v-on="on"
