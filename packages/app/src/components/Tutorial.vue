@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            dialog: !localStorage.visited,
+            dialog: !localStorage.visited && !this.$isMobile(),
             allTut: [
                 {
                     step: "Step 1",
