@@ -7,7 +7,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        fallLockedDayStatus: {"Monday": false, "Tuesday": false, "Wednesday": false, "Thursday": false, "Friday": false},
+        fallLockedDayStatus: {
+            Monday: false,
+            Tuesday: false,
+            Wednesday: false,
+            Thursday: false,
+            Friday: false,
+        },
         fallSelectedCourses: {},
         fallLockedSections: [],
         fallTimetable: {
@@ -17,7 +23,13 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         },
-        winterLockedDayStatus: {"Monday": false, "Tuesday": false, "Wednesday": false, "Thursday": false, "Friday": false},
+        winterLockedDayStatus: {
+            Monday: false,
+            Tuesday: false,
+            Wednesday: false,
+            Thursday: false,
+            Friday: false,
+        },
         winterSelectedCourses: {},
         winterLockedSections: [],
         winterTimetable: {
@@ -35,14 +47,22 @@ export default new Vuex.Store({
         semesterStatus: "F",
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
+        tutorialPopup: false,
     },
     mutations: {
         setLockedDayStatus(state, payload) {
             if (state.semesterStatus === "F") {
-                state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[payload]
+                state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[
+                    payload
+                ];
             } else {
-                state.winterLockedDayStatus[payload] = !state.winterLockedDayStatus[payload]
+                state.winterLockedDayStatus[payload] = !state.winterLockedDayStatus[
+                    payload
+                ];
             }
+        },
+        setTutorialPopup(state, payload) {
+            state.tutorialPopup = payload;
         },
         setSemesterStatus(state, payload) {
             state.semesterStatus = payload;
@@ -331,6 +351,9 @@ export default new Vuex.Store({
         },
         getOverwriteLockedSectionPopup: (state) => {
             return state.overwriteLockedSectionPopup;
+        },
+        getTutorialPopup(state) {
+            return state.tutorialPopup;
         },
         timetable: (state) => {
             if (state.semesterStatus === "F") {

@@ -14,23 +14,6 @@
                         :loadingParent="$apollo.loading"
                     />
                     <switch-sem />
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                                class="ml-3"
-                                fab
-                                dark
-                                x-small
-                                color="primary"
-                                v-bind="attrs"
-                                v-on="on"
-                                @click="$router.push({name: 'about'})"
-                            >
-                                <v-icon dark>mdi-information-outline</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>About</span>
-                    </v-tooltip>
                 </v-toolbar>
             </v-col>
         </v-row>
@@ -38,7 +21,7 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <tutorial/>
+                    <tutorial />
                     <timetable-course-card
                         class="my-4"
                         v-for="(course, code) in getSelectedCourses(selectedCourses)"
@@ -48,6 +31,7 @@
                 </v-col>
             </v-row>
             <v-row>
+                <help-dial />
                 <v-col class="mr-8">
                     <timetable :timetable="timetable" />
                 </v-col>
@@ -59,10 +43,11 @@
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
-import Tutorial from "../components/Tutorial"
+import Tutorial from "../components/Tutorial";
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
+import HelpDial from "../components/HelpDial";
 import { mapGetters } from "vuex";
 export default {
     created() {
@@ -75,7 +60,8 @@ export default {
         CourseSearchBar,
         Timetable,
         TimetableCourseCard,
-        Tutorial
+        Tutorial,
+        HelpDial,
     },
     computed: {
         ...mapGetters(["selectedCourses", "timetable"]),
