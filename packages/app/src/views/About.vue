@@ -178,7 +178,7 @@
                             but we have made it our mission to do so.
                         </h3>
                         <h3 class="font-weight-medium">
-                            That's why we need your help. At Viaplanner, we are
+                            That's why we need your help. At VIAPlanner, we are
                             strong believer in collaboration. Thus, we've decided to
                             display all of our source code. If you have any ideas
                             that you think would be useful, please don't hesitate to
