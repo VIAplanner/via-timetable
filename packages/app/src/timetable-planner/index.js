@@ -803,19 +803,19 @@ const generateTimetables = (fallCourses, fallLockSections, winterCourses, winter
     lockSectionOfCourse(fallCourseSections, fallLockSections)
     lockSectionOfCourse(winterCourseSections, winterLockSections)
     const timetables = createTimetable(fallCourseSections, winterCourseSections, "F")
-    if(JSON.stringify(timetables[0]) === JSON.stringify({
+    if((JSON.stringify(timetables[0]) === JSON.stringify({
         MONDAY: [],
         TUESDAY: [],
         WEDNESDAY: [],
         THURSDAY: [],
         FRIDAY: [],
-    }) || JSON.stringify(timetables[1]) === JSON.stringify({
+    }) && fallCourses.length > 0) || (JSON.stringify(timetables[1]) === JSON.stringify({
         MONDAY: [],
         TUESDAY: [],
         WEDNESDAY: [],
         THURSDAY: [],
         FRIDAY: [],
-    })){
+    })) && winterCourses.length > 0) {
         timetable = null
     }
     return timetables;
