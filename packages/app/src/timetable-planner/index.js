@@ -127,7 +127,7 @@ const overlapExists = (timetable) => {
  * @param {*} courseSections 
  * @param {*} lockSection 
  */
-const lockSectionOfCourse = (courseSections, lockSection) => {
+const lockSectionOfCourse = (courseSections, lockSections) => {
     for (const course of courseSections) {
         for (const section of lockSections) {
             if (course.code === section.slice(0, section.length - 5)) {
@@ -297,8 +297,8 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                         else {
                                                             const yearLocked = []
                                                             for (const section of temp) {
-                                                                if (section.code.charAt(section.code.length - 6) === "Y") {
-                                                                    yearLocked.append(section.code)
+                                                                if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
+                                                                    yearLocked.append(section.comboCode)
                                                                 }
                                                             }
                                                             const temp = createCopyOfCourseSection(winterCourseSection)
@@ -350,8 +350,8 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                         if (praResult) {
                             const yearLocked = []
                             for (const section of temp) {
-                                if (section.code.charAt(section.code.length - 6) === "Y") {
-                                    yearLocked.append(section.code)
+                                if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
+                                    yearLocked.append(section.comboCode)
                                 }
                             }
                             const temp = createCopyOfCourseSection(winterCourseSection)
@@ -437,8 +437,8 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                             if (tutResult) {
                                 const yearLocked = []
                                 for (const section of temp) {
-                                    if (section.code.charAt(section.code.length - 6) === "Y") {
-                                        yearLocked.append(section.code)
+                                    if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
+                                        yearLocked.append(section.comboCode)
                                     }
                                 }
                                 const temp = createCopyOfCourseSection(winterCourseSection)
@@ -479,9 +479,9 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                         }
                         else {
                             const yearLocked = []
-                            for (const section of temp) {
-                                if (section.code.charAt(section.code.length - 6) === "Y") {
-                                    yearLocked.append(section.code)
+                            for (const section of [...output]) {
+                                if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
+                                    yearLocked.append(section.comboCode)
                                 }
                             }
                             const temp = createCopyOfCourseSection(winterCourseSection)
@@ -771,7 +771,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
         fallTimetable, winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")
     }
     if (winterCourseSection.length > 0 && state === "W") {
-        winterLectureCombo(winterLockSection)
+        winterLectureCombo(winterCourseSection)
     }
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
     for (const day of days) {
