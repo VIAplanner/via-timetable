@@ -6,13 +6,11 @@
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
                     contain
+                    @click="$router.push({name: 'home'})"
+                    style="cursor: pointer"
                 />
                 <v-spacer></v-spacer>
-                <v-btn
-                    text
-                    href="https://uoftcoursetools.tech/"
-                    target="blank"
-                >
+                <v-btn text href="https://uoftcoursetools.tech/" target="blank">
                     <v-icon left>mdi-file-document</v-icon>
                     Docs
                 </v-btn>
@@ -206,9 +204,14 @@
                                 <v-icon left>mdi-github</v-icon>
                                 GitHub
                             </v-btn>
-                            <v-btn target="blank" color="#00A1FF" dark>
-                                <v-icon left>mdi-account-box</v-icon>
-                                Contact
+                            <v-btn
+                                href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
+                                target="blank"
+                                color="#00A1FF"
+                                dark
+                            >
+                                <v-icon left>mdi-text-box-check-outline</v-icon>
+                                Survey
                             </v-btn>
                         </div>
                     </v-col>
