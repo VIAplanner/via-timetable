@@ -3,14 +3,34 @@
         <v-row>
             <v-col class="py-0">
                 <v-toolbar dark color="#012B5C">
-                    <v-icon class="mr-2">mdi-calendar</v-icon>
-                    <v-toolbar-title class="mr-4">Timetable Planner</v-toolbar-title>
+                    <v-img
+                        src="../assets/VIA-Planner-White.png"
+                        max-width="130"
+                        contain
+                    />
                     <course-search-bar
                         :allCourses="formattedCourses"
                         class="mx-4"
                         :loadingParent="$apollo.loading"
                     />
                     <switch-sem />
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                class="ml-3"
+                                fab
+                                dark
+                                small
+                                color="primary"
+                                v-bind="attrs"
+                                v-on="on"
+                                @click="$router.push({name: 'about'})"
+                            >
+                                <v-icon dark>mdi-information-outline</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>About</span>
+                    </v-tooltip>
                 </v-toolbar>
             </v-col>
         </v-row>
