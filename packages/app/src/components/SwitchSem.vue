@@ -4,9 +4,9 @@
             v-model="toggle"
             :labels="{ checked: 'Fall', unchecked: 'Winter' }"
             :color="{ checked: '#F26B83', unchecked: '#4C91F9' }"
-            :font-size="15"
-            :width="93"
-            :height="40"
+            :font-size="14"
+            :width="83"
+            :height="30"
             :speed="150"
             sync
         />
