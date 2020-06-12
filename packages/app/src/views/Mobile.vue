@@ -3,8 +3,11 @@
         <v-row>
             <v-col class="py-0" style="text-align: center">
                 <v-toolbar dark color="#012B5C">
-                    <v-icon class="mr-2">mdi-calendar</v-icon>
-                    <v-toolbar-title class="mr-4">Timetable Planner</v-toolbar-title>
+                    <v-img
+                        src="../assets/VIA-Planner-White.png"
+                        max-width="100"
+                        contain
+                    />
                 </v-toolbar>
                 <h1 style="margin-top:50px; margin-bottom: 60px">
                     Mobile View In Progress
@@ -22,7 +25,7 @@
                                 height="50"
                                 color="#00A1FF"
                                 dark
-                                @click="$router.push({name: 'about'})"
+                                @click="$router.push({ name: 'about' })"
                             >
                                 <v-icon left dark>mdi-information</v-icon>
                                 About

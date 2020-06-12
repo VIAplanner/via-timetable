@@ -38,6 +38,7 @@
         <v-container>
             <v-row>
                 <v-col>
+                    <tutorial/>
                     <timetable-course-card
                         class="my-4"
                         v-for="(course, code) in getSelectedCourses(selectedCourses)"
@@ -58,6 +59,7 @@
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
+import Tutorial from "../components/Tutorial"
 import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
@@ -73,6 +75,7 @@ export default {
         CourseSearchBar,
         Timetable,
         TimetableCourseCard,
+        Tutorial
     },
     computed: {
         ...mapGetters(["selectedCourses", "timetable"]),
