@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Timetable Planner | VIAplanner Docs</title>
+    <meta name="generator" content="VuePress 1.5.1">
+    
+    <meta name="description" content="We're unifying UofT's course data, and using it to build tools such as a course guide and timetable planner.">
+    <link rel="preload" href="/assets/css/0.styles.ecd8690f.css" as="style"><link rel="preload" href="/assets/js/app.d8eb7bde.js" as="script"><link rel="preload" href="/assets/js/2.43730822.js" as="script"><link rel="preload" href="/assets/js/3.7d802c7f.js" as="script"><link rel="prefetch" href="/assets/js/10.a89c5658.js"><link rel="prefetch" href="/assets/js/4.3a129d09.js"><link rel="prefetch" href="/assets/js/5.3a120ba3.js"><link rel="prefetch" href="/assets/js/6.41cdd127.js"><link rel="prefetch" href="/assets/js/7.a6aab2ef.js"><link rel="prefetch" href="/assets/js/8.c640ed38.js"><link rel="prefetch" href="/assets/js/9.9ed8df18.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.ecd8690f.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/logo.png" alt="VIAplanner Docs" class="logo"> <span class="site-name can-hide">VIAplanner Docs</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/course-api/" class="nav-link">
+  Course API
+</a></div><div class="nav-item"><a href="/timetable-planner/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Timetable Planner
+</a></div><div class="nav-item"><a href="/course-guide/" class="nav-link">
+  Course Guide
+</a></div><div class="nav-item"><a href="https://viaplanner.ca/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Application
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <a href="https://github.com/utm-hacklab/VIAplanner" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/course-api/" class="nav-link">
+  Course API
+</a></div><div class="nav-item"><a href="/timetable-planner/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Timetable Planner
+</a></div><div class="nav-item"><a href="/course-guide/" class="nav-link">
+  Course Guide
+</a></div><div class="nav-item"><a href="https://viaplanner.ca/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Application
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <a href="https://github.com/utm-hacklab/VIAplanner" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Timetable Planner</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/timetable-planner/#overview" class="sidebar-link">Overview</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/timetable-planner/#roadmap-for-the-timetable-algorithm" class="sidebar-link">Roadmap for the Timetable Algorithm</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/timetable-planner/#checking-for-conflicts" class="sidebar-link">Checking for Conflicts</a></li><li class="sidebar-sub-header"><a href="/timetable-planner/#times-off" class="sidebar-link">Times Off</a></li><li class="sidebar-sub-header"><a href="/timetable-planner/#maximize-or-minimize-idle-time" class="sidebar-link">Maximize or Minimize Idle Time</a></li><li class="sidebar-sub-header"><a href="/timetable-planner/#locked-time-sections" class="sidebar-link">Locked Time Sections</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="timetable-planner"><a href="#timetable-planner" class="header-anchor">#</a> Timetable Planner</h1> <p>A web app that helps UofT students plan their courses to generate their optimal timetable.</p> <p>The timetable planner allows students to enter their course load and get back a timetable that fits their needs. The vision for the timetable planner includes taking student preferences into account such as:</p> <ul><li>How early students wish to start and end classes</li> <li>What days students would like to take off</li> <li>What times students would prefer gap time and breaks</li></ul> <h2 id="overview"><a href="#overview" class="header-anchor">#</a> Overview</h2> <p><img src="/assets/img/Timetable-journey.874c1c15.png" alt="timetable-journey"></p> <p>Once the user selects the courses from the Course Guide:</p> <p><img src="/assets/img/coursechosing.80b5906a.png" alt="coursechosing"></p> <p>The user views the timetable:</p> <p>The timetable will display whether or not if the selected courses have a valid time, that is no conflict for all courses.</p> <ul><li>Valid:</li></ul> <p><img src="/assets/img/timetable.f46bca2f.png" alt="timetable"></p> <ul><li>Invalid:</li></ul> <p><img src="/assets/img/error1.38a288a6.png" alt="error1"></p> <p>There are serveral preferences that the user can select to optimize the timetable:</p> <p><img src="/assets/img/timetableconstraint.bbe19910.png" alt="timetableconstraint"></p> <ul><li>Minimize/Maximize idle time: The user can maximize or minimize the gap time between courses.</li> <li>Days off: The user can select the day(s) off so there will be no course appear on that day.</li> <li>Avoid Morning/Evening Class: The user can choose whether if they want to have courses in the morning or evening.</li></ul> <p>The timetable will return invalid and displays a message if the constraints are unreachable.</p> <p><img src="/assets/img/error2.1552fc03.png" alt="error2"></p> <p>The user can also choose to lock certain course times.</p> <p>When preferences are made, those times will not be changed.</p> <p><img src="/assets/img/lock1.8ec839ae.png" alt="lock1"></p> <p>after a course is locked and a preference is being made:</p> <p><img src="/assets/img/lock2.c237d63a.png" alt="lock2"></p> <h2 id="roadmap-for-the-timetable-algorithm"><a href="#roadmap-for-the-timetable-algorithm" class="header-anchor">#</a> Roadmap for the Timetable Algorithm</h2> <p>The timetable algorithm takes in a set of course names and transforms into a list of timetables. Then the user can optimize the timetable to fit their preference.</p> <p>The algorithm starts out by checking if the given sections conflict with each other. The algorithm will return true or false depending on whether or not a conflict exists.</p> <p>After checking for basic validity, we can optimize our timetable by adding constraints to it.</p> <p>The algorithm then takes in an invalid time argument that inputs from the user's preference times off.</p> <p>The algorithm then implements an idle time function which takes in a set of valid timetable and returns the max and the min idle time depend on the user's preference.</p> <p>The algorithm then stores the user's locked courses in a list which will stay in position despite future optimization.</p> <h3 id="checking-for-conflicts"><a href="#checking-for-conflicts" class="header-anchor">#</a> Checking for Conflicts</h3> <p>Before any optimization, the algorithm checks if it is possible to make a timetable out of the given courses by checking the conflict between the course times.</p> <p><strong>Pseudocode</strong></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/**
+ * 
+ * @param timetable: A map of day to timeSections 
+ {&quot;MONDAY&quot;: [time_sections], ...}
+ * 
+ */</span>
+<span class="token keyword">function</span> <span class="token function">overlap</span><span class="token punctuation">(</span><span class="token parameter">timetable</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">for</span> day <span class="token keyword">in</span> timetable
+        <span class="token keyword">if</span> the times <span class="token keyword">of</span> the day overlaps each other
+            <span class="token keyword">return</span> <span class="token boolean">false</span>
+    <span class="token keyword">return</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="times-off"><a href="#times-off" class="header-anchor">#</a> Times Off</h3> <p>The user can input their desired times off, such as day off or morning/evening off, the algorithm reruns the conflict check and returns valid timetable with the invalid times.</p> <p><strong>Psedocode</strong></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/**
+ * 
+ * @param courseList: A list of course sections 
+ {&quot;CSC108H5FLEC0101&quot;: {&quot;MONDAY&quot;:[Time Section], ...}, ...}
+ * @param timesOff: A map of day to TimeSections of times off
+ {&quot;MONDAY&quot;:[Time Sections], ...} 
+ *
+ */</span>
+<span class="token keyword">function</span> <span class="token function">bucketCourseByDay</span><span class="token punctuation">(</span><span class="token parameter">courseList<span class="token punctuation">,</span> timesOff</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">for</span> course <span class="token keyword">in</span> courseList
+        append course to timetable
+    <span class="token keyword">for</span> timesOffBlock <span class="token keyword">in</span> timesOff
+        append timesOffBlock to timetable
+    check <span class="token keyword">if</span> valid or not by overlap <span class="token keyword">function</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="maximize-or-minimize-idle-time"><a href="#maximize-or-minimize-idle-time" class="header-anchor">#</a> Maximize or Minimize Idle Time</h3> <p>The user can choose to maximize or minimize their idle time at school, which is the time gaps between classes each day. The algorithm compares the total idle time in each timetable given and returns the user's preference.</p> <p><strong>Pseudocode</strong></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/**
+ * 
+ * @param setTimetable: A list of timetable
+ [{&quot;MONDAY&quot;:[Time Sections], ...}]
+ * @param maxOrMin: A string 
+ &quot;MAX&quot;/&quot;MIN&quot;
+ *
+ */</span>
+<span class="token keyword">function</span> <span class="token function">idleTime</span><span class="token punctuation">(</span><span class="token parameter">setTimetable<span class="token punctuation">,</span> maxOrMin</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">for</span> timetable <span class="token keyword">in</span> setTimetable
+        sum up all the idle time and store the index
+    check <span class="token keyword">for</span> the max and min <span class="token keyword">of</span> the idletimes
+    <span class="token keyword">return</span> based on maxOrMin
+
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="locked-time-sections"><a href="#locked-time-sections" class="header-anchor">#</a> Locked Time Sections</h3> <p>The user can lock the section(s) they prefer to stay the same while processing other optimizations. The algorithm stores the locked section in a list, when processing other optimization, the list is being compared and put in to the new timetable to ensure timetable includes the locked section.</p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/utm-hacklab/VIAplanner/edit/master/timetable-planner/README.md" target="_blank" rel="noopener noreferrer">Edit on Github!</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">6/13/2020, 5:57:10 PM</span></div></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.d8eb7bde.js" defer></script><script src="/assets/js/2.43730822.js" defer></script><script src="/assets/js/3.7d802c7f.js" defer></script>
+  </body>
+</html>

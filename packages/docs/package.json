@@ -1,7 +1,7 @@
 {
     "scripts": {
         "start": "vuepress dev",
-        "build": "./build-docs.sh"
+        "build": "vuepress build"
     },
     "devDependencies": {
         "vuepress": "^1.4.0"

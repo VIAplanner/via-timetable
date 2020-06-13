@@ -1,10 +1,12 @@
 ---
 home: true
-heroImage: /VIA.png
-heroText: VIAplanner
-tagline: VIAplanner is a tool that was designed by students of University of Toronto to help back the community. We desire to enhance the experience of student's course selecting process.
+heroImage: /logo-with-text.png
+heroText: 
+tagline: VIAplanner is a tool designed by students at the University of Toronto to help the community. We desire to enhance the course selection process.
 footer: MIT Licensed
 --- 
+
+<CBtn></CBtn>
 
 ## Vision
 
