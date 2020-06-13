@@ -39,12 +39,6 @@ export default {
     methods: {
         ...mapMutations(["setSemesterStatus", "setSearchBarValue"]),
     },
-    // watch: {
-    //     // when toggle changes, clear the search bar
-    //     toggle(){
-    //         this.setSearchBarValue(null)
-    //     }
-    // }
 };
 </script>
 

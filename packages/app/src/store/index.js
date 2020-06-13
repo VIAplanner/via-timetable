@@ -47,7 +47,7 @@ export default new Vuex.Store({
         semesterStatus: "F",
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
-        tutorialPopup: false,
+        tutorialPopup: !localStorage.visited,
     },
     mutations: {
         setLockedDayStatus(state, payload) {

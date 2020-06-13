@@ -14,7 +14,7 @@
                 <v-icon v-else>mdi-hammer-screwdriver</v-icon>
             </v-btn>
         </template>
-        <v-btn fab dark small color="orange">
+        <v-btn fab dark small color="orange" @click="setTutorialPopup(true)">
             <v-icon>mdi-teach</v-icon>
         </v-btn>
         <v-btn fab dark small color="blue" @click="$router.push({ name: 'about' })">
@@ -24,11 +24,15 @@
 </template>
 
 <script>
+import { mapMutations} from "vuex";
 export default {
     data() {
         return {
             fab: false,
         };
+    },
+    methods:{
+         ...mapMutations(["setTutorialPopup"]),
     },
 };
 </script>
