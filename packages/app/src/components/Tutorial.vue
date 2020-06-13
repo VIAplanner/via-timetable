@@ -3,7 +3,7 @@
         <v-card>
             <v-card-title style="background-color: #012B5C;">
                 <p class="headline ma-0" style="color: white">
-                    Welcome to VIAplanner! {{ getTutorialPopup }}
+                    Welcome to VIAplanner!
                 </p>
                 <v-spacer></v-spacer>
                 <v-btn icon large @click="dialog = false" color="white">
