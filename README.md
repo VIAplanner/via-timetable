@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://uoftcoursetools.tech/" target="_blank">
-    <img alt="VIAplanner" width="300" src="./VIA.png">
+  <a href="https://docs.viaplanner.ca/" target="_blank">
+    <img alt="VIAplanner" width="300" src="./logo-with-text.png">
   </a>
 </p>
 
