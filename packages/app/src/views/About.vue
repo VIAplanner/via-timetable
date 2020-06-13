@@ -187,8 +187,9 @@
                         <h1>Open Source</h1>
                         <h3 class="font-weight-medium ma-5">
                             This is a platform built for students, by students.
-                            Universities can't always keep up with the cutting-edge,
-                            but we have made it our mission to do so.
+                            Universities can't always keep up with the cutting-edge
+                            technologies, but we have made it our mission to do so in
+                            order to deliver the best.
                         </h3>
                         <h3 class="font-weight-medium">
                             That's why we need your help. At VIAPlanner, we are
