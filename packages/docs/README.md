@@ -1,8 +1,8 @@
 ---
 home: true
-heroImage: /logo.png
-heroText: UofT Course Tools
-tagline: We're unifying UofT's course data, and using it to build tools such as a course guide and timetable planner.
+heroImage: /VIA.png
+heroText: VIAplanner
+tagline: VIAplanner is a tool that was designed by students of University of Toronto to help back the community. We desire to enhance the experience of student's course selecting process.
 footer: MIT Licensed
 --- 
 
