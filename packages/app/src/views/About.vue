@@ -6,11 +6,24 @@
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
                     contain
-                    @click="$router.push({name: 'home'})"
+                    @click="$router.push({ name: 'home' })"
                     style="cursor: pointer"
                 />
                 <v-spacer></v-spacer>
-                <v-btn text href="https://uoftcoursetools.tech/" target="blank">
+                <v-btn
+                    text
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
+                    target="blank"
+                >
+                    <v-icon left>mdi-text-box-check-outline</v-icon>
+                    Survey
+                </v-btn>
+                <v-btn
+                    v-if="!$isMobile()"
+                    text
+                    href="https://uoftcoursetools.tech/"
+                    target="blank"
+                >
                     <v-icon left>mdi-file-document</v-icon>
                     Docs
                 </v-btn>
@@ -174,8 +187,9 @@
                         <h1>Open Source</h1>
                         <h3 class="font-weight-medium ma-5">
                             This is a platform built for students, by students.
-                            Universities can't always keep up with the cutting-edge,
-                            but we have made it our mission to do so.
+                            Universities can't always keep up with the cutting-edge
+                            technologies, but we have made it our mission to do so in
+                            order to deliver the best.
                         </h3>
                         <h3 class="font-weight-medium">
                             That's why we need your help. At VIAPlanner, we are

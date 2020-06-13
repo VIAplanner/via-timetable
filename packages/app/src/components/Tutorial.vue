@@ -3,7 +3,7 @@
         <v-card>
             <v-card-title style="background-color: #012B5C;">
                 <p class="headline ma-0" style="color: white">
-                    Welcome to VIAplanner!
+                    Welcome to VIAplanner! {{ getTutorialPopup }}
                 </p>
                 <v-spacer></v-spacer>
                 <v-btn icon large @click="dialog = false" color="white">
@@ -37,6 +37,7 @@
 
 <script>
 import genColor from "color-generator";
+import { mapMutations, mapGetters } from "vuex";
 export default {
     mounted() {
         if (!localStorage.visited) {
@@ -45,7 +46,6 @@ export default {
     },
     data() {
         return {
-            dialog: !localStorage.visited && !this.$isMobile(),
             allTut: [
                 {
                     step: "Step 1",
@@ -80,6 +80,20 @@ export default {
                 },
             ],
         };
+    },
+    computed: {
+        ...mapGetters(["getTutorialPopup"]),
+        dialog: {
+            get() {
+                return !this.$isMobile() && this.getTutorialPopup;
+            },
+            set(value) {
+                this.setTutorialPopup(value);
+            },
+        },
+    },
+    methods: {
+        ...mapMutations(["setTutorialPopup"]),
     },
 };
 </script>
