@@ -4,6 +4,8 @@
   </a>
 </p>
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/84bc999c-5549-415d-8d1e-f8c03324c2e4/deploy-status)](https://app.netlify.com/sites/viaplanner/deploys)
+
 # VIAplanner
 
 VIAplanner is a tool designed by students at the University of Toronto to help the community. We desire to enhance the course selection process.
