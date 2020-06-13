@@ -21,7 +21,7 @@
                 <v-btn
                     v-if="!$isMobile()"
                     text
-                    href="https://uoftcoursetools.tech/"
+                    href="https://docs.viaplanner.ca/"
                     target="blank"
                 >
                     <v-icon left>mdi-file-document</v-icon>
@@ -200,7 +200,7 @@
                         </h3>
                         <div class="mt-3">
                             <v-btn
-                                href="https://uoftcoursetools.tech/"
+                                href="https://docs.viaplanner.ca/"
                                 target="blank"
                                 dark
                                 color="#012B5C"
