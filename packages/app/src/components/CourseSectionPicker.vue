@@ -205,11 +205,21 @@ export default {
       for (var x = 0; x < dayEvents.length; x++) {
         const event = dayEvents[x];
         const time = this.getFormattedTime(event.start, event.end);
+        let conflictEmoji
+        if(event.code[8] === 'F'){
+          conflictEmoji = "🍂"
+        }
+        else if(event.code[8] === 'S'){
+          conflictEmoji = "❄️"
+        }
+        else {
+          conflictEmoji = "🍂❄️"
+        }
         const ret = {
           courseCode: event.code,
           sectionCode: event.sectionCode,
           time: time,
-          conflictString: `${event.code} ${
+          conflictString: `${conflictEmoji} ${event.code} ${
             event.sectionCode
           } ${time}`
         };
@@ -239,19 +249,14 @@ export default {
         if (fallConflict != null &&
         `${fallConflict.courseCode}${fallConflict.sectionCode}` !=
         `${this.code}${timetableSection}`) {
-          // fallConflict.conflictString = "Conflicts with " + fallConflict.conflictString
           ret.push(fallConflict)
         }
         if (winterConflict != null &&
         `${winterConflict.courseCode}${winterConflict.sectionCode}` !=
         `${this.code}${timetableSection}`) {
-          // if (ret.length == 0) {
-          //   winterConflict.conflictString = "Conflicts with" + winterConflict.conflictString
-          // }
-          // else {
-          //   winterConflict.conflictString = "and " + winterConflict.conflictString
-          // }
-          ret.push(winterConflict)
+          if (!(ret.length === 1 && ret[0].conflictString === winterConflict.conflictString)) {
+            ret.push(winterConflict)
+          }
         }
       }
       if (ret.length == 0) {
