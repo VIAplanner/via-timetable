@@ -375,12 +375,11 @@ export default new Vuex.Store({
                 return state.winterTimetable;
             }
         },
-        otherTimetable: (state)=>{
-            if (state.semesterStatus === "F") {
-                return state.winterTimetable;
-            } else {
-                return state.fallTimetable;
-            }
+        fallTimetable: (state)=>{
+            return state.fallTimetable;
+        },
+        winterTimetable : (state)=>{
+            return state.winterTimetable
         },
         selectedCourses: (state) => {
             if (state.semesterStatus === "F") {
