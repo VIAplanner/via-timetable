@@ -207,6 +207,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                 // Base case...
                 const temp = [...output];
                 temp.push(arrayElement);
+                const tempLecList = temp
                 addSectionToTimetable(temp, fallTimetable)
                 //if its invalid, clear the timetable and start again
                 if (overlapExists(fallTimetable)) {
@@ -243,6 +244,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                     }
                                     const temp = [...output2];
                                     temp.push(arrayElement2);
+                                    const tempPraList = temp
                                     addSectionToTimetable(temp, fallTimetable)
                                     if (overlapExists(fallTimetable)) {
 
@@ -298,6 +300,8 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                             const yearLocked = []
                                                             const tempList = [...output2]
                                                             tempList.push(arrayElement2)
+                                                            tempList.push(...tempLecList)
+                                                            tempList.push(...tempPraList)
                                                             for (const section of tempList) {
                                                                 if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
                                                                     yearLocked.push(section.comboCode)
@@ -342,6 +346,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                             const yearLocked = []
                                             const tempList = [...output2]
                                             tempList.push(arrayElement2)
+                                            tempList.push(...tempLecList)
                                             for (const section of tempList) {
                                                 if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
                                                     yearLocked.push(section.comboCode)
@@ -436,13 +441,13 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                             const yearLocked = []
                                             const tempList = [...output2]
                                             tempList.push(arrayElement2)
+                                            tempList.push(...tempLecList)
                                             for (const section of tempList) {
                                                 if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
                                                     yearLocked.push(section.comboCode)
                                                 }
                                             }
                                             const temp = createCopyOfCourseSection(winterCourseSection)
-                                            console.log(temp, yearLocked)
                                             lockSectionOfCourse(temp, yearLocked)
                                             winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
                                             if (JSON.stringify(winterTimetable) === JSON.stringify({
@@ -471,7 +476,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                             }
                             const tutResult = tutorialCombo(courseSection)
                             if (tutResult) {
-
                                 fallLectureCombo.founded = 1
                                 //founds a valid timetable
                                 return true
@@ -712,7 +716,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                         }
                                         const temp = [...output2];
                                         temp.push(arrayElement2);
-                                        addSectionToTimetable(temp, fallTimetable)
+                                        addSectionToTimetable(temp, winterTimetable)
                                         if (overlapExists(fallTimetable)) {
                                             fallTimetable = createShallowCopyOfTimetable(prevTimetable)
                                             let j = -1;
