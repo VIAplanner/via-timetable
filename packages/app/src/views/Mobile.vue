@@ -37,7 +37,7 @@
                                 height="50"
                                 color="#012B5C"
                                 dark
-                                href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                                href="https://github.com/UTM-Hacklab/VIAplanner"
                                 target="_blank"
                             >
                                 <v-icon left dark>mdi-github</v-icon>
@@ -50,7 +50,7 @@
                                 height="50"
                                 color="#69C673"
                                 dark
-                                href="https://uoftcoursetools.tech/"
+                                href="https://docs.viaplanner.ca"
                                 target="_blank"
                             >
                                 <v-icon left dark>mdi-file-document</v-icon>
