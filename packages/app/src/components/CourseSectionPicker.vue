@@ -65,8 +65,7 @@
                         >
                           <v-col>
                             <v-tooltip top
-                              v-if="_checkConflict(time.day,time.start,time.end,
-							  timetableSelectedMeetingSections[activityType]) != null"
+                              v-if="_checkConflict(time.day,time.start,time.end, timetableSelectedMeetingSections[activityType]) != null"
                             >
 								<template v-slot:activator="{ on }">
 									<div class="conflicting-time-orange" v-on="on">
@@ -78,7 +77,7 @@
 									time.start,time.end, timetableSelectedMeetingSections[activityType])"
 									:key="conflictSection.sectionCode"
 								>
-									{{conflictSection.conflictString}}
+									Conflicts with {{conflictSection.conflictString}}
 								</div>
                             </v-tooltip>
                             <div v-else>
@@ -148,13 +147,11 @@ export default {
     this.resetSelectedMeetingSections();
   },
   computed: {
-    ...mapGetters([
-      "timetable",
-	  "fallTimetable",
-	  "winterTimetable",
-      "selectedCourses",
-      "getLockedSections"
-    ]),
+    ...mapGetters(["timetable", 
+    "fallTimetable", 
+    "winterTimetable", 
+    "selectedCourses", 
+    "getLockedSections"]),
     course() {
       return this.selectedCourses[this.code];
     },
@@ -212,7 +209,7 @@ export default {
           courseCode: event.code,
           sectionCode: event.sectionCode,
           time: time,
-          conflictString: `${event.code.slice(0, 6)} ${
+          conflictString: `${event.code} ${
             event.sectionCode
           } ${time}`
         };
@@ -225,37 +222,42 @@ export default {
       return null;
     },
     _checkConflict(day, start, end, timetableSection) {
-		let ret = []
-	  	if (this.code[8] === "F" || this.code[8] === "S") { //Half year course
-			const semesterConflict = this.checkConflict(this.timetable, day, start, end);
-			/*If there is conflict and the conflict is not with the selected section on the timetable which
-            the user is trying to switch away from, in other words if the conflict is real*/
-			if (semesterConflict != null &&
-			`${semesterConflict.courseCode}${semesterConflict.sectionCode}` !=
-			`${this.code}${timetableSection}`) {
-				ret.push(semesterConflict)
-			}
-		}
-		else{ //Full year course
-			const fallConflict = this.checkConflict(this.fallTimetable, day, start, end);
-			const winterConflict = this.checkConflict(this.winterTimetable, day, start, end);
-			if (fallConflict != null &&
-			`${fallConflict.courseCode}${fallConflict.sectionCode}` !=
-			`${this.code}${timetableSection}`) {
-				fallConflict.conflictString = "Conflicts with " + fallConflict.conflictString
-				ret.push(fallConflict)
-			}
-			if (winterConflict != null &&
-			`${winterConflict.courseCode}${winterConflict.sectionCode}` !=
-			`${this.code}${timetableSection}`) {
-				winterConflict.conflictString = "and " + winterConflict.conflictString
-				ret.push(winterConflict)
-			}
-		}
-		if (ret.length == 0) {
-			return null
-		}
-		return ret
+      let ret = []
+      if (this.code[8] === "F" || this.code[8] === "S") { //Half year course
+        const semesterConflict = this.checkConflict(this.timetable, day, start, end);
+        /*If there is conflict and the conflict is not with the selected section on the timetable which
+              the user is trying to switch away from, in other words if the conflict is real*/
+        if (semesterConflict != null &&
+        `${semesterConflict.courseCode}${semesterConflict.sectionCode}` !=
+        `${this.code}${timetableSection}`) {
+          ret.push(semesterConflict)
+        }
+      }
+      else{ //Full year course
+        const fallConflict = this.checkConflict(this.fallTimetable, day, start, end);
+        const winterConflict = this.checkConflict(this.winterTimetable, day, start, end);
+        if (fallConflict != null &&
+        `${fallConflict.courseCode}${fallConflict.sectionCode}` !=
+        `${this.code}${timetableSection}`) {
+          // fallConflict.conflictString = "Conflicts with " + fallConflict.conflictString
+          ret.push(fallConflict)
+        }
+        if (winterConflict != null &&
+        `${winterConflict.courseCode}${winterConflict.sectionCode}` !=
+        `${this.code}${timetableSection}`) {
+          // if (ret.length == 0) {
+          //   winterConflict.conflictString = "Conflicts with" + winterConflict.conflictString
+          // }
+          // else {
+          //   winterConflict.conflictString = "and " + winterConflict.conflictString
+          // }
+          ret.push(winterConflict)
+        }
+      }
+      if (ret.length == 0) {
+        return null
+      }
+      return ret
     },
     onClickDone() {
       this.updateTimetable();

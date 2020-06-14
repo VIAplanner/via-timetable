@@ -29,6 +29,8 @@ export default new Vuex.Store({
         },
         conflictPopup: false,
         searchBarValue: null,
+        savedFallTimetable: {},
+        savedWinterTimetable: {},
         savedSelectedCourses: {},
         savedLockedSections: [],
         semesterStatus: "F",
@@ -84,19 +86,19 @@ export default new Vuex.Store({
             }
         },
         removeCourse(state, payload) {
-            if (payload.course.courseCode.slice(0, 4) === "Lock") {
+            if (payload.code.slice(0, 4) === "Lock") {
                 if (state.semesterStatus === "F") {
                     Vue.delete(state.fallSelectedCourses, payload.code)
                 } else {
                     Vue.delete(state.winterSelectedCourses, payload.code)
                 }
             }
-            else if (payload.course.courseCode[8] === "F") {
+            else if (payload.code[8] === "F") {
                 Vue.delete(state.fallSelectedCourses, payload.code)
             }
-            else if (payload.course.courseCode[8] === "S") {
+            else if (payload.code[8] === "S") {
                 Vue.delete(state.winterSelectedCourses, payload.code)
-            } else if (payload.course.courseCode[8] === "Y"){
+            } else if (payload.code[8] === "Y"){
                 Vue.delete(state.fallSelectedCourses, payload.code)
                 Vue.delete(state.winterSelectedCourses, payload.code)
             }
@@ -173,6 +175,12 @@ export default new Vuex.Store({
     },
     actions: {
         saveTimetable(context) {
+            context.state.savedFallTimetable = JSON.parse(
+                JSON.stringify(context.state.fallTimetable)
+            );
+            context.state.savedWinterTimetable = JSON.parse(
+                JSON.stringify(context.state.winterTimetable)
+            );
             if (context.state.semesterStatus === "F") {
                 context.state.savedSelectedCourses = JSON.parse(
                     JSON.stringify(context.state.fallSelectedCourses)
@@ -190,6 +198,7 @@ export default new Vuex.Store({
             }
         },
         revertTimetable(context) {
+            context.commit("setTimetables", [context.state.savedFallTimetable, context.state.savedWinterTimetable]);
             context.commit("setSelectedCourses", context.state.savedSelectedCourses);
             context.commit("setLockedSections", context.state.savedLockedSections);
         },
@@ -218,14 +227,14 @@ export default new Vuex.Store({
                 },
             });
 
-            let timetables;
             const fallCourses = Object.keys(context.state.fallSelectedCourses).map(
                 (code) => context.state.fallSelectedCourses[code]
             );
-            const winterCourses = Object.keys(context.state.fallSelectedCourses).map(
+            const winterCourses = Object.keys(context.state.winterSelectedCourses).map(
                 (code) => context.state.winterSelectedCourses[code]
             );
-            timetables = generateTimetables(fallCourses, context.state.fallLockedSections,
+
+            let timetables = generateTimetables(fallCourses, context.state.fallLockedSections,
                 winterCourses, context.state.winterLockedSections)
 
             context.dispatch("validateTimetable", timetables);
@@ -238,7 +247,7 @@ export default new Vuex.Store({
             ) {
                 context.commit("setSearchBarValue", null);
             }
-
+            
             //Remove course
             context.commit("removeCourse", payload);
             
@@ -255,22 +264,24 @@ export default new Vuex.Store({
             }
 
             //Remove all sections of the deleted course from the correct timetable   
-            if(payload.includes("Lock")){
+            if(payload.code.includes("Lock")){
                 if(context.state.semesterStatus === "F"){
-                    for (let day of context.state.fallTimetable) {
-                        for (let event of day) {
-                            if (event.code === payload) {
-                                day.splice(day.indexOf(event), 1);
+                    for (let day in context.state.fallTimetable) {
+                        let dayEvents = context.state.fallTimetable[day]
+                        for (let event of dayEvents) {
+                            if (event.code === payload.code) {
+                                dayEvents.splice(dayEvents.indexOf(event), 1);
                                 break;
                             }
                         }
                     }
                 }
                 else{
-                    for (let day of context.state.winterTimetable) {
-                        for (let event of day) {
-                            if (event.code === payload) {
-                                day.splice(day.indexOf(event), 1);
+                    for (let day in context.state.winterTimetable) {
+                        let dayEvents = context.state.winterTimetable[day]
+                        for (let event of dayEvents) {
+                            if (event.code === payload.code) {
+                                dayEvents.splice(dayEvents.indexOf(event), 1);
                                 break;
                             }
                         }
@@ -278,28 +289,32 @@ export default new Vuex.Store({
                 }
             }
             else{
-                for (let day of context.state.fallTimetable) {
-                    for (let event of day) {
-                        if (event.code === payload) {
-                            day.splice(day.indexOf(event), 1);
+                for (let day in context.state.fallTimetable) {
+                    let dayEvents = context.state.fallTimetable[day]
+                    for (let event of dayEvents) {
+                        if (event.code === payload.code) {
+                            dayEvents.splice(dayEvents.indexOf(event), 1);
                         }
                     }
                 }
-                for (let day of context.state.winterTimetable) {
-                    for (let event of day) {
-                        if (event.code === payload) {
-                            day.splice(day.indexOf(event), 1);
+                for (let day in context.state.winterTimetable) {
+                    let dayEvents = context.state.winterTimetable[day]
+                    for (let event of dayEvents) {
+                        if (event.code === payload.code) {
+                            dayEvents.splice(dayEvents.indexOf(event), 1);
                         }
                     }
                 }
             }
         },
         //Recalculate timetable when switching sections with conflict
-        resetTimetable(context) {
+        resetTimetable(context, payload) {
             // Save the timetable before it gets reset
-            context.dispatch("saveTimetable");
-            let timetable;
-            
+
+            if(!payload){
+                context.dispatch("saveTimetable");            
+            }
+
             const fallCourses = Object.keys(context.state.fallSelectedCourses).map(
                 (code) => context.state.fallSelectedCourses[code]
             );
@@ -307,7 +322,7 @@ export default new Vuex.Store({
                 (code) => context.state.winterSelectedCourses[code]
             );
                 
-            bothTimetables = generateTimetables(fallCourses, context.state.fallLockedSections,
+            let bothTimetables = generateTimetables(fallCourses, context.state.fallLockedSections,
                 winterCourses, context.state.winterLockedSections)
 
             context.dispatch("validateTimetable", bothTimetables);

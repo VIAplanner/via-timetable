@@ -300,7 +300,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                             tempList.push(arrayElement2)
                                                             for (const section of tempList) {
                                                                 if (section.comboCode.charAt(section.comboCode.length - 6) === "Y") {
-                                                                    yearLocked.append(section.comboCode)
+                                                                    yearLocked.push(section.comboCode)
                                                                 }
                                                             }
                                                             const temp = createCopyOfCourseSection(winterCourseSection)
@@ -442,6 +442,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                 }
                                             }
                                             const temp = createCopyOfCourseSection(winterCourseSection)
+                                            console.log(temp, yearLocked)
                                             lockSectionOfCourse(temp, yearLocked)
                                             winterTimetable = createTimetable(fallCourseSection, temp, "W")[1]
                                             if (JSON.stringify(winterTimetable) === JSON.stringify({
@@ -815,7 +816,7 @@ const generateTimetables = (fallCourses, fallLockSections, winterCourses, winter
     const winterCourseSections = winterCourses.map(course => sortCourseSection(course));
     lockSectionOfCourse(fallCourseSections, fallLockSections)
     lockSectionOfCourse(winterCourseSections, winterLockSections)
-    const timetables = createTimetable(fallCourseSections, winterCourseSections, "F")
+    let timetables = createTimetable(fallCourseSections, winterCourseSections, "F")
     if ((JSON.stringify(timetables[0]) === JSON.stringify({
         MONDAY: [],
         TUESDAY: [],
@@ -829,7 +830,7 @@ const generateTimetables = (fallCourses, fallLockSections, winterCourses, winter
         THURSDAY: [],
         FRIDAY: [],
     })) && winterCourses.length > 0) {
-        timetable = null
+        timetables = null
     }
     return timetables;
 };

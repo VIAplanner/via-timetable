@@ -74,12 +74,16 @@ export default {
         ...mapActions([
             "selectCourse",
             "deleteCourse",
+            "saveTimetable",
             "resetTimetable"
         ]),
-        ...mapMutations(["lockSection", "setLockedDayStatus"]),
+        ...mapMutations(["lockSection", "setLockedDayStatus", "addCourse"]),
         lockDay() {
             let i = 0;
             this.setLockedDayStatus(this.weekday);
+
+            // save a copy before the change
+            this.saveTimetable()
 
             //Flag is true if there is at least one course on the day that's unlocked
             let flag = this.timetable[this.weekday.toUpperCase()].some((element)=>{
@@ -100,7 +104,7 @@ export default {
             }
 
             if (flag) {
-                this.resetTimetable()
+                this.resetTimetable(true)
             }
         },
         unlockDay() {
