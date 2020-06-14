@@ -74,38 +74,40 @@ export default {
         ...mapActions([
             "selectCourse",
             "deleteCourse",
-            "saveTimetable",
-            "revertTimetable",
+            "resetTimetable"
         ]),
         ...mapMutations(["lockSection", "setLockedDayStatus"]),
         lockDay() {
             let i = 0;
-            this.saveTimetable();
             this.setLockedDayStatus(this.weekday);
+
+            //Flag is true if there is at least one course on the day that's unlocked
+            let flag = this.timetable[this.weekday.toUpperCase()].some((element)=>{
+                return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`)
+            })
 
             while (i < 12) {
                 this.currStart = 32400 + i * 3600;
 
-                // if locking the day is impossible, revert to the previous timetable
-                if (this.getNoTimetablePopup) {
-                    this.revertTimetable();
-                    break;
-                }
-
+                //
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                     );
-                    this.selectCourse({ course: this.currSecData, noSave: true });
+                    this.addCourse({ course: this.currSecData});
                 }
                 i++;
+            }
+
+            if (flag) {
+                this.resetTimetable()
             }
         },
         unlockDay() {
             this.setLockedDayStatus(this.weekday);
             for (let i = 0; i < 12; i++) {
                 this.currStart = 32400 + i * 3600;
-                for (var lockedCourse of this.getLockedSections) {
+                for (let lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
                             code: lockedCourse.slice(0, lockedCourse.length - 5),

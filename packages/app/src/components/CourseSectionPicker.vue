@@ -64,53 +64,26 @@
                           :key="`${time.day}${time.start}`"
                         >
                           <v-col>
-                            <v-tooltip
-                              top
-                              v-if="
-                                                                _checkConflict(
-                                                                    time.day,
-                                                                    time.start,
-                                                                    time.end,
-                                                                    timetableSelectedMeetingSections[
-                                                                        activityType
-                                                                    ]
-                                                                ) != null
-                                                            "
+                            <v-tooltip top
+                              v-if="_checkConflict(time.day,time.start,time.end,
+							  timetableSelectedMeetingSections[activityType]) != null"
                             >
-                              <template v-slot:activator="{ on }">
-                                <div class="conflicting-time-orange" v-on="on">
-                                  {{
-                                  getProperDayName(
-                                  time.day
-                                  ).slice(0, 3)
-                                  }}
-                                  {{
-                                  getFormattedTime(
-                                  time.start,
-                                  time.end
-                                  )
-                                  }}
-                                </div>
-                              </template>
-                              Conflicts with
-                              {{
-                              checkConflict(
-                              time.day,
-                              time.start,
-                              time.end
-                              ).conflictString
-                              }}
+								<template v-slot:activator="{ on }">
+									<div class="conflicting-time-orange" v-on="on">
+										{{getProperDayName(time.day).slice(0, 3)}}
+										{{getFormattedTime(time.start,time.end)}}
+									</div>
+								</template>
+								<div v-for="conflictSection in _checkConflict(time.day,
+									time.start,time.end, timetableSelectedMeetingSections[activityType])"
+									:key="conflictSection.sectionCode"
+								>
+									{{conflictSection.conflictString}}
+								</div>
                             </v-tooltip>
                             <div v-else>
-                              {{
-                              getProperDayName(time.day)
-                              }}
-                              {{
-                              getFormattedTime(
-                              time.start,
-                              time.end
-                              )
-                              }}
+                              {{getProperDayName(time.day)}}
+                              {{getFormattedTime(time.start,time.end)}}
                             </div>
                           </v-col>
                         </v-row>
@@ -175,7 +148,13 @@ export default {
     this.resetSelectedMeetingSections();
   },
   computed: {
-    ...mapGetters(["timetable", "selectedCourses", "getLockedSections"]),
+    ...mapGetters([
+      "timetable",
+	  "fallTimetable",
+	  "winterTimetable",
+      "selectedCourses",
+      "getLockedSections"
+    ]),
     course() {
       return this.selectedCourses[this.code];
     },
@@ -215,7 +194,7 @@ export default {
         e = 12;
       }
       var endPeriod = end / 3600 < 12 ? "AM" : "PM";
-      let startHalf = Number.isInteger(s) ? "00":"30"
+      let startHalf = Number.isInteger(s) ? "00" : "30";
       let endHalf = Number.isInteger(e) ? "00" : "30";
       return `${s - startHalf / 6 / 10}:${startHalf} ${startPeriod} - ${e -
         endHalf / 6 / 10}:${endHalf} ${endPeriod}`;
@@ -224,8 +203,8 @@ export default {
       var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
       return ret.slice(0, 3);
     },
-    checkConflict(day, start, end) {
-      const dayEvents = this.timetable[day];
+    checkConflict(timetable, day, start, end) {
+      const dayEvents = timetable[day];
       for (var x = 0; x < dayEvents.length; x++) {
         const event = dayEvents[x];
         const time = this.getFormattedTime(event.start, event.end);
@@ -246,17 +225,37 @@ export default {
       return null;
     },
     _checkConflict(day, start, end, timetableSection) {
-      const conflict = this.checkConflict(day, start, end);
-      /*If there is conflict and the conflict is not with the selected section on the timetable which
-            the user is trying to switch away from */
-      if (
-        conflict != null &&
-        `${conflict.courseCode}${conflict.sectionCode}` !=
-          `${this.code}${timetableSection}`
-      ) {
-        return conflict;
-      }
-      return null;
+		let ret = []
+	  	if (this.code[8] === "F" || this.code[8] === "S") { //Half year course
+			const semesterConflict = this.checkConflict(this.timetable, day, start, end);
+			/*If there is conflict and the conflict is not with the selected section on the timetable which
+            the user is trying to switch away from, in other words if the conflict is real*/
+			if (semesterConflict != null &&
+			`${semesterConflict.courseCode}${semesterConflict.sectionCode}` !=
+			`${this.code}${timetableSection}`) {
+				ret.push(semesterConflict)
+			}
+		}
+		else{ //Full year course
+			const fallConflict = this.checkConflict(this.fallTimetable, day, start, end);
+			const winterConflict = this.checkConflict(this.winterTimetable, day, start, end);
+			if (fallConflict != null &&
+			`${fallConflict.courseCode}${fallConflict.sectionCode}` !=
+			`${this.code}${timetableSection}`) {
+				fallConflict.conflictString = "Conflicts with " + fallConflict.conflictString
+				ret.push(fallConflict)
+			}
+			if (winterConflict != null &&
+			`${winterConflict.courseCode}${winterConflict.sectionCode}` !=
+			`${this.code}${timetableSection}`) {
+				winterConflict.conflictString = "and " + winterConflict.conflictString
+				ret.push(winterConflict)
+			}
+		}
+		if (ret.length == 0) {
+			return null
+		}
+		return ret
     },
     onClickDone() {
       this.updateTimetable();

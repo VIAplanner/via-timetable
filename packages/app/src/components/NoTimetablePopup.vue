@@ -6,7 +6,7 @@
       </v-img>
       <v-card-text class="text--primary">
         <div class="textStyle">
-          We are unable to generate a timetable based on the changes you
+          We are unable to generate a pair of timetables based on the changes you
           made. We will roll back your previous timetable.
         </div>
       </v-card-text>
