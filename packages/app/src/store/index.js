@@ -268,9 +268,9 @@ export default new Vuex.Store({
                 if(context.state.semesterStatus === "F"){
                     for (let day in context.state.fallTimetable) {
                         let dayEvents = context.state.fallTimetable[day]
-                        for (let event of dayEvents) {
-                            if (event.code === payload.code) {
-                                dayEvents.splice(dayEvents.indexOf(event), 1);
+                        for (let i = dayEvents.length - 1; i >= 0; i--){
+                            if (dayEvents[i].code === payload.code) {
+                                dayEvents.splice(i, 1);
                                 break;
                             }
                         }
@@ -279,9 +279,9 @@ export default new Vuex.Store({
                 else{
                     for (let day in context.state.winterTimetable) {
                         let dayEvents = context.state.winterTimetable[day]
-                        for (let event of dayEvents) {
-                            if (event.code === payload.code) {
-                                dayEvents.splice(dayEvents.indexOf(event), 1);
+                        for (let i = dayEvents.length - 1; i >= 0; i--){
+                            if (dayEvents[i].code === payload.code) {
+                                dayEvents.splice(i, 1);
                                 break;
                             }
                         }
@@ -291,17 +291,17 @@ export default new Vuex.Store({
             else{
                 for (let day in context.state.fallTimetable) {
                     let dayEvents = context.state.fallTimetable[day]
-                    for (let event of dayEvents) {
-                        if (event.code === payload.code) {
-                            dayEvents.splice(dayEvents.indexOf(event), 1);
+                    for (let i = dayEvents.length - 1; i >= 0; i--){
+                        if (dayEvents[i].code === payload.code) {
+                            dayEvents.splice(i, 1);
                         }
                     }
                 }
                 for (let day in context.state.winterTimetable) {
                     let dayEvents = context.state.winterTimetable[day]
-                    for (let event of dayEvents) {
-                        if (event.code === payload.code) {
-                            dayEvents.splice(dayEvents.indexOf(event), 1);
+                    for (let i = dayEvents.length - 1; i >= 0; i--){
+                        if (dayEvents[i].code === payload.code) {
+                            dayEvents.splice(i, 1);
                         }
                     }
                 }
