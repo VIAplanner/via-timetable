@@ -786,21 +786,22 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
         fallLectureCombo(fallCourseSection)
     }
     else if (fallCourseSection.length == 0 && state === "F") {
-        fallTimetable, winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")
+        winterTimetable = createTimetable(fallCourseSection, winterCourseSection, "W")[1]
     }
     if (winterCourseSection.length > 0 && state === "W") {
         winterLectureCombo(winterCourseSection)
     }
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
-    for (const day of days) {
-        fallTimetable[day].sort((a, b) => {
-            return a.start - b.start;
-        });
-        winterTimetable[day].sort((a, b) => {
-            return a.start - b.start;
-        });
+    if(state === "F"){
+        for (const day of days) {
+            fallTimetable[day].sort((a, b) => {
+                return a.start - b.start;
+            });
+            winterTimetable[day].sort((a, b) => {
+                return a.start - b.start;
+            });
+        }
     }
-
     return [fallTimetable, winterTimetable]
 
 };
