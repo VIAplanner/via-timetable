@@ -322,9 +322,14 @@ export default new Vuex.Store({
                 (code) => context.state.winterSelectedCourses[code]
             );
                 
+            console.log(fallCourses, context.state.fallLockedSections,
+                winterCourses, context.state.winterLockedSections)
+                
             let bothTimetables = generateTimetables(fallCourses, context.state.fallLockedSections,
                 winterCourses, context.state.winterLockedSections)
-
+            
+            console.log(bothTimetables)
+            
             context.dispatch("validateTimetable", bothTimetables);
         },
         //Switch a section of a course when there is no conflict

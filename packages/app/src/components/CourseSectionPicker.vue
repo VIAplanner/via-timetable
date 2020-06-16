@@ -75,7 +75,7 @@
 								</template>
 								<div v-for="conflictSection in _checkConflict(time.day,
 									time.start,time.end, timetableSelectedMeetingSections[activityType])"
-									:key="conflictSection.sectionCode"
+									:key="`${conflictSection.courseCode}${conflictSection.sectionCode}`"
 								>
 									Conflicts with {{conflictSection.conflictString}}
 								</div>
@@ -290,7 +290,7 @@ export default {
               currTime.end,
               this.timetableSelectedMeetingSections[activityType]
             );
-            if (conflictTime != null) {
+            if (conflictTimes != null) {
               conflictSections.push(...conflictTimes);
             }
           }
