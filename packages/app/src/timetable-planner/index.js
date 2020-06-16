@@ -209,7 +209,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                 temp.push(arrayElement);
                 const tempLecList = temp
                 addSectionToTimetable(temp, fallTimetable)
-                console.log(fallTimetable)
                 //if its invalid, clear the timetable and start again
                 if (overlapExists(fallTimetable)) {
                     fallTimetable = {
@@ -420,7 +419,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                         const temp = [...output2];
                                         temp.push(arrayElement2);
                                         addSectionToTimetable(temp, fallTimetable)
-                                        console.log(fallTimetable)
                                         if (overlapExists(fallTimetable)) {
                                             fallTimetable = createShallowCopyOfTimetable(prevTimetable)
                                             let j = -1;
@@ -773,7 +771,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
 
 
     if (fallCourseSection.length > 0 && state === "F") {
-        console.log(fallCourseSection)
         fallLectureCombo(fallCourseSection)
     }
     else if (fallCourseSection.length == 0 && state === "F") {
