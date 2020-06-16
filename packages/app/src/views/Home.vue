@@ -19,7 +19,7 @@
       <v-row>
         <v-col>
           <timetable-course-card
-            class="my-4"
+            class="my-4 mx-8"
             v-for="(course, code) in getSelectedCourses(selectedCourses)"
             :key="code"
             :course="course"

@@ -103,10 +103,10 @@ export default {
         // change the color in the event so it correct based on hovering or locked
         dynamicColor() {
             if (this.locked) {
-                return { background: "#e6e6e6", cursor: "pointer" };
+                return { background: "#d9d9d9", cursor: "pointer" };
             } else {
                 return this.hovered
-                    ? { background: "#e6e6e6", cursor: "pointer" }
+                    ? { background: "#d9d9d9", cursor: "pointer" }
                     : { background: "white", cursor: "pointer" };
             }
         },
@@ -264,7 +264,6 @@ export default {
     height: 252px;
 }
 .course-code {
-    margin-bottom: 3px;
     margin-left: 3px;
 }
 .align-left {

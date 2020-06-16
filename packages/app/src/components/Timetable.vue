@@ -60,7 +60,7 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const start = convertSecondsToHours(event.start);
-                    if (start < earliest) {
+                    if (start < earliest && !event.code.includes("Lock")) {
                         earliest = start;
                     }
                 }
@@ -73,7 +73,7 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const end = convertSecondsToHours(event.end);
-                    if (end > latest) {
+                    if (end > latest && !event.code.includes("Lock")) {
                         latest = end;
                     }
                 }
