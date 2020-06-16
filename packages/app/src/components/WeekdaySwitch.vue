@@ -90,8 +90,8 @@ export default {
                 return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`)
             })
 
-            while (i < 12) {
-                this.currStart = 32400 + i * 3600;
+            while (i < 13) {
+                this.currStart = 28800 + i * 3600;
 
                 //
                 if (this.validLockSection()) {
@@ -109,8 +109,8 @@ export default {
         },
         unlockDay() {
             this.setLockedDayStatus(this.weekday);
-            for (let i = 0; i < 12; i++) {
-                this.currStart = 32400 + i * 3600;
+            for (let i = 0; i < 13; i++) {
+                this.currStart = 28800 + i * 3600;
                 for (let lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
