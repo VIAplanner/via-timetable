@@ -410,6 +410,12 @@ export default new Vuex.Store({
                 return state.winterLockedSections;
             }
         },
+        fallLockedSections: (state) => {
+            return state.fallLockedSections
+        },
+        winterLockedSections: (state) => {
+            return state.winterLockedSections
+        },
         getCourseColor: (state) => (code) => {
             if (state.semesterStatus === "F") {
                 return state.fallSelectedCourses[code].color;

@@ -151,7 +151,9 @@ export default {
     "fallTimetable", 
     "winterTimetable", 
     "selectedCourses", 
-    "getLockedSections"]),
+    "getLockedSections",
+    "fallLockedSections",
+    "winterLockedSections"]),
     course() {
       return this.selectedCourses[this.code];
     },
@@ -282,14 +284,14 @@ export default {
           //Find all conflicting sections
           const conflictSections = [];
           for (var currTime of newSection.times) {
-            var conflictTime = this._checkConflict(
+            var conflictTimes = this._checkConflict(
               currTime.day,
               currTime.start,
               currTime.end,
               this.timetableSelectedMeetingSections[activityType]
             );
             if (conflictTime != null) {
-              conflictSections.push(conflictTime);
+              conflictSections.push(...conflictTimes);
             }
           }
           // case 1, no conflicting times
@@ -306,12 +308,15 @@ export default {
           }
           // case 2, there are conflicting time(s)
           else {
+            //All the sections the user is trying to switch away from
             this.oldSectionsWithConflict.push(
               `${this.code}${this.timetableSelectedMeetingSections[activityType]}`
             );
+            //All the new sections to switch into
             this.newSectionsWithConflict.push(
               `${this.code}${this.selectedMeetingSections[activityType]}`
             );
+            //All the other sections the new sections conflict with
             this.totalConflictSections.push(...conflictSections);
           }
         }
@@ -320,12 +325,13 @@ export default {
         //Find if any conflicting section(s) is locked, if so, pop up a dialog
         var popUp = false;
         for (var conflictSection of this.totalConflictSections) {
-          if (
-            this.getLockedSections.indexOf(
-              `${conflictSection.courseCode}${conflictSection.sectionCode}`
-            ) != -1
-          ) {
+          let fallIndex = this.fallLockedSections.indexOf(
+            `${conflictSection.courseCode}${conflictSection.sectionCode}`)
+          let winterIndex = this.winterLockedSections.indexOf(
+              `${conflictSection.courseCode}${conflictSection.sectionCode}`)
+          if (fallIndex != -1 || winterIndex != -1) {
             popUp = true;
+            break;
           }
         }
         if (popUp) {
@@ -346,7 +352,7 @@ export default {
           `${conflictSection.courseCode}${conflictSection.sectionCode}`
         );
       }
-      // Lock the new sections, regenerate timetable, and unlock the new sections
+      // Temporarily lock the new sections, regenerate timetable, and unlock the new sections
       for (var newSection of this.newSectionsWithConflict) {
         this.lockSection(newSection);
       }
