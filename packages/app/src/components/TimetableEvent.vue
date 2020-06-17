@@ -103,10 +103,10 @@ export default {
         // change the color in the event so it correct based on hovering or locked
         dynamicColor() {
             if (this.locked) {
-                return { background: "#e6e6e6", cursor: "pointer" };
+                return { background: "#d9d9d9", cursor: "pointer" };
             } else {
                 return this.hovered
-                    ? { background: "#e6e6e6", cursor: "pointer" }
+                    ? { background: "#d9d9d9", cursor: "pointer" }
                     : { background: "white", cursor: "pointer" };
             }
         },
@@ -146,8 +146,8 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["selectCourse", "deleteCourse"]),
-        ...mapMutations(["lockSection", "unlockSection"]),
+        ...mapActions(["deleteCourse"]),
+        ...mapMutations(["lockSection", "unlockSection", "addCourse"]),
         atInput() {
             var courseSectionPicker = this.$refs.popUp;
             if (typeof courseSectionPicker != "undefined") {
@@ -162,8 +162,9 @@ export default {
             // half hour
             return true;
         },
+        //Toggle locked status of this TimetableEvent when it is not empty (lock/unlock this section)
         lockToggle() {
-            // modifies vuex based on the current section lock status
+            // modifies vuex based on the current section's lock status
             !this.locked
                 ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
                 : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
@@ -197,13 +198,14 @@ export default {
             e = e - 0.5;
             return `${s}:00 - ${e}:30`;
         },
+        //Toggle locked status of this TimetableEvent when it is empty (block/unblock this hour)
         lockedSectionToggle() {
             if (!this.locked) {
                 // if the user clicks on an empty timeslot, it will be added as a course in vuex
                 this.lockSection(
                     `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                 );
-                this.selectCourse({ course: this.currSecData });
+                this.addCourse({ course: this.currSecData });
             } else {
                 // if the user clicks on a lock timeslot, it will be removed
                 this.deleteCourse({ code: this.currSecData.courseCode });
@@ -262,7 +264,6 @@ export default {
     height: 252px;
 }
 .course-code {
-    margin-bottom: 3px;
     margin-left: 3px;
 }
 .align-left {

@@ -75,37 +75,43 @@ export default {
             "selectCourse",
             "deleteCourse",
             "saveTimetable",
-            "revertTimetable",
+            "resetTimetable"
         ]),
-        ...mapMutations(["lockSection", "setLockedDayStatus"]),
+        ...mapMutations(["lockSection", "setLockedDayStatus", "addCourse"]),
         lockDay() {
             let i = 0;
-            this.saveTimetable();
             this.setLockedDayStatus(this.weekday);
 
-            while (i < 12) {
-                this.currStart = 32400 + i * 3600;
+            // save a copy before the change
+            this.saveTimetable()
 
-                // if locking the day is impossible, revert to the previous timetable
-                if (this.getNoTimetablePopup) {
-                    this.revertTimetable();
-                    break;
-                }
+            //Flag is true if there is at least one course on the day that's unlocked
+            let flag = this.timetable[this.weekday.toUpperCase()].some((element)=>{
+                return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`)
+            })
 
+            while (i < 13) {
+                this.currStart = 28800 + i * 3600;
+
+                //
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                     );
-                    this.selectCourse({ course: this.currSecData, noSave: true });
+                    this.addCourse({ course: this.currSecData});
                 }
                 i++;
+            }
+
+            if (flag) {
+                this.resetTimetable(true)
             }
         },
         unlockDay() {
             this.setLockedDayStatus(this.weekday);
-            for (let i = 0; i < 12; i++) {
-                this.currStart = 32400 + i * 3600;
-                for (var lockedCourse of this.getLockedSections) {
+            for (let i = 0; i < 13; i++) {
+                this.currStart = 28800 + i * 3600;
+                for (let lockedCourse of this.getLockedSections) {
                     if (lockedCourse.includes(this.weekday.toUpperCase())) {
                         this.deleteCourse({
                             code: lockedCourse.slice(0, lockedCourse.length - 5),
