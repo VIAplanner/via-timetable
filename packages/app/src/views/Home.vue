@@ -17,12 +17,12 @@
     <v-container>
       <v-row>
         <help-dial />
-        <v-col class="mr-8">
+        <v-col class="mr-8 pb-0">
           <timetable :timetable="timetable" />
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col class="pt-0">
           <tutorial />
           <timetable-course-card
             class="my-4 mx-8"

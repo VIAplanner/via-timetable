@@ -237,7 +237,10 @@ export default {
 }
 
 .container {
-    padding: 24px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    padding-top: 24px !important;
+    padding-bottom: 0px !important;
 }
 
 .time-axis-number {
