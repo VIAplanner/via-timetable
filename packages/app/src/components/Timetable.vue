@@ -123,6 +123,12 @@ export default {
                 let eventEnd = convertSecondsToHours(event.end);
                 // Pad empty events before the start of the first class
                 // one hour
+
+                // if the current locked event starts before the timetable start time
+                if(eventStart < this.timetableStart){
+                    continue;
+                }
+
                 if (Number.isInteger(eventStart - currTime)) {
                     for (let j = 0; j < eventStart - currTime; j++) {
                         result.push({
@@ -150,7 +156,7 @@ export default {
                             currEnd: eventStart * 3600,
                         });
                         invalidStart--;
-                    // previous end time is full hour
+                        // previous end time is full hour
                     } else {
                         result.push({
                             start: invalidStart,
@@ -167,7 +173,6 @@ export default {
                             invalidStart--;
                         }
                     }
-                    
                 }
                 // if the section is a user locked section, pass it in as a locked event
                 if (event.code.includes("Lock")) {
@@ -181,7 +186,14 @@ export default {
                     event["currStart"] = event.start;
                     result.push(event);
                 }
+
                 currTime = eventEnd;
+
+                // if we reached the timetable end time
+                if (currTime === this.timetableEnd ) {
+                    break;
+                }
+
                 //If last event, pad empty events after it
                 if (i === meetingSections.length - 1) {
                     //half hour
