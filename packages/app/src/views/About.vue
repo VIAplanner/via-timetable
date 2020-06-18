@@ -1,7 +1,13 @@
 <template>
     <v-app>
-        <v-content style="background-color: #F3F3F3" class="pt-0">
-            <v-app-bar app dark color="#012B5C" class="pa-0">
+        <v-content style="background-color: #FEFEFE" class="pt-0">
+            <v-app-bar
+                fixed
+                elevation="0"
+                dark
+                class="pa-0"
+                :style="top ? 'background-color: transparent': 'background-color: #012B5C'"
+            >
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
@@ -36,8 +42,28 @@
                     GitHub
                 </v-btn>
             </v-app-bar>
-            <v-container fluid>
-                <v-row :justify="$isMobile() ? 'center' : 'start'">
+            <v-container fluid class="pb-0 pt-0">
+                <v-row>
+                    <v-col class="pa-0">
+                        <v-parallax
+                            id="top-image"
+                            src="../assets/about-background.jpg"
+                            :height="windowHeight"
+                        >
+                            <v-row align="center" justify="center">
+                                <v-col class="text-center" cols="12">
+                                    <h1 style="font-size:70px; letter-spacing:2px;"  v-intersect="onIntersect">
+                                        Strive for Equality
+                                    </h1>
+                                    <v-btn rounded color="#8be4f0" large
+                                        >Join Us</v-btn
+                                    >
+                                </v-col>
+                            </v-row>
+                        </v-parallax>
+                    </v-col>
+                </v-row>
+                <!-- <v-row :justify="$isMobile() ? 'center' : 'start'">
                     <v-col cols="12" lg="7" md="7" class="pb-0">
                         <div style="text-align:center">
                             <v-img
@@ -78,12 +104,8 @@
                             </div>
                         </v-row>
                     </v-col>
-                </v-row>
-                <v-row
-                    style="background-color: #FEFEFE"
-                    justify="center"
-                    class="pt-12"
-                >
+                </v-row> -->
+                <v-row justify="center" class="pt-12">
                     <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
                         <v-row
                             align="center"
@@ -157,7 +179,7 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row justify="center" style="background-color: #FEFEFE;">
+                <v-row justify="center">
                     <v-col style="text-align: center">
                         <h1 class="ma-3">Features</h1>
                         <v-carousel
@@ -182,7 +204,11 @@
                         </v-carousel>
                     </v-col>
                 </v-row>
-                <v-row justify="center" align="center" style="min-height: 400px">
+                <v-row
+                    justify="center"
+                    align="center"
+                    style="min-height: 400px; background-color: #F5FAFD"
+                >
                     <v-col style="text-align: center" cols="12" lg="5">
                         <h1>Open Source</h1>
                         <h3 class="font-weight-medium ma-5">
@@ -239,6 +265,7 @@
 export default {
     data() {
         return {
+            top: false,
             slideData: {
                 "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
                 "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
@@ -247,6 +274,16 @@ export default {
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
         };
+    },
+    computed: {
+        windowHeight() {
+            return window.innerHeight;
+        },
+    },
+    methods: {
+        onIntersect(entries) {
+            this.top = entries[0].isIntersecting;
+        },
     },
 };
 </script>
