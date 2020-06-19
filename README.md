@@ -22,8 +22,8 @@ The fundamental problem we are trying to solve :
 ## Installation Using NPM
 
 ```sh
-git clone https://github.com/UTM-Hacklab/UofTCourseTools
-cd UofTCourseTools/packages/app
+git clone https://github.com/UTM-Hacklab/VIAplanner.git
+cd VIAplanner/packages/app
 npm install
 npm run serve
 ```
