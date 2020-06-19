@@ -6,7 +6,11 @@
                 elevation="0"
                 dark
                 class="pa-0"
-                :style="top ? 'background-color: transparent': 'background-color: #012B5C'"
+                :style="
+                    top
+                        ? 'background-color: transparent'
+                        : 'background-color: #012B5C'
+                "
             >
                 <v-img
                     src="../assets/VIA-Planner-White.png"
@@ -52,59 +56,35 @@
                         >
                             <v-row align="center" justify="center">
                                 <v-col class="text-center" cols="12">
-                                    <h1 style="font-size:70px; letter-spacing:2px;"  v-intersect="onIntersect">
-                                        Strive for Equality
-                                    </h1>
-                                    <v-btn rounded color="#8be4f0" large
-                                        >Join Us</v-btn
+                                    <h1
+                                        class="text-h2 ma-4"
+                                        v-intersect="onIntersect"
                                     >
+                                        Course Selection Made Easy
+                                    </h1>
+                                    <h1
+                                        class="text-h5 ma-4"
+                                        style="font-weight: 300"
+                                    >
+                                        We are a tool for tailoring your University
+                                        timetable based on your programs
+                                    </h1>
+                                    <v-btn
+                                        rounded
+                                        color="white"
+                                        x-large
+                                        outlined
+                                        style="text-transform: none"
+                                        class="ma-4"
+                                        @click="$router.push({ name: 'home' })"
+                                    >
+                                        Try out the Alpha
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                         </v-parallax>
                     </v-col>
                 </v-row>
-                <!-- <v-row :justify="$isMobile() ? 'center' : 'start'">
-                    <v-col cols="12" lg="7" md="7" class="pb-0">
-                        <div style="text-align:center">
-                            <v-img
-                                class="center"
-                                src="../assets/img1.png"
-                                max-width="800"
-                            ></v-img>
-                        </div>
-                    </v-col>
-                    <v-col cols="11" lg="4" md="4" class="pb-0">
-                        <v-row align="center" style="min-height: 450px">
-                            <div style="text-align: center">
-                                <h1>Making Your Timetable,</h1>
-                                <h1 style="margin-bottom: 40px">
-                                    Should Never Be a Chore
-                                </h1>
-                                <h3
-                                    style="margin-bottom: 20px"
-                                    class="font-weight-medium"
-                                >
-                                    Have you always dreaded making your timetable?
-                                    Searching through Acorn desperately trying to fit
-                                    together your courses? Well, we built a solution
-                                    for that. Through just a few clicks, our
-                                    timetable generator will provide you an ideal
-                                    schedule. Just select your courses, and we will
-                                    take care of the rest!
-                                </h3>
-                                <v-btn
-                                    class="text-none mb-1"
-                                    dark
-                                    large
-                                    color="#012B5C"
-                                    @click="$router.push({ name: 'home' })"
-                                >
-                                    Try it Now
-                                </v-btn>
-                            </div>
-                        </v-row>
-                    </v-col>
-                </v-row> -->
                 <v-row justify="center" class="pt-12">
                     <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
                         <v-row
@@ -209,22 +189,23 @@
                     align="center"
                     style="min-height: 400px; background-color: #F5FAFD"
                 >
-                    <v-col style="text-align: center" cols="12" lg="5">
+                    <v-col style="text-align: center" cols="12" lg="6">
                         <h1>Open Source</h1>
-                        <h3 class="font-weight-medium ma-5">
+                        <h3 class="text-body-1 ma-5">
                             This is a platform built for students, by students.
-                            Universities can't always keep up with the cutting-edge
-                            technologies, but we have made it our mission to do so in
-                            order to deliver the best.
+                            Universities can't always keep up with the
+                            <strong>cutting-edge</strong>
+                            technologies, but we have made it our mission to do so.
                         </h3>
-                        <h3 class="font-weight-medium">
+                        <h3 class="text-body-1">
                             That's why we need your help. At VIAplanner, we are
-                            strong believer in collaboration. Thus, we've decided to
-                            display all of our source code. If you have any ideas
-                            that you think would be useful, please don't hesitate to
-                            make it happen.
+                            strong believer in <strong>collaboration</strong>. Thus,
+                            we've decided to display all of our source code. If you
+                            have any ideas that you think would be useful, please
+                            don't hesitate to
+                            <strong>make it happen.</strong>
                         </h3>
-                        <div class="mt-3">
+                        <div class="mt-5">
                             <v-btn
                                 href="https://docs.viaplanner.ca/"
                                 target="blank"
