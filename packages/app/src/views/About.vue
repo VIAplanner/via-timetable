@@ -53,6 +53,7 @@
                             id="top-image"
                             src="../assets/about-background.jpg"
                             :height="windowHeight"
+                            v-if="!$isMobile()"
                         >
                             <v-row align="center" justify="center">
                                 <v-col class="text-center" cols="12">
@@ -74,7 +75,7 @@
                                         color="white"
                                         x-large
                                         outlined
-                                        style="text-transform: none"
+                                        style="text-transform: none; border-width: medium"
                                         class="ma-4"
                                         @click="$router.push({ name: 'home' })"
                                     >
@@ -83,9 +84,53 @@
                                 </v-col>
                             </v-row>
                         </v-parallax>
+                        <v-img
+                            id="top-image"
+                            src="../assets/about-background.jpg"
+                            :height="windowHeight"
+                            v-else
+                        >
+                            <v-row
+                                align="center"
+                                justify="center"
+                                class="fill-height"
+                            >
+                                <v-col class="text-center" cols="12">
+                                    <h1
+                                        class="text-h2 ma-4"
+                                        v-intersect="onIntersect"
+                                        style="color: white"
+                                    >
+                                        Course Selection Made Easy
+                                    </h1>
+                                    <h1
+                                        class="text-h5 ma-4"
+                                        style="font-weight: 300; color: white"
+                                    >
+                                        We are a tool for tailoring your University
+                                        timetable based on your programs
+                                    </h1>
+                                    <v-btn
+                                        rounded
+                                        color="white"
+                                        x-large
+                                        outlined
+                                        style="text-transform: none; border-width: medium"
+                                        class="ma-4"
+                                        @click="$router.push({ name: 'home' })"
+                                    >
+                                        Try out the Alpha
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-img>
                     </v-col>
                 </v-row>
-                <v-row justify="center" class="pt-12">
+                <v-row
+                    justify="center"
+                    class="pt-12"
+                    style="background-color: #F3F3F3"
+                >
                     <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
                         <v-row
                             align="center"
@@ -159,7 +204,7 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row justify="center">
+                <v-row justify="center" style="background-color: #F3F3F3">
                     <v-col style="text-align: center">
                         <h1 class="ma-3">Features</h1>
                         <v-carousel
@@ -184,11 +229,7 @@
                         </v-carousel>
                     </v-col>
                 </v-row>
-                <v-row
-                    justify="center"
-                    align="center"
-                    style="min-height: 400px; background-color: #F5FAFD"
-                >
+                <v-row justify="center" align="center" style="min-height: 400px">
                     <v-col style="text-align: center" cols="12" lg="6">
                         <h1>Open Source</h1>
                         <h3 class="text-body-1 ma-5">
