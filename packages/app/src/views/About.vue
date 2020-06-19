@@ -1,7 +1,17 @@
 <template>
     <v-app>
-        <v-content style="background-color: #F3F3F3" class="pt-0">
-            <v-app-bar app dark color="#012B5C" class="pa-0">
+        <v-content style="background-color: #FEFEFE" class="pt-0">
+            <v-app-bar
+                fixed
+                elevation="0"
+                dark
+                class="pa-0"
+                :style="
+                    top
+                        ? 'background-color: transparent'
+                        : 'background-color: #012B5C'
+                "
+            >
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
@@ -36,53 +46,90 @@
                     GitHub
                 </v-btn>
             </v-app-bar>
-            <v-container fluid>
-                <v-row :justify="$isMobile() ? 'center' : 'start'">
-                    <v-col cols="12" lg="7" md="7" class="pb-0">
-                        <div style="text-align:center">
-                            <v-img
-                                class="center"
-                                src="../assets/img1.png"
-                                max-width="800"
-                            ></v-img>
-                        </div>
-                    </v-col>
-                    <v-col cols="11" lg="4" md="4" class="pb-0">
-                        <v-row align="center" style="min-height: 450px">
-                            <div style="text-align: center">
-                                <h1>Making Your Timetable,</h1>
-                                <h1 style="margin-bottom: 40px">
-                                    Should Never Be a Chore
-                                </h1>
-                                <h3
-                                    style="margin-bottom: 20px"
-                                    class="font-weight-medium"
-                                >
-                                    Have you always dreaded making your timetable?
-                                    Searching through Acorn desperately trying to fit
-                                    together your courses? Well, we built a solution
-                                    for that. Through just a few clicks, our
-                                    timetable generator will provide you an ideal
-                                    schedule. Just select your courses, and we will
-                                    take care of the rest!
-                                </h3>
-                                <v-btn
-                                    class="text-none mb-1"
-                                    dark
-                                    large
-                                    color="#012B5C"
-                                    @click="$router.push({ name: 'home' })"
-                                >
-                                    Try it Now
-                                </v-btn>
-                            </div>
-                        </v-row>
+            <v-container fluid class="pb-0 pt-0">
+                <v-row>
+                    <v-col class="pa-0">
+                        <v-parallax
+                            id="top-image"
+                            src="../assets/about-background.jpg"
+                            :height="windowHeight"
+                            v-if="!$isMobile()"
+                        >
+                            <v-row align="center" justify="center">
+                                <v-col class="text-center" cols="12">
+                                    <h1
+                                        class="text-h2 ma-4"
+                                        v-intersect="onIntersect"
+                                    >
+                                        Course Selection Made Easy
+                                    </h1>
+                                    <h1
+                                        class="text-h5 ma-4"
+                                        style="font-weight: 300"
+                                    >
+                                        We are a tool for tailoring your University
+                                        timetable based on your programs
+                                    </h1>
+                                    <v-btn
+                                        rounded
+                                        color="white"
+                                        x-large
+                                        outlined
+                                        style="text-transform: none; border-width: medium"
+                                        class="ma-4"
+                                        @click="$router.push({ name: 'home' })"
+                                    >
+                                        Try out the Alpha
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-parallax>
+                        <v-img
+                            id="top-image"
+                            src="../assets/about-background.jpg"
+                            :height="windowHeight"
+                            v-else
+                        >
+                            <v-row
+                                align="center"
+                                justify="center"
+                                class="fill-height"
+                            >
+                                <v-col class="text-center" cols="12">
+                                    <h1
+                                        class="text-h2 ma-4"
+                                        v-intersect="onIntersect"
+                                        style="color: white"
+                                    >
+                                        Course Selection Made Easy
+                                    </h1>
+                                    <h1
+                                        class="text-h5 ma-4"
+                                        style="font-weight: 300; color: white"
+                                    >
+                                        We are a tool for tailoring your University
+                                        timetable based on your programs
+                                    </h1>
+                                    <v-btn
+                                        rounded
+                                        color="white"
+                                        x-large
+                                        outlined
+                                        style="text-transform: none; border-width: medium"
+                                        class="ma-4"
+                                        @click="$router.push({ name: 'home' })"
+                                    >
+                                        Try out the Alpha
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-img>
                     </v-col>
                 </v-row>
                 <v-row
-                    style="background-color: #FEFEFE"
                     justify="center"
                     class="pt-12"
+                    style="background-color: #F3F3F3"
                 >
                     <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
                         <v-row
@@ -157,7 +204,7 @@
                         </v-row>
                     </v-col>
                 </v-row>
-                <v-row justify="center" style="background-color: #FEFEFE;">
+                <v-row justify="center" style="background-color: #F3F3F3">
                     <v-col style="text-align: center">
                         <h1 class="ma-3">Features</h1>
                         <v-carousel
@@ -183,22 +230,23 @@
                     </v-col>
                 </v-row>
                 <v-row justify="center" align="center" style="min-height: 400px">
-                    <v-col style="text-align: center" cols="12" lg="5">
+                    <v-col style="text-align: center" cols="12" lg="6">
                         <h1>Open Source</h1>
-                        <h3 class="font-weight-medium ma-5">
+                        <h3 class="text-body-1 ma-5">
                             This is a platform built for students, by students.
-                            Universities can't always keep up with the cutting-edge
-                            technologies, but we have made it our mission to do so in
-                            order to deliver the best.
+                            Universities can't always keep up with the
+                            <strong>cutting-edge</strong>
+                            technologies, but we have made it our mission to do so.
                         </h3>
-                        <h3 class="font-weight-medium">
+                        <h3 class="text-body-1">
                             That's why we need your help. At VIAplanner, we are
-                            strong believer in collaboration. Thus, we've decided to
-                            display all of our source code. If you have any ideas
-                            that you think would be useful, please don't hesitate to
-                            make it happen.
+                            strong believer in <strong>collaboration</strong>. Thus,
+                            we've decided to display all of our source code. If you
+                            have any ideas that you think would be useful, please
+                            don't hesitate to
+                            <strong>make it happen.</strong>
                         </h3>
-                        <div class="mt-3">
+                        <div class="mt-5">
                             <v-btn
                                 href="https://docs.viaplanner.ca/"
                                 target="blank"
@@ -239,6 +287,7 @@
 export default {
     data() {
         return {
+            top: false,
             slideData: {
                 "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
                 "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
@@ -247,6 +296,16 @@ export default {
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
         };
+    },
+    computed: {
+        windowHeight() {
+            return window.innerHeight;
+        },
+    },
+    methods: {
+        onIntersect(entries) {
+            this.top = entries[0].isIntersecting;
+        },
     },
 };
 </script>
