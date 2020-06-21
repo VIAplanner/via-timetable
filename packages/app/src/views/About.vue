@@ -126,109 +126,115 @@
                         </v-img>
                     </v-col>
                 </v-row>
-                <v-row
-                    justify="center"
-                    class="pt-12"
-                    style="background-color: #F3F3F3"
-                >
-                    <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
-                        <v-row
-                            align="center"
-                            :justify="$isMobile() ? 'center' : 'end'"
-                            style="min-height:450px"
-                        >
-                            <div
-                                :style="
-                                    $isMobile()
-                                        ? 'text-align: center'
-                                        : 'text-align: right'
-                                "
+                <v-card elevation="4" class="mt-4">
+                    <v-row justify="center">
+                        <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
+                            <v-row
+                                align="center"
+                                :justify="$isMobile() ? 'center' : 'end'"
+                                class="fill-height"
                             >
-                                <h3>Generate</h3>
-                                <h1 style="margin-bottom: 20px">
-                                    Schedule Automatically
-                                </h1>
-                                <h3 class="font-weight-medium">
-                                    Simply choose a course on the search bar
-                                </h3>
-                                <h3
-                                    style="margin-bottom: 40px;"
-                                    class="font-weight-medium"
+                                <div
+                                    :style="
+                                        $isMobile()
+                                            ? 'text-align: center'
+                                            : 'text-align: right'
+                                    "
                                 >
-                                    and we will make a timetable for you
-                                </h3>
+                                    <h3>Generate</h3>
+                                    <h1 style="margin-bottom: 20px">
+                                        Schedule Automatically
+                                    </h1>
+                                    <h3 class="font-weight-medium">
+                                        Simply choose a course on the search bar
+                                    </h3>
+                                    <h3
+                                        style="margin-bottom: 40px;"
+                                        class="font-weight-medium"
+                                    >
+                                        and we will make a timetable for you
+                                    </h3>
+                                </div>
+                            </v-row>
+                        </v-col>
+                        <v-col cols="12" lg="7" class="pb-0" order="1" order-lg="2">
+                            <div style="text-align:center">
+                                <v-img
+                                    :class="$isMobile() ? ['center', 'ma-3'] : ['center', 'mt-3', 'mb-7']"
+                                    src="../assets/img2.gif"
+                                    max-width="800"
+                                ></v-img>
                             </div>
-                        </v-row>
-                    </v-col>
-                    <v-col cols="12" lg="7" class="pb-0" order="1" order-lg="2">
-                        <div style="text-align:center">
-                            <v-img
-                                class="center"
-                                src="../assets/img2.gif"
-                                max-width="800"
-                            ></v-img>
-                        </div>
-                    </v-col>
-                </v-row>
-                <v-row justify="center" class="pt-12">
-                    <v-col class="pb-0" cols="12" lg="7">
-                        <div style="text-align:center">
-                            <v-img
-                                class="center"
-                                src="../assets/img3.gif"
-                                max-width="800"
-                            ></v-img>
-                        </div>
-                    </v-col>
-                    <v-col cols="11" lg="5" class="pb-0">
-                        <v-row
-                            align="center"
-                            :justify="$isMobile() ? 'center' : 'start'"
-                            style="min-height: 430px;"
-                        >
-                            <div :style="$isMobile() ? 'text-align: center' : ''">
-                                <h3>Flexibility</h3>
-                                <h1 style="margin-bottom: 20px">
-                                    Block Times Off
-                                </h1>
-                                <h3 class="font-weight-medium">
-                                    Can't go to school on Mondays?
-                                </h3>
-                                <h3
-                                    style="margin-bottom: 40px;"
-                                    class="font-weight-medium"
-                                >
-                                    Just block that day off and we will reschedule
-                                </h3>
+                        </v-col>
+                    </v-row>
+                </v-card>
+                <v-card elevation="4" class="mt-4">
+                    <v-row justify="center" class="pt-12">
+                        <v-col class="pb-0" cols="12" lg="7">
+                            <div style="text-align:center">
+                                <v-img
+                                    class="center"
+                                    src="../assets/img3.gif"
+                                    max-width="800"
+                                ></v-img>
                             </div>
-                        </v-row>
-                    </v-col>
-                </v-row>
-                <v-row justify="center" style="background-color: #F3F3F3">
-                    <v-col style="text-align: center">
-                        <h1 class="ma-3">Features</h1>
-                        <v-carousel
-                            show-arrows-on-hover
-                            :height="$isMobile() ? 350 : 600"
-                        >
-                            <v-carousel-item
-                                v-for="(path, text) in slideData"
-                                :key="text"
+                        </v-col>
+                        <v-col cols="11" lg="5" class="pb-0">
+                            <v-row
+                                align="center"
+                                :justify="$isMobile() ? 'center' : 'start'"
+                                style="min-height: 430px;"
                             >
-                                <v-sheet color="white">
-                                    <v-row>
-                                        <v-col>
-                                            <p style="color: black">
-                                                {{ text }}
-                                            </p>
-                                            <v-img class="center" :src="path" />
-                                        </v-col>
-                                    </v-row>
-                                </v-sheet>
-                            </v-carousel-item>
-                        </v-carousel>
-                    </v-col>
-                </v-row>
+                                <div
+                                    :style="$isMobile() ? 'text-align: center' : ''"
+                                >
+                                    <h3>Flexibility</h3>
+                                    <h1 style="margin-bottom: 20px">
+                                        Block Times Off
+                                    </h1>
+                                    <h3 class="font-weight-medium">
+                                        Can't go to school on Mondays?
+                                    </h3>
+                                    <h3
+                                        style="margin-bottom: 40px;"
+                                        class="font-weight-medium"
+                                    >
+                                        Just block that day off and we will
+                                        reschedule
+                                    </h3>
+                                </div>
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-card>
+                <v-card elevation="4" class="mt-4">
+                    <v-row justify="center">
+                        <v-col style="text-align: center">
+                            <h1 class="ma-3">Features</h1>
+                            <v-carousel
+                                show-arrows-on-hover
+                                :height="$isMobile() ? 350 : 600"
+                            >
+                                <v-carousel-item
+                                    v-for="(path, text) in slideData"
+                                    :key="text"
+                                    class="pa-3"
+                                >
+                                    <v-sheet color="white">
+                                        <v-row>
+                                            <v-col>
+                                                <p style="color: black">
+                                                    {{ text }}
+                                                </p>
+                                                <v-img class="center" :src="path" />
+                                            </v-col>
+                                        </v-row>
+                                    </v-sheet>
+                                </v-carousel-item>
+                            </v-carousel>
+                        </v-col>
+                    </v-row>
+                </v-card>
                 <v-row justify="center" align="center" style="min-height: 400px">
                     <v-col style="text-align: center" cols="12" lg="6">
                         <h1>Open Source</h1>
