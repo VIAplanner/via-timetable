@@ -47,6 +47,19 @@
                 </v-btn>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
+                <v-snackbar v-model="mobileAlert">
+                    Sorry! The mobile view is not ready yet 😢
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            color="pink"
+                            text
+                            v-bind="attrs"
+                            @click="mobileAlert = false"
+                        >
+                            Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
                 <v-row>
                     <v-col class="pa-0">
                         <v-parallax
@@ -117,7 +130,7 @@
                                         outlined
                                         style="text-transform: none; border-width: medium"
                                         class="ma-4"
-                                        @click="$router.push({ name: 'home' })"
+                                        @click="mobileAlert = true"
                                     >
                                         Try out the Alpha
                                     </v-btn>
@@ -309,6 +322,7 @@ export default {
                 "Lock Sections: lock specific sections and we won't change it": require("../assets/slide4.gif"),
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
+            mobileAlert: false
         };
     },
     computed: {

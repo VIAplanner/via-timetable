@@ -48,7 +48,7 @@ import { mapGetters } from "vuex";
 export default {
   created() {
     if (this.$isMobile()) {
-      this.$router.push({ name: "mobile" });
+      this.$router.push({ name: "about" });
     }
   },
   components: {
