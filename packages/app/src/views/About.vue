@@ -89,6 +89,7 @@
                             :height="windowHeight"
                             v-if="!$isMobile()"
                         >
+                            <v-overlay :opacity="darkMode ? 0.15: 0"/>
                             <v-row align="center" justify="center">
                                 <v-col class="text-center" cols="12">
                                     <h1
@@ -124,6 +125,7 @@
                             :height="windowHeight"
                             v-else
                         >
+                            <v-overlay :opacity="darkMode ? 0.15: 0"/>
                             <v-row
                                 align="center"
                                 justify="center"
