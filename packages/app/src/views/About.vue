@@ -16,7 +16,7 @@
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
                     contain
-                    @click="$router.push({ name: 'home' })"
+                    @click="$isMobile() ? mobileAlert = true : $router.push({ name: 'home' })"
                     style="cursor: pointer"
                 />
                 <v-spacer></v-spacer>
@@ -141,7 +141,7 @@
                 </v-row>
                 <v-card elevation="4" class="mt-4">
                     <v-row justify="center">
-                        <v-col cols="12" lg="5" order="2" order-lg="1">
+                        <v-col cols="11" lg="5" order="2" order-lg="1">
                             <v-row
                                 align="center"
                                 :justify="$isMobile() ? 'center' : 'end'"
@@ -159,7 +159,7 @@
                                         Schedule Automatically
                                     </h1>
                                     <h3 class="font-weight-medium">
-                                        Simply choose a course on the search bar
+                                        Simply choose a course
                                     </h3>
                                     <h3
                                         style="margin-bottom: 40px;"
