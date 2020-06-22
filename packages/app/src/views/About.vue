@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-content style="background-color: #FEFEFE" class="pt-0">
+        <v-content style="background-color: #000000" class="pt-0">
             <v-app-bar
                 fixed
                 elevation="0"
@@ -16,7 +16,11 @@
                     src="../assets/VIA-Planner-White.png"
                     :max-width="$isMobile() ? 100 : 130"
                     contain
-                    @click="$isMobile() ? mobileAlert = true : $router.push({ name: 'home' })"
+                    @click="
+                        $isMobile()
+                            ? (mobileAlert = true)
+                            : $router.push({ name: 'home' })
+                    "
                     style="cursor: pointer"
                 />
                 <v-spacer></v-spacer>
@@ -139,7 +143,7 @@
                         </v-img>
                     </v-col>
                 </v-row>
-                <v-card elevation="4" class="mt-4">
+                <v-card elevation="4" class="mt-4" dark>
                     <v-row justify="center">
                         <v-col cols="11" lg="5" order="2" order-lg="1">
                             <v-row
@@ -185,7 +189,7 @@
                         </v-col>
                     </v-row>
                 </v-card>
-                <v-card elevation="4" class="mt-4">
+                <v-card elevation="4" class="mt-4" dark>
                     <v-row justify="center">
                         <v-col class="pb-0" cols="12" lg="7">
                             <div style="text-align:center">
@@ -228,7 +232,7 @@
                         </v-col>
                     </v-row>
                 </v-card>
-                <v-card elevation="4" class="mt-4">
+                <v-card elevation="4" class="mt-4" dark>
                     <v-row justify="center">
                         <v-col style="text-align: center">
                             <h1 class="ma-3">Features</h1>
@@ -258,51 +262,54 @@
                 </v-card>
                 <v-row justify="center" align="center" style="min-height: 400px">
                     <v-col style="text-align: center" cols="12" lg="6">
-                        <h1>Open Source</h1>
-                        <h3 class="text-body-1 ma-5">
-                            This is a platform built for students, by students.
-                            Universities can't always keep up with the
-                            <strong>cutting-edge</strong>
-                            technologies, but we have made it our mission to do so.
-                        </h3>
-                        <h3 class="text-body-1">
-                            That's why we need your help. At VIAplanner, we are
-                            strong believer in <strong>collaboration</strong>. Thus,
-                            we've decided to display all of our source code. If you
-                            have any ideas that you think would be useful, please
-                            don't hesitate to
-                            <strong>make it happen.</strong>
-                        </h3>
-                        <div class="mt-5">
-                            <v-btn
-                                href="https://docs.viaplanner.ca/"
-                                target="blank"
-                                dark
-                                color="#012B5C"
-                            >
-                                <v-icon left>mdi-file-document</v-icon>
-                                API Docs
-                            </v-btn>
-                            <v-btn
-                                href="https://github.com/UTM-Hacklab/UofTCourseTools"
-                                target="blank"
-                                color="#7C007C"
-                                dark
-                                class="ma-1"
-                            >
-                                <v-icon left>mdi-github</v-icon>
-                                GitHub
-                            </v-btn>
-                            <v-btn
-                                href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
-                                target="blank"
-                                color="#00A1FF"
-                                dark
-                            >
-                                <v-icon left>mdi-text-box-check-outline</v-icon>
-                                Survey
-                            </v-btn>
-                        </div>
+                        <v-sheet dark color="black">
+                            <h1>Open Source</h1>
+                            <h3 class="text-body-1 ma-5">
+                                This is a platform built for students, by students.
+                                Universities can't always keep up with the
+                                <strong>cutting-edge</strong>
+                                technologies, but we have made it our mission to do
+                                so.
+                            </h3>
+                            <h3 class="text-body-1">
+                                That's why we need your help. At VIAplanner, we are
+                                strong believer in <strong>collaboration</strong>.
+                                Thus, we've decided to display all of our source
+                                code. If you have any ideas that you think would be
+                                useful, please don't hesitate to
+                                <strong>make it happen.</strong>
+                            </h3>
+                            <div class="mt-5">
+                                <v-btn
+                                    href="https://docs.viaplanner.ca/"
+                                    target="blank"
+                                    dark
+                                    color="#012B5C"
+                                >
+                                    <v-icon left>mdi-file-document</v-icon>
+                                    API Docs
+                                </v-btn>
+                                <v-btn
+                                    href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                                    target="blank"
+                                    color="#7C007C"
+                                    dark
+                                    class="ma-1"
+                                >
+                                    <v-icon left>mdi-github</v-icon>
+                                    GitHub
+                                </v-btn>
+                                <v-btn
+                                    href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
+                                    target="blank"
+                                    color="#00A1FF"
+                                    dark
+                                >
+                                    <v-icon left>mdi-text-box-check-outline</v-icon>
+                                    Survey
+                                </v-btn>
+                            </div>
+                        </v-sheet>
                     </v-col>
                 </v-row>
             </v-container>
@@ -322,7 +329,7 @@ export default {
                 "Lock Sections: lock specific sections and we won't change it": require("../assets/slide4.gif"),
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
-            mobileAlert: false
+            mobileAlert: false,
         };
     },
     computed: {
