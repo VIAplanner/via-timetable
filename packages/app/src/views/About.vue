@@ -128,7 +128,7 @@
                 </v-row>
                 <v-card elevation="4" class="mt-4">
                     <v-row justify="center">
-                        <v-col cols="12" lg="5" class="pb-0" order="2" order-lg="1">
+                        <v-col cols="12" lg="5" order="2" order-lg="1">
                             <v-row
                                 align="center"
                                 :justify="$isMobile() ? 'center' : 'end'"
@@ -160,7 +160,11 @@
                         <v-col cols="12" lg="7" class="pb-0" order="1" order-lg="2">
                             <div style="text-align:center">
                                 <v-img
-                                    :class="$isMobile() ? ['center', 'ma-3'] : ['center', 'mt-3', 'mb-7']"
+                                    :class="
+                                        $isMobile()
+                                            ? ['center', 'ma-3']
+                                            : ['center', 'mt-3', 'mb-7', 'mr-5']
+                                    "
                                     src="../assets/img2.gif"
                                     max-width="800"
                                 ></v-img>
@@ -169,11 +173,15 @@
                     </v-row>
                 </v-card>
                 <v-card elevation="4" class="mt-4">
-                    <v-row justify="center" class="pt-12">
+                    <v-row justify="center">
                         <v-col class="pb-0" cols="12" lg="7">
                             <div style="text-align:center">
                                 <v-img
-                                    class="center"
+                                    :class="
+                                        $isMobile()
+                                            ? ['center', 'ma-3']
+                                            : ['center', 'mt-3', 'mb-7', 'ml-5']
+                                    "
                                     src="../assets/img3.gif"
                                     max-width="800"
                                 ></v-img>
@@ -183,7 +191,7 @@
                             <v-row
                                 align="center"
                                 :justify="$isMobile() ? 'center' : 'start'"
-                                style="min-height: 430px;"
+                                class="fill-height"
                             >
                                 <div
                                     :style="$isMobile() ? 'text-align: center' : ''"
