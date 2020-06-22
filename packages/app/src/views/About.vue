@@ -1,6 +1,11 @@
 <template>
     <v-app>
-        <v-content style="background-color: #000000" class="pt-0">
+        <v-content
+            :style="
+                darkMode ? 'background-color: #000000' : 'background-color: #F5F5F6'
+            "
+            class="pt-0"
+        >
             <v-app-bar
                 fixed
                 elevation="0"
@@ -64,6 +69,18 @@
                         </v-btn>
                     </template>
                 </v-snackbar>
+                <v-btn
+                    fab
+                    dark
+                    bottom
+                    right
+                    fixed
+                    color="primary"
+                    @click="darkMode = !darkMode"
+                >
+                    <v-icon v-if="darkMode" dark>mdi-brightness-4</v-icon>
+                    <v-icon v-else dark>mdi-brightness-6</v-icon>
+                </v-btn>
                 <v-row>
                     <v-col class="pa-0">
                         <v-parallax
@@ -143,7 +160,7 @@
                         </v-img>
                     </v-col>
                 </v-row>
-                <v-card elevation="4" class="mt-4" dark>
+                <v-card elevation="4" class="mt-4" :dark="darkMode">
                     <v-row justify="center">
                         <v-col cols="11" lg="5" order="2" order-lg="1">
                             <v-row
@@ -189,7 +206,7 @@
                         </v-col>
                     </v-row>
                 </v-card>
-                <v-card elevation="4" class="mt-4" dark>
+                <v-card elevation="4" class="mt-4" :dark="darkMode">
                     <v-row justify="center">
                         <v-col class="pb-0" cols="12" lg="7">
                             <div style="text-align:center">
@@ -232,7 +249,7 @@
                         </v-col>
                     </v-row>
                 </v-card>
-                <v-card elevation="4" class="mt-4" dark>
+                <v-card elevation="4" class="mt-4" :dark="darkMode">
                     <v-row justify="center">
                         <v-col style="text-align: center">
                             <h1 class="ma-3">Features</h1>
@@ -244,11 +261,12 @@
                                     v-for="(path, text) in slideData"
                                     :key="text"
                                     class="pa-3"
+                                    :light="!darkMode"
                                 >
-                                    <v-sheet color="white">
+                                    <v-sheet>
                                         <v-row>
                                             <v-col>
-                                                <p style="color: black">
+                                                <p>
                                                     {{ text }}
                                                 </p>
                                                 <v-img class="center" :src="path" />
@@ -260,9 +278,16 @@
                         </v-col>
                     </v-row>
                 </v-card>
-                <v-row justify="center" align="center" style="min-height: 400px">
+                <v-row
+                    justify="center"
+                    align="center"
+                    :style="$isMobile() ? 'min-height: 500px' : 'min-height: 400px'"
+                >
                     <v-col style="text-align: center" cols="12" lg="6">
-                        <v-sheet dark color="black">
+                        <v-sheet
+                            :dark="darkMode"
+                            :color="darkMode ? 'black' : '#F5F5F6'"
+                        >
                             <h1>Open Source</h1>
                             <h3 class="text-body-1 ma-5">
                                 This is a platform built for students, by students.
@@ -330,6 +355,7 @@ export default {
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
             },
             mobileAlert: false,
+            darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
         };
     },
     computed: {
