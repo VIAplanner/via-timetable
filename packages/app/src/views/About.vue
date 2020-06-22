@@ -46,14 +46,23 @@
                     <v-icon left>mdi-file-document</v-icon>
                     Docs
                 </v-btn>
-                <v-btn
-                    text
-                    href="https://github.com/UTM-Hacklab/UofTCourseTools"
-                    target="blank"
-                >
-                    <v-icon left>mdi-github</v-icon>
-                    GitHub
-                </v-btn>
+                <v-btn-toggle style="background-color: transparent">
+                    <v-btn
+                        text
+                        href="https://github.com/UTM-Hacklab/VIAplanner"
+                        target="blank"
+                    >
+                        <v-icon left>mdi-github</v-icon>
+                        GitHub 
+                    </v-btn>
+                    <v-btn
+                        text
+                        href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                        target="blank"
+                    >
+                        {{ starCount }}
+                    </v-btn>
+                </v-btn-toggle>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
                 <v-snackbar v-model="mobileAlert">
@@ -346,10 +355,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
     data() {
         return {
             top: false,
+            starCount: 0,
             slideData: {
                 "Generate Timetable: no need to select your own times": require("../assets/slide1.gif"),
                 "Switch Sections: complete control over your schedule": require("../assets/slide2.gif"),
@@ -360,6 +371,16 @@ export default {
             mobileAlert: false,
             darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
         };
+    },
+    mounted() {
+        axios
+            .get("https://api.github.com/repos/UTM-Hacklab/VIAplanner")
+            .then((response) => {
+                this.starCount = response.data.stargazers_count;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     },
     computed: {
         windowHeight() {
