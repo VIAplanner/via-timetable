@@ -54,15 +54,18 @@
                     <v-icon left>mdi-github</v-icon>
                     GitHub
                 </v-btn>
-                <v-btn
-                    text
-                    href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
+
+                <v-chip
+                    link
+                    href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                    label
+                    outlined
+                    color="white"
                     target="blank"
-                    class="pa-0"
                 >
-                    <v-icon left>mdi-star</v-icon>
+                    <v-icon small left>mdi-star</v-icon>
                     {{ starCount }}
-                </v-btn>
+                </v-chip>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
                 <v-snackbar v-model="mobileAlert">
