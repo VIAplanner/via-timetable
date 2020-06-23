@@ -46,7 +46,6 @@
                     <v-icon left>mdi-file-document</v-icon>
                     Docs
                 </v-btn>
-                <v-btn-toggle style="background-color: transparent">
                     <v-btn
                         text
                         href="https://github.com/UTM-Hacklab/VIAplanner"
@@ -55,14 +54,17 @@
                         <v-icon left>mdi-github</v-icon>
                         GitHub 
                     </v-btn>
-                    <v-btn
-                        text
+                    
+                    <v-chip
+                        link
                         href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                        label
+                        outlined
+                        color = "white"
                         target="blank"
                     >
-                        {{ starCount }}
-                    </v-btn>
-                </v-btn-toggle>
+                       <v-icon small >mdi-star</v-icon> {{ starCount }}
+                    </v-chip>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
                 <v-snackbar v-model="mobileAlert">
