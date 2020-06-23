@@ -46,23 +46,23 @@
                     <v-icon left>mdi-file-document</v-icon>
                     Docs
                 </v-btn>
-                <v-btn-toggle style="background-color: transparent">
-                    <v-btn
-                        text
-                        href="https://github.com/UTM-Hacklab/VIAplanner"
-                        target="blank"
-                    >
-                        <v-icon left>mdi-github</v-icon>
-                        GitHub 
-                    </v-btn>
-                    <v-btn
-                        text
-                        href="https://github.com/UTM-Hacklab/UofTCourseTools"
-                        target="blank"
-                    >
-                        {{ starCount }}
-                    </v-btn>
-                </v-btn-toggle>
+                <v-btn
+                    text
+                    href="https://github.com/UTM-Hacklab/VIAplanner"
+                    target="blank"
+                >
+                    <v-icon left>mdi-github</v-icon>
+                    GitHub
+                </v-btn>
+                <v-btn
+                    text
+                    href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
+                    target="blank"
+                    class="pa-0"
+                >
+                    <v-icon left>mdi-star</v-icon>
+                    {{ starCount }}
+                </v-btn>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
                 <v-snackbar v-model="mobileAlert">
@@ -310,42 +310,59 @@
                             </h3>
                             <h3 class="text-body-1">
                                 That's why we need your help. At VIAplanner, we are
-                                strong believer in <strong>collaboration</strong>.
+                                strong believers in <strong>collaboration</strong>.
                                 Thus, we've decided to display all of our source
                                 code. If you have any ideas that you think would be
                                 useful, please don't hesitate to
                                 <strong>make it happen.</strong>
                             </h3>
-                            <div class="mt-5">
+                            <v-row class="mt-5" justify="center">
                                 <v-btn
                                     href="https://docs.viaplanner.ca/"
                                     target="blank"
                                     dark
                                     color="#012B5C"
+                                    elevation="0"
+                                    class="ma-1"
                                 >
                                     <v-icon left>mdi-file-document</v-icon>
                                     API Docs
                                 </v-btn>
                                 <v-btn
-                                    href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                                    href="https://github.com/UTM-Hacklab/VIAplanner"
                                     target="blank"
                                     color="#7C007C"
                                     dark
-                                    class="ma-1"
+                                    class="ml-1 mt-1 mb-1"
+                                    elevation="0"
+                                    style="border-top-right-radius: 0px;border-bottom-right-radius: 0px;"
                                 >
                                     <v-icon left>mdi-github</v-icon>
                                     GitHub
                                 </v-btn>
                                 <v-btn
+                                    href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
+                                    target="blank"
+                                    color="#670067"
+                                    dark
+                                    class="mr-1 mt-1 mb-1"
+                                    elevation="0"
+                                    style="border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+                                >
+                                    <v-icon left>mdi-star</v-icon>
+                                    {{ starCount }}
+                                </v-btn>
+                                <v-btn
                                     href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
                                     target="blank"
                                     color="#00A1FF"
+                                    class="ma-1"
                                     dark
                                 >
                                     <v-icon left>mdi-text-box-check-outline</v-icon>
                                     Survey
                                 </v-btn>
-                            </div>
+                            </v-row>
                         </v-sheet>
                     </v-col>
                 </v-row>
