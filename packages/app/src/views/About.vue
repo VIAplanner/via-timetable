@@ -132,7 +132,7 @@
                                         outlined
                                         style="text-transform: none; border-width: medium"
                                         class="ma-4"
-                                        @click="mobileAlert = true"
+                                        @click="$isMobile() ? mobileAlert = true : $router.push({ name: 'home' })"
                                     >
                                         Try out the Alpha
                                     </v-btn>
