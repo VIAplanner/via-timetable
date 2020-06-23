@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "@mdi/font": "^5.0.45",
+        "animated-number-vue": "^1.0.0",
         "axios": "^0.19.2",
         "color-generator": "^0.1.0",
         "core-js": "^3.6.4",

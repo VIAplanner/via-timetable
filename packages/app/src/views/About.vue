@@ -57,14 +57,18 @@
 
                 <v-chip
                     link
-                    href="https://github.com/UTM-Hacklab/UofTCourseTools"
+                    href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
                     label
                     outlined
                     color="white"
                     target="blank"
                 >
                     <v-icon small left>mdi-star</v-icon>
-                    {{ starCount }}
+                    <animated-number
+                        :value="starCount"
+                        :round="true"
+                        :duration="1000"
+                    />
                 </v-chip>
             </v-app-bar>
             <v-container fluid class="pb-0 pt-0">
@@ -376,7 +380,12 @@
 
 <script>
 import axios from "axios";
+import AnimatedNumber from "animated-number-vue";
+
 export default {
+    components:{
+        AnimatedNumber
+    },
     data() {
         return {
             top: false,
