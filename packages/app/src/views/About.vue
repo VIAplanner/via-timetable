@@ -99,48 +99,10 @@
                 </v-btn>
                 <v-row>
                     <v-col class="pa-0">
-                        <v-parallax
-                            id="top-image"
-                            src="../assets/about-background.jpg"
-                            :height="windowHeight"
-                            v-if="!$isMobile()"
-                        >
-                            <v-overlay :opacity="darkMode ? 0.15 : 0" z-index="0" />
-                            <v-row align="center" justify="center">
-                                <v-col class="text-center" cols="12">
-                                    <h1
-                                        class="text-h2 ma-4"
-                                        v-intersect="onIntersect"
-                                        style="z-index: 1; position: relative"
-                                    >
-                                        Course Selection Made Easy
-                                    </h1>
-                                    <h1
-                                        class="text-h5 ma-4"
-                                        style="font-weight: 300"
-                                    >
-                                        We are a tool for tailoring your University
-                                        timetable based on your programs
-                                    </h1>
-                                    <v-btn
-                                        rounded
-                                        color="white"
-                                        x-large
-                                        outlined
-                                        style="text-transform: none; border-width: medium"
-                                        class="ma-4"
-                                        @click="$router.push({ name: 'home' })"
-                                    >
-                                        Try out the Alpha
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-parallax>
                         <v-img
                             id="top-image"
                             src="../assets/about-background.jpg"
                             :height="windowHeight"
-                            v-else
                         >
                             <v-overlay :opacity="darkMode ? 0.15 : 0" z-index="0" />
                             <v-row
@@ -383,8 +345,8 @@ import axios from "axios";
 import AnimatedNumber from "animated-number-vue";
 
 export default {
-    components:{
-        AnimatedNumber
+    components: {
+        AnimatedNumber,
     },
     data() {
         return {
