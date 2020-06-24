@@ -69,6 +69,21 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
     return allTimes
 }
 
+const formatLevel = (courseCode) => {
+    if (courseCode[3] === '1') {
+        return 100
+    }
+    else if (courseCode[3] === '2') {
+        return 200
+    }
+    else if (courseCode[3] === '3') {
+        return 300
+    }
+    else if (courseCode[3] === '4') {
+        return 400
+    }
+}
+
 const formatCourseCode = (rawTitle) => {
     return rawTitle.split(" - ")[0]
 }
@@ -196,12 +211,12 @@ const scrape = async () => {
         code: "",
         name: "",
         description: "",
-        division: "",
+        division: "University of Toronto Mississauga",
         department: "",
         prerequisites: "",
         exclusions: "",
         level: -1,
-        campus: "",
+        campus: "UTM",
         term: "",
         breadths: [],
         meeting_sections: []
@@ -220,8 +235,9 @@ const scrape = async () => {
     // console.log(formatName(allInfo[14]))
     // console.log(formatBreadths(allInfo[15]))
     // console.log(formatDescription(allInfo[16]))
-    console.log(formatPrereqs(allInfo[16]))
-    console.log(formatExclusions(allInfo[16]))
+    // console.log(formatPrereqs(allInfo[16]))
+    // console.log(formatExclusions(allInfo[16]))
+    console.log(formatLevel("MAT133Y5"))
     await browser.close();
 }
 
