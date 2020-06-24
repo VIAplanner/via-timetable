@@ -117,13 +117,19 @@ const formatID = (courseCode) => {
     }
 }
 
+// returns a array of instructors
 const formatInstructor = (rawInstructor) => {
-    // removes \n at the end
-    return rawInstructor.replace(/^\s+|\s+$/g, '').split("\n");
+    let tempInstructors = rawInstructor.replace(/^\s+|\s+$/g, '')
+    if (tempInstructors != "") {
+        return tempInstructors.split("\n");
+    }
+    else {
+        return []
+    }
 }
 
 const formatDescription = (rawDescription) => {
-    return rawDescription.split("\n\n")[0]
+    return rawDescription.split("\n\n")[0].replace("\n", " ")
 }
 
 const formatPrereqs = (rawDescription) => {
@@ -136,7 +142,7 @@ const formatPrereqs = (rawDescription) => {
         }
     }
 
-    return prereqs.replace(/^\s+|\s+$/g, '')
+    return prereqs.replace(/^\s+|\s+$/g, '').replace("\n", " ")
 }
 
 const formatExclusions = (rawDescription) => {
@@ -149,7 +155,7 @@ const formatExclusions = (rawDescription) => {
         }
     }
 
-    return exclusions.replace(/^\s+|\s+$/g, '')
+    return exclusions.replace(/^\s+|\s+$/g, '').replace("\n", " ")
 }
 
 const formatTerm = (courseCode) => {
@@ -174,21 +180,23 @@ const scrape = async () => {
         headless: false,
     });
     const page = await browser.newPage();
-    await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
+    // await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
 
     // get list of all courses offered at UTM
-    let courseCodes = await page.evaluate(() => {
-        // the fourth drop down contains the data for all courses
-        let allCoursesDiv = document.querySelectorAll("div.selectize-dropdown-content")[3].querySelectorAll("div")
-        let codes = []
-        for (let courseDiv of allCoursesDiv) {
-            codes.push(courseDiv.innerText)
-        }
-        return codes
-    });
+    // let courseCodes = await page.evaluate(() => {
+    //     // the fourth drop down contains the data for all courses
+    //     let allCoursesDiv = document.querySelectorAll("div.selectize-dropdown-content")[3].querySelectorAll("div")
+    //     let codes = []
+    //     for (let courseDiv of allCoursesDiv) {
+    //         codes.push(courseDiv.innerText)
+    //     }
+    //     return codes
+    // });
 
 
-    await page.goto(`https://student.utm.utoronto.ca/timetable?course=MAT133Y5`, { waitUntil: 'networkidle0' });
+    let courseCode = "MAT133Y5Y"
+
+    await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
     let allInfo = await page.evaluate(() => {
         let allInfoDivs = document.querySelectorAll("tr.meeting_section")[0].querySelectorAll("td")
@@ -206,23 +214,50 @@ const scrape = async () => {
         return data
     });
 
+
     let currCourseData = {
         id: "",
         code: "",
         name: "",
         description: "",
         division: "University of Toronto Mississauga",
-        department: "",
+        department: "NA",
         prerequisites: "",
         exclusions: "",
-        level: -1,
+        level: 0,
         campus: "UTM",
         term: "",
         breadths: [],
         meeting_sections: []
     }
 
-    // console.log(allInfo)
+    console.log(allInfo)
+
+    currCourseData.id = formatID(courseCode)
+    currCourseData.code = courseCode
+    currCourseData.name = formatName(allInfo[14])
+    currCourseData.description = formatDescription(allInfo[16])
+    currCourseData.prerequisites = formatPrereqs(allInfo[16])
+    currCourseData.exclusions = formatExclusions(allInfo[16])
+    currCourseData.level = formatLevel(courseCode)
+    currCourseData.term = formatTerm(courseCode)
+    currCourseData.breadths = formatBreadths(allInfo[15])
+
+    let currMeetingSection = {
+        code: "",
+        instructors: [],
+        times: [],
+        size: 0,
+        enrolment: 0
+    }
+
+    currMeetingSection.code = allInfo[1]
+    currMeetingSection.instructors = formatInstructor(allInfo[2])
+    currMeetingSection.times = formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10])
+    currMeetingSection.size = allInfo[4]
+    currMeetingSection.enrolment = allInfo[3]
+
+    currCourseData.meeting_sections.push(currMeetingSection)
 
     // console.log(formatID(courseCodes[0]))
     // console.log(formatInstructor(allInfo[2]))
@@ -237,7 +272,10 @@ const scrape = async () => {
     // console.log(formatDescription(allInfo[16]))
     // console.log(formatPrereqs(allInfo[16]))
     // console.log(formatExclusions(allInfo[16]))
-    console.log(formatLevel("MAT133Y5"))
+    // console.log(formatLevel("MAT133Y5"))
+
+    console.log(JSON.stringify(currCourseData))
+
     await browser.close();
 }
 
