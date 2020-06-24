@@ -1,6 +1,60 @@
 const puppeteer = require('puppeteer');
 
-const main = async () => {
+const formatID = (courseCode) => {
+    // fall or full year course
+    if (courseCode[8] === 'F' || courseCode[8] === 'Y') {
+        return `${courseCode}20209`
+    }
+    else { // winter course
+        return `${courseCode}20211`
+    }
+}
+
+const formatInstructor = (rawInstructor) => {
+    return rawInstructor.replace(/^\s+|\s+$/g, '');
+}
+
+const formatDays = (rawDays) => {
+    let strippedDays = rawDays.replace(/^\s+|\s+$/g, '').split("\n")
+    strippedDays.forEach((day, index, arr) => {
+        debugger
+        if (day === "MO") {
+            arr[index] = "MONDAY"
+        }
+        else if (day === "TU") {
+            arr[index] = "TUESDAY"
+        }
+        else if (day === "WE") {
+            arr[index] = "WEDNESDAY"
+        }
+        else if (day === "TH") {
+            arr[index] = "THURSDAY"
+        }
+        else if (day === "FR") {
+            arr[index] = "FRIDAY"
+        }
+    })
+  
+    return strippedDays
+}
+
+const formatTerm = (courseCode) => {
+    // fall course
+    if (courseCode[8] === 'F') {
+        return "2020 Fall"
+    }
+    // winter cours 
+    else if (courseCode[8] === 'S') {
+        return "2021 Winter"
+    }
+    // full year course
+    else {
+        return "2020 Full Year"
+    }
+}
+
+
+const scrape = async () => {
 
     const browser = await puppeteer.launch({
         headless: false,
@@ -8,9 +62,10 @@ const main = async () => {
     const page = await browser.newPage();
     await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
 
-    // get list of all courses offered
+    // get list of all courses offered at UTM
     let courseCodes = await page.evaluate(() => {
-        let allCoursesDiv = document.querySelectorAll("div[class='selectize-dropdown-content']")[3].querySelectorAll("div")
+        // the fourth drop down contains the data for all courses
+        let allCoursesDiv = document.querySelectorAll("div.selectize-dropdown-content")[3].querySelectorAll("div")
         let codes = []
         for (let courseDiv of allCoursesDiv) {
             codes.push(courseDiv.innerText)
@@ -20,7 +75,7 @@ const main = async () => {
 
 
     await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCodes[0]}`, { waitUntil: 'networkidle0' });
-    
+
     let allInfo = await page.evaluate(() => {
         let allInfoDivs = document.querySelectorAll("tr.meeting_section")[0].querySelectorAll("td")
         let data = []
@@ -30,11 +85,30 @@ const main = async () => {
         return data
     });
 
+    let courseData = {
+        id: "",
+        code: "",
+        name: "",
+        description: "",
+        division: "",
+        department: "",
+        prerequisites: "",
+        exclusions: "",
+        level: -1,
+        campus: "",
+        term: "",
+        breadths: [],
+        meeting_sections: []
+    }
+
     console.log(allInfo)
 
-    // console.log(courseCodes)
-    // await browser.close();
+    // console.log(formatID(courseCodes[0]))
+    // console.log(formatInstructor(allInfo[2]))
+    // console.log(formatTerm(courseCodes[0]), courseCodes[0])
+    console.log(formatDays(allInfo[7]))
+    await browser.close();
 }
 
 // Start the script
-main();
+scrape();
