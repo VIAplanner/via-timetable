@@ -36,14 +36,16 @@ const formatDays = (rawDays) => {
     return strippedDays
 }
 
-// return a times object matching the api requirements
+// return a times array matching the api requirements
 const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
     let strippedStart = rawStart.replace(/^\s+|\s+$/g, '').split("\n")
     strippedStart.forEach((time, index, arr) => {
+        // convert times to seconds
         arr[index] = timeToSeconds(time)
     })
     let strippedEnd = rawEnd.replace(/^\s+|\s+$/g, '').split("\n")
     strippedEnd.forEach((time, index, arr) => {
+        // convert times to seconds
         arr[index] = timeToSeconds(time)
     })
     let strippedDays = formatDays(rawDays)
@@ -67,6 +69,29 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
     return allTimes
 }
 
+const formatCourseCode = (rawTitle) => {
+    return rawTitle.split(" - ")[0]
+}
+
+const formatName = (rawTitle) => {
+    let tempName = rawTitle.split(" - ")[1]
+    // remove the distribution
+    return tempName.slice(0, tempName.length - 6)
+}
+
+const formatBreadths = (rawBreadths) => {
+    if (rawBreadths === "(SCI)") {
+        return [1]
+    }
+    else if (rawBreadths === "(SSc)") {
+        return [2]
+    }
+    else if (rawBreadths === "(HUM)") {
+        return [3]
+    }
+
+}
+
 const formatID = (courseCode) => {
     // fall or full year course
     if (courseCode[8] === 'F' || courseCode[8] === 'Y') {
@@ -80,6 +105,36 @@ const formatID = (courseCode) => {
 const formatInstructor = (rawInstructor) => {
     // removes \n at the end
     return rawInstructor.replace(/^\s+|\s+$/g, '').split("\n");
+}
+
+const formatDescription = (rawDescription) => {
+    return rawDescription.split("\n\n")[0]
+}
+
+const formatPrereqs = (rawDescription) => {
+    let tempPrereqs = rawDescription.split("\n\n")
+    let prereqs = ""
+    for (let i = 0; i < tempPrereqs.length; i++) {
+        if (tempPrereqs[i].includes("Prerequisites:")) {
+            prereqs = tempPrereqs[i].slice(15, tempPrereqs[i].length)
+            break;
+        }
+    }
+
+    return prereqs.replace(/^\s+|\s+$/g, '')
+}
+
+const formatExclusions = (rawDescription) => {
+    let tempExclusions = rawDescription.split("\n\n")
+    let exclusions = ""
+    for (let i = 0; i < tempExclusions.length; i++) {
+        if (tempExclusions[i].includes("Exclusion:")) {
+            exclusions = tempExclusions[i].slice(11, tempExclusions[i].length)
+            break;
+        }
+    }
+
+    return exclusions.replace(/^\s+|\s+$/g, '')
 }
 
 const formatTerm = (courseCode) => {
@@ -118,18 +173,25 @@ const scrape = async () => {
     });
 
 
-    await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCodes[0]}`, { waitUntil: 'networkidle0' });
+    await page.goto(`https://student.utm.utoronto.ca/timetable?course=MAT133Y5`, { waitUntil: 'networkidle0' });
 
     let allInfo = await page.evaluate(() => {
         let allInfoDivs = document.querySelectorAll("tr.meeting_section")[0].querySelectorAll("td")
+        let title = document.querySelector("div.course > span > h4").innerText
+        let rawBreadths = document.querySelector("div.course > span > h4 > b").innerText
+        let rawDescription = document.querySelector("div.infoCourseDetails").innerText
         let data = []
         for (let infoDiv of allInfoDivs) {
             data.push(infoDiv.innerText)
         }
+
+        data.push(title)
+        data.push(rawBreadths)
+        data.push(rawDescription)
         return data
     });
 
-    let courseData = {
+    let currCourseData = {
         id: "",
         code: "",
         name: "",
@@ -145,7 +207,7 @@ const scrape = async () => {
         meeting_sections: []
     }
 
-    console.log(allInfo)
+    // console.log(allInfo)
 
     // console.log(formatID(courseCodes[0]))
     // console.log(formatInstructor(allInfo[2]))
@@ -153,7 +215,13 @@ const scrape = async () => {
     // console.log(formatDays(allInfo[7]))
     // console.log(timeToSeconds("9:00"))
     // console.log(formatLocations(allInfo[10]))
-    console.log(formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10]))
+    // console.log(formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10]))
+    // console.log(formatCourseCode(allInfo[14]))
+    // console.log(formatName(allInfo[14]))
+    // console.log(formatBreadths(allInfo[15]))
+    // console.log(formatDescription(allInfo[16]))
+    console.log(formatPrereqs(allInfo[16]))
+    console.log(formatExclusions(allInfo[16]))
     await browser.close();
 }
 
