@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 // convert 24 hours to seconds
-const  timeToSeconds = (hour) => {
+const timeToSeconds = (hour) => {
     let splitTimes = hour.split(":")
     let hourSeconds = parseInt(splitTimes[0]) * 3600
     let minuteSeconds = parseInt(splitTimes[1]) * 60
@@ -32,19 +32,39 @@ const formatDays = (rawDays) => {
             arr[index] = "FRIDAY"
         }
     })
-  
+
     return strippedDays
 }
 
 // return a times object matching the api requirements
 const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
     let strippedStart = rawStart.replace(/^\s+|\s+$/g, '').split("\n")
+    strippedStart.forEach((time, index, arr) => {
+        arr[index] = timeToSeconds(time)
+    })
     let strippedEnd = rawEnd.replace(/^\s+|\s+$/g, '').split("\n")
+    strippedEnd.forEach((time, index, arr) => {
+        arr[index] = timeToSeconds(time)
+    })
     let strippedDays = formatDays(rawDays)
     let strippedLocations = formatLocations(rawLocations)
-    
-    
-    
+    let allTimes = []
+
+    for (let i = 0; i < strippedStart.length; i++) {
+        let currDuration = strippedEnd[i] - strippedStart[i]
+
+        let currTime = {
+            day: strippedDays[i],
+            start: strippedStart[i],
+            end: strippedEnd[i],
+            duration: currDuration,
+            location: strippedLocations[i]
+        }
+
+        allTimes.push(currTime)
+    }
+
+    return allTimes
 }
 
 const formatID = (courseCode) => {
@@ -132,7 +152,8 @@ const scrape = async () => {
     // console.log(formatTerm(courseCodes[0]), courseCodes[0])
     // console.log(formatDays(allInfo[7]))
     // console.log(timeToSeconds("9:00"))
-    console.log(formatLocations(allInfo[10]))
+    // console.log(formatLocations(allInfo[10]))
+    console.log(formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10]))
     await browser.close();
 }
 
