@@ -1,17 +1,15 @@
 const puppeteer = require('puppeteer');
 
-const formatID = (courseCode) => {
-    // fall or full year course
-    if (courseCode[8] === 'F' || courseCode[8] === 'Y') {
-        return `${courseCode}20209`
-    }
-    else { // winter course
-        return `${courseCode}20211`
-    }
+// convert 24 hours to seconds
+const  timeToSeconds = (hour) => {
+    let splitTimes = hour.split(":")
+    let hourSeconds = parseInt(splitTimes[0]) * 3600
+    let minuteSeconds = parseInt(splitTimes[1]) * 60
+    return hourSeconds + minuteSeconds
 }
 
-const formatInstructor = (rawInstructor) => {
-    return rawInstructor.replace(/^\s+|\s+$/g, '');
+const formatLocations = (rawLocations) => {
+    return rawLocations.replace(/^\s+|\s+$/g, '').split("\n")
 }
 
 const formatDays = (rawDays) => {
@@ -36,6 +34,32 @@ const formatDays = (rawDays) => {
     })
   
     return strippedDays
+}
+
+// return a times object matching the api requirements
+const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
+    let strippedStart = rawStart.replace(/^\s+|\s+$/g, '').split("\n")
+    let strippedEnd = rawEnd.replace(/^\s+|\s+$/g, '').split("\n")
+    let strippedDays = formatDays(rawDays)
+    let strippedLocations = formatLocations(rawLocations)
+    
+    
+    
+}
+
+const formatID = (courseCode) => {
+    // fall or full year course
+    if (courseCode[8] === 'F' || courseCode[8] === 'Y') {
+        return `${courseCode}20209`
+    }
+    else { // winter course
+        return `${courseCode}20211`
+    }
+}
+
+const formatInstructor = (rawInstructor) => {
+    // removes \n at the end
+    return rawInstructor.replace(/^\s+|\s+$/g, '').split("\n");
 }
 
 const formatTerm = (courseCode) => {
@@ -106,7 +130,9 @@ const scrape = async () => {
     // console.log(formatID(courseCodes[0]))
     // console.log(formatInstructor(allInfo[2]))
     // console.log(formatTerm(courseCodes[0]), courseCodes[0])
-    console.log(formatDays(allInfo[7]))
+    // console.log(formatDays(allInfo[7]))
+    // console.log(timeToSeconds("9:00"))
+    console.log(formatLocations(allInfo[10]))
     await browser.close();
 }
 
