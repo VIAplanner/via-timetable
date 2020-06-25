@@ -8,14 +8,29 @@ const timeToSeconds = (hour) => {
     return hourSeconds + minuteSeconds
 }
 
-const formatLocations = (rawLocations) => {
-    return rawLocations.replace(/^\s+|\s+$/g, '').split("\n")
+// return an array of all locations for the current section
+const formatLocations = (rawLocations, fullCourseCode) => {
+
+
+    // skip every location since it's for the next semester
+    if (fullCourseCode[8] === "Y") {
+        let allLocations = []
+
+        for (let i = 0; i < rawLocations.length; i += 2) {
+            allLocations.push(rawLocations[i])
+        }
+
+        return allLocations
+    }
+    else {
+        return rawLocations
+    }
+
 }
 
 const formatDays = (rawDays) => {
     let strippedDays = rawDays.replace(/^\s+|\s+$/g, '').split("\n")
     strippedDays.forEach((day, index, arr) => {
-        debugger
         if (day === "MO") {
             arr[index] = "MONDAY"
         }
@@ -37,7 +52,7 @@ const formatDays = (rawDays) => {
 }
 
 // return a times array matching the api requirements
-const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
+const formatTimes = (rawStart, rawEnd, rawDays, rawLocations, fullCourseCode) => {
     let strippedStart = rawStart.replace(/^\s+|\s+$/g, '').split("\n")
     strippedStart.forEach((time, index, arr) => {
         // convert times to seconds
@@ -48,8 +63,9 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations) => {
         // convert times to seconds
         arr[index] = timeToSeconds(time)
     })
+
+    let strippedLocations = formatLocations(rawLocations, fullCourseCode)
     let strippedDays = formatDays(rawDays)
-    let strippedLocations = formatLocations(rawLocations)
     let allTimes = []
 
     for (let i = 0; i < strippedStart.length; i++) {
@@ -194,90 +210,126 @@ const scrape = async () => {
     // });
 
 
-    let courseCode = "MAT133Y5Y"
+    let courseCode = "ECO100Y5"
 
     await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
-    let allInfo = await page.evaluate(() => {
-        let allInfoDivs = document.querySelectorAll("tr.meeting_section")[0].querySelectorAll("td")
-        let title = document.querySelector("div.course > span > h4").innerText
-        let rawBreadths = document.querySelector("div.course > span > h4 > b").innerText
-        let rawDescription = document.querySelector("div.infoCourseDetails").innerText
-        let data = []
-        for (let infoDiv of allInfoDivs) {
-            data.push(infoDiv.innerText)
+    // returns an array of objects containing info for all courses matching the currentCourseCode
+    let coursesRawInfo = await page.evaluate(() => {
+
+        // array of courses raw info
+        let allCoursesRawInfo = document.querySelectorAll("div.course")
+        let finalCourses = []
+
+        for (let rawCourseInfo of allCoursesRawInfo) {
+
+
+            // object containing all info about the current course
+            let courseInfo = {
+                rawTitle: rawCourseInfo.querySelector("span > h4").innerText,
+                rawBreadths: rawCourseInfo.querySelector("span > h4 > b").innerText,
+                rawDescription: rawCourseInfo.querySelector("div.infoCourseDetails").innerText,
+                rawMeetingSections: []
+            }
+
+            // raw html for all the sections
+            let allSectionDivs = rawCourseInfo.querySelectorAll("tr.meeting_section")
+
+            for (let currSectionDiv of allSectionDivs) {
+
+                let currSecInfo = [] // array of all data for the current section
+                let rawInfo = currSectionDiv.querySelectorAll("td")
+
+                if (rawInfo.length < 11) {
+                    continue
+                }
+
+                for (let currInfo of rawInfo) {
+                    currSecInfo.push(currInfo.innerText)
+                }
+
+                let allLocations = []
+                for (let rawLocations of rawInfo[10].querySelectorAll("span")) {
+                    allLocations.push(rawLocations.innerText)
+                }
+
+                // override the location to be a list of the location data
+                currSecInfo[10] = allLocations
+
+                courseInfo.rawMeetingSections.push(currSecInfo)
+
+            }
+
+            finalCourses.push(courseInfo)
         }
 
-        data.push(title)
-        data.push(rawBreadths)
-        data.push(rawDescription)
-        return data
+        return finalCourses
+
     });
 
+    // console.log(coursesRawInfo)
 
-    let currCourseData = {
-        id: "",
-        code: "",
-        name: "",
-        description: "",
-        division: "University of Toronto Mississauga",
-        department: "NA",
-        prerequisites: "",
-        exclusions: "",
-        level: 0,
-        campus: "UTM",
-        term: "",
-        breadths: [],
-        meeting_sections: []
+    for (let currCourseRawInfo of coursesRawInfo) {
+        let currCourseData = {
+            id: "",
+            code: "",
+            name: "",
+            description: "",
+            division: "University of Toronto Mississauga",
+            department: "NA",
+            prerequisites: "",
+            exclusions: "",
+            level: 0,
+            campus: "UTM",
+            term: "",
+            breadths: [],
+            meeting_sections: []
+        }
+
+        // full code with semester
+        let fullCourseCode = formatCourseCode(currCourseRawInfo.rawTitle)
+
+        // current course data
+        currCourseData.name = formatName(currCourseRawInfo.rawTitle)
+        currCourseData.description = formatDescription(currCourseRawInfo.rawDescription)
+        currCourseData.prerequisites = formatPrereqs(currCourseRawInfo.rawDescription)
+        currCourseData.exclusions = formatExclusions(currCourseRawInfo.rawDescription)
+        currCourseData.breadths = formatBreadths(currCourseRawInfo.rawBreadths)
+
+        // data that only needs the courseCode
+        currCourseData.id = formatID(fullCourseCode)
+        currCourseData.code = fullCourseCode
+        currCourseData.level = formatLevel(fullCourseCode)
+        currCourseData.term = formatTerm(fullCourseCode)
+
+        for (let rawSectionInfo of currCourseRawInfo.rawMeetingSections) {
+
+            let currMeetingSection = {
+                code: "",
+                instructors: [],
+                times: [],
+                size: 0,
+                enrolment: 0
+            }
+
+            currMeetingSection.code = rawSectionInfo[1]
+            currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
+            currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
+            currMeetingSection.size = rawSectionInfo[4]
+            currMeetingSection.enrolment = rawSectionInfo[3]
+
+            currCourseData.meeting_sections.push(currMeetingSection)
+
+        }
+
+
+        console.log(JSON.stringify(currCourseData))
     }
 
-    console.log(allInfo)
 
-    currCourseData.id = formatID(courseCode)
-    currCourseData.code = courseCode
-    currCourseData.name = formatName(allInfo[14])
-    currCourseData.description = formatDescription(allInfo[16])
-    currCourseData.prerequisites = formatPrereqs(allInfo[16])
-    currCourseData.exclusions = formatExclusions(allInfo[16])
-    currCourseData.level = formatLevel(courseCode)
-    currCourseData.term = formatTerm(courseCode)
-    currCourseData.breadths = formatBreadths(allInfo[15])
-
-    let currMeetingSection = {
-        code: "",
-        instructors: [],
-        times: [],
-        size: 0,
-        enrolment: 0
-    }
-
-    currMeetingSection.code = allInfo[1]
-    currMeetingSection.instructors = formatInstructor(allInfo[2])
-    currMeetingSection.times = formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10])
-    currMeetingSection.size = allInfo[4]
-    currMeetingSection.enrolment = allInfo[3]
-
-    currCourseData.meeting_sections.push(currMeetingSection)
-
-    // console.log(formatID(courseCodes[0]))
-    // console.log(formatInstructor(allInfo[2]))
-    // console.log(formatTerm(courseCodes[0]), courseCodes[0])
-    // console.log(formatDays(allInfo[7]))
-    // console.log(timeToSeconds("9:00"))
-    // console.log(formatLocations(allInfo[10]))
-    // console.log(formatTimes(allInfo[8], allInfo[9], allInfo[7], allInfo[10]))
-    // console.log(formatCourseCode(allInfo[14]))
-    // console.log(formatName(allInfo[14]))
-    // console.log(formatBreadths(allInfo[15]))
-    // console.log(formatDescription(allInfo[16]))
-    // console.log(formatPrereqs(allInfo[16]))
-    // console.log(formatExclusions(allInfo[16]))
-    // console.log(formatLevel("MAT133Y5"))
-
-    console.log(JSON.stringify(currCourseData))
 
     await browser.close();
 }
 
-// Start the script
+// Start the scraper
 scrape();
