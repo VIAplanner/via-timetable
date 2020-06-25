@@ -132,7 +132,11 @@
                                         outlined
                                         style="text-transform: none; border-width: medium"
                                         class="ma-4"
-                                        @click="$isMobile() ? mobileAlert = true : $router.push({ name: 'home' })"
+                                        @click="
+                                            $isMobile()
+                                                ? (mobileAlert = true)
+                                                : $router.push({ name: 'home' })
+                                        "
                                     >
                                         Try out the Alpha
                                     </v-btn>
@@ -335,6 +339,19 @@
                         </v-sheet>
                     </v-col>
                 </v-row>
+                <v-footer
+                    absolute
+                    class="font-weight-medium"
+                    :dark="darkMode"
+                    :color="darkMode ? 'black' : '#F5F5F6'"
+                >
+                    <v-row justify="center">
+                        <h1 class="text-subtitle-1">
+                            Copyright © 2020 VIAplanner - Data updated for the 2020 -
+                            2021 school year
+                        </h1>
+                    </v-row>
+                </v-footer>
             </v-container>
         </v-content>
     </v-app>
