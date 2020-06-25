@@ -78,7 +78,7 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations, fullCourseCode) =>
             start: strippedStart[i],
             end: strippedEnd[i],
             duration: currDuration,
-            location: strippedLocations[i] != undefined ? strippedLocations[i] : "" 
+            location: strippedLocations[i] != undefined ? strippedLocations[i] : ""
         }
 
         allTimes.push(currTime)
@@ -314,7 +314,7 @@ const scrape = async () => {
                 enrolment: 0
             }
 
-            currMeetingSection.code = rawSectionInfo[1]
+            currMeetingSection.code = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
             currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
             currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
             currMeetingSection.size = rawSectionInfo[4]
@@ -332,7 +332,6 @@ const scrape = async () => {
 
         // console.log(JSON.stringify(currCourseData))
     }
-
 
 
     await browser.close();
