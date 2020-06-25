@@ -192,150 +192,186 @@ const formatTerm = (courseCode) => {
 }
 
 
-const scrape = async () => {
+const scrape = async (startRatio, endRatio) => {
 
     const browser = await puppeteer.launch({
         headless: false,
     });
     const page = await browser.newPage();
-    // await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
+    await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
 
     // get list of all courses offered at UTM
-    // let courseCodes = await page.evaluate(() => {
-    //     // the fourth drop down contains the data for all courses
-    //     let allCoursesDiv = document.querySelectorAll("div.selectize-dropdown-content")[3].querySelectorAll("div")
-    //     let codes = []
-    //     for (let courseDiv of allCoursesDiv) {
-    //         codes.push(courseDiv.innerText)
-    //     }
-    //     return codes
-    // });
+    let courseCodes = await page.evaluate(() => {
+        // the fourth drop down contains the data for all courses
+        let allCoursesDiv = document.querySelectorAll("div.selectize-dropdown-content")[3].querySelectorAll("div")
+        let codes = []
+        for (let courseDiv of allCoursesDiv) {
+            codes.push(courseDiv.innerText)
+        }
+        return codes
+    });
+
+    let start = 0
+    let end = courseCodes.length
+    if (startRatio != -1 && endRatio != -1) {
+        start = parseInt(courseCodes.length / 3) * startRatio
+        end = parseInt(courseCodes.length / 3) * endRatio
+    }
 
 
-    let courseCode = "CSC236H5"
+    for (let i = start; i < end; i++) {
 
-    await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
+        let courseCode = courseCodes[i]
 
-    // returns an array of objects containing info for all courses matching the currentCourseCode
-    let coursesRawInfo = await page.evaluate(() => {
+        await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
-        // array of courses raw info
-        let allCoursesRawInfo = document.querySelectorAll("div.course")
-        let finalCourses = []
+        // returns an array of objects containing info for all courses matching the currentCourseCode
+        let coursesRawInfo = await page.evaluate(() => {
 
-        for (let rawCourseInfo of allCoursesRawInfo) {
+            // array of courses raw info
+            let allCoursesRawInfo = document.querySelectorAll("div.course")
+            let finalCourses = []
 
+            for (let rawCourseInfo of allCoursesRawInfo) {
 
-            // object containing all info about the current course
-            let courseInfo = {
-                rawTitle: rawCourseInfo.querySelector("span > h4").innerText,
-                rawBreadths: rawCourseInfo.querySelector("span > h4 > b").innerText,
-                rawDescription: rawCourseInfo.querySelector("div.infoCourseDetails").innerText,
-                rawMeetingSections: []
+                // object containing all info about the current course
+                let courseInfo = {
+                    rawTitle: rawCourseInfo.querySelector("span > h4").innerText,
+                    rawBreadths: rawCourseInfo.querySelector("span > h4 > b").innerText,
+                    rawDescription: rawCourseInfo.querySelector("div.infoCourseDetails").innerText,
+                    rawMeetingSections: []
+                }
+
+                // raw html for all the sections
+                let allSectionDivs = rawCourseInfo.querySelectorAll("tr.meeting_section")
+
+                for (let currSectionDiv of allSectionDivs) {
+
+                    let currSecInfo = [] // array of all data for the current section
+                    let rawInfo = currSectionDiv.querySelectorAll("td")
+
+                    if (rawInfo.length < 11) {
+                        continue
+                    }
+
+                    for (let currInfo of rawInfo) {
+                        currSecInfo.push(currInfo.innerText)
+                    }
+
+                    let allLocations = []
+                    for (let rawLocations of rawInfo[10].querySelectorAll("span")) {
+                        allLocations.push(rawLocations.innerText)
+                    }
+
+                    // override the location to be a list of the location data
+                    currSecInfo[10] = allLocations
+
+                    courseInfo.rawMeetingSections.push(currSecInfo)
+
+                }
+
+                finalCourses.push(courseInfo)
             }
 
-            // raw html for all the sections
-            let allSectionDivs = rawCourseInfo.querySelectorAll("tr.meeting_section")
+            return finalCourses
 
-            for (let currSectionDiv of allSectionDivs) {
+        });
 
-                let currSecInfo = [] // array of all data for the current section
-                let rawInfo = currSectionDiv.querySelectorAll("td")
+        // console.log(coursesRawInfo)
 
-                if (rawInfo.length < 11) {
+        for (let currCourseRawInfo of coursesRawInfo) {
+            let currCourseData = {
+                id: "",
+                code: "",
+                name: "",
+                description: "",
+                division: "University of Toronto Mississauga",
+                department: "NA",
+                prerequisites: "",
+                exclusions: "",
+                level: 0,
+                campus: "UTM",
+                term: "",
+                breadths: [],
+                meeting_sections: []
+            }
+
+            // full code with semester
+            let fullCourseCode = formatCourseCode(currCourseRawInfo.rawTitle)
+
+            // current course data
+            currCourseData.name = formatName(currCourseRawInfo.rawTitle)
+            currCourseData.description = formatDescription(currCourseRawInfo.rawDescription)
+            currCourseData.prerequisites = formatPrereqs(currCourseRawInfo.rawDescription)
+            currCourseData.exclusions = formatExclusions(currCourseRawInfo.rawDescription)
+            currCourseData.breadths = formatBreadths(currCourseRawInfo.rawBreadths)
+
+            // data that only needs the courseCode
+            currCourseData.id = formatID(fullCourseCode)
+            currCourseData.code = fullCourseCode
+            currCourseData.level = formatLevel(fullCourseCode)
+            currCourseData.term = formatTerm(fullCourseCode)
+
+            for (let rawSectionInfo of currCourseRawInfo.rawMeetingSections) {
+
+                let currMeetingSection = {
+                    code: "",
+                    instructors: [],
+                    times: [],
+                    size: 0,
+                    enrolment: 0
+                }
+
+                // skip online async and closed sections
+                if (rawSectionInfo[11] == "Online Asynchronous" || rawSectionInfo[12].includes("Closed")) {
                     continue
                 }
 
-                for (let currInfo of rawInfo) {
-                    currSecInfo.push(currInfo.innerText)
+                currMeetingSection.code = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
+                currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
+                currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
+                currMeetingSection.size = rawSectionInfo[4]
+                currMeetingSection.enrolment = rawSectionInfo[3]
+
+                currCourseData.meeting_sections.push(currMeetingSection)
+
+            }
+
+            // write course data to json
+            fs.writeFile(`../../output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
+                if (err) {
+                    console.log(err);
                 }
+            });
 
-                let allLocations = []
-                for (let rawLocations of rawInfo[10].querySelectorAll("span")) {
-                    allLocations.push(rawLocations.innerText)
-                }
+            console.log(i)
 
-                // override the location to be a list of the location data
-                currSecInfo[10] = allLocations
-
-                courseInfo.rawMeetingSections.push(currSecInfo)
-
-            }
-
-            finalCourses.push(courseInfo)
+            // console.log(JSON.stringify(currCourseData), "\n\n")
         }
-
-        return finalCourses
-
-    });
-
-    // console.log(coursesRawInfo)
-
-    for (let currCourseRawInfo of coursesRawInfo) {
-        let currCourseData = {
-            id: "",
-            code: "",
-            name: "",
-            description: "",
-            division: "University of Toronto Mississauga",
-            department: "NA",
-            prerequisites: "",
-            exclusions: "",
-            level: 0,
-            campus: "UTM",
-            term: "",
-            breadths: [],
-            meeting_sections: []
-        }
-
-        // full code with semester
-        let fullCourseCode = formatCourseCode(currCourseRawInfo.rawTitle)
-
-        // current course data
-        currCourseData.name = formatName(currCourseRawInfo.rawTitle)
-        currCourseData.description = formatDescription(currCourseRawInfo.rawDescription)
-        currCourseData.prerequisites = formatPrereqs(currCourseRawInfo.rawDescription)
-        currCourseData.exclusions = formatExclusions(currCourseRawInfo.rawDescription)
-        currCourseData.breadths = formatBreadths(currCourseRawInfo.rawBreadths)
-
-        // data that only needs the courseCode
-        currCourseData.id = formatID(fullCourseCode)
-        currCourseData.code = fullCourseCode
-        currCourseData.level = formatLevel(fullCourseCode)
-        currCourseData.term = formatTerm(fullCourseCode)
-
-        for (let rawSectionInfo of currCourseRawInfo.rawMeetingSections) {
-
-            let currMeetingSection = {
-                code: "",
-                instructors: [],
-                times: [],
-                size: 0,
-                enrolment: 0
-            }
-
-            currMeetingSection.code = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
-            currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
-            currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
-            currMeetingSection.size = rawSectionInfo[4]
-            currMeetingSection.enrolment = rawSectionInfo[3]
-
-            currCourseData.meeting_sections.push(currMeetingSection)
-
-        }
-
-        fs.writeFile(`../../output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
-            if (err) {
-                console.log(err);
-            }
-        });
-
-        // console.log(JSON.stringify(currCourseData))
     }
 
 
     await browser.close();
 }
 
+// determines how much to scrape. First is the first third, second is the second third and so on
+let startRatio = -1
+let endRatio = -1
+if (process.argv.length === 3) {
+    if (process.argv[2] === 'first') {
+        startRatio = 0
+        endRatio = 1
+    }
+    else if (process.argv[2] === 'second') {
+        startRatio = 1
+        endRatio = 2
+    }
+    else if (process.argv[2] === 'third') {
+        startRatio = 2
+        endRatio = 3
+    }
+}
+
+
 // Start the scraper
-scrape();
+scrape(startRatio, endRatio);
