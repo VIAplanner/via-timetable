@@ -1,10 +1,17 @@
 {
   "name": "courses-scraper",
   "version": "0.0.1",
-  "description": "This repo has python programs that scrape UofT Course Data",
+  "description": "This package contains the scraper for scraping UTM course data",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "UoftCourseTools",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cli-progress": "^3.8.2",
+    "puppeteer": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
