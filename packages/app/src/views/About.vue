@@ -147,6 +147,121 @@
                 </v-row>
                 <v-card elevation="4" class="mt-4" :dark="darkMode">
                     <v-row justify="center">
+                        <v-col class="text-center">
+                            <h1 class="ma-3">Release Schedule</h1>
+                            <v-timeline
+                                :dense="$vuetify.breakpoint.smAndDown"
+                                class="ma-3"
+                                align-top
+                            >
+                                <v-timeline-item
+                                    color="green lighten-1"
+                                    fill-dot
+                                    left
+                                    icon="mdi-party-popper"
+                                >
+                                    <v-card color="green lighten-1">
+                                        <v-card-title class="green lighten-1">
+                                            <v-row>
+                                                <v-col>
+                                                    <h1 class="text-start">Alpha</h1>
+                                                    <h1
+                                                        class="text-start text-subtitle-1"
+                                                    >
+                                                        Available Now
+                                                    </h1>
+                                                </v-col>
+                                                <v-icon size="64">
+                                                    mdi-notebook
+                                                </v-icon>
+                                            </v-row>
+                                        </v-card-title>
+                                        <v-sheet class="pa-5 text-left">
+                                            <ul>
+                                                <li>
+                                                    Generate timetable based on
+                                                    selected courses
+                                                </li>
+                                                <li>
+                                                    Switch sections (lecture,
+                                                    practical, tutorial)
+                                                </li>
+                                                <li>Lock courses</li>
+                                                <li>Blocks parts of the day</li>
+                                                <li>Block entire days</li>
+                                                <li>
+                                                    Switch semesters (plan for both
+                                                    semesters)
+                                                </li>
+                                            </ul>
+                                            <v-btn
+                                                class="ma-4 start"
+                                                color="green lighten-1"
+                                                dark
+                                                @click="
+                                                    $isMobile()
+                                                        ? (mobileAlert = true)
+                                                        : $router.push({
+                                                              name: 'home',
+                                                          })
+                                                "
+                                            >
+                                                Try it Now
+                                            </v-btn>
+                                        </v-sheet>
+                                    </v-card>
+                                </v-timeline-item>
+
+                                <v-timeline-item
+                                    color="red lighten-1"
+                                    fill-dot
+                                    small
+                                    right
+                                >
+                                    <v-card color="red lighten-1">
+                                        <v-card-title class="red lighten-1">
+                                            <v-row>
+                                                <v-col>
+                                                    <h1 class="text-start">Beta</h1>
+                                                    <h1
+                                                        class="text-start text-subtitle-1"
+                                                    >
+                                                        End of August
+                                                    </h1>
+                                                </v-col>
+                                                <v-icon size="64">
+                                                    mdi-server
+                                                </v-icon>
+                                            </v-row>
+                                        </v-card-title>
+                                        <v-sheet class="pa-5 text-left">
+                                            <ul>
+                                                <li>
+                                                    Create account and save timetable
+                                                </li>
+                                                <li>Load saved timetables</li>
+                                                <li>
+                                                    Course suggestion based on
+                                                    programs (selected programs)
+                                                </li>
+                                                <li>UI improvement</li>
+                                            </ul>
+                                            <v-btn
+                                                class="ma-4 start"
+                                                color="red lighten-1"
+                                                disabled
+                                            >
+                                                Coming Soon
+                                            </v-btn>
+                                        </v-sheet>
+                                    </v-card>
+                                </v-timeline-item>
+                            </v-timeline>
+                        </v-col>
+                    </v-row>
+                </v-card>
+                <v-card elevation="4" class="mt-4" :dark="darkMode">
+                    <v-row justify="center">
                         <v-col cols="11" lg="5" order="2" order-lg="1">
                             <v-row
                                 align="center"
@@ -260,121 +375,6 @@
                                     </v-sheet>
                                 </v-carousel-item>
                             </v-carousel>
-                        </v-col>
-                    </v-row>
-                </v-card>
-                <v-card elevation="4" class="mt-4" :dark="darkMode">
-                    <v-row justify="center">
-                        <v-col class="text-center">
-                            <h1 class="ma-3">Release Schedule</h1>
-                            <v-timeline
-                                :dense="$vuetify.breakpoint.smAndDown"
-                                class="ma-3"
-                                align-top
-                            >
-                                <v-timeline-item
-                                    color="green lighten-1"
-                                    fill-dot
-                                    left
-                                    icon="mdi-party-popper"
-                                >
-                                    <v-card color="green lighten-1">
-                                        <v-card-title class="green lighten-1">
-                                            <v-row>
-                                                <v-col>
-                                                    <h1 class="text-start">Alpha</h1>
-                                                    <h1
-                                                        class="text-start text-subtitle-1"
-                                                    >
-                                                        Available Now
-                                                    </h1>
-                                                </v-col>
-                                                <v-icon size="64">
-                                                    mdi-notebook
-                                                </v-icon>
-                                            </v-row>
-                                        </v-card-title>
-                                        <v-sheet class="pa-5 text-left">
-                                            <ul>
-                                                <li>
-                                                    Generate timetable based on
-                                                    selected courses
-                                                </li>
-                                                <li>
-                                                    Switch sections (lecture,
-                                                    practical, tutorial)
-                                                </li>
-                                                <li>Lock courses</li>
-                                                <li>Blocks parts of the day</li>
-                                                <li>Block entire days</li>
-                                                <li>
-                                                    Switch semesters (plan for both
-                                                    semesters)
-                                                </li>
-                                            </ul>
-                                            <v-btn
-                                                class="ma-4 start"
-                                                color="green lighten-1"
-                                                dark
-                                                @click="
-                                                    $isMobile()
-                                                        ? (mobileAlert = true)
-                                                        : $router.push({
-                                                              name: 'home',
-                                                          })
-                                                "
-                                            >
-                                                Try it Now
-                                            </v-btn>
-                                        </v-sheet>
-                                    </v-card>
-                                </v-timeline-item>
-
-                                <v-timeline-item
-                                    color="red lighten-1"
-                                    fill-dot
-                                    small
-                                    right
-                                >
-                                    <v-card color="red lighten-1">
-                                        <v-card-title class="red lighten-1">
-                                            <v-row>
-                                                <v-col>
-                                                    <h1 class="text-start">Beta</h1>
-                                                    <h1
-                                                        class="text-start text-subtitle-1"
-                                                    >
-                                                        End of August
-                                                    </h1>
-                                                </v-col>
-                                                <v-icon size="64">
-                                                    mdi-server
-                                                </v-icon>
-                                            </v-row>
-                                        </v-card-title>
-                                        <v-sheet class="pa-5 text-left">
-                                            <ul>
-                                                <li>
-                                                    Create account and save timetable
-                                                </li>
-                                                <li>Load saved timetables</li>
-                                                <li>
-                                                    Course suggestion based on
-                                                    programs (selected programs)
-                                                </li>
-                                                <li>UI improvement</li>
-                                            </ul>
-                                            <v-btn
-                                                class="ma-4 start"
-                                                color="red lighten-1"
-                                                disabled
-                                            >
-                                                Coming Soon
-                                            </v-btn>
-                                        </v-sheet>
-                                    </v-card>
-                                </v-timeline-item>
-                            </v-timeline>
                         </v-col>
                     </v-row>
                 </v-card>
