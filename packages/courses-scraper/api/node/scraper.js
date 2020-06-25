@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const fs = require("fs")
 
 // convert 24 hours to seconds
 const timeToSeconds = (hour) => {
@@ -64,6 +65,7 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations, fullCourseCode) =>
         arr[index] = timeToSeconds(time)
     })
 
+    debugger
     let strippedLocations = formatLocations(rawLocations, fullCourseCode)
     let strippedDays = formatDays(rawDays)
     let allTimes = []
@@ -76,7 +78,7 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations, fullCourseCode) =>
             start: strippedStart[i],
             end: strippedEnd[i],
             duration: currDuration,
-            location: strippedLocations[i]
+            location: strippedLocations[i] != undefined ? strippedLocations[i] : "" 
         }
 
         allTimes.push(currTime)
@@ -210,7 +212,7 @@ const scrape = async () => {
     // });
 
 
-    let courseCode = "ECO100Y5"
+    let courseCode = "CSC236H5"
 
     await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
@@ -322,8 +324,13 @@ const scrape = async () => {
 
         }
 
+        fs.writeFile(`../../output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
 
-        console.log(JSON.stringify(currCourseData))
+        // console.log(JSON.stringify(currCourseData))
     }
 
 
