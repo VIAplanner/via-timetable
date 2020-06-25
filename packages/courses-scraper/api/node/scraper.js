@@ -221,12 +221,14 @@ const scrape = async (startRatio, endRatio) => {
 
     for (let i = start; i < end; i++) {
 
+        debugger
         let courseCode = courseCodes[i]
 
         await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
         // returns an array of objects containing info for all courses matching the currentCourseCode
         let coursesRawInfo = await page.evaluate(() => {
+
 
             // array of courses raw info
             let allCoursesRawInfo = document.querySelectorAll("div.course")
@@ -237,7 +239,7 @@ const scrape = async (startRatio, endRatio) => {
                 // object containing all info about the current course
                 let courseInfo = {
                     rawTitle: rawCourseInfo.querySelector("span > h4").innerText,
-                    rawBreadths: rawCourseInfo.querySelector("span > h4 > b").innerText,
+                    rawBreadths: rawCourseInfo.querySelector("span > h4 > b") != null ? rawCourseInfo.querySelector("span > h4 > b").innerText : 0,
                     rawDescription: rawCourseInfo.querySelector("div.infoCourseDetails").innerText,
                     rawMeetingSections: []
                 }
@@ -369,6 +371,10 @@ if (process.argv.length === 3) {
     else if (process.argv[2] === 'third') {
         startRatio = 2
         endRatio = 3
+    }
+    else{
+        console.log("Usage: node scraper.js (optional: first, second, third)")
+        return
     }
 }
 
