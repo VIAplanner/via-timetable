@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const cliProgress = require('cli-progress'); // magic progress bar
 const fs = require("fs")
 
 // convert 24 hours to seconds
@@ -195,7 +196,7 @@ const formatTerm = (courseCode) => {
 const scrape = async (startRatio, endRatio) => {
 
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: false, //  comment this out if you don't want to see the browser
     });
     const page = await browser.newPage();
     await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
@@ -218,10 +219,15 @@ const scrape = async (startRatio, endRatio) => {
         end = parseInt(courseCodes.length / 3) * endRatio
     }
 
+    // create a new progress bar instance and use shades_classic theme
+    const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+
+    // start the progress bar with a total number of courses to scrape and start value of 0
+    bar1.start(end - start, 0);
+
 
     for (let i = start; i < end; i++) {
 
-        debugger
         let courseCode = courseCodes[i]
 
         await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
@@ -346,14 +352,17 @@ const scrape = async (startRatio, endRatio) => {
                 }
             });
 
-            console.log(i)
-
-            // console.log(JSON.stringify(currCourseData), "\n\n")
         }
+
+        // update the current value in your application..
+        bar1.update(1);
+
     }
 
 
     await browser.close();
+    // stop the progress bar
+    bar1.stop();
 }
 
 // determines how much to scrape. First is the first third, second is the second third and so on
@@ -372,7 +381,7 @@ if (process.argv.length === 3) {
         startRatio = 2
         endRatio = 3
     }
-    else{
+    else {
         console.log("Usage: node scraper.js (optional: first, second, third)")
         return
     }

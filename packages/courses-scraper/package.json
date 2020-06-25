@@ -8,9 +8,8 @@
   "author": "UoftCourseTools",
   "license": "MIT",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "puppeteer": "^4.0.0",
-    "request": "^2.88.2"
+    "cli-progress": "^3.8.2",
+    "puppeteer": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
