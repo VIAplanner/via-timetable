@@ -99,7 +99,11 @@
                 </v-btn>
                 <v-row>
                     <v-col class="pa-0">
-                        <v-img id="top-image" src="../assets/about-background.jpg">
+                        <v-img
+                            id="top-image"
+                            src="../assets/about-background.jpg"
+                            :height="windowHeight"
+                        >
                             <v-overlay :opacity="darkMode ? 0.15 : 0" z-index="0" />
                             <v-row
                                 align="center"
@@ -261,83 +265,113 @@
                 </v-card>
                 <v-card elevation="4" class="mt-4" :dark="darkMode">
                     <v-row justify="center">
-                        <v-col style="text-align: center">
-                            <h1 class="ma-3">Future Plans</h1>
+                        <v-col class="text-center">
+                            <h1 class="ma-3">Release Schedule</h1>
                             <v-timeline
                                 :dense="$vuetify.breakpoint.smAndDown"
                                 class="ma-3"
+                                align-top
                             >
                                 <v-timeline-item
-                                    color="red lighten-1"
+                                    color="green lighten-1"
                                     fill-dot
                                     left
-                                    small
+                                    icon="mdi-party-popper"
                                 >
-                                    <v-card>
-                                        <v-card-title
-                                            class="red lighten-1 justify-end"
-                                        >
-                                            <h2
-                                                class="display-1 white--text font-weight-light"
-                                            >
-                                                Alpha
-                                            </h2>
-                                        </v-card-title>
-                                        <v-card-subtitle>
-                                            Available Now
-                                        </v-card-subtitle>
-                                        <v-container>
+                                    <v-card color="green lighten-1">
+                                        <v-card-title class="green lighten-1">
                                             <v-row>
-                                                <v-col
-                                                    class="hidden-sm-and-down"
-                                                    md="2"
-                                                >
-                                                    <v-icon size="64"
-                                                        >mdi-server-network</v-icon
+                                                <v-col>
+                                                    <h1 class="text-start">Alpha</h1>
+                                                    <h1
+                                                        class="text-start text-subtitle-1"
                                                     >
+                                                        Available Now
+                                                    </h1>
                                                 </v-col>
-                                                <v-col cols="12" md="10">
-                                                    Lorem ipsum dolor sit amet, no
-                                                    nam oblique veritus. Commune
-                                                    scaevola imperdiet nec ut, sed
-                                                    euismod convenire principes at.
-                                                    Est et nobis iisque percipit, an
-                                                    vim zril disputando voluptatibus.
-                                                </v-col>
+                                                <v-icon size="64">
+                                                    mdi-notebook
+                                                </v-icon>
                                             </v-row>
-                                        </v-container>
+                                        </v-card-title>
+                                        <v-sheet class="pa-5 text-left">
+                                            <ul>
+                                                <li>
+                                                    Generate timetable based on
+                                                    selected courses
+                                                </li>
+                                                <li>
+                                                    Switch sections (lecture,
+                                                    practical, tutorial)
+                                                </li>
+                                                <li>Lock courses</li>
+                                                <li>Blocks parts of the day</li>
+                                                <li>Block entire days</li>
+                                                <li>
+                                                    Switch semesters (plan for both
+                                                    semesters)
+                                                </li>
+                                            </ul>
+                                            <v-btn
+                                                class="ma-4 start"
+                                                color="green lighten-1"
+                                                dark
+                                                @click="
+                                                    $isMobile()
+                                                        ? (mobileAlert = true)
+                                                        : $router.push({
+                                                              name: 'home',
+                                                          })
+                                                "
+                                            >
+                                                Try it Now
+                                            </v-btn>
+                                        </v-sheet>
                                     </v-card>
                                 </v-timeline-item>
 
                                 <v-timeline-item
-                                    color="green lighten-1"
+                                    color="red lighten-1"
                                     fill-dot
+                                    small
                                     right
                                 >
-                                    <v-card>
-                                        <v-card-title class="green lighten-1">
-                                            <v-icon class="mr-4" dark size="42">
-                                                mdi-phone-in-talk
-                                            </v-icon>
-                                            <h2
-                                                class="display-1 white--text font-weight-light"
-                                            >
-                                                Beta (End of August)
-                                            </h2>
-                                        </v-card-title>
-                                        <v-container>
+                                    <v-card color="red lighten-1">
+                                        <v-card-title class="red lighten-1">
                                             <v-row>
                                                 <v-col>
-                                                    Lorem ipsum dolor sit amet, no
-                                                    nam oblique veritus. Commune
-                                                    scaevola imperdiet nec ut, sed
-                                                    euismod convenire principes at.
-                                                    Est et nobis iisque percipit, an
-                                                    vim zril disputando voluptatibus,
-                                                    vix an salutandi sententiae.
+                                                    <h1 class="text-start">Beta</h1>
+                                                    <h1
+                                                        class="text-start text-subtitle-1"
+                                                    >
+                                                        End of August
+                                                    </h1>
                                                 </v-col>
+                                                <v-icon size="64">
+                                                    mdi-server
+                                                </v-icon>
                                             </v-row>
-                                        </v-container>
+                                        </v-card-title>
+                                        <v-sheet class="pa-5 text-left">
+                                            <ul>
+                                                <li>
+                                                    Create account and save timetable
+                                                </li>
+                                                <li>Load saved timetables</li>
+                                                <li>
+                                                    Course suggestion based on
+                                                    programs (selected programs)
+                                                </li>
+                                                <li>UI improvement</li>
+                                            </ul>
+                                            <v-btn
+                                                class="ma-4 start"
+                                                color="red lighten-1"
+                                                disabled
+                                            >
+                                                Coming Soon
+                                            </v-btn>
+                                        </v-sheet>
                                     </v-card>
                                 </v-timeline-item>
                             </v-timeline>
@@ -427,7 +461,7 @@
                     :color="darkMode ? 'black' : '#F5F5F6'"
                 >
                     <v-row justify="center">
-                        <h1 class="text-subtitle-1">
+                        <h1 class="text-subtitle-1 text-center">
                             Copyright © 2020 VIAplanner - Data updated for the 2020 -
                             2021 school year
                         </h1>
