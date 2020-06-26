@@ -39,6 +39,7 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         },
+        exportOverlay: false,
         conflictPopup: false,
         searchBarValue: null,
         savedFallTimetable: {},
@@ -51,6 +52,9 @@ export default new Vuex.Store({
         tutorialPopup: !localStorage.visited,
     },
     mutations: {
+        setExportOverlay(state, payload){
+            state.exportOverlay = payload
+        },
         setLockedDayStatus(state, payload) {
             if (state.semesterStatus === "F") {
                 state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[
@@ -398,6 +402,9 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
+        getExportOverlay: (state) =>{
+            return state.exportOverlay
+        },
         getNoTimetablePopup: (state) => {
             return state.noTimetablePopup;
         },

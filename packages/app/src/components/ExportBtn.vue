@@ -38,7 +38,7 @@ export default {
         ...mapGetters(["getSemesterStatus"]),
     },
     methods: {
-        ...mapMutations(["setSemesterStatus"]),
+        ...mapMutations(["setSemesterStatus", "setExportOverlay"]),
 
         // timer function for making the system sleep
         sleep(ms) {
@@ -47,6 +47,9 @@ export default {
 
         // switch timetable download, then repeat
         async exportTimetables() {
+            
+            this.setExportOverlay(true)
+
             let fileName = "";
 
             if (this.getSemesterStatus === "F") {
@@ -71,6 +74,9 @@ export default {
 
             await this.sleep(50);
             this.exportCurrTimetable(fileName);
+
+            this.setExportOverlay(false)
+
         },
 
         async exportCurrTimetable(fileName) {
