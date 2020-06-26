@@ -18,13 +18,14 @@
             <span>Export Timetables</span>
         </v-tooltip>
         <v-btn v-else fab dark small color="green">
-            <v-icon>mdi-information</v-icon>
+            <v-icon>mdi-download</v-icon>
         </v-btn>
     </v-row>
 </template>
 
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
     data() {
@@ -33,9 +34,41 @@ export default {
             exportURL: null,
         };
     },
+    computed: {
+        ...mapGetters(["getSemesterStatus"]),
+    },
     methods: {
+        ...mapMutations(["setSemesterStatus"]),
+
+        // switch timetable download, then repeat
         async exportTimetables() {
-            const el = document.querySelector("#exportMe")
+            let fileName = "";
+
+            if (this.getSemesterStatus === "F") {
+                this.setSemesterStatus("S");
+                fileName = "Winter-Timetable.png";
+            } else {
+                this.setSemesterStatus("F");
+                fileName = "Fall-Timetable.png";
+            }
+
+            await this.exportCurrTimetable(fileName);
+
+            if (this.getSemesterStatus === "F") {
+                this.setSemesterStatus("S");
+                fileName = "Winter-Timetable.png";
+            } else {
+                this.setSemesterStatus("F");
+                fileName = "Fall-Timetable.png";
+            }
+
+            await this.exportCurrTimetable(fileName);
+        },
+
+        async exportCurrTimetable(fileName) {
+            // grab the entire screen element
+            const el = document.querySelector("#exportMe");
+
             const options = {
                 type: "dataURL",
             };
@@ -46,26 +79,33 @@ export default {
                 console.log("conversion error");
             }
 
-            this.downloadWithAxios();
+            await this.downloadWithAxios(fileName);
         },
 
-        forceFileDownload(response) {
+        // magic
+        forceFileDownload(response, fileName) {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", "file.png"); //or any other extension
+            link.setAttribute("download", fileName);
+            // add a new link in the html for download
             document.body.appendChild(link);
             link.click();
-            document.body.pop();
+            // remove that child
+            document.body.removeChild(document.body.lastChild);
         },
-        async downloadWithAxios() {
+
+        // more magic
+        async downloadWithAxios(fileName) {
+            let response = null;
+
             try {
-                let response = await axios({
+                response = await axios({
                     method: "get",
                     url: this.exportURL,
                     responseType: "arraybuffer",
                 });
-                this.forceFileDownload(response);
+                this.forceFileDownload(response, fileName);
             } catch (error) {
                 console.log("Download Failed");
             }
