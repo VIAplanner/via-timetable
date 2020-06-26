@@ -555,9 +555,9 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                 const temp = [...output2];
                 temp.push(arrayElement2);
                 const tempPraList = temp
+                console.log(temp)
                 addSectionToTimetable(temp, fallTimetable)
                 if (overlapExists(fallTimetable)) {
-
                     fallTimetable = {
                         MONDAY: [],
                         TUESDAY: [],
@@ -691,7 +691,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                             };
                         }
                         else {
-                            fallLectureCombo.founded = 1
+                            fallPracticalCombo.founded = 1
                             //founds a valid timetable
                             return true
                         }
