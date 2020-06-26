@@ -16,7 +16,7 @@
             </template>
             <span>Tutorial</span>
         </v-tooltip>
-        <v-btn v-else fab dark small color="orange" @click="setTutorialPopup(true)">
+        <v-btn v-else fab dark small color="orange">
             <v-icon>mdi-teach</v-icon>
         </v-btn>
     </v-row>

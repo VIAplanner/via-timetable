@@ -14,18 +14,22 @@
                 <v-icon v-else>mdi-hammer-screwdriver</v-icon>
             </v-btn>
         </template>
+        <export-btn></export-btn>
         <about-btn></about-btn>
         <tutorial-btn></tutorial-btn>
     </v-speed-dial>
 </template>
 
 <script>
-import TutorialBtn from "../components/TutorialBtn"
-import AboutBtn from "../components/AboutBtn"
+import TutorialBtn from "../components/TutorialBtn";
+import AboutBtn from "../components/AboutBtn";
+import ExportBtn from "../components/ExportBtn";
+
 export default {
-    components:{
+    components: {
         TutorialBtn,
-        AboutBtn
+        AboutBtn,
+        ExportBtn,
     },
     data() {
         return {

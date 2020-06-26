@@ -18,11 +18,9 @@
             </v-col>
         </v-row>
 
-        <v-container ref="exportMe">
+        <v-container id="exportMe">
             <v-row>
                 <help-dial />
-                <v-btn fab dark bottom left fixed color="primary" @click="print">
-                </v-btn>
                 <v-col class="mr-8 pb-0">
                     <timetable :timetable="timetable" />
                 </v-col>
@@ -55,7 +53,6 @@ import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
 import { mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
     created() {
@@ -91,7 +88,6 @@ export default {
     data() {
         return {
             optimizationOpen: false,
-            exportURL: null,
         };
     },
     apollo: {
@@ -109,37 +105,7 @@ export default {
             }
 
             return filteredCourses;
-        },
-        async print() {
-            const el = this.$refs.exportMe;
-            const options = {
-                type: "dataURL",
-            };
-            this.exportURL = await this.$html2canvas(el, options);
-            this.downloadWithAxios();
-        },
-
-        forceFileDownload(response) {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", "file.png"); //or any other extension
-            document.body.appendChild(link);
-            link.click();
-            document.body.pop();
-        },
-        async downloadWithAxios() {
-            try {
-                let response = await axios({
-                    method: "get",
-                    url: this.exportURL,
-                    responseType: "arraybuffer",
-                });
-                this.forceFileDownload(response);
-            } catch {
-                console.log("Download Failed");
-            }
-        },
+        }
     },
 };
 </script>
