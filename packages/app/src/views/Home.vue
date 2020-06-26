@@ -1,5 +1,17 @@
 <template>
     <div>
+        <v-overlay :value="getExportOverlay">
+            <v-row>
+                <h1 class="ma-3">Exporting</h1>
+            </v-row>
+            <v-row justify="center">
+                <v-progress-circular
+                    indeterminate
+                    size="64"
+                    style="margin-left: auto ; margin-right: auto ;"
+                ></v-progress-circular>
+            </v-row>
+        </v-overlay>
         <v-row>
             <v-col class="py-0">
                 <v-toolbar dark color="#012B5C">
@@ -18,7 +30,7 @@
             </v-col>
         </v-row>
 
-        <v-container>
+        <v-container id="exportMe">
             <v-row>
                 <help-dial />
                 <v-col class="mr-8 pb-0">
@@ -52,7 +64,8 @@ import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
-import { mapGetters } from "vuex";
+import { mapGetters} from "vuex";
+
 export default {
     created() {
         if (this.$isMobile()) {
@@ -68,7 +81,7 @@ export default {
         HelpDial,
     },
     computed: {
-        ...mapGetters(["selectedCourses", "timetable"]),
+        ...mapGetters(["selectedCourses", "timetable", "getExportOverlay"]),
         formattedCourses() {
             if (!this.courses) {
                 return [];

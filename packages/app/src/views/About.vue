@@ -103,6 +103,7 @@
                             id="top-image"
                             src="../assets/about-background.jpg"
                             :height="windowHeight"
+                            :eager="true"
                         >
                             <v-overlay :opacity="darkMode ? 0.15 : 0" z-index="0" />
                             <v-row
@@ -122,7 +123,7 @@
                                         class="text-h5 ma-4"
                                         style="font-weight: 300; color: white"
                                     >
-                                        We are a tool for tailoring your University
+                                        A tool for tailoring your University
                                         timetable based on your programs
                                     </h1>
                                     <v-btn
@@ -133,19 +134,19 @@
                                         style="text-transform: none; border-width: medium"
                                         class="ma-4"
                                         @click="
-                                            $isMobile()
-                                                ? (mobileAlert = true)
-                                                : $router.push({ name: 'home' })
+                                            $vuetify.goTo('#schedule', {
+                                                offset: 78,
+                                            })
                                         "
                                     >
-                                        Try out the Alpha
+                                        Release Schedule
                                     </v-btn>
                                 </v-col>
                             </v-row>
                         </v-img>
                     </v-col>
                 </v-row>
-                <v-card elevation="4" class="mt-4" :dark="darkMode">
+                <v-card elevation="4" class="mt-4" :dark="darkMode" id="schedule">
                     <v-row justify="center">
                         <v-col class="text-center">
                             <h1 class="ma-3">Release Schedule</h1>
@@ -157,11 +158,11 @@
                                 <v-timeline-item
                                     color="green lighten-1"
                                     fill-dot
-                                    left
                                     icon="mdi-party-popper"
+                                    left
                                 >
                                     <v-card color="green lighten-1">
-                                        <v-card-title class="green lighten-1">
+                                        <v-card-title color="green lighten-1">
                                             <v-row>
                                                 <v-col>
                                                     <h1 class="text-start">Alpha</h1>
@@ -213,9 +214,36 @@
                                 </v-timeline-item>
 
                                 <v-timeline-item
+                                    right
+                                    color="green lighten-1"
+                                    class="text-left"
+                                    fill-dot
+                                >
+                                    Course data updated for 2020 - 2021 school year
+                                    (UTM)
+                                </v-timeline-item>
+
+                                <v-timeline-item
+                                    left
+                                    color="green lighten-1"
+                                    class="text-lg-right text-left"
+                                    fill-dot
+                                >
+                                    Courses now show their delivery methods
+                                </v-timeline-item>
+
+                                <v-timeline-item
+                                    right
+                                    color="green lighten-1"
+                                    class="text-left"
+                                    fill-dot
+                                >
+                                    Export timetable as png
+                                </v-timeline-item>
+
+                                <v-timeline-item
                                     color="red lighten-1"
                                     fill-dot
-                                    small
                                     right
                                 >
                                     <v-card color="red lighten-1">
@@ -257,6 +285,12 @@
                                     </v-card>
                                 </v-timeline-item>
                             </v-timeline>
+                            <h1 class="text-body-1">
+                                Keep in mind, the deadlines for each release is when
+                                <strong>ALL</strong> the features will be ready. So
+                                come back frequently to check if a new feature has
+                                been released 😀
+                            </h1>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -301,6 +335,7 @@
                                     "
                                     src="../assets/img2.gif"
                                     max-width="800"
+                                    :eager="true"
                                 ></v-img>
                             </div>
                         </v-col>
@@ -318,6 +353,7 @@
                                     "
                                     src="../assets/img3.gif"
                                     max-width="800"
+                                    :eager="true"
                                 ></v-img>
                             </div>
                         </v-col>
@@ -369,7 +405,11 @@
                                                 <p>
                                                     {{ text }}
                                                 </p>
-                                                <v-img class="center" :src="path" />
+                                                <v-img
+                                                    class="center"
+                                                    :eager="true"
+                                                    :src="path"
+                                                />
                                             </v-col>
                                         </v-row>
                                     </v-sheet>

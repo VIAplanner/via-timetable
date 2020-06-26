@@ -23,7 +23,6 @@
             dark
             small
             color="blue"
-            @click="$router.push({ name: 'about' })"
         >
             <v-icon>mdi-information</v-icon>
         </v-btn>
