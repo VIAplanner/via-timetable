@@ -8,7 +8,6 @@
         flat
         hide-no-data
         hide-details
-        hide-selected
         :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
         :loading="loading"
         :autofocus="false"

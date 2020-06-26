@@ -11,7 +11,9 @@
                         :class="durationClass(event.start, event.end)"
                         :style="{ background: getCourseColor(event.code) }"
                     >
-                        <h4 class="course-code">{{ event.code }}</h4>
+                        <h4 class="course-code">
+                            {{ event.code }}
+                        </h4>
 
                         <div class="lock-button">
                             <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
@@ -27,7 +29,10 @@
                             </v-btn>
                         </div>
 
-                        <div style="margin-left: 3px;">{{ event.sectionCode }}</div>
+                        <div style="margin-left: 3px;">
+                            {{ event.sectionCode }}
+                            <span class="text-body-1">({{ deliveryMethod }})</span>
+                        </div>
 
                         <div style="position: relative;">
                             <div class="align-left">
@@ -97,6 +102,15 @@ export default {
     },
     computed: {
         ...mapGetters(["getCourseColor", "getLockedSections"]),
+        deliveryMethod() {
+            if (this.event.sectionCode[1] === "0") {
+                return "In Person";
+            } else if (this.event.sectionCode[1] === "8") {
+                return "Rotate";
+            } else {
+                return "Sync";
+            }
+        },
         dynamicText() {
             return !this.locked ? "Block This Time" : "Unblock This Time";
         },
@@ -181,6 +195,8 @@ export default {
                 return "two-hours-half";
             } else if (duration === 3) {
                 return "three-hours";
+            } else if (duration === 4) {
+                return "four-hours";
             }
         },
         getFormattedTime(start, end) {
@@ -262,6 +278,9 @@ export default {
 }
 .three-hours {
     height: 252px;
+}
+.four-hours {
+    height: 336px;
 }
 .course-code {
     margin-left: 3px;
