@@ -195,6 +195,8 @@ export default {
                 return "two-hours-half";
             } else if (duration === 3) {
                 return "three-hours";
+            } else if (duration === 4) {
+                return "four-hours";
             }
         },
         getFormattedTime(start, end) {
@@ -276,6 +278,9 @@ export default {
 }
 .three-hours {
     height: 252px;
+}
+.four-hours {
+    height: 336px;
 }
 .course-code {
     margin-left: 3px;

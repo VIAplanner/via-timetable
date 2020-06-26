@@ -224,6 +224,7 @@ export default new Vuex.Store({
         },
         validateTimetable(context, payload) {
             if (payload === null) {
+                context.commit("setSearchBarValue", null);
                 context.commit("setNoTimetablePopup", true);
                 context.dispatch("revertTimetable");
             } else {
