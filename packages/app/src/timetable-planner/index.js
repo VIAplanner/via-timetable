@@ -783,7 +783,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
         winterLectureCombo.founded = 0
         let lec2 = searchForSectionIndexAfterprevIndex(courseSection, "lecture", whichArray)
         if (lec2 != -1) {
-            return courseSection[whichArray].practical.some((arrayElement) => {
+            return courseSection[whichArray].lecture.some((arrayElement) => {
             // Recursive case...
             //if the course is not the last one
             if (winterLectureCombo.founded == 1) {
