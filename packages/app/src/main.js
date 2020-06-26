@@ -13,9 +13,12 @@ import { createProvider } from "./vue-apollo";
 import ToggleButton from "vue-js-toggle-button";
 import VueMobileDetection from "vue-mobile-detection";
 import VueAnalytics from "vue-analytics";
+import VueHtml2Canvas from 'vue-html2canvas';
+ 
 
 Vue.config.productionTip = false;
 
+Vue.use(VueHtml2Canvas);
 Vue.use(ToggleButton);
 Vue.use(VueMobileDetection);
 Vue.use(VueAnalytics, {

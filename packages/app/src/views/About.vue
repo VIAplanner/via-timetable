@@ -103,6 +103,7 @@
                             id="top-image"
                             src="../assets/about-background.jpg"
                             :height="windowHeight"
+                            :eager="true"
                         >
                             <v-overlay :opacity="darkMode ? 0.15 : 0" z-index="0" />
                             <v-row
@@ -157,6 +158,7 @@
                                 <v-timeline-item
                                     color="green lighten-1"
                                     fill-dot
+                                    icon="mdi-party-popper"
                                     left
                                 >
                                     <v-card color="green lighten-1">
@@ -225,7 +227,6 @@
                                     left
                                     color="green lighten-1"
                                     class="text-lg-right text-left"
-                                    icon="mdi-party-popper"
                                     fill-dot
                                 >
                                     Courses now show their delivery methods
@@ -325,6 +326,7 @@
                                     "
                                     src="../assets/img2.gif"
                                     max-width="800"
+                                    :eager="true"
                                 ></v-img>
                             </div>
                         </v-col>
@@ -342,6 +344,7 @@
                                     "
                                     src="../assets/img3.gif"
                                     max-width="800"
+                                    :eager="true"
                                 ></v-img>
                             </div>
                         </v-col>
@@ -393,7 +396,11 @@
                                                 <p>
                                                     {{ text }}
                                                 </p>
-                                                <v-img class="center" :src="path" />
+                                                <v-img
+                                                    class="center"
+                                                    :eager="true"
+                                                    :src="path"
+                                                />
                                             </v-col>
                                         </v-row>
                                     </v-sheet>
