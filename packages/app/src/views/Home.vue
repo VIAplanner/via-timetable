@@ -18,7 +18,7 @@
             </v-col>
         </v-row>
 
-        <v-container id="exportMe" ref="exportMe">
+        <v-container id="exportMe">
             <v-row>
                 <help-dial />
                 <v-col class="mr-8 pb-0">

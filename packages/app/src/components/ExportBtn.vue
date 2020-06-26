@@ -40,6 +40,11 @@ export default {
     methods: {
         ...mapMutations(["setSemesterStatus"]),
 
+        // timer function for making the system sleep
+        sleep(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        },
+
         // switch timetable download, then repeat
         async exportTimetables() {
             let fileName = "";
@@ -52,7 +57,9 @@ export default {
                 fileName = "Fall-Timetable.png";
             }
 
-            await this.exportCurrTimetable(fileName);
+            // wait until the page is full loaded
+            await this.sleep(50);
+            this.exportCurrTimetable(fileName);
 
             if (this.getSemesterStatus === "F") {
                 this.setSemesterStatus("S");
@@ -62,14 +69,13 @@ export default {
                 fileName = "Fall-Timetable.png";
             }
 
-            await this.exportCurrTimetable(fileName);
+            await this.sleep(50);
+            this.exportCurrTimetable(fileName);
         },
 
         async exportCurrTimetable(fileName) {
             // grab the entire screen element
-            const el = this.$parent.$parent.$parent.$parent.$refs.exportMe;
-            console.log(el)
-            // const el = document.querySelector("#exportMe");
+            const el = document.querySelector("#exportMe");
 
             const options = {
                 type: "dataURL",
@@ -81,7 +87,7 @@ export default {
                 console.log("conversion error");
             }
 
-            await this.downloadWithAxios(fileName);
+            this.downloadWithAxios(fileName);
         },
 
         // magic
