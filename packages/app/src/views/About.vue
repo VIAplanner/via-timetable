@@ -233,6 +233,15 @@
                                 </v-timeline-item>
 
                                 <v-timeline-item
+                                    right
+                                    color="green lighten-1"
+                                    class="text-left"
+                                    fill-dot
+                                >
+                                    Export timetable as png
+                                </v-timeline-item>
+
+                                <v-timeline-item
                                     color="red lighten-1"
                                     fill-dot
                                     right
