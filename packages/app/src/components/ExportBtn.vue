@@ -67,7 +67,9 @@ export default {
 
         async exportCurrTimetable(fileName) {
             // grab the entire screen element
-            const el = document.querySelector("#exportMe");
+            const el = this.$parent.$parent.$parent.$parent.$refs.exportMe;
+            console.log(el)
+            // const el = document.querySelector("#exportMe");
 
             const options = {
                 type: "dataURL",
