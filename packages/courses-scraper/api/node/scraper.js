@@ -245,8 +245,7 @@ const scrape = async (startRatio, endRatio) => {
 
     for (let i = start; i < end; i++) {
 
-        // let courseCode = courseCodes[i]
-        let courseCode = "ECO100Y5"
+        let courseCode = courseCodes[i]
 
         await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
@@ -377,14 +376,16 @@ const scrape = async (startRatio, endRatio) => {
                 });
             }
 
-            progressBar.increment()
         }
+
+        progressBar.increment()
     }
 
 
     await browser.close();
     // stop the progress bar
     progressBar.stop();
+    return
 }
 
 // determines how much to scrape. First is the first third, second is the second third and so on
