@@ -975,7 +975,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                                 }
                                             }
                                             else {
-                                                fallLectureCombo.founded = 1
+                                                winterLectureCombo.founded = 1
                                                 return true
                                             }
                                         })
