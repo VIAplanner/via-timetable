@@ -285,7 +285,7 @@
                                     </v-card>
                                 </v-timeline-item>
                             </v-timeline>
-                            <h1 class="text-body-1">
+                            <h1 class="text-body-1 ma-1">
                                 Keep in mind, the deadlines for each release is when
                                 <strong>ALL</strong> the features will be ready. So
                                 come back frequently to check if a new feature has
@@ -494,21 +494,20 @@
                         </v-sheet>
                     </v-col>
                 </v-row>
-                <v-footer
-                    absolute
-                    class="font-weight-medium"
-                    :dark="darkMode"
-                    :color="darkMode ? 'black' : '#F5F5F6'"
-                >
-                    <v-row justify="center">
-                        <h1 class="text-subtitle-1 text-center">
-                            Copyright © 2020 VIAplanner - Data updated for the 2020 -
-                            2021 school year
-                        </h1>
-                    </v-row>
-                </v-footer>
             </v-container>
         </v-content>
+        <v-footer
+            absolute
+            :dark="darkMode"
+            :color="darkMode ? 'black' : '#F5F5F6'"
+        >
+            <v-row justify="center">
+                <h1 class="text-subtitle-1 text-center">
+                    Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
+                    school year
+                </h1>
+            </v-row>
+        </v-footer>
     </v-app>
 </template>
 
