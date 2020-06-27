@@ -956,14 +956,15 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                     } else {
                                         return courseSection[whichArray2].tutorial.some((arrayElement2) => {
                                             // Base case when reach until the last course that has tutorial
-                                            if (fallLectureCombo.founded == 1) {
+                                            if (winterLectureCombo.founded == 1) {
                                                 return true
                                             }
                                             const temp = [...output2];
                                             temp.push(arrayElement2);
+                                            console.log(temp)
                                             addSectionToTimetable(temp, winterTimetable)
-                                            if (overlapExists(fallTimetable)) {
-                                                fallTimetable = createShallowCopyOfTimetable(prevTimetable)
+                                            if (overlapExists(winterTimetable)) {
+                                                winterTimetable = createShallowCopyOfTimetable(prevTimetable)
                                                 let j = -1;
                                                 for (let i = 0; i < temp.length; i++) {
                                                     if (temp[i] === courseSection[i].tutorial[courseSection[i].tutorial.length - 1]) {
