@@ -480,27 +480,13 @@
                                     <v-icon left>mdi-star</v-icon>
                                     {{ starCount }}
                                 </v-btn>
-                                <v-btn
-                                    href="https://docs.google.com/forms/d/e/1FAIpQLScmmk0H3_5KVxoa6m74_Uj93dF-2OCUQF-kPXcr9xki8V71oQ/viewform"
-                                    target="blank"
-                                    color="#00A1FF"
-                                    class="ma-1"
-                                    dark
-                                >
-                                    <v-icon left>mdi-text-box-check-outline</v-icon>
-                                    Survey
-                                </v-btn>
                             </v-row>
                         </v-sheet>
                     </v-col>
                 </v-row>
             </v-container>
         </v-content>
-        <v-footer
-            absolute
-            :dark="darkMode"
-            :color="darkMode ? 'black' : '#F5F5F6'"
-        >
+        <v-footer absolute :dark="darkMode" :color="darkMode ? 'black' : '#F5F5F6'">
             <v-row justify="center">
                 <h1 class="text-subtitle-1 text-center">
                     Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
