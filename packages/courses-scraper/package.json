@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "cli-progress": "^3.8.2",
+    "ora": "^4.0.4",
     "puppeteer": "^4.0.0"
   },
   "devDependencies": {
