@@ -1,6 +1,8 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
+
+// course model and validation
 const timeSchema = new Schema({
     day: {
         type: String,
@@ -35,15 +37,15 @@ const meetingSectionSchema = new Schema({
     },
     times: {
         type: [timeSchema],
-        validate(value){
-            if (value.length === 0){
+        validate(value) {
+            if (value.length === 0) {
                 throw new Error("Times must be provided")
             }
-        } 
+        }
     },
     size: {
         type: Number,
-        default: 0
+        default: 0,
     },
     enrolment: {
         type: Number,
@@ -103,16 +105,13 @@ const courseSchema = new Schema({
     },
     breadths: {
         type: Array,
-        default: []
-    },
-    meeting_sections: {
-        type: [meetingSectionSchema],
-        validate(value){
-            if (value.length === 0){
-                throw new Error("Meeting sections must be provided")
+        validate(value) {
+            if (value.some(isNaN)) {
+                throw new Error("breath must be numbers")
             }
-        } 
-    }
+        }
+    },
+    meeting_sections:  [meetingSectionSchema]
 })
 
 const Course = mongoose.model("Course", courseSchema)
