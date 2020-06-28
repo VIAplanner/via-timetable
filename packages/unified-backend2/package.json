@@ -1,0 +1,19 @@
+{
+  "name": "unified-backend",
+  "version": "1.0.0",
+  "description": "Stores the source code for the REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yingxiaoyang Hu",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.20"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
