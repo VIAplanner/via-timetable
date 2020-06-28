@@ -1,2 +1,1 @@
-courses/
-node_modules/
+src/db/.env

@@ -1,18 +1,19 @@
 {
   "name": "unified-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Stores the source code for the REST API",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Yingxiaoyang Hu",
+  "license": "GPL-2.0-only",
   "dependencies": {
-    "apollo-server": "^2.14.2",
-    "mongoose": "^5.9.7"
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.20"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }
