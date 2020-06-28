@@ -52,7 +52,7 @@ export default new Vuex.Store({
         tutorialPopup: !localStorage.visited,
     },
     mutations: {
-        setExportOverlay(state, payload){
+        setExportOverlay(state, payload) {
             state.exportOverlay = payload
         },
         setLockedDayStatus(state, payload) {
@@ -87,22 +87,52 @@ export default new Vuex.Store({
         },
         addCourse(state, payload) {
             if (payload.course.courseCode.slice(0, 4) === "Lock") {
+
+                let whichDay = payload.course.meeting_sections[0].times[0].day
+
                 if (state.semesterStatus === "F") {
                     state.fallSelectedCourses[payload.course.courseCode] =
-                    payload.course;
+                        payload.course;
+
+                    //Add new section into timetable
+                    state.fallTimetable[whichDay].push({
+                        code: payload.course.courseCode,
+                        sectionCode: payload.course.meeting_sections[0].sectionCode,
+                        instructors: payload.course.meeting_sections[0].instructors[0],
+                        ...payload.course.meeting_sections[0].times[0],
+                    })
+
+                    // sort it 
+                    state.fallTimetable[whichDay].sort((a, b) => {
+                        return a.start - b.start;
+                    });
+
                 } else {
                     state.winterSelectedCourses[payload.course.courseCode] =
-                    payload.course;
+                        payload.course;
+
+                    //Add new section into timetable
+                    state.winterTimetable[whichDay].push({
+                        code: payload.course.courseCode,
+                        sectionCode: payload.course.meeting_sections[0].sectionCode,
+                        instructors: payload.course.meeting_sections[0].instructors[0],
+                        ...payload.course.meeting_sections[0].times[0],
+                    })
+
+                    // sort it 
+                    state.winterTimetable[whichDay].sort((a, b) => {
+                        return a.start - b.start;
+                    });
                 }
             }
             else if (payload.course.courseCode[8] === "F") {
                 state.fallSelectedCourses[payload.course.courseCode] =
                     payload.course;
-            } 
+            }
             else if (payload.course.courseCode[8] === "S") {
                 state.winterSelectedCourses[payload.course.courseCode] =
                     payload.course;
-            } else if (payload.course.courseCode[8] === "Y"){
+            } else if (payload.course.courseCode[8] === "Y") {
                 state.fallSelectedCourses[payload.course.courseCode] =
                     payload.course;
                 state.winterSelectedCourses[payload.course.courseCode] =
@@ -122,7 +152,7 @@ export default new Vuex.Store({
             }
             else if (payload.code[8] === "S") {
                 Vue.delete(state.winterSelectedCourses, payload.code)
-            } else if (payload.code[8] === "Y"){
+            } else if (payload.code[8] === "Y") {
                 Vue.delete(state.fallSelectedCourses, payload.code)
                 Vue.delete(state.winterSelectedCourses, payload.code)
             }
@@ -168,13 +198,13 @@ export default new Vuex.Store({
                     index = state.fallLockedSections.indexOf(payload);
                     if (index != -1) {
                         state.fallLockedSections.splice(index, 1);
-                    } 
+                    }
                 }
                 else {
                     index = state.winterLockedSections.indexOf(payload);
                     if (index != -1) {
                         state.winterLockedSections.splice(index, 1);
-                    } 
+                    }
                 }
             }
             if (payload[8] === "F") { //Fall
@@ -182,7 +212,7 @@ export default new Vuex.Store({
                 if (index != -1) {
                     state.fallLockedSections.splice(index, 1);
                 }
-            } else if (payload[8] === "S"){ //Winter
+            } else if (payload[8] === "S") { //Winter
                 index = state.winterLockedSections.indexOf(payload);
                 if (index != -1) {
                     state.winterLockedSections.splice(index, 1);
@@ -193,7 +223,7 @@ export default new Vuex.Store({
                     state.fallLockedSections.splice(index, 1);
                     index = state.winterLockedSections.indexOf(payload)
                     state.winterLockedSections.splice(index, 1);
-                } 
+                }
             }
         },
     },
@@ -272,10 +302,10 @@ export default new Vuex.Store({
             ) {
                 context.commit("setSearchBarValue", null);
             }
-            
+
             //Remove course
             context.commit("removeCourse", payload);
-            
+
             //Unlock all sections of the deleted course           
             for (let lockedSection of context.state.fallLockedSections) {
                 if (lockedSection.includes(payload.code)) {
@@ -289,11 +319,11 @@ export default new Vuex.Store({
             }
 
             //Remove all sections of the deleted course from the correct timetable   
-            if(payload.code.includes("Lock")){
-                if(context.state.semesterStatus === "F"){
+            if (payload.code.includes("Lock")) {
+                if (context.state.semesterStatus === "F") {
                     for (let day in context.state.fallTimetable) {
                         let dayEvents = context.state.fallTimetable[day]
-                        for (let i = dayEvents.length - 1; i >= 0; i--){
+                        for (let i = dayEvents.length - 1; i >= 0; i--) {
                             if (dayEvents[i].code === payload.code) {
                                 dayEvents.splice(i, 1);
                                 break;
@@ -301,10 +331,10 @@ export default new Vuex.Store({
                         }
                     }
                 }
-                else{
+                else {
                     for (let day in context.state.winterTimetable) {
                         let dayEvents = context.state.winterTimetable[day]
-                        for (let i = dayEvents.length - 1; i >= 0; i--){
+                        for (let i = dayEvents.length - 1; i >= 0; i--) {
                             if (dayEvents[i].code === payload.code) {
                                 dayEvents.splice(i, 1);
                                 break;
@@ -313,10 +343,10 @@ export default new Vuex.Store({
                     }
                 }
             }
-            else{
+            else {
                 for (let day in context.state.fallTimetable) {
                     let dayEvents = context.state.fallTimetable[day]
-                    for (let i = dayEvents.length - 1; i >= 0; i--){
+                    for (let i = dayEvents.length - 1; i >= 0; i--) {
                         if (dayEvents[i].code === payload.code) {
                             dayEvents.splice(i, 1);
                         }
@@ -324,7 +354,7 @@ export default new Vuex.Store({
                 }
                 for (let day in context.state.winterTimetable) {
                     let dayEvents = context.state.winterTimetable[day]
-                    for (let i = dayEvents.length - 1; i >= 0; i--){
+                    for (let i = dayEvents.length - 1; i >= 0; i--) {
                         if (dayEvents[i].code === payload.code) {
                             dayEvents.splice(i, 1);
                         }
@@ -336,8 +366,8 @@ export default new Vuex.Store({
         resetTimetable(context, payload) {
             // Save the timetable before it gets reset
 
-            if(!payload){
-                context.dispatch("saveTimetable");            
+            if (!payload) {
+                context.dispatch("saveTimetable");
             }
 
             const fallCourses = Object.keys(context.state.fallSelectedCourses).map(
@@ -346,10 +376,10 @@ export default new Vuex.Store({
             const winterCourses = Object.keys(context.state.winterSelectedCourses).map(
                 (code) => context.state.winterSelectedCourses[code]
             );
-                
+
             let bothTimetables = generateTimetables(fallCourses, context.state.fallLockedSections,
                 winterCourses, context.state.winterLockedSections)
-            
+
             context.dispatch("validateTimetable", bothTimetables);
         },
         //Switch a section of a course when there is no conflict
@@ -359,15 +389,15 @@ export default new Vuex.Store({
                 "unlockSection",
                 `${payload.old.courseCode}${payload.old.sectionCode}`
             );
-            
+
             let whichSemesters = []
-            if(payload.old.courseCode[8] === "F"){
+            if (payload.old.courseCode[8] === "F") {
                 whichSemesters.push(context.state.fallTimetable)
             }
-            else if(payload.old.courseCode[8] === "S"){
+            else if (payload.old.courseCode[8] === "S") {
                 whichSemesters.push(context.state.winterTimetable)
             }
-            else{
+            else {
                 whichSemesters.push(context.state.fallTimetable)
                 whichSemesters.push(context.state.winterTimetable)
             }
@@ -402,7 +432,7 @@ export default new Vuex.Store({
     },
     modules: {},
     getters: {
-        getExportOverlay: (state) =>{
+        getExportOverlay: (state) => {
             return state.exportOverlay
         },
         getNoTimetablePopup: (state) => {
@@ -421,10 +451,10 @@ export default new Vuex.Store({
                 return state.winterTimetable;
             }
         },
-        fallTimetable: (state)=>{
+        fallTimetable: (state) => {
             return state.fallTimetable;
         },
-        winterTimetable : (state)=>{
+        winterTimetable: (state) => {
             return state.winterTimetable
         },
         selectedCourses: (state) => {
