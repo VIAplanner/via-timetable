@@ -304,24 +304,25 @@ const scrape = async (startRatio, endRatio) => {
 
         });
 
-        let currCourseData = {
-            id: "",
-            code: "",
-            name: "",
-            description: "",
-            division: "University of Toronto Mississauga",
-            department: "NA",
-            prerequisites: "",
-            exclusions: "",
-            level: 0,
-            campus: "UTM",
-            term: "",
-            breadths: [],
-            meeting_sections: []
-        }
 
         // need to loop because a course could be in both fall and winter
         for (let currCourseRawInfo of coursesRawInfo) {
+
+            let currCourseData = {
+                id: "",
+                code: "",
+                name: "",
+                description: "",
+                division: "University of Toronto Mississauga",
+                department: "NA",
+                prerequisites: "",
+                exclusions: "",
+                level: 0,
+                campus: "UTM",
+                term: "",
+                breadths: [],
+                meeting_sections: []
+            }
 
             // full code with semester
             let fullCourseCode = formatCourseCode(currCourseRawInfo.rawTitle)
@@ -369,7 +370,7 @@ const scrape = async (startRatio, endRatio) => {
             // write course data to json is the course is not empty
             if (currCourseData.meeting_sections.length != 0) {
 
-                fs.writeFile(`../../output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
+                fs.writeFile(`output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
                     if (err) {
                         console.log(err);
                     }
