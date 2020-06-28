@@ -218,10 +218,10 @@ export default {
         lockedSectionToggle() {
             if (!this.locked) {
                 // if the user clicks on an empty timeslot, it will be added as a course in vuex
+                this.addCourse({ course: this.currSecData });
                 this.lockSection(
                     `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
                 );
-                this.addCourse({ course: this.currSecData });
             } else {
                 // if the user clicks on a lock timeslot, it will be removed
                 this.deleteCourse({ code: this.currSecData.courseCode });
