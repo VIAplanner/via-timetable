@@ -243,7 +243,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["switchSection", "resetTimetable"]),
+        ...mapActions(["switchSection", "resetTimetable", "deleteCourse"]),
         ...mapMutations([
             "lockSection",
             "unlockSection",
@@ -444,6 +444,11 @@ export default {
                 this.unlockSection(
                     `${conflictSection.courseCode}${conflictSection.sectionCode}`
                 );
+
+                // if the section that the user is switching to is a locked section, delete it
+                if (conflictSection.courseCode.includes("Lock")) {
+                    this.deleteCourse({ code: conflictSection.courseCode });
+                }
             }
             // Temporarily lock the new sections, regenerate timetable, and unlock the new sections
             for (var newSection of this.newSectionsWithConflict) {

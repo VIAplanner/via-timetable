@@ -86,7 +86,6 @@ export default new Vuex.Store({
             state.overwriteLockedSectionPopup = payload;
         },
         addCourse(state, payload) {
-            console.log(payload)
             if (payload.course.courseCode.slice(0, 4) === "Lock") {
 
                 let whichDay = payload.course.meeting_sections[0].times[0].day
