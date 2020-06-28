@@ -10,7 +10,7 @@ cluster = MongoClient(
     "mongodb+srv://user_1:coursetools@coursetoolscluster-wjb51.mongodb.net/test?retryWrites=true&w=majority")
 db = cluster["UofT"]
 collection = db["Courses"]
-courses_directory = "../../output/"
+courses_directory = "output/"
 
 # adding all JSON from local to server
 for course in tqdm(os.listdir(courses_directory)):
