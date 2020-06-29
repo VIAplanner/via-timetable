@@ -2,15 +2,31 @@ const express = require("express")
 const Course = require("../models/course")
 const router = new express.Router()
 
+// route to get all course data for the search bar
+router.get("/courses/searchbar", async (req, res) => {
+    try {
+        const allCourses = await Course.find({})
+        let allSearchBarValues = []
+        for (let course of allCourses) {
+            allSearchBarValues.push({ code: course.code, name: course.name })
+        }
+
+        res.send(allSearchBarValues)
+
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
 // route for getting data about a specific course
 router.get("/courses/:code", async (req, res) => {
 
     try {
         const course = await Course.findOne({ code: req.params.code })
-        if(!course){
-            res.status(404).send({message: "no course exist with this code"})
+        if (!course) {
+            res.status(404).send({ message: "no course exist with this code" })
         }
-        else{
+        else {
             res.send(course)
         }
     } catch (e) {
@@ -23,8 +39,8 @@ router.get("/courses/:code", async (req, res) => {
 router.get("/courses", async (req, res) => {
 
     try {
-        const courses = await Course.find({})
-        res.send(courses)
+        const allCourses = await Course.find({})
+        res.send(allCourses)
     } catch (e) {
         res.status(500).send(e)
     }
