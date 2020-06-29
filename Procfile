@@ -1,1 +1,1 @@
-web: ./deploy-server.bash
+web: npm run start:api

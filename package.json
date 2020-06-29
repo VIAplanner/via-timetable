@@ -1,23 +1,24 @@
 {
-  "name": "viaplanner",
-  "version": "1.0.0",
-  "description": "A UTM timetable planner",
-  "main": "index.js",
-  "scripts": {
-    "start:api": "./deploy-server.bash"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UTM-Hacklab/VIAplanner.git"
-  },
-  "keywords": [
-    "timetbale",
-    "generator"
-  ],
-  "author": "VIAplanner contributors",
-  "license": "GPL-2.0-only",
-  "bugs": {
-    "url": "https://github.com/UTM-Hacklab/VIAplanner/issues"
-  },
-  "homepage": "https://github.com/UTM-Hacklab/VIAplanner#readme"
-}
+    "name": "viaplanner",
+    "version": "1.0.0",
+    "description": "A UTM timetable planner",
+    "main": "index.js",
+    "scripts": {
+      "start:api": "cd packages/unified-backend; npm install; npm run start"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/UTM-Hacklab/VIAplanner.git"
+    },
+    "keywords": [
+      "timetable",
+      "generator"
+    ],
+    "author": "VIAplanner contributors",
+    "license": "GPL-2.0-only",
+    "bugs": {
+      "url": "https://github.com/UTM-Hacklab/VIAplanner/issues"
+    },
+    "homepage": "https://github.com/UTM-Hacklab/VIAplanner#readme"
+  }
+  
