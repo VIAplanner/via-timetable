@@ -17,7 +17,6 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import gql from "graphql-tag";
 export default {
     name: "course-search-bar",
     props: {
@@ -77,39 +76,39 @@ export default {
             this.$refs.searchBarComponent.blur();
             this.loading = true;
 
-            this.$apollo
-                .query({
-                    query: gql`
-                        query getCourse($code: String!) {
-                            courses(code: $code) {
-                                courseCode: code
-                                name
-                                meeting_sections {
-                                    sectionCode: code
-                                    instructors
-                                    times {
-                                        day
-                                        start
-                                        end
-                                        location
-                                    }
-                                }
-                            }
-                        }
-                    `,
-                    variables: {
-                        code: this.selectedCourse.slice(
-                            5,
-                            this.selectedCourse.indexOf(":")
-                        ),
-                    },
-                })
-                .then((response) => {
-                    if (response.data.courses) {
-                        this.selectCourse({ course: response.data.courses[0] });
-                    }
-                    this.loading = false;
-                });
+            // this.$apollo
+            //     .query({
+            //         query: gql`
+            //             query getCourse($code: String!) {
+            //                 courses(code: $code) {
+            //                     courseCode: code
+            //                     name
+            //                     meeting_sections {
+            //                         sectionCode: code
+            //                         instructors
+            //                         times {
+            //                             day
+            //                             start
+            //                             end
+            //                             location
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         `,
+            //         variables: {
+            //             code: this.selectedCourse.slice(
+            //                 5,
+            //                 this.selectedCourse.indexOf(":")
+            //             ),
+            //         },
+            //     })
+            //     .then((response) => {
+            //         if (response.data.courses) {
+            //             this.selectCourse({ course: response.data.courses[0] });
+            //         }
+            //         this.loading = false;
+            //     });
         },
     },
 };
