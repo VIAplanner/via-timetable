@@ -1,25 +1,19 @@
-const express = require("express")
 require("./db/mongoose")
-
-const Course = require("./models/course")
-
+const express = require("express")
+const courseRouter = require("./routes/course")
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(express.json())
+app.use(express.json()) // parse request as json
+app.use(courseRouter)
 
-app.post("/courses", async (req, res) => {
-    const currCourse = new Course(req.body)
+app.get("/", (req, res) => {
+    res.redirect('https://docs.viaplanner.ca/course-api/');
+})
 
-    try {
-        await currCourse.save()
-        res.status(200).send({message: "course added successfully"})
-    } catch (e) {
-        res.status(400).send(e)
-
-    }
-
+app.get("*", (req, res) => {
+    res.redirect('https://docs.viaplanner.ca/course-api/');
 })
 
 app.listen(port, () => {
