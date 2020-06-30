@@ -1,12 +1,13 @@
 require("./db/mongoose")
 const express = require("express")
+const sslRedirect = require('heroku-ssl-redirect');
 const cors = require("cors")
 const courseRouter = require("./routes/course")
 
 const app = express()
 const port = process.env.PORT || 3000
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0 // allow for https request
+app.use(sslRedirect()); // enable ssl redirect
 app.use(cors()) // allow access from all origins
 app.use(express.json()) // parse request as json
 app.use(courseRouter)
