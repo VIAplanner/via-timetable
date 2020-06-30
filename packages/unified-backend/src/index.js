@@ -12,16 +12,6 @@ app.use(cors()) // allow access from all origins
 app.use(express.json()) // parse request as json
 app.use(courseRouter)
 
-if (process.env.NODE_ENV === 'production') {
-    app.use((req, res, next) => {
-        if (req.header('x-forwarded-proto') !== 'https')
-            res.redirect(`https://${req.header('host')}${req.url}`)
-        else
-            next()
-    })
-}
-
-
 app.get("/", (req, res) => {
     res.redirect('https://docs.viaplanner.ca/course-api/');
 })
