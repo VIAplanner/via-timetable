@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "vuepress dev",
+        "dev": "vuepress dev",
         "build": "vuepress build"
     },
     "devDependencies": {
