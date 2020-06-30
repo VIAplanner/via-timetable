@@ -39,6 +39,14 @@ export default {
         }
 
         if (rawCourses.length != 0) {
+            rawCourses.sort((a, b) => {
+                if (a.courseCode < b.courseCode) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
             this.allCourses = rawCourses.map((course) => {
                 if (course.courseCode[8] === "F") {
                     return `🍂   ${course.courseCode}: ${course.name}`;
