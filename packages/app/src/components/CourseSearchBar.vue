@@ -9,7 +9,7 @@
         hide-no-data
         hide-details
         :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
-        :loading="false"
+        :loading="loading"
         :autofocus="false"
         solo-inverted
     ></v-autocomplete>
@@ -22,35 +22,35 @@ import axios from "axios";
 export default {
     data() {
         return {
-            loading: false,
+            loading: true,
             allCourses: [],
         };
     },
     async mounted() {
         let rawCourses = [];
 
-        console.log(`${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`)
-
         try {
             rawCourses = await axios.get(
-                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`
+                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar?api_key=${process.env.VUE_APP_API_KEY}`
             );
+            rawCourses = rawCourses.data;
         } catch (e) {
-            console.log(e);
+            console.log(e.message);
         }
 
         if (rawCourses.length != 0) {
-            return [];
+            this.allCourses = rawCourses.map((course) => {
+                if (course.code[8] === "F") {
+                    return `🍂   ${course.code}: ${course.name}`;
+                } else if (course.code[8] === "S") {
+                    return `❄️   ${course.code}: ${course.name}`;
+                } else {
+                    return `🍂❄️ ${course.code}: ${course.name}`;
+                }
+            });
         }
-        this.allCourses = this.rawCourses.map((course) => {
-            if (course.code[8] === "F") {
-                return `🍂   ${course.code}: ${course.name}`;
-            } else if (course.code[8] === "S") {
-                return `❄️   ${course.code}: ${course.name}`;
-            } else {
-                return `🍂❄️ ${course.code}: ${course.name}`;
-            }
-        });
+
+        this.loading = false;
     },
     computed: {
         ...mapGetters(["getSearchBarValue", "getSemesterStatus", "selectedCourses"]),
@@ -73,7 +73,7 @@ export default {
     methods: {
         ...mapActions(["selectCourse"]),
         ...mapMutations(["setSearchBarValue", "setSemesterStatus"]),
-        onCourseSelected() {
+        async onCourseSelected() {
             if (!this.selectedCourse) return;
 
             // Switch the semester based on the course
@@ -91,6 +91,29 @@ export default {
             // unfocus the search bar
             this.$refs.searchBarComponent.blur();
             this.loading = true;
+
+            let course = {};
+            // let courseCode = this.selectedCourse.slice(
+            //     5,
+            //     this.selectedCourse.indexOf(":")
+            // );
+
+            let courseCode = ""
+
+            try {
+                course = await axios.get(
+                    `${process.env.VUE_APP_API_BASE_URL}/courses/${courseCode}?api_key=${process.env.VUE_APP_API_KEY}`
+                );
+                course = course.data
+            } catch (e) {
+                console.log(e.message);
+            }
+
+            if (course) {
+                this.selectCourse({ course });
+            }
+
+            this.loading = false;
 
             // this.$apollo
             //     .query({
@@ -129,5 +152,3 @@ export default {
     },
 };
 </script>
-
-<style></style>

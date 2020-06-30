@@ -27,7 +27,7 @@ const timeSchema = new Schema({
 })
 
 const meetingSectionSchema = new Schema({
-    code: {
+    sectionCode: {
         type: String,
         required: true
     },
@@ -63,7 +63,7 @@ const courseSchema = new Schema({
         type: String,
         required: true,
     },
-    code: {
+    courseCode: {
         type: String,
         required: true
     },
