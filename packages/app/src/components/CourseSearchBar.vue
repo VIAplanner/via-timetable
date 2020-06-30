@@ -3,13 +3,13 @@
         ref="searchBarComponent"
         @change="onCourseSelected"
         v-model="selectedCourse"
-        :items="semCourses"
+        :items="allCourses"
         class="mx-4"
         flat
         hide-no-data
         hide-details
         :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
-        :loading="loading"
+        :loading="false"
         :autofocus="false"
         solo-inverted
     ></v-autocomplete>
@@ -17,16 +17,40 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import axios from "axios";
+
 export default {
-    name: "course-search-bar",
-    props: {
-        loadingParent: Boolean,
-        allCourses: Array,
-    },
-    data(){
+    data() {
         return {
-            loadingChild: false
+            loading: false,
+            allCourses: [],
+        };
+    },
+    async mounted() {
+        let rawCourses = [];
+
+        console.log(`${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`)
+
+        try {
+            rawCourses = await axios.get(
+                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`
+            );
+        } catch (e) {
+            console.log(e);
         }
+
+        if (rawCourses.length != 0) {
+            return [];
+        }
+        this.allCourses = this.rawCourses.map((course) => {
+            if (course.code[8] === "F") {
+                return `🍂   ${course.code}: ${course.name}`;
+            } else if (course.code[8] === "S") {
+                return `❄️   ${course.code}: ${course.name}`;
+            } else {
+                return `🍂❄️ ${course.code}: ${course.name}`;
+            }
+        });
     },
     computed: {
         ...mapGetters(["getSearchBarValue", "getSemesterStatus", "selectedCourses"]),
@@ -45,14 +69,6 @@ export default {
                 return courseString[14] === ":";
             });
         },
-        loading: {
-            get(){
-                return this.loadingParent || this.loadingChild
-            },
-            set(value){
-                this.loadingChild = value
-            }
-        }
     },
     methods: {
         ...mapActions(["selectCourse"]),
