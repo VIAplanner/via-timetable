@@ -41,7 +41,7 @@
               <timetable :timetable="timetable" />
             </smooth-scrollbar>
           </v-col>
-          <v-col cols="2" class="pl-0">
+          <v-col cols="3" class="pl-0">
             <v-row class="pr-6">
               <v-col>
                 <v-card class="left-panel" img="../assets/VIA-Logo-Blue.png" width="500">
