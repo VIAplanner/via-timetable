@@ -21,9 +21,7 @@
                         contain
                     />
                     <course-search-bar
-                        :allCourses="formattedCourses"
                         class="mx-4"
-                        :loadingParent="$apollo.loading"
                     />
                     <switch-sem />
                 </v-toolbar>
@@ -61,7 +59,6 @@ import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
 import Tutorial from "../components/Tutorial";
 import TimetableCourseCard from "../components/TimetableCourseCard";
-import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
 import { mapGetters} from "vuex";
@@ -101,9 +98,6 @@ export default {
         return {
             optimizationOpen: false,
         };
-    },
-    apollo: {
-        courses: COURSES_SEARCH_BAR_QUERY,
     },
     methods: {
         // filters user lock timeslots

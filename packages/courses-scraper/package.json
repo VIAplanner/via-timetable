@@ -6,12 +6,14 @@
     "utm:first": "node api/node/scraper.js first",
     "utm:second": "node api/node/scraper.js second",
     "utm:third": "node api/node/scraper.js third",
-    "upload": "python3 api/python/uploader.py"
+    "upload": "node api/node/uploader.js"
   },
   "author": "UoftCourseTools",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "cli-progress": "^3.8.2",
+    "dotenv": "^8.2.0",
     "ora": "^4.0.4",
     "puppeteer": "^4.0.0"
   },

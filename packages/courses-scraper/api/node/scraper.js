@@ -310,7 +310,7 @@ const scrape = async (startRatio, endRatio) => {
 
             let currCourseData = {
                 id: "",
-                code: "",
+                courseCode: "",
                 name: "",
                 description: "",
                 division: "University of Toronto Mississauga",
@@ -336,14 +336,14 @@ const scrape = async (startRatio, endRatio) => {
 
             // data that only needs the courseCode
             currCourseData.id = formatID(fullCourseCode)
-            currCourseData.code = fullCourseCode
+            currCourseData.courseCode = fullCourseCode
             currCourseData.level = formatLevel(fullCourseCode)
             currCourseData.term = formatTerm(fullCourseCode)
 
             for (let rawSectionInfo of currCourseRawInfo.rawMeetingSections) {
 
                 let currMeetingSection = {
-                    code: "",
+                    sectionCode: "",
                     instructors: [],
                     times: [],
                     size: 0,
@@ -356,7 +356,7 @@ const scrape = async (startRatio, endRatio) => {
                     continue
                 }
 
-                currMeetingSection.code = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
+                currMeetingSection.sectionCode = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
                 currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
                 currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
                 currMeetingSection.size = rawSectionInfo[4]
