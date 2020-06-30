@@ -44,8 +44,10 @@ export default new Vuex.Store({
         searchBarValue: null,
         savedFallTimetable: {},
         savedWinterTimetable: {},
-        savedSelectedCourses: {},
-        savedLockedSections: [],
+        savedFallSelectedCourses: {},
+        savedWinterSelectedCourses: {},
+        savedFallLockedSections: [],
+        savedWinterLockedSections: [],
         semesterStatus: "F",
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
@@ -159,19 +161,13 @@ export default new Vuex.Store({
         },
         //Todo
         setLockedSections(state, payload) {
-            if (state.semesterStatus === "F") {
-                state.fallLockedSections = payload;
-            } else {
-                state.winterLockedSections = payload;
-            }
+            state.fallLockedSections = payload[0];
+            state.winterLockedSections = payload[1];
         },
         //Todo
         setSelectedCourses(state, payload) {
-            if (state.semesterStatus === "F") {
-                state.fallSelectedCourses = payload;
-            } else {
-                state.winterSelectedCourses = payload;
-            }
+            state.fallSelectedCourses = payload[0];
+            state.winterSelectedCourses = payload[1];
         },
         lockSection(state, payload) {
             if (payload.slice(0, 4) === "Lock") {
@@ -235,26 +231,28 @@ export default new Vuex.Store({
             context.state.savedWinterTimetable = JSON.parse(
                 JSON.stringify(context.state.winterTimetable)
             );
-            if (context.state.semesterStatus === "F") {
-                context.state.savedSelectedCourses = JSON.parse(
-                    JSON.stringify(context.state.fallSelectedCourses)
-                );
-                context.state.savedLockedSections = [
-                    ...context.state.fallLockedSections,
-                ];
-            } else {
-                context.state.savedSelectedCourses = JSON.parse(
-                    JSON.stringify(context.state.winterSelectedCourses)
-                );
-                context.state.savedLockedSections = [
-                    ...context.state.winterLockedSections,
-                ];
-            }
+            context.state.savedFallSelectedCourses = JSON.parse(
+                JSON.stringify(context.state.fallSelectedCourses)
+            );
+            context.state.savedWinterSelectedCourses = JSON.parse(
+                JSON.stringify(context.state.winterSelectedCourses)
+            );
+            context.state.savedFallLockedSections = [
+                ...context.state.fallLockedSections,
+            ];
+            context.state.savedWinterLockedSections = [
+                ...context.state.winterLockedSections,
+            ];
         },
         revertTimetable(context) {
-            context.commit("setTimetables", [context.state.savedFallTimetable, context.state.savedWinterTimetable]);
-            context.commit("setSelectedCourses", context.state.savedSelectedCourses);
-            context.commit("setLockedSections", context.state.savedLockedSections);
+            context.commit("setTimetables", [context.state.savedFallTimetable, 
+                            context.state.savedWinterTimetable]);
+            context.commit("setSelectedCourses", 
+                            [context.state.savedFallSelectedCourses, 
+                            context.state.savedWinterSelectedCourses]);
+            context.commit("setLockedSections", 
+                            [context.state.savedFallLockedSections,
+                            context.state.savedWinterLockedSections]);
         },
         validateTimetable(context, payload) {
             if (payload === null) {

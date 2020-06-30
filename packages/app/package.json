@@ -19,10 +19,12 @@
         "vue": "^2.6.11",
         "vue-analytics": "^5.22.1",
         "vue-apollo": "^3.0.3",
+        "vue-custom-scrollbar": "^1.2.0",
         "vue-html2canvas": "0.0.4",
         "vue-js-toggle-button": "^1.3.3",
         "vue-mobile-detection": "^1.0.0",
         "vue-router": "^3.1.6",
+        "vue-smooth-scrollbar": "^0.1.2",
         "vuetify": "^2.3.0",
         "vuex": "^3.1.3"
     },

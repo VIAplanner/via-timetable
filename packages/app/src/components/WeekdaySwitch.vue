@@ -6,9 +6,9 @@
                 @mouseleave="hovered = false"
                 justify="center"
             >
-                <h2 class="day-label">
+                <h3 class="day-label">
                     {{ weekday }}
-                </h2>
+                </h3>
                 <div v-if="hovered || locked" v-on="on">
                     <v-btn @click="unlockDay" v-if="locked" icon>
                         <v-icon>mdi-lock</v-icon>
@@ -149,7 +149,7 @@ export default {
 
 <style scoped>
 .day-label {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     text-align: center;
 }
 </style>

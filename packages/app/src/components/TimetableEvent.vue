@@ -11,8 +11,8 @@
                         :class="durationClass(event.start, event.end)"
                         :style="{ background: getCourseColor(event.code) }"
                     >
-                        <h4 class="course-code">
-                            {{ event.code }}
+                        <h4>
+                        {{ event.code }}
                         </h4>
 
                         <div class="lock-button">
@@ -29,9 +29,9 @@
                             </v-btn>
                         </div>
 
-                        <div style="margin-left: 3px;">
+                        <div >
                             {{ event.sectionCode }}
-                            <span class="text-body-1">({{ deliveryMethod }})</span>
+                            <!-- <span class="text-body-1">({{ deliveryMethod }})</span> -->
                         </div>
 
                         <div style="position: relative;">
@@ -250,11 +250,13 @@ export default {
     padding-top: 8px !important;
 }
 .event {
-    border: 0.2px solid gray;
+    border: 1px solid gray;
     color: white;
     padding: 8px;
+    padding-top: 3px;
     position: relative;
     cursor: pointer;
+    font-size: small
 }
 .empty-event {
     background: white;
@@ -262,22 +264,22 @@ export default {
     cursor: default;
 }
 .half-hour {
-    height: 42px;
+    height: 32px;
 }
 .one-hour {
-    height: 84px;
+    height: 64px;
 }
 .one-hour-half {
-    height: 126px;
+    height: 96px;
 }
 .two-hours {
-    height: 168px;
+    height: 128px;
 }
 .two-hours-half {
-    height: 210px;
+    height: 160px;
 }
 .three-hours {
-    height: 252px;
+    height: 192px;
 }
 .four-hours {
     height: 336px;
@@ -287,11 +289,11 @@ export default {
 }
 .align-left {
     position: absolute;
-    left: 3px;
+    left: 0px;
 }
 .align-right {
     position: absolute;
-    right: 5px;
+    right: 0px;
 }
 .lock-button {
     position: absolute;

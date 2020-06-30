@@ -4,7 +4,7 @@
         @change="onCourseSelected"
         v-model="selectedCourse"
         :items="semCourses"
-        class="mx-4"
+        class="mx-4; styles"
         flat
         hide-no-data
         hide-details
@@ -114,5 +114,10 @@ export default {
     },
 };
 </script>
-
-<style></style>
+<style scoped>
+    .styles {
+        border: 5px solid #012B5C;
+        min-width: 600px;
+        max-width: 800px;
+    }
+</style>

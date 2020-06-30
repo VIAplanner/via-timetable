@@ -9,7 +9,7 @@
         transition="scale-transition"
     >
         <template v-slot:activator>
-            <v-btn v-model="fab" color="#012B5C" dark fab>
+            <v-btn v-model="fab" color="#012B5C" dark small fab>
                 <v-icon v-if="fab">mdi-close</v-icon>
                 <v-icon v-else>mdi-hammer-screwdriver</v-icon>
             </v-btn>

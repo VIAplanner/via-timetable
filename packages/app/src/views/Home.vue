@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--Exporting Progress Overlay-->
         <v-overlay :value="getExportOverlay">
             <v-row>
                 <h1 class="ma-3">Exporting</h1>
@@ -12,47 +13,68 @@
                 ></v-progress-circular>
             </v-row>
         </v-overlay>
+
+        <v-tabs dark background-color="#012B5C" height="58px">
+            <v-img
+                src="../assets/VIA-Planner-White.png"
+                max-width="130"
+                contain
+                style="margin: 7px 20px 7px 7px"
+            />
+            <v-tab>
+                PROGRAMS
+            </v-tab>
+            <v-tab>
+                COURSES
+            </v-tab>
+            <course-search-bar
+                :allCourses="formattedCourses"
+                class="mx-4"
+                :loadingParent="$apollo.loading"
+            />
+            <switch-sem style="margin: 15px 30px 15px 15px"/>
+            <v-tab-item>
+                <div>
+                Program Choosing Page
+                </div>
+            </v-tab-item>
+            <!--Course Choosing Page-->
+            <v-tab-item>
+                <v-row :style="contentHeight">
+                    <help-dial />
+                    <v-col cols="3" class="left-panel">
+                        <!-- <vue-custom-scrollbar class="scroll-area"  :settings="scrollBarSettings"> -->
+                        <smooth-scrollbar class="left-scroll-area">
+                            <v-expansion-panels 
+                            class="expansion-panels-settings"
+                            :v-model="whichCoursesExpanded" 
+                            multiple>
+                                <selected-course-card
+                                    v-for="(course, code) in filterCourses(selectedCourses)"
+                                    :key="code"
+                                    :course="course"
+                                />
+                            </v-expansion-panels>
+                        </smooth-scrollbar>
+                        <!-- </vue-custom-scrollbar> -->
+                    </v-col>
+                    <v-col class="pb-0; timetableColumn" id="export-me">
+                        <smooth-scrollbar>
+                            <timetable :timetable="timetable" />
+                        </smooth-scrollbar>
+                    </v-col>
+                </v-row>
+            </v-tab-item>
+        </v-tabs>
         <v-row>
-            <v-col class="py-0">
-                <v-toolbar dark color="#012B5C">
-                    <v-img
-                        src="../assets/VIA-Planner-White.png"
-                        max-width="130"
-                        contain
-                    />
-                    <course-search-bar
-                        :allCourses="formattedCourses"
-                        class="mx-4"
-                        :loadingParent="$apollo.loading"
-                    />
-                    <switch-sem />
-                </v-toolbar>
+            <v-col class="pt-0">
+                <h1 style="text-align:center" class="text-subtitle-1">
+                    Copyright © 2020 VIAplanner - Data updated for the 2020 -
+                    2021 school year
+                </h1>
+                <tutorial />
             </v-col>
         </v-row>
-
-        <v-container id="exportMe">
-            <v-row>
-                <help-dial />
-                <v-col class="mr-8 pb-0">
-                    <timetable :timetable="timetable" />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col class="pt-0">
-                    <h1 style="text-align:center" class="text-subtitle-1">
-                        Copyright © 2020 VIAplanner - Data updated for the 2020 -
-                        2021 school year
-                    </h1>
-                    <tutorial />
-                    <timetable-course-card
-                        class="my-4 mx-8"
-                        v-for="(course, code) in getSelectedCourses(selectedCourses)"
-                        :key="code"
-                        :course="course"
-                    />
-                </v-col>
-            </v-row>
-        </v-container>
     </div>
 </template>
 
@@ -60,10 +82,11 @@
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
 import Tutorial from "../components/Tutorial";
-import TimetableCourseCard from "../components/TimetableCourseCard";
 import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
+import SelectedCourseCard from "../components/SelectedCourseCard"
+// import VueCustomScrollbar from 'vue-custom-scrollbar'
 import { mapGetters} from "vuex";
 
 export default {
@@ -76,9 +99,10 @@ export default {
         SwitchSem,
         CourseSearchBar,
         Timetable,
-        TimetableCourseCard,
         Tutorial,
         HelpDial,
+        SelectedCourseCard,
+        // VueCustomScrollbar,
     },
     computed: {
         ...mapGetters(["selectedCourses", "timetable", "getExportOverlay"]),
@@ -96,10 +120,20 @@ export default {
                 }
             });
         },
+        contentHeight() {
+            return `height: ${window.innerHeight - 89}px`
+        }
     },
     data() {
         return {
             optimizationOpen: false,
+            whichCoursesExpanded: [],
+            scrollBarSettings: {
+                wheelPropagation: false,
+                maxScrollbarLength: 240,
+                swipeEasing: true,
+                wheelSpeed: 0.1
+            }
         };
     },
     apollo: {
@@ -107,12 +141,12 @@ export default {
     },
     methods: {
         // filters user lock timeslots
-        getSelectedCourses(selectedCourses) {
+        filterCourses(courses) {
             const filteredCourses = {};
 
-            for (var code in selectedCourses) {
+            for (var code in courses) {
                 if (!code.includes("Lock")) {
-                    filteredCourses[code] = selectedCourses[code];
+                    filteredCourses[code] = courses[code];
                 }
             }
 
@@ -121,3 +155,29 @@ export default {
     },
 };
 </script>
+<style scoped>
+    .timetableColumn {
+        padding-top: 0px;
+        height: 100%;
+    }
+    .inset-shadow {
+        box-shadow: inset 0px 3px 10px 0px grey
+    }
+    .left-scroll-area {
+        position: relative;
+        margin: auto;
+        height: 500px;
+    }
+    .left-panel {
+        background-color: #e3e3e3; 
+        height: 500px;
+        /* overflow-y: auto; */
+        padding: 5px 0px 20px 0px;
+        position: relative;
+    }
+    .expansion-panels-settings {
+        position: absolute;
+        right: 13px;
+        width: 90%;
+    }
+</style>

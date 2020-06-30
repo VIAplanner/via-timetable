@@ -5,7 +5,7 @@
             <v-col class="time-axis">
                 <div class="top-margin"></div>
                 <div v-for="time in timeRange" :key="time" class="time-axis-number">
-                    <h3 class="time-label">{{ time }}</h3>
+                    <h4 class="time-label">{{ time }}</h4>
                 </div>
             </v-col>
             <v-col cols="11">
@@ -233,26 +233,24 @@ export default {
 
 .background {
     background-color: white;
-    border-radius: 16px;
 }
 
 .container {
     padding-left: 24px !important;
-    padding-right: 24px !important;
-    padding-top: 24px !important;
+    padding-right: 70px !important;
+    padding-top: 20px !important;
     padding-bottom: 0px !important;
 }
 
 .time-axis-number {
-    height: 84px;
+    height: 64px;
 }
-
 .top-margin {
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
 .time-axis {
-    margin-right: 25px;
+    margin-right: 20px;
 }
 
 .time-label {
