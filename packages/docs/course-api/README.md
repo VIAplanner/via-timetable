@@ -14,7 +14,7 @@ Welcome to the VIAplanner API. The API is written with Express to provide maximu
 4. If you wish to use this API, please contact us at our [GitHub](https://github.com/UTM-Hacklab/VIAplanner)
 
 ## High-level overview
-
+![](./backend-architecture.png)
 
 ## Query Guide
 
