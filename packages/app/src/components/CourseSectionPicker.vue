@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="!$apollo.loading">
+    <v-card>
         <OverwriteLockedSectionPopup
             @Proceed="autoResolveConflict"
             @Cancel="clearTempVars"

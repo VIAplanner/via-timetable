@@ -38,8 +38,6 @@ export default {
             console.log(e.message);
         }
 
-        console.log(rawCourses)
-
         if (rawCourses.length != 0) {
             this.allCourses = rawCourses.map((course) => {
                 if (course.courseCode[8] === "F") {
