@@ -264,15 +264,12 @@
                                         </v-card-title>
                                         <v-sheet class="pa-5 text-left">
                                             <ul>
-                                                <li>
-                                                    Create account and save timetable
-                                                </li>
-                                                <li>Load saved timetables</li>
+                                                <li>Save timetables as png</li>
                                                 <li>
                                                     Course suggestion based on
                                                     programs (selected programs)
                                                 </li>
-                                                <li>UI improvement</li>
+                                                <li>UI improvement such as minimizing scrolling</li>
                                             </ul>
                                             <v-btn
                                                 class="ma-4 start"
