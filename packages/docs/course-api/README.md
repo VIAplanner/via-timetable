@@ -76,7 +76,7 @@ https://api.viaplanner.ca (this will take you to the docs)
 
 ### 1. UTM Course Scraper:
 
-The scraper takes data from [**Data Source, UofT Course Finder**](#_1-uoft-course-finder) then every single course with the code _H5_ is placed into a queue. Each of the threads extract a course and scrape the relevant data (refer to [**Data Structures 1-3**](#_1-course) for details).
+The scraper takes data from [**Data Source, UTM Timetable**](#_1-utm-timetable) loads all course data (since they generated with Javascript) with puppeteer. (refer to [**Data Structures 1-3**](#_1-course) for details).
 
 ### 2. UTM Program Scraper:
 
