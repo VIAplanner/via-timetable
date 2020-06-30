@@ -13,7 +13,7 @@ router.get("/courses/searchbar", async (req, res) => {
         const allCourses = await Course.find({})
         let allSearchBarValues = []
         for (let course of allCourses) {
-            allSearchBarValues.push({ code: course.code, name: course.name })
+            allSearchBarValues.push({ courseCode: course.courseCode, name: course.name })
         }
 
         res.send(allSearchBarValues)
@@ -24,14 +24,15 @@ router.get("/courses/searchbar", async (req, res) => {
 })
 
 // route for getting data about a specific course
-router.get("/courses/:code", async (req, res) => {
+router.get("/courses/:courseCode", async (req, res) => {
 
     try {
         if (req.query.api_key != process.env.API_KEY) {
             throw new Error("Invalid API key")
         }
 
-        const course = await Course.findOne({ code: req.params.code })
+        const course = await Course.findOne({ courseCode: req.params.courseCode })
+
         if (!course) {
             res.status(404).send({ message: "no course exist with this code" })
         }

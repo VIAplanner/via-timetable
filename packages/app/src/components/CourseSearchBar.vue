@@ -38,14 +38,16 @@ export default {
             console.log(e.message);
         }
 
+        console.log(rawCourses)
+
         if (rawCourses.length != 0) {
             this.allCourses = rawCourses.map((course) => {
-                if (course.code[8] === "F") {
-                    return `🍂   ${course.code}: ${course.name}`;
-                } else if (course.code[8] === "S") {
-                    return `❄️   ${course.code}: ${course.name}`;
+                if (course.courseCode[8] === "F") {
+                    return `🍂   ${course.courseCode}: ${course.name}`;
+                } else if (course.courseCode[8] === "S") {
+                    return `❄️   ${course.courseCode}: ${course.name}`;
                 } else {
-                    return `🍂❄️ ${course.code}: ${course.name}`;
+                    return `🍂❄️ ${course.courseCode}: ${course.name}`;
                 }
             });
         }
@@ -93,18 +95,16 @@ export default {
             this.loading = true;
 
             let course = {};
-            // let courseCode = this.selectedCourse.slice(
-            //     5,
-            //     this.selectedCourse.indexOf(":")
-            // );
-
-            let courseCode = ""
+            let courseCode = this.selectedCourse.slice(
+                5,
+                this.selectedCourse.indexOf(":")
+            );
 
             try {
                 course = await axios.get(
                     `${process.env.VUE_APP_API_BASE_URL}/courses/${courseCode}?api_key=${process.env.VUE_APP_API_KEY}`
                 );
-                course = course.data
+                course = course.data;
             } catch (e) {
                 console.log(e.message);
             }
