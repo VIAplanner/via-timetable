@@ -39,6 +39,8 @@ export default {
         }
 
         if (rawCourses.length != 0) {
+
+            // sort the search bar
             rawCourses.sort((a, b) => {
                 if (a.courseCode < b.courseCode) {
                     return -1;
