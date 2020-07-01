@@ -24,9 +24,7 @@
       <v-tab>PROGRAMS</v-tab>
       <v-tab>COURSES</v-tab>
       <course-search-bar
-        :allCourses="formattedCourses"
         class="mx-4"
-        :loadingParent="$apollo.loading"
       />
       <switch-sem style="margin: 15px 30px 15px 15px" />
       <v-tab-item>
@@ -59,7 +57,6 @@
                         />
                       </v-expansion-panels>
                   </smooth-scrollbar>
-                  <!-- </vue-custom-scrollbar> -->
                 </v-card>
               </v-col>
             </v-row>
@@ -87,7 +84,6 @@ import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
 import SelectedCourseCard from "../components/SelectedCourseCard";
-// import VueCustomScrollbar from 'vue-custom-scrollbar'
 import { mapGetters } from "vuex";
 
 export default {
@@ -103,7 +99,6 @@ export default {
     Tutorial,
     HelpDial,
     SelectedCourseCard
-    // VueCustomScrollbar,
   },
   computed: {
     ...mapGetters([
@@ -143,9 +138,6 @@ export default {
         wheelSpeed: 0.1
       }
     };
-  },
-  apollo: {
-    courses: COURSES_SEARCH_BAR_QUERY
   },
   methods: {
     // filters user lock timeslots

@@ -9,15 +9,15 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@mdi/font/css/materialdesignicons.css";
-import { createProvider } from "./vue-apollo";
 import ToggleButton from "vue-js-toggle-button";
 import VueMobileDetection from "vue-mobile-detection";
 import VueAnalytics from "vue-analytics";
 import VueHtml2Canvas from 'vue-html2canvas';
 import SmoothScrollbar from 'vue-smooth-scrollbar'
-Vue.use(SmoothScrollbar)
+
 Vue.config.productionTip = false;
 
+Vue.use(SmoothScrollbar)
 Vue.use(VueHtml2Canvas);
 Vue.use(ToggleButton);
 Vue.use(VueMobileDetection);
@@ -30,6 +30,5 @@ new Vue({
     router,
     store,
     vuetify,
-    apolloProvider: createProvider(),
     render: (h) => h(App),
 }).$mount("#app");
