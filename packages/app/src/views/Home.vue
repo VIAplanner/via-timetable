@@ -25,13 +25,16 @@
             />
             <v-tab>PROGRAMS</v-tab>
             <v-tab>COURSES</v-tab>
-            <course-search-bar style="margin: auto"/>
-            <switch-sem style="margin: auto"/>
+            <course-search-bar style="margin: auto" />
+            <switch-sem style="margin: auto" />
             <v-tab-item>
                 <program-view />
             </v-tab-item>
             <v-tab-item>
-                <timetable-view />
+                <v-row>
+                    <timetable-view />
+                    <side-bar />
+                </v-row>
             </v-tab-item>
         </v-tabs>
         <v-row>
@@ -52,6 +55,7 @@ import SwitchSem from "../components/SwitchSem";
 import TimetableView from "../views/Timetable";
 import ProgramView from "../views/Program";
 import { mapGetters } from "vuex";
+import SideBar from "../views/SideBar";
 
 export default {
     created() {
@@ -65,6 +69,7 @@ export default {
         Tutorial,
         TimetableView,
         ProgramView,
+        SideBar,
     },
     computed: {
         ...mapGetters(["getSemesterStatus", "getExportOverlay"]),
@@ -82,38 +87,11 @@ export default {
             whichTab: 1,
         };
     },
-    methods: {
-        // filters user lock timeslots
-        filterCourses(courses) {
-            const filteredCourses = {};
-
-            for (var code in courses) {
-                if (!code.includes("Lock")) {
-                    filteredCourses[code] = courses[code];
-                }
-            }
-
-            return filteredCourses;
-        },
-    },
 };
 </script>
 <style scoped>
 .timetableColumn {
     padding-top: 0px;
     height: 100%;
-}
-.left-scroll-area {
-    position: relative;
-    height: 90% !important;
-}
-.left-panel {
-    height: 500px;
-    /* overflow-y: auto; */
-    padding: 5px 10px 20px 15px;
-    position: relative;
-}
-.expansion-panels-settings {
-    width: 90%;
 }
 </style>
