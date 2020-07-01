@@ -31,7 +31,7 @@
                 <program-view />
             </v-tab-item>
             <v-tab-item>
-                <course-view />
+                <timetable-view />
             </v-tab-item>
         </v-tabs>
         <v-row>
@@ -49,7 +49,7 @@
 import CourseSearchBar from "../components/CourseSearchBar";
 import Tutorial from "../components/Tutorial";
 import SwitchSem from "../components/SwitchSem";
-import CourseView from "../views/Course";
+import TimetableView from "../views/Timetable";
 import ProgramView from "../views/Program";
 import { mapGetters } from "vuex";
 
@@ -63,7 +63,7 @@ export default {
         SwitchSem,
         CourseSearchBar,
         Tutorial,
-        CourseView,
+        TimetableView,
         ProgramView,
     },
     computed: {
