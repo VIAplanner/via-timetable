@@ -80,7 +80,6 @@
 import CourseSearchBar from "../components/CourseSearchBar";
 import Timetable from "../components/Timetable";
 import Tutorial from "../components/Tutorial";
-import COURSES_SEARCH_BAR_QUERY from "../graphql/CoursesSearchBar.gql";
 import SwitchSem from "../components/SwitchSem";
 import HelpDial from "../components/HelpDial";
 import SelectedCourseCard from "../components/SelectedCourseCard";
