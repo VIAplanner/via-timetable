@@ -4,8 +4,8 @@
         @change="onCourseSelected"
         v-model="selectedCourse"
         :items="allCourses"
-        class="mx-4 styles"
         flat
+        class="ml-2 mr-2"
         hide-no-data
         hide-details
         :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
@@ -39,7 +39,6 @@ export default {
         }
 
         if (rawCourses.length != 0) {
-
             // sort the search bar
             rawCourses.sort((a, b) => {
                 if (a.courseCode < b.courseCode) {
@@ -127,9 +126,7 @@ export default {
 };
 </script>
 <style scoped>
-    .styles {
-        border: 5px solid #012B5C;
-        min-width: 600px;
-        max-width: 800px;
-    }
+.styles {
+    border: 5px solid #012b5c;
+}
 </style>

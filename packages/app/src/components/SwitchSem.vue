@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pl-1 pr-3">
         <toggle-button
             v-model="toggle"
             :labels="{ checked: 'Fall', unchecked: 'Winter' }"

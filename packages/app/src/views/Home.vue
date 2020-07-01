@@ -1,5 +1,7 @@
 <template>
     <div>
+        <!-- Popup tutorial -->
+        <tutorial />
         <!--Exporting Progress Overlay-->
         <v-overlay :value="getExportOverlay">
             <v-row>
@@ -14,7 +16,7 @@
             </v-row>
         </v-overlay>
 
-        <v-tabs dark background-color="#012B5C" height="58px">
+        <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
             <v-img
                 src="../assets/VIA-Planner-White.png"
                 max-width="130"
@@ -23,53 +25,21 @@
             />
             <v-tab>PROGRAMS</v-tab>
             <v-tab>COURSES</v-tab>
-            <course-search-bar class="mx-4" />
-            <switch-sem style="margin: 15px 30px 15px 15px" />
+            <course-search-bar style="margin: auto"/>
+            <switch-sem style="margin: auto"/>
             <v-tab-item>
-                <div>Program Choosing Page</div>
+                <program-view />
             </v-tab-item>
-            <!--Course Choosing Page-->
             <v-tab-item>
-                <v-row :style="contentHeight">
-                    <help-dial />
-                    <v-col class="pb-0 pr-0; timetableColumn" id="export-me">
-                        <smooth-scrollbar>
-                            <timetable :timetable="timetable" />
-                        </smooth-scrollbar>
-                    </v-col>
-                    <v-col cols="3" class="pl-0">
-                        <v-card :height="coursePanelHeight" class="pa-4 mr-6">
-                            <h1 class="text-h5">{{sideBarTitle}}</h1>
-                            <hr class="mb-1"/>
-                            <smooth-scrollbar
-                                class="left-scroll-area"
-                            >
-                                <v-expansion-panels
-                                    :v-model="whichCoursesExpanded"
-                                    multiple
-                                    class="expansion-panel-settings pa-1"
-                                >
-                                    <selected-course-card
-                                        v-for="(course, code) in filterCourses(
-                                            selectedCourses
-                                        )"
-                                        :key="code"
-                                        :course="course"
-                                    />
-                                </v-expansion-panels>
-                            </smooth-scrollbar>
-                        </v-card>
-                    </v-col>
-                </v-row>
+                <course-view />
             </v-tab-item>
         </v-tabs>
         <v-row>
-            <v-col class="pt-0">
+            <v-col class="pa-0">
                 <h1 style="text-align:center" class="text-subtitle-1">
                     Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
                     school year
                 </h1>
-                <tutorial />
             </v-col>
         </v-row>
     </div>
@@ -77,11 +47,10 @@
 
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
-import Timetable from "../components/Timetable";
 import Tutorial from "../components/Tutorial";
 import SwitchSem from "../components/SwitchSem";
-import HelpDial from "../components/HelpDial";
-import SelectedCourseCard from "../components/SelectedCourseCard";
+import CourseView from "../views/Course";
+import ProgramView from "../views/Program";
 import { mapGetters } from "vuex";
 
 export default {
@@ -93,33 +62,12 @@ export default {
     components: {
         SwitchSem,
         CourseSearchBar,
-        Timetable,
         Tutorial,
-        HelpDial,
-        SelectedCourseCard,
+        CourseView,
+        ProgramView,
     },
     computed: {
-        ...mapGetters([
-            "getSemesterStatus",
-            "selectedCourses",
-            "fallSelectedCourses",
-            "winterSelectedCourses",
-            "timetable",
-            "getExportOverlay",
-        ]),
-        sideBarTitle() {
-            if (this.getSemesterStatus === "F") {
-                return "Fall Courses";
-            } else {
-                return "Winter Courses";
-            }
-        },
-        contentHeight() {
-            return `height: ${window.innerHeight - 99}px`;
-        },
-        coursePanelHeight(){
-            return (window.innerHeight - 99) * 0.8 
-        }
+        ...mapGetters(["getSemesterStatus", "getExportOverlay"]),
     },
     data() {
         return {
@@ -131,6 +79,7 @@ export default {
                 swipeEasing: true,
                 wheelSpeed: 0.1,
             },
+            whichTab: 1,
         };
     },
     methods: {
