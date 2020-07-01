@@ -51,7 +51,7 @@
                                 :key="meetingsection.section"
                             >
                                 <v-col class="pa-0" cols="3"><p style="font-size:15px">{{ meetingsection.sectionCode }}</p></v-col>
-                                <v-col cols="3" class="pa-0">
+                                <v-col cols="2" class="pa-0">
                                     <p style="font-size:15px">{{getProperDayName(meetingsection.day)}}</p>
                                     </v-col>
                                 <v-col cols="5" style="margin-left: 15px">
@@ -61,7 +61,6 @@
                                         meetingsection.end
                                     )
                                 }}</p></v-col>
-                                <v-col> <p style="font-size:15px">{{ meetingsection.instructorName }}</p></v-col>
                             </v-row>
                         </div>
                     </v-col>
@@ -122,13 +121,11 @@ export default {
             if (s == 0) {
                 s = 12;
             }
-            var startPeriod = start / 3600 < 12 ? "AM" : "PM";
             let startHalf = Number.isInteger(s) ? "00" : "30";
             var e = (end / 3600) % 12;
             if (e == 0) {
                 e = 12;
             }
-            var endPeriod = end / 3600 < 12 ? "AM" : "PM";
             let endHalf = Number.isInteger(e) ? "00" : "30";
             return `${s - startHalf / 6 / 10}:${startHalf} - ${e -
                 endHalf / 6 / 10}:${endHalf}`;
