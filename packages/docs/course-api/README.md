@@ -2,85 +2,119 @@
 sidebar: auto
 ---
 
-# [Course API](http://www.api.uoftcoursetools.tech/)
-
 ## API Overview
-GraphQL Playground is a graphical, interactive, in-browser GraphQL __IDE__, created by Prisma and based on GraphiQL.
 
-The way to use the playground is illustrated in the following images. Refer to [**Data Structures 1-6**](#_1-course) for the available data that the API can provide. 
+Welcome to the VIAplanner API. The API is written with Express to provide maximum efficiency and coding experience. The purpose of this API is to supply the data needed for our timetable planner.
 
-*Note:* 
-Courses has an extra required argument called **"code"** to filter per course. if an empty string is passed as an argument into code, every course will be returned.
-![Example 1](./playgroundEx1.png)
-![Example 2](./playgroundEx2.png)
-![Example 3](./playgroundEx3.png)
+**Notes:**
 
-Refer to [**Data Structures 1-6**](#_1-course) for the available data that the API can provide. 
+1. The API is limited to **only** VIAplanner developers. Thus, an API key is required. The reason for doing so is to maximize performance for our timetable planner
+2. Currently, the API only contains UTM data. However, we will expand it in the future to house UTSG and UTSC data as well
+3. The API is still under development. Thus, the routes are likely to change
+4. If you wish to use this API, please contact us at our [GitHub](https://github.com/UTM-Hacklab/VIAplanner)
 
-If you are curious on how the API was built and want to know more about GraphQL  , [click here](https://www.howtographql.com/basics/0-introduction/).
 ## High-level overview
+![](./backend-architecture.png)
 
-![Backend Architecture](./backend-architecture.png)
+## Query Guide
 
-The Unified Backend provides unified access to UofT course data scattered across UofT's web services. The API relies on three main sources [UofT Course Finder](#_1-uoft-course-finder), [UTM Academic Calendar](#_2-utm-academic-calendar), [UTM Program Selection Guide](#_3-utm-program-selection-guide) , and [UTM Course Evaluations](#_4-utm-course-evaluations). 
+### Base URL
+https://api.viaplanner.ca (this will take you to the docs)
+
+### Get all courses
+**method:** get <br/>
+**usage:** https://api.viaplanner.ca/courses?api_key=api_key <br/>
+**schema:** see [**Data Structure 9**](#_9-all-courses) <br/>
+**return value:**
+- success: an array containing objects of all courses in the data base
+- failure: an object with the fail message 
+
+### Get a courses
+**method:** get <br/>
+**usage:** https://api.viaplanner.ca/courses/courseCode?api_key=api_key <br/>
+**schema:** see [**Data Structures 1-3**](#_1-course) <br/>
+**return value:** 
+- success: an object containing the data of the specified course
+- failure: an object with the fail message 
+
+### Get the search bar value 
+**method:** get <br/>
+**usage:** https://api.viaplanner.ca/courses/searchbar?api_key=api_key <br/>
+**schema:** see [**Data Structure 8**](#_8-course-search-bar) <br/>
+**return value:** 
+- success: an array containing objects with the courseCode and name of every course in the database 
+- failure: an object with the fail message 
+
+### Create a courses
+**method:** post <br/>
+**usage:** https://api.viaplanner.ca/courses?api_key=api_key <br/>
+**schema:** see [**Data Structures 1-3**](#_1-course) <br/>
+**return value:** 
+- success: an object with a message saying the course was created
+- failure: an object with the fail message 
+
 
 ## Data Sources
 
-### 1. [UofT Course Finder:](http://coursefinder.utoronto.ca/course-search/search/courseSearch?viewId=CourseSearch-FormView&methodToCall=start)
+### 1. [UTM Timetable:](https://student.utm.utoronto.ca/timetable/)
 
-__Data Provided:__ Information regarding every course in all 3 UofT campuses. Information such as lecture time, professors, pre-requisite etc are provided (refer to [**Data Structures 1-3**](#_1-course) for details). 
+**Data Provided:** Information regarding every course in UTM. Information such as lecture time, professors, pre-requisite etc are provided (refer to [**Data Structures 1-3**](#_1-course) for details).
 
 ### 2. [UTM Academic Calendar:](https://student.utm.utoronto.ca/calendar/program_list.pl)
 
-__Data Provided:__ Information regarding every program in UTM. Information such as post requirement, required courses, program level (minor, major, specialist) etc are provided (refer to [**Data Structures 4-5**](#_4-subject) for details). 
+**Data Provided:** Information regarding every program in UTM. Information such as post requirement, required courses, program level (minor, major, specialist) etc are provided (refer to [**Data Structures 4-5**](#_4-subject) for details).
 
 ### 3. [UTM Program Selection Guide:](https://www.utm.utoronto.ca/registrar/office-registrar-publications/program-selection-guide)
 
-__Data Provided:__ Program type (1, 2, 3) for every UTM program. This information is stored as a attribute in [**Data Structures 5, Program**](#_5-program).
+**Data Provided:** Program type (1, 2, 3) for every UTM program. This information is stored as a attribute in [**Data Structures 5, Program**](#_5-program).
 
 ### 4. [UTM Course Evaluations:](https://course-evals.utoronto.ca/BPI/fbview.aspx?blockid=hjeZ7JJWJupVgjPoyu&userid=tO4GQugFiFULB0AXgInh7idHCU-AnN3pNhvC&lng=en)
 
-__Data Provided:__ Course evaluation results for UTM Mississauga Undergraduate Programs (refer to [**Data Structure 6**](#_6-course-evaluation)).
+**Data Provided:** Course evaluation results for UTM Mississauga Undergraduate Programs (refer to [**Data Structure 6**](#_6-course-evaluation)).
 
 ## Scraper Breakdown
 
 ### 1. UTM Course Scraper:
-The scraper takes data from [**Data Source, UofT Course Finder**](#_1-uoft-course-finder) then every single course with the code *H5* is placed into a queue. Each of the threads extract a course and scrape the relevant data (refer to [**Data Structures 1-3**](#_1-course) for details). 
+
+The scraper takes data from [**Data Source, UTM Timetable**](#_1-utm-timetable) loads all course data (since they generated with Javascript) with puppeteer. (refer to [**Data Structures 1-3**](#_1-course) for details).
 
 ### 2. UTM Program Scraper:
+
 The scraper takes data from [**Data Source, UTM Academic Calendar**](#_2-utm-academic-calendar) then the data are placed into 2 objects (refer to [**Data Structures 4-5**](#_4-subject) for details). The data is used for the course guide API to provide recommended courses.
 
 ### 3. Course Evaluation Scraper
+
 The scraper takes data from [**Data Source, UTM Course Evaluations**](#_4-utm-course-evaluations).
 
 Items 1-9 are criteria with responses that range from 1 to 5, with 1 as the lowest rating and 5 as the highest rating.
-* **item 1:** I found the course intellectually stimulating.
-* **item 2:** The course provided me with a deeper understanding of the subject matter.
-* **item 3:** The instructor created a course atmosphere that was conducive to my learning.
-* **item 4:** Course projects, assignments, tests and/or exams improved my understanding of the course material.
-* **item 5:** Course projects, assignments, tests and/or exams provided opportunity for me to demonstrate an understanding of the course material.
-* **item 6:** Overall, the quality of my learning experience in this course was: (Scale for Item 6: Poor, Fair, Good, Very Good, Excellent).
-* **item 7:** Course Workload.
-* **item 8:** I would recommend this course.
-* **item 9:** I inspired to learn subject matter.
+
+-   **item 1:** I found the course intellectually stimulating.
+-   **item 2:** The course provided me with a deeper understanding of the subject matter.
+-   **item 3:** The instructor created a course atmosphere that was conducive to my learning.
+-   **item 4:** Course projects, assignments, tests and/or exams improved my understanding of the course material.
+-   **item 5:** Course projects, assignments, tests and/or exams provided opportunity for me to demonstrate an understanding of the course material.
+-   **item 6:** Overall, the quality of my learning experience in this course was: (Scale for Item 6: Poor, Fair, Good, Very Good, Excellent).
+-   **item 7:** Course Workload.
+-   **item 8:** I would recommend this course.
+-   **item 9:** I inspired to learn subject matter.
 
 ## Data Structures
 
 ### 1. Course
 
 ```js
-type Course 
+type Course
 {
-        id: String, 
-        code: String,
+        id: String,
+        courseCode: String,
         name: String,
         description: String,
         division: String,
         department: String,
         prerequisites: String,
-        exclusions: String, 
+        exclusions: String,
         level: Int,
-        campus: String, 
+        campus: String,
         term: String,
         breadths: [Int],
         meeting_sections: [MeetingSection]
@@ -92,11 +126,12 @@ type Course
 ```js
 type MeetingSection
 {
-        code: String,
+        sectionCode: String,
         instructors: [String],
         times: [Times],
         size: Int,
-        enrolment: Int
+        enrolment: Int,
+        notes: String
 }
 ```
 
@@ -108,7 +143,7 @@ type Times
         day: String,
         start: Int,
         end: Int,
-        duration: Int, 
+        duration: Int,
         location: String
 }
 ```
@@ -117,7 +152,7 @@ type Times
 
 ```js
 type Subject
-{ 
+{
         name: String,
         degrees: [String],
         notes: [String],
@@ -129,7 +164,7 @@ type Subject
 
 ```js
 type Program
-{ 
+{
          name: String,
          level: String,
          code: String,
@@ -138,21 +173,24 @@ type Program
          courses: YearCourses
 }
 ```
+
 ### 6. YearCourses
+
 ```js
 type YearCourses
-{ 
+{
          year1: [String],
          year2: [String],
          year3: [String],
          year4: [String]
-         
+
 }
 ```
+
 ### 7. Course Evaluation
 
 ```js
-{ 
+{
    "department":String,
    "course":String,
    "Prof":[String],
@@ -164,8 +202,27 @@ type YearCourses
    "item 5":float,
    "item 6":float,
    "item 7":string,
-   "item 8":string,  
+   "item 8":string,
    "item 9":float,
 }
+```
+
+### 8. Course search bar
+
+```js
+[
+    {
+        courseCode: String,
+        name: String
+    }
+]
+```
+
+### 9. All courses
+
+```js
+[
+    Course
+]
 ```
 

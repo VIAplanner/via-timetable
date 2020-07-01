@@ -3,7 +3,7 @@
         ref="searchBarComponent"
         @change="onCourseSelected"
         v-model="selectedCourse"
-        :items="semCourses"
+        :items="allCourses"
         class="mx-4"
         flat
         hide-no-data
@@ -17,17 +17,50 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import gql from "graphql-tag";
+import axios from "axios";
+
 export default {
-    name: "course-search-bar",
-    props: {
-        loadingParent: Boolean,
-        allCourses: Array,
-    },
-    data(){
+    data() {
         return {
-            loadingChild: false
+            loading: true,
+            allCourses: [],
+        };
+    },
+    async mounted() {
+        let rawCourses = [];
+
+        try {
+            rawCourses = await axios.get(
+                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar?api_key=${process.env.VUE_APP_API_KEY}`
+            );
+            rawCourses = rawCourses.data;
+        } catch (e) {
+            console.log(e.message);
         }
+
+        if (rawCourses.length != 0) {
+
+            // sort the search bar
+            rawCourses.sort((a, b) => {
+                if (a.courseCode < b.courseCode) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
+            this.allCourses = rawCourses.map((course) => {
+                if (course.courseCode[8] === "F") {
+                    return `🍂   ${course.courseCode}: ${course.name}`;
+                } else if (course.courseCode[8] === "S") {
+                    return `❄️   ${course.courseCode}: ${course.name}`;
+                } else {
+                    return `🍂❄️ ${course.courseCode}: ${course.name}`;
+                }
+            });
+        }
+
+        this.loading = false;
     },
     computed: {
         ...mapGetters(["getSearchBarValue", "getSemesterStatus", "selectedCourses"]),
@@ -46,19 +79,11 @@ export default {
                 return courseString[14] === ":";
             });
         },
-        loading: {
-            get(){
-                return this.loadingParent || this.loadingChild
-            },
-            set(value){
-                this.loadingChild = value
-            }
-        }
     },
     methods: {
         ...mapActions(["selectCourse"]),
         ...mapMutations(["setSearchBarValue", "setSemesterStatus"]),
-        onCourseSelected() {
+        async onCourseSelected() {
             if (!this.selectedCourse) return;
 
             // Switch the semester based on the course
@@ -77,42 +102,27 @@ export default {
             this.$refs.searchBarComponent.blur();
             this.loading = true;
 
-            this.$apollo
-                .query({
-                    query: gql`
-                        query getCourse($code: String!) {
-                            courses(code: $code) {
-                                courseCode: code
-                                name
-                                meeting_sections {
-                                    sectionCode: code
-                                    instructors
-                                    times {
-                                        day
-                                        start
-                                        end
-                                        location
-                                    }
-                                }
-                            }
-                        }
-                    `,
-                    variables: {
-                        code: this.selectedCourse.slice(
-                            5,
-                            this.selectedCourse.indexOf(":")
-                        ),
-                    },
-                })
-                .then((response) => {
-                    if (response.data.courses) {
-                        this.selectCourse({ course: response.data.courses[0] });
-                    }
-                    this.loading = false;
-                });
+            let course = {};
+            let courseCode = this.selectedCourse.slice(
+                5,
+                this.selectedCourse.indexOf(":")
+            );
+
+            try {
+                course = await axios.get(
+                    `${process.env.VUE_APP_API_BASE_URL}/courses/${courseCode}?api_key=${process.env.VUE_APP_API_KEY}`
+                );
+                course = course.data;
+            } catch (e) {
+                console.log(e.message);
+            }
+
+            if (course) {
+                this.selectCourse({ course });
+            }
+
+            this.loading = false;
         },
     },
 };
 </script>
-
-<style></style>

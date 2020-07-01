@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const cliProgress = require('cli-progress'); // magic progress bar
+const ora = require('ora'); // spinning circle
 const fs = require("fs")
 
 // convert 24 hours to seconds
@@ -13,8 +14,7 @@ const timeToSeconds = (hour) => {
 // return an array of all locations for the current section
 const formatLocations = (rawLocations, fullCourseCode) => {
 
-
-    // skip every location since it's for the next semester
+    // skip every other location since it's for the next semester
     if (fullCourseCode[8] === "Y") {
         let allLocations = []
 
@@ -25,7 +25,7 @@ const formatLocations = (rawLocations, fullCourseCode) => {
         return allLocations
     }
     else {
-        return rawLocations
+        return rawLocations.split("\n")
     }
 
 }
@@ -66,7 +66,6 @@ const formatTimes = (rawStart, rawEnd, rawDays, rawLocations, fullCourseCode) =>
         arr[index] = timeToSeconds(time)
     })
 
-    debugger
     let strippedLocations = formatLocations(rawLocations, fullCourseCode)
     let strippedDays = formatDays(rawDays)
     let allTimes = []
@@ -195,6 +194,24 @@ const formatTerm = (courseCode) => {
 
 const scrape = async (startRatio, endRatio) => {
 
+    const spinner = ora({
+        text: "Calculating total time", spinner: {
+            "interval": 80,
+            "frames": [
+                "⠋",
+                "⠙",
+                "⠹",
+                "⠸",
+                "⠼",
+                "⠴",
+                "⠦",
+                "⠧",
+                "⠇",
+                "⠏"
+            ]
+        }
+    }).start();
+
     const browser = await puppeteer.launch({
         headless: false, //  comment this out if you don't want to see the browser
     });
@@ -219,12 +236,12 @@ const scrape = async (startRatio, endRatio) => {
         end = parseInt(courseCodes.length / 3) * endRatio
     }
 
+    spinner.stop()
+
     // create a new progress bar instance and use shades_classic theme
-    const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+    const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
-    // start the progress bar with a total number of courses to scrape and start value of 0
-    bar1.start(end - start, 0);
-
+    progressBar.start(end - start, 0);
 
     for (let i = start; i < end; i++) {
 
@@ -232,9 +249,8 @@ const scrape = async (startRatio, endRatio) => {
 
         await page.goto(`https://student.utm.utoronto.ca/timetable?course=${courseCode}`, { waitUntil: 'networkidle0' });
 
-        // returns an array of objects containing info for all courses matching the currentCourseCode
+        // returns an array of objects containing info for all courses matching the current course code
         let coursesRawInfo = await page.evaluate(() => {
-
 
             // array of courses raw info
             let allCoursesRawInfo = document.querySelectorAll("div.course")
@@ -268,11 +284,14 @@ const scrape = async (startRatio, endRatio) => {
 
                     let allLocations = []
                     for (let rawLocations of rawInfo[10].querySelectorAll("span")) {
-                        allLocations.push(rawLocations.innerText)
+                        // checks if the span is empty or equal to "&nbsp;" or "&nbsp;&nbsp;"
+                        allLocations.push(rawLocations.innerText.length > 2 ? rawLocations.innerText : "")
                     }
 
-                    // override the location to be a list of the location data
-                    currSecInfo[10] = allLocations
+                    // override the location to be a list of the location data if it's a full year course
+                    if (allLocations.length != 0) {
+                        currSecInfo[10] = allLocations
+                    }
 
                     courseInfo.rawMeetingSections.push(currSecInfo)
 
@@ -285,12 +304,13 @@ const scrape = async (startRatio, endRatio) => {
 
         });
 
-        // console.log(coursesRawInfo)
 
+        // need to loop because a course could be in both fall and winter
         for (let currCourseRawInfo of coursesRawInfo) {
+
             let currCourseData = {
                 id: "",
-                code: "",
+                courseCode: "",
                 name: "",
                 description: "",
                 division: "University of Toronto Mississauga",
@@ -316,18 +336,19 @@ const scrape = async (startRatio, endRatio) => {
 
             // data that only needs the courseCode
             currCourseData.id = formatID(fullCourseCode)
-            currCourseData.code = fullCourseCode
+            currCourseData.courseCode = fullCourseCode
             currCourseData.level = formatLevel(fullCourseCode)
             currCourseData.term = formatTerm(fullCourseCode)
 
             for (let rawSectionInfo of currCourseRawInfo.rawMeetingSections) {
 
                 let currMeetingSection = {
-                    code: "",
+                    sectionCode: "",
                     instructors: [],
                     times: [],
                     size: 0,
-                    enrolment: 0
+                    enrolment: 0,
+                    notes: ""
                 }
 
                 // skip online async and closed sections
@@ -335,34 +356,37 @@ const scrape = async (startRatio, endRatio) => {
                     continue
                 }
 
-                currMeetingSection.code = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
+                currMeetingSection.sectionCode = `${rawSectionInfo[1][0]}${rawSectionInfo[1].slice(3, rawSectionInfo[1].length)}`
                 currMeetingSection.instructors = formatInstructor(rawSectionInfo[2])
                 currMeetingSection.times = formatTimes(rawSectionInfo[8], rawSectionInfo[9], rawSectionInfo[7], rawSectionInfo[10], fullCourseCode)
                 currMeetingSection.size = rawSectionInfo[4]
                 currMeetingSection.enrolment = rawSectionInfo[3]
+                currMeetingSection.notes = rawSectionInfo[12]
 
                 currCourseData.meeting_sections.push(currMeetingSection)
 
             }
 
-            // write course data to json
-            fs.writeFile(`../../output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            // write course data to json is the course is not empty
+            if (currCourseData.meeting_sections.length != 0) {
+
+                fs.writeFile(`output/${fullCourseCode}.json`, JSON.stringify(currCourseData), (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
 
         }
 
-        // update the current value in your application..
-        bar1.update(1);
-
+        progressBar.increment()
     }
 
 
     await browser.close();
     // stop the progress bar
-    bar1.stop();
+    progressBar.stop();
+    return
 }
 
 // determines how much to scrape. First is the first third, second is the second third and so on

@@ -129,12 +129,42 @@ export default new Vuex.Store({
         },
         addCourse(state, payload) {
             if (payload.course.courseCode.slice(0, 4) === "Lock") {
+
+                let whichDay = payload.course.meeting_sections[0].times[0].day
+
                 if (state.semesterStatus === "F") {
                     state.fallSelectedCourses[payload.course.courseCode] =
                         payload.course;
+
+                    //Add new section into timetable
+                    state.fallTimetable[whichDay].push({
+                        code: payload.course.courseCode,
+                        sectionCode: payload.course.meeting_sections[0].sectionCode,
+                        instructors: payload.course.meeting_sections[0].instructors[0],
+                        ...payload.course.meeting_sections[0].times[0],
+                    })
+
+                    // sort it 
+                    state.fallTimetable[whichDay].sort((a, b) => {
+                        return a.start - b.start;
+                    });
+
                 } else {
                     state.winterSelectedCourses[payload.course.courseCode] =
                         payload.course;
+
+                    //Add new section into timetable
+                    state.winterTimetable[whichDay].push({
+                        code: payload.course.courseCode,
+                        sectionCode: payload.course.meeting_sections[0].sectionCode,
+                        instructors: payload.course.meeting_sections[0].instructors[0],
+                        ...payload.course.meeting_sections[0].times[0],
+                    })
+
+                    // sort it 
+                    state.winterTimetable[whichDay].sort((a, b) => {
+                        return a.start - b.start;
+                    });
                 }
             }
             else if (payload.course.courseCode[8] === "F") {
