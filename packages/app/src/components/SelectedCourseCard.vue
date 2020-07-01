@@ -54,7 +54,7 @@
                                 <v-col cols="2" class="pa-0">
                                     <p style="font-size:15px">{{getProperDayName(meetingsection.day)}}</p>
                                     </v-col>
-                                <v-col cols="5" style="margin-left: 15px">
+                                <v-col cols="5" style="margin-left: 15px" class="pa-0">
                                   <p style="font-size:15px">{{
                                     getFormattedTime(
                                         meetingsection.start,
