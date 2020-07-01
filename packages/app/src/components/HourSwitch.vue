@@ -89,7 +89,7 @@ export default {
       var weekdays = Object.keys(this.timetable);
       for (var weekday of weekdays) {
         this.timetable[weekday].forEach(element => {
-          if (element.start == this.converter()) {
+          if (element.start <= this.converter() <= element.end) {
             courseNames.push(element);
           }
         });
@@ -119,7 +119,6 @@ export default {
           this.addCourse({ course: this.currSecData(weekday) });
         }
         if (flag && currCourse > 0) {
-          //console.log("working?");
           this.resetTimetable(true);
         }
       }
@@ -138,23 +137,17 @@ export default {
       }
     },
     validLockSection(weekday) {
-    //   let hourCourse = this.timetable[weekday].forEach(element => {
-    //     if (element.start == this.converter()) {
-    //       return `${element.code}${element.sectionCode}`;
-    //     }
-    //   });
-      for (let i = 0; i < this.timetable[weekday].length; i++) {
-        if (this.timetable[weekday][i].start == this.converter()) {
-          console.log(this.timetable[weekday][i]);
+      let flag = this.timetable[weekday].some(element => {
+        if (element.start == this.converter()) {
+          return this.getLockedSections.includes(
+            `${element.code}${element.sectionCode}`
+          );
         }
+        return false;
+      });
+      if (flag) {
+        return false;
       }
-    //   if (
-    //     this.getLockedSections.includes(
-    //       `${hourCourse.code}${hourCourse.sectionCode}`
-    //     )
-    //   ) {
-    //     return false;
-    //   }
       return true;
     }
   }
