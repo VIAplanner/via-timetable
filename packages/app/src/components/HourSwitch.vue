@@ -108,7 +108,6 @@ export default {
           );
         });
         this.currStart = this.converter();
-        //console.log(this.timetable)
 
         if (this.validLockSection(weekday)) {
           this.lockSection(

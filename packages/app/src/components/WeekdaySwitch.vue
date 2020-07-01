@@ -86,13 +86,10 @@ export default {
 
             //Flag is true if there is at least one course on the day that's unlocked
             let flag = this.timetable[this.weekday.toUpperCase()].some((element)=>{
-                // console.log(this.getLockedSections)
                 return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`)
             })
             while (i < 13) {
                 this.currStart = 28800 + i * 3600;
-
-                console.log(this.validLockSection())
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
@@ -121,7 +118,6 @@ export default {
         },
         validLockSection() {
             const currDayTimetable = this.timetable[this.weekday.toUpperCase()];
-            // console.log(currDayTimetable);
             for (let section of currDayTimetable) {
                 // if the course on the timetable is locked, don't add one here
                 if (
