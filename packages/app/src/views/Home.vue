@@ -38,14 +38,16 @@
                         </smooth-scrollbar>
                     </v-col>
                     <v-col cols="3" class="pl-0">
-                        <v-card height="500" class="pa-4 mr-6">
-                            <h1 class="text-h5">Courses</h1>
-                            <hr />
-                            <smooth-scrollbar class="left-scroll-area">
+                        <v-card :height="coursePanelHeight" class="pa-4 mr-6">
+                            <h1 class="text-h5">{{sideBarTitle}}</h1>
+                            <hr class="mb-1"/>
+                            <smooth-scrollbar
+                                class="left-scroll-area"
+                            >
                                 <v-expansion-panels
                                     :v-model="whichCoursesExpanded"
                                     multiple
-                                    class="expansion-panel-settings"
+                                    class="expansion-panel-settings pa-1"
                                 >
                                     <selected-course-card
                                         v-for="(course, code) in filterCourses(
@@ -105,23 +107,19 @@ export default {
             "timetable",
             "getExportOverlay",
         ]),
-        formattedCourses() {
-            if (!this.courses) {
-                return [];
+        sideBarTitle() {
+            if (this.getSemesterStatus === "F") {
+                return "Fall Courses";
+            } else {
+                return "Winter Courses";
             }
-            return this.courses.map((course) => {
-                if (course.code[8] === "F") {
-                    return `🍂   ${course.code}: ${course.name}`;
-                } else if (course.code[8] === "S") {
-                    return `❄️   ${course.code}: ${course.name}`;
-                } else {
-                    return `🍂❄️ ${course.code}: ${course.name}`;
-                }
-            });
         },
         contentHeight() {
             return `height: ${window.innerHeight - 99}px`;
         },
+        coursePanelHeight(){
+            return (window.innerHeight - 99) * 0.8 
+        }
     },
     data() {
         return {
@@ -156,13 +154,9 @@ export default {
     padding-top: 0px;
     height: 100%;
 }
-.inset-shadow {
-    box-shadow: inset 0px 3px 10px 0px grey;
-}
 .left-scroll-area {
     position: relative;
-    margin: auto;
-    height: 500px;
+    height: 90% !important;
 }
 .left-panel {
     height: 500px;
