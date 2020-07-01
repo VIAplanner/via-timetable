@@ -7,8 +7,8 @@
 </template>
 
 <style>
-html, body {
+body {
     max-width: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 </style>

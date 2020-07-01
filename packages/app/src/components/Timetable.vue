@@ -1,12 +1,17 @@
 <template>
-    <v-container class="background">
+    <v-container class="background" style="padding-right: 50px !important">
         <v-row>
             <NoTimetablePopup></NoTimetablePopup>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
-                <div v-for="time in timeRange" :key="time" class="time-axis-number">
-                    <h4 class="time-label">{{ time }}</h4>
-                </div>
+                <v-row
+                    v-for="time in timeRange"
+                    :key="time"
+                    class="time-axis-number"
+                >
+                    <hour-switch :time="time"></hour-switch>
+                    <!-- <h3 class="time-label">{{ time }}</h3> -->
+                </v-row>
             </v-col>
             <v-col cols="11">
                 <v-row name="week-days-axis">
@@ -33,6 +38,7 @@
 <script>
 import TimetableEvent from "./TimetableEvent";
 import NoTimetablePopup from "./NoTimetablePopup";
+import HourSwitch from "./HourSwitch";
 import WeekdaySwitch from "./WeekdaySwitch";
 import { mapMutations, mapGetters } from "vuex";
 
@@ -45,6 +51,7 @@ export default {
     components: {
         TimetableEvent,
         WeekdaySwitch,
+        HourSwitch,
         NoTimetablePopup,
     },
     props: {
@@ -125,7 +132,7 @@ export default {
                 // one hour
 
                 // if the current locked event starts before the timetable start time
-                if(eventStart < this.timetableStart){
+                if (eventStart < this.timetableStart) {
                     continue;
                 }
 
@@ -190,7 +197,7 @@ export default {
                 currTime = eventEnd;
 
                 // if we reached the timetable end time
-                if (currTime === this.timetableEnd ) {
+                if (currTime === this.timetableEnd) {
                     break;
                 }
 
@@ -244,6 +251,7 @@ export default {
 
 .time-axis-number {
     height: 64px;
+    text-align: right;
 }
 .top-margin {
     margin-bottom: 25px;
