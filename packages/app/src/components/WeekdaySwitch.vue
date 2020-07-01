@@ -81,7 +81,6 @@ export default {
         lockDay() {
             let i = 0;
             this.setLockedDayStatus(this.weekday);
-
             // save a copy before the change
             this.saveTimetable()
 
@@ -89,11 +88,8 @@ export default {
             let flag = this.timetable[this.weekday.toUpperCase()].some((element)=>{
                 return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`)
             })
-
             while (i < 13) {
                 this.currStart = 28800 + i * 3600;
-
-                //
                 if (this.validLockSection()) {
                     this.lockSection(
                         `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`

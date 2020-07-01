@@ -4,9 +4,10 @@
             <NoTimetablePopup></NoTimetablePopup>
             <v-col class="time-axis">
                 <div class="top-margin"></div>
-                <div v-for="time in timeRange" :key="time" class="time-axis-number">
-                    <h3 class="time-label">{{ time }}</h3>
-                </div>
+                <v-row v-for="time in timeRange" :key="time" class="time-axis-number">
+                    <hour-switch :time="time"></hour-switch>
+                    <!-- <h3 class="time-label">{{ time }}</h3> -->
+                </v-row>
             </v-col>
             <v-col cols="11">
                 <v-row name="week-days-axis">
@@ -34,6 +35,7 @@
 import TimetableEvent from "./TimetableEvent";
 import NoTimetablePopup from "./NoTimetablePopup";
 import WeekdaySwitch from "./WeekdaySwitch";
+import HourSwitch from "./HourSwitch";
 import { mapMutations, mapGetters } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
@@ -45,6 +47,7 @@ export default {
     components: {
         TimetableEvent,
         WeekdaySwitch,
+        HourSwitch,
         NoTimetablePopup,
     },
     props: {
@@ -245,6 +248,7 @@ export default {
 
 .time-axis-number {
     height: 84px;
+    text-align: right;
 }
 
 .top-margin {
