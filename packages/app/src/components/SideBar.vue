@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card :height="coursePanelHeight" class="pa-4">
-            <h1 class="text-h5">{{ sideBarTitle }}</h1>
+            <h1 class="text-h6">{{ sideBarTitle }}</h1>
             <hr class="mb-1" />
             <smooth-scrollbar class="right-scroll-area">
                 <v-expansion-panels
@@ -19,7 +19,7 @@
             </smooth-scrollbar>
         </v-card>
         <v-card :height="programPanelHeight" class="mt-3 pa-4">
-            <h1 class="text-h5">Programs</h1>
+            <h1 class="text-h6">Programs</h1>
             <hr class="mb-1" />
             <smooth-scrollbar class="right-scroll-area">
             </smooth-scrollbar>
