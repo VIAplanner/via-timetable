@@ -1,7 +1,12 @@
 <template>
     <div :style="contentHeight">
         <v-row class="fill-height" justify="center" align="center">
-            <v-img src="../assets/coming-soon.png" :max-width="imgWidth"></v-img>
+            <v-img
+                @click="$router.push({ name: 'about' })"
+                src="../assets/coming-soon.png"
+                :max-width="imgWidth"
+                style="cursor: pointer;"
+            />
         </v-row>
     </div>
 </template>
@@ -11,9 +16,9 @@ export default {
         contentHeight() {
             return `height: ${window.innerHeight - 110}px`;
         },
-        imgWidth(){
-            return window.innerWidth * 0.6
-        }
+        imgWidth() {
+            return window.innerWidth * 0.6;
+        },
     },
 };
 </script>

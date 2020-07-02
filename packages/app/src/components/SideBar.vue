@@ -19,10 +19,14 @@
             </smooth-scrollbar>
         </v-card>
         <v-card :height="programPanelHeight" class="mt-3 pa-4">
+            <v-overlay absolute opacity="0.3">
+                <h1>Coming Soon</h1>
+            </v-overlay>
             <h1 class="text-h6">Programs</h1>
-            <hr class="mb-1" />
-            <smooth-scrollbar class="right-scroll-area">
-            </smooth-scrollbar>
+            <hr class="mb-3" />
+            <v-skeleton-loader type="list-item-avatar" />
+            <v-skeleton-loader type="list-item-avatar-two-line" />
+            <v-skeleton-loader type="list-item-avatar" />
         </v-card>
     </div>
 </template>
