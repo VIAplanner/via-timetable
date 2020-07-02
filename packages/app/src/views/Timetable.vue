@@ -1,12 +1,11 @@
 <template>
-    <v-row :style="contentHeight" id="export-me"> 
+    <v-row :style="contentHeight" id="exportMe"> 
         <help-dial />
         <v-col class="pb-0 pr-0; timetableColumn">
             <smooth-scrollbar>
                 <timetable :timetable="timetable" />
             </smooth-scrollbar>
         </v-col>
-        
     </v-row>
 </template>
 
