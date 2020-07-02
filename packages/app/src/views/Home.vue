@@ -55,7 +55,7 @@ import SwitchSem from "../components/SwitchSem";
 import TimetableView from "../views/Timetable";
 import ProgramView from "../views/Program";
 import { mapGetters } from "vuex";
-import SideBar from "../views/SideBar";
+import SideBar from "../components/SideBar";
 
 export default {
     created() {

@@ -33,7 +33,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["selectedCourses", "getSemesterStatus"]),
+        ...mapGetters(["selectedCourses", "getSemesterStatus", "timetable"]),
         sideBarTitle() {
             if (this.getSemesterStatus === "F") {
                 return "Fall Courses";
@@ -45,8 +45,8 @@ export default {
             return (window.innerHeight - 99) * 0.6;
         },
         filterCourses() {
+            this.timetable //force re-render the selected courses
             const filteredCourses = {};
-            console.log(this.selectedCourses)
 
             for (var code in this.selectedCourses) {
                 if (!code.includes("Lock")) {
