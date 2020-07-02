@@ -16,10 +16,11 @@
                         </h4>
 
                         <div class="lock-button">
-                            <v-btn dark @click.stop="lockToggle" v-if="locked" icon>
+                            <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
                                 <v-icon>mdi-lock</v-icon>
                             </v-btn>
                             <v-btn
+                                small
                                 dark
                                 @click.stop="lockToggle"
                                 v-if="!locked && hovered"
@@ -29,17 +30,34 @@
                             </v-btn>
                         </div>
 
-                        <div >
-                            {{ event.sectionCode }}
-                            <!-- <span class="text-body-1">({{ deliveryMethod }})</span> -->
-                        </div>
+                        <v-row class="px-3">
+                            <div>
+                                {{ event.sectionCode }} ({{deliveryMethod}})
+                            </div>
+                            <v-spacer/>
+                            <div v-if="locations.length === 2 && durationClass === 'one-hour'">
+                                {{locations[0]}}
+                            </div>
+                        </v-row>
 
-                        <div style="position: relative;">
-                            <div class="align-left">
+                        <v-row class="px-3">
+                            <div>
                                 {{ getFormattedTime(event.start, event.end) }}
                             </div>
-                            <div class="align-right">{{ event.location }}</div>
-                        </div>
+                            <v-spacer/>
+                            <div v-if="locations.length === 1 || durationClass != 'one-hour'">
+                                {{locations[0]}}
+                            </div>
+                            <div v-else-if="locations.length === 2 && durationClass === 'one-hour'">
+                                {{locations[1]}}
+                            </div>
+                        </v-row>
+                        <v-row class="px-3" v-if="locations.length === 2 && durationClass != 'one-hour'">
+                            <v-spacer/>
+                            <div>
+                                {{locations[1]}}
+                            </div>
+                        </v-row>
                     </div>
                 </template>
                 <course-section-picker
@@ -110,6 +128,9 @@ export default {
             } else {
                 return "Sync";
             }
+        },
+        locations() {
+            return this.event.location.split("; ")
         },
         dynamicText() {
             return !this.locked ? "Block This Time" : "Unblock This Time";

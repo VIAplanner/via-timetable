@@ -24,7 +24,7 @@
                 style="margin: 7px 20px 7px 7px"
             />
             <v-tab>PROGRAMS</v-tab>
-            <v-tab>COURSES</v-tab>
+            <v-tab>TIMETABLE</v-tab>
             <course-search-bar style="margin: auto" />
             <switch-sem style="margin: auto" />
             <v-tab-item>

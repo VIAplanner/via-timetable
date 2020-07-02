@@ -36,10 +36,10 @@
                                     <h4 style="margin-left: 60px">Time</h4>
                                 </v-col>
                                 <v-col>
-                                    <h4 style="margin-left: 80px">Location</h4>
+                                    <h4 style="margin-left: 70px">Location</h4>
                                 </v-col>
                                 <v-col>
-                                    <h4 style="margin-left: 15px">Instructor</h4>
+                                    <h4 style="margin-left: 37px">Instructor</h4>
                                 </v-col>
                             </v-row>
                             <v-divider class="activity-divider" />
@@ -152,35 +152,33 @@
                                                     :key="`${time.day}${time.start}`"
                                                 >
                                                     <v-col>
-                                                        <div>
+                                                        <div v-if="time.location.length != 1">
                                                             {{ time.location }}
+                                                        </div>
+                                                        <div v-else>
+                                                            Online
                                                         </div>
                                                     </v-col>
                                                 </v-row>
                                             </v-col>
 
                                             <v-col class="contain">
-                                                <v-row class="center-vertical">
-                                                    <v-col style="margin-left: 15px">
-                                                        <v-list-item-title
-                                                            v-if="
-                                                                activityType ===
-                                                                    'lecture'
-                                                            "
-                                                            class="text-wrap"
-                                                        >
-                                                            {{
-                                                                meetingSection
-                                                                    .instructors[0]
-                                                            }}
-                                                        </v-list-item-title>
-                                                        <v-list-item-title
-                                                            v-else
-                                                            class="text-wrap"
-                                                            >TBA</v-list-item-title
-                                                        >
-                                                    </v-col>
-                                                </v-row>
+                                                <div
+                                                    v-if="activityType ==='lecture' && 
+                                                    meetingSection.instructors.length != 0"
+                                                    class="center-vertical"
+                                                    style="text-align: center; width: 100%"
+                                                >
+                                                    {{
+                                                        meetingSection.instructors[0]
+                                                    }}
+                                                </div>
+                                                <div
+                                                    v-else
+                                                    class="center-vertical"
+                                                    style="text-align: center; width: 100%"
+                                                    >TBA
+                                                </div>
                                             </v-col>
                                         </v-row>
                                     </v-list-item-content>

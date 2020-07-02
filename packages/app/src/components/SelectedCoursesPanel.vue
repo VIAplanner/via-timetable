@@ -3,7 +3,8 @@
         {{selectedCourses}}
         <v-expansion-panels 
         :v-model="whichCoursesExpanded" 
-        multiple>
+        multiple
+        focusable>
             <selected-course-card
                 v-for="(course, code) in filterCourses(selectedCourses)"
                 :key="code"
@@ -29,7 +30,7 @@ export default {
             whichCoursesExpanded: [],
             scrollBarSettings: {
                 wheelPropagation: false,
-                maxScrollbarLength: 240,
+                maxScrollbarLength: 100,
                 swipeEasing: true
             }     
         }       
