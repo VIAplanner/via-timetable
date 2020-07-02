@@ -1,72 +1,86 @@
 <template>
-        <v-expansion-panel style="min-width: 98%" class="mb-1">
-            <v-expansion-panel-header
-                class="pa-0 pr-2"
-                style="max-height: 50px !important"
+    <v-expansion-panel
+        style="min-width: 98%; border-radius: 5px !important;"
+        class="mb-1"
+    >
+        <v-expansion-panel-header
+            class="pa-0 pr-2"
+            style="max-height: 50px !important"
+        >
+            <div
+                class="mr-3 card-header"
+                :style="
+                    `background-color: ${course.color};  border-top-left-radius: 5px; border-bottom-left-radius: 5px;`
+                "
             >
-                <div
-                    class="mr-3 card-header"
-                    :style="`background-color: ${course.color}`"
-                >
-                    <p></p>
-                </div>
-                <div style="color: #474747">
-                    <h3>{{ course.courseCode }}</h3>
-                </div>
-                <v-spacer />
-                <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            icon
-                            v-on="on"
-                            color="#474747"
-                            max-width="40"
-                            max-height="40"
+                <p></p>
+            </div>
+            <div style="color: #474747">
+                <h3>{{ course.courseCode }}</h3>
+            </div>
+            <v-spacer />
+            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                        icon
+                        v-on="on"
+                        color="#474747"
+                        max-width="40"
+                        max-height="40"
+                    >
+                        <v-icon>mdi-pencil-box-outline</v-icon>
+                    </v-btn>
+                </template>
+                <course-section-picker
+                    v-on:done="dialog = false"
+                    :code="course.courseCode"
+                    ref="popUp"
+                />
+            </v-dialog>
+            <v-btn
+                color="#474747"
+                @click="deleteCourse({ code: course.courseCode })"
+                max-width="40"
+                max-height="40"
+                icon
+            >
+                <v-icon>mdi-delete</v-icon>
+            </v-btn>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+            <v-row>
+                <v-col>
+                    <div class="sections-info">
+                        <v-row
+                            v-for="meetingsection in meetingSections"
+                            :key="meetingsection.section"
                         >
-                            <v-icon>mdi-pencil-box-outline</v-icon>
-                        </v-btn>
-                    </template>
-                    <course-section-picker
-                        v-on:done="dialog = false"
-                        :code="course.courseCode"
-                        ref="popUp"
-                    />
-                </v-dialog>
-                <v-btn
-                    color="#474747"
-                    @click="deleteCourse({ code: course.courseCode })"
-                    max-width="40"
-                    max-height="40"
-                    icon
-                >
-                    <v-icon>mdi-delete</v-icon>
-                </v-btn>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-                <v-row>
-                    <v-col>
-                        <div class="sections-info">
-                            <v-row
-                                v-for="meetingsection in meetingSections"
-                                :key="meetingsection.section"
+                            <v-col class="pa-0" cols="3"
+                                ><p style="font-size:15px">
+                                    {{ meetingsection.sectionCode }}
+                                </p></v-col
                             >
-                                <v-col class="pa-0" cols="3"><p style="font-size:15px">{{ meetingsection.sectionCode }}</p></v-col>
-                                <v-col cols="2" class="pa-0">
-                                    <p style="font-size:15px">{{getProperDayName(meetingsection.day)}}</p>
-                                    </v-col>
-                                <v-col cols="5" style="margin-left: 15px" class="pa-0">
-                                  <p style="font-size:15px">{{
-                                    getFormattedTime(
-                                        meetingsection.start,
-                                        meetingsection.end
-                                    )
-                                }}</p></v-col>
-                            </v-row>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
+                            <v-col cols="2" class="pa-0">
+                                <p style="font-size:15px">
+                                    {{ getProperDayName(meetingsection.day) }}
+                                </p>
+                            </v-col>
+                            <v-col cols="5" style="margin-left: 15px" class="pa-0">
+                                <p style="font-size:15px">
+                                    {{
+                                        getFormattedTime(
+                                            meetingsection.start,
+                                            meetingsection.end
+                                        )
+                                    }}
+                                </p></v-col
+                            >
+                        </v-row>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-expansion-panel-content>
+    </v-expansion-panel>
 </template>
 
 <script>
@@ -131,7 +145,7 @@ export default {
                 endHalf / 6 / 10}:${endHalf}`;
         },
         getProperDayName(day) {
-            return day.slice(0,3).toUpperCase();
+            return day.slice(0, 3).toUpperCase();
         },
         atInput() {
             // console.log('pop up toggled')

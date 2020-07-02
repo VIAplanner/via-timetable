@@ -1,59 +1,60 @@
 <template>
-    <div>
-        <!-- Popup tutorial -->
-        <tutorial />
-        <!--Exporting Progress Overlay-->
-        <v-overlay :value="getExportOverlay">
-            <v-row>
-                <h1 class="ma-3">Exporting</h1>
-            </v-row>
-            <v-row justify="center">
-                <v-progress-circular
-                    indeterminate
-                    size="64"
-                    style="margin-left: auto ; margin-right: auto ;"
-                ></v-progress-circular>
-            </v-row>
-        </v-overlay>
-
-        <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
-            <v-img
-                src="../assets/VIA-Planner-White.png"
-                max-width="130"
-                contain
-                style="margin: 7px 20px 7px 7px"
-            />
-            <v-tab>PROGRAMS</v-tab>
-            <v-tab>COURSES</v-tab>
-            <course-search-bar style="margin: auto" />
-            <switch-sem style="margin: auto" />
-            <v-tab-item>
-                <program-view />
-            </v-tab-item>
-            <v-tab-item>
+    <v-row>
+        <v-col class="ma-0 pt-0 pb-0">
+            <!-- Popup tutorial -->
+            <tutorial />
+            <!--Exporting Progress Overlay-->
+            <v-overlay :value="getExportOverlay">
                 <v-row>
-                    <timetable-view />
-                    <side-bar />
+                    <h1 class="ma-3">Exporting</h1>
                 </v-row>
-            </v-tab-item>
-        </v-tabs>
-        <v-row>
-            <v-col class="pa-0">
-                <h1 style="text-align:center" class="text-subtitle-1">
-                    Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
-                    school year
-                </h1>
-            </v-col>
-        </v-row>
-    </div>
+                <v-row justify="center">
+                    <v-progress-circular
+                        indeterminate
+                        size="64"
+                        style="margin-left: auto ; margin-right: auto ;"
+                    ></v-progress-circular>
+                </v-row>
+            </v-overlay>
+
+            <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
+                <v-img
+                    src="../assets/VIA-Planner-White.png"
+                    max-width="130"
+                    contain
+                    class="ma-2 ml-1"
+                />
+                <v-tab>PROGRAMS</v-tab>
+                <v-tab>TIMETABLE</v-tab>
+                <course-search-bar style="margin: auto" />
+                <switch-sem style="margin: auto" class="pr-3"/>
+            </v-tabs>
+            <v-row>
+                <v-col>
+                    <router-view />
+                </v-col>
+                <v-col cols="3" class="grey lighten-4 mr-2 pb-4">
+                    <side-bar />
+                </v-col>
+            </v-row>
+            <v-footer absolute>
+                <v-row>
+                    <v-col class="pa-0">
+                        <h1 style="text-align:center" class="text-subtitle-1">
+                            Copyright © 2020 VIAplanner - Data updated for the 2020 -
+                            2021 school year
+                        </h1>
+                    </v-col>
+                </v-row>
+            </v-footer>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
 import CourseSearchBar from "../components/CourseSearchBar";
 import Tutorial from "../components/Tutorial";
 import SwitchSem from "../components/SwitchSem";
-import TimetableView from "../views/Timetable";
-import ProgramView from "../views/Program";
 import { mapGetters } from "vuex";
 import SideBar from "../components/SideBar";
 
@@ -67,8 +68,6 @@ export default {
         SwitchSem,
         CourseSearchBar,
         Tutorial,
-        TimetableView,
-        ProgramView,
         SideBar,
     },
     computed: {
@@ -76,8 +75,6 @@ export default {
     },
     data() {
         return {
-            optimizationOpen: false,
-            whichCoursesExpanded: [],
             scrollBarSettings: {
                 wheelPropagation: false,
                 maxScrollbarLength: 240,
@@ -86,6 +83,15 @@ export default {
             },
             whichTab: 1,
         };
+    },
+    watch: {
+        whichTab() {
+            if (this.whichTab === 0) {
+                this.$router.push({ name: "program" });
+            } else if (this.whichTab === 1) {
+                this.$router.push({ name: "timetable" });
+            }
+        },
     },
 };
 </script>

@@ -25,7 +25,7 @@ export default {
             "timetable",
         ]),
         contentHeight() {
-            return `height: ${window.innerHeight - 99}px`;
+            return `height: ${window.innerHeight - 120}px`;
         },
     },
 };
