@@ -1,9 +1,9 @@
 <template>
-    <v-row :style="contentHeight" id="exportMe"> 
+    <v-row :style="contentHeight">
         <help-dial />
         <v-col class="pb-0 pr-0; timetableColumn">
             <smooth-scrollbar>
-                <timetable :timetable="timetable" />
+                <timetable :timetable="timetable" id="exportMe" />
             </smooth-scrollbar>
         </v-col>
     </v-row>
@@ -17,12 +17,10 @@ import { mapGetters } from "vuex";
 export default {
     components: {
         Timetable,
-        HelpDial
+        HelpDial,
     },
     computed: {
-        ...mapGetters([
-            "timetable",
-        ]),
+        ...mapGetters(["timetable"]),
         contentHeight() {
             return `height: ${window.innerHeight - 110}px`;
         },
