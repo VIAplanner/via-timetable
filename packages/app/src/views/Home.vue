@@ -17,7 +17,7 @@
                 </v-row>
             </v-overlay>
 
-            <v-tabs dark background-color="#012B5C" height="58px" :value="whichTab">
+            <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     max-width="130"
@@ -27,26 +27,29 @@
                 <v-tab>PROGRAMS</v-tab>
                 <v-tab>TIMETABLE</v-tab>
                 <course-search-bar style="margin: auto" />
-                <switch-sem style="margin: auto" class="pr-3"/>
+                <switch-sem style="margin: auto" class="pr-3" />
             </v-tabs>
             <v-row>
-                <v-col>
+                <v-col class="pb-0">
                     <router-view />
+                    <v-footer class="white">
+                        <v-row>
+                            <v-col class="pa-0">
+                                <h1
+                                    style="text-align:center"
+                                    class="text-subtitle-1"
+                                >
+                                    Copyright © 2020 VIAplanner - Data updated for
+                                    the 2020 - 2021 school year
+                                </h1>
+                            </v-col>
+                        </v-row>
+                    </v-footer>
                 </v-col>
-                <v-col cols="3" class="grey lighten-4 mr-2 pb-4">
+                <v-col cols="3" class="grey lighten-4 mr-2">
                     <side-bar />
                 </v-col>
             </v-row>
-            <v-footer absolute>
-                <v-row>
-                    <v-col class="pa-0">
-                        <h1 style="text-align:center" class="text-subtitle-1">
-                            Copyright © 2020 VIAplanner - Data updated for the 2020 -
-                            2021 school year
-                        </h1>
-                    </v-col>
-                </v-row>
-            </v-footer>
         </v-col>
     </v-row>
 </template>

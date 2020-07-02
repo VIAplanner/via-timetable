@@ -52,7 +52,7 @@ export default {
             return (window.innerHeight - 99) * 0.6;
         },
         programPanelHeight() {
-            return (window.innerHeight - 99) * 0.35;
+            return (window.innerHeight - 99) * 0.4;
         },
         filterCourses() {
             this.timetable; //force re-render the selected courses
