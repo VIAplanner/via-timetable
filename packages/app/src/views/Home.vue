@@ -17,7 +17,7 @@
                 </v-row>
             </v-overlay>
 
-            <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
+            <v-tabs dark background-color="#012B5C" height="58px" :value="whichTab">
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     max-width="130"
