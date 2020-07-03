@@ -19,7 +19,7 @@
             </smooth-scrollbar>
         </v-card>
         <v-card :height="programPanelHeight" class="mt-3 pa-4">
-            <v-overlay absolute opacity="0.3">
+            <v-overlay absolute opacity="0.3" z-index=1>
                 <h1>Coming Soon</h1>
             </v-overlay>
             <h1 class="text-h6">Programs</h1>
