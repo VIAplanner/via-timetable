@@ -41,11 +41,8 @@ export default {
         contentHeightCSS() {
             return `height: ${window.innerHeight - 110}px`;
         },
-        timetableHeight() {
-            return window.innerHeight - 99;
-        },
         contentHeight() {
-            return window.innerHeight - 110
+            return window.innerHeight - 100
         },
         whichTimetable() {
             if (this.getSemesterStatus === "F") {
