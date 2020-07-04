@@ -60,7 +60,7 @@ export default {
     },
     data() {
         return {
-            logo: require("../assets/barbackground.png"),
+            logo: require("../assets/VIA-Planner-White.png"),
         };
     },
     computed: {

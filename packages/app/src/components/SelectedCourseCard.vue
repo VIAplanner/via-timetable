@@ -114,7 +114,7 @@ export default {
                                 ? "TBA"
                                 : event.instructors[0];
                         const loc = 
-                            event.location.length === 1
+                            event.location.length <= 1
                                 ? "Online"
                                 : event.location
                         const info = {
