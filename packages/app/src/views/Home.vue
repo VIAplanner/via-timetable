@@ -30,7 +30,7 @@
                 <switch-sem style="margin: auto" class="pr-3" />
             </v-tabs>
             <v-row>
-                <v-col class="pb-0">
+                <v-col class="pa-0">
                     <router-view />
                     <v-footer class="white">
                         <v-row>

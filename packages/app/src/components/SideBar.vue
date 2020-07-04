@@ -6,7 +6,7 @@
             <v-row
                 justify="center"
                 align="center"
-                :style="`height: ${coursePanelHeight * 0.8}px`"
+                :style="`height: ${coursePanelHeight * 0.9}px`"
                 style="z-index: -1"
             >
                 <img :src="imgSrc" style="position: absolute" :width="imgWidth" />
@@ -88,12 +88,6 @@ export default {
 
             return filteredCourses;
         },
-        backgroundColor() {
-            if (this.getSemesterStatus === "F") {
-                return "backgound-color: #ffb566"
-            }
-            else return "background-color: #c5d7de"
-        }
     },
 };
 </script>
@@ -102,6 +96,8 @@ export default {
     position: relative;
     height: 90% !important;
     background-color: transparent;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .expansion-panels-settings {
     width: 90%;
