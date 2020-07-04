@@ -153,7 +153,7 @@
                                                     :key="`${time.day}${time.start}`"
                                                 >
                                                     <v-col>
-                                                        <div v-if="time.location.length != 1">
+                                                        <div v-if="time.location.length > 1">
                                                             {{ time.location }}
                                                         </div>
                                                         <div v-else>
