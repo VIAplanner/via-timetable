@@ -56,6 +56,12 @@ export default {
 
             return filteredCourses;
         },
+        backgroundColor() {
+            if (this.getSemesterStatus === "F") {
+                return "backgound-color: #ffb566"
+            }
+            else return "background-color: #c5d7de"
+        }
     },
 };
 </script>

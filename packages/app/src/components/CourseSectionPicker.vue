@@ -4,13 +4,14 @@
             @Proceed="autoResolveConflict"
             @Cancel="clearTempVars"
         ></OverwriteLockedSectionPopup>
-        <v-toolbar :color="course.color" dark>
+        <v-toolbar :color="course.color" dark style="z-index: 1">
             <v-toolbar-title class="text-wrap"
                 >{{ course.courseCode }} {{ course.name }}</v-toolbar-title
             >
             <v-spacer />
             <v-btn text @click="onClickDone">Done</v-btn>
         </v-toolbar>
+        <smooth-scrollbar>
         <v-card-text height="600px">
             <v-list rounded subheader two-line flat>
                 <v-container
@@ -189,6 +190,7 @@
                 </v-container>
             </v-list>
         </v-card-text>
+        </smooth-scrollbar>
     </v-card>
 </template>
 

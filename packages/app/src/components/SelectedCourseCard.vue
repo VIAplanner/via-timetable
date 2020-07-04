@@ -43,6 +43,7 @@
                 </v-btn>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
+                <hr class="mb-1" />
                 <div class="pa-3">
                     <div v-for="(section, code) of meetingSections"
                             :key="code">
