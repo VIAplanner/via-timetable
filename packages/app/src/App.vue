@@ -7,7 +7,7 @@
 </template>
 
 <style>
-body {
+#app {
     max-width: 100%;
     overflow: hidden;
 }

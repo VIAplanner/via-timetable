@@ -1,23 +1,42 @@
 <template>
-    <v-col cols="3" class="pl-0">
-        <v-card :height="coursePanelHeight" class="pa-4 mr-6">
-            <h1 class="text-h5">{{ sideBarTitle }}</h1>
+    <div>
+        <v-card :height="coursePanelHeight" class="pa-4">
+            <h1 class="text-h6">{{ sideBarTitle }}</h1>
             <hr class="mb-1" />
-            <smooth-scrollbar class="right-scroll-area">
-                <v-expansion-panels
-                    :v-model="whichCoursesExpanded"
-                    multiple
-                    class="expansion-panel-settings pa-1"
-                >
-                    <selected-course-card
-                        v-for="(course, code) in filterCourses"
-                        :key="code"
-                        :course="course"
-                    />
-                </v-expansion-panels>
-            </smooth-scrollbar>
+            <v-row
+                justify="center"
+                align="center"
+                :style="`height: ${coursePanelHeight * 0.8}px`"
+                style="z-index: -1"
+            >
+                <img :src="imgSrc" style="position: absolute" :width="imgWidth" />
+                <smooth-scrollbar class="right-scroll-area">
+                    <v-expansion-panels
+                        :v-model="whichCoursesExpanded"
+                        multiple
+                        hover
+                        class="expansion-panel-settings pa-1"
+                    >
+                        <selected-course-card
+                            v-for="(course, code) in filterCourses"
+                            :key="code"
+                            :course="course"
+                        />
+                    </v-expansion-panels>
+                </smooth-scrollbar>
+            </v-row>
         </v-card>
-    </v-col>
+        <v-card :height="programPanelHeight" class="mt-3 pa-4">
+            <v-overlay absolute opacity="0.3" z-index="1">
+                <h1>Coming Soon</h1>
+            </v-overlay>
+            <h1 class="text-h6">Programs</h1>
+            <hr class="mb-3" />
+            <v-skeleton-loader type="list-item-avatar" />
+            <v-skeleton-loader type="list-item-avatar-two-line" />
+            <v-skeleton-loader type="list-item-avatar" />
+        </v-card>
+    </div>
 </template>
 <script>
 import SelectedCourseCard from "../components/SelectedCourseCard";
@@ -44,8 +63,21 @@ export default {
         coursePanelHeight() {
             return (window.innerHeight - 99) * 0.6;
         },
+        programPanelHeight() {
+            return (window.innerHeight - 99) * 0.4;
+        },
+        imgWidth() {
+            return window.innerWidth * 0.17;
+        },
+        imgSrc() {
+            if (this.getSemesterStatus === "F") {
+                return require("../assets/fall-background.png");
+            } else {
+                return require("../assets/winter-background.png");
+            }
+        },
         filterCourses() {
-            this.timetable //force re-render the selected courses
+            this.timetable; //force re-render the selected courses
             const filteredCourses = {};
 
             for (var code in this.selectedCourses) {
@@ -69,6 +101,7 @@ export default {
 .right-scroll-area {
     position: relative;
     height: 90% !important;
+    background-color: transparent;
 }
 .expansion-panels-settings {
     width: 90%;
