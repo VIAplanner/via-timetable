@@ -1,7 +1,7 @@
 <template>
   <v-col @mouseover="hovered = true" @mouseleave="hovered = false" justify="center">
     <h2 class="hour-label">{{ time }}</h2>
-    <div v-if="hovered || locked">
+    <div v-if="!last && (hovered || locked)">
       <v-btn @click="unlockDay" v-if="locked" icon>
         <v-icon>mdi-lock</v-icon>
       </v-btn>
@@ -18,11 +18,12 @@ export default {
   data() {
     return {
       hovered: false,
-      currStart: 32400
+      currStart: 28800
     };
   },
   props: {
-    time: String
+    time: String,
+    last: Boolean
   },
   computed: {
     ...mapGetters([
@@ -102,6 +103,7 @@ export default {
       var currCourse = this.courseAtTheHour().length;
       var weekdays = Object.keys(this.timetable);
       for (var weekday of weekdays) {
+        console.log(this.courseAtTheHour())
         let flag = this.courseAtTheHour().some(element => {
           return !this.getLockedSections.includes(
             `${element.code}${element.sectionCode}`
@@ -118,6 +120,7 @@ export default {
           this.addCourse({ course: this.currSecData(weekday) });
         }
         if (flag && currCourse > 0) {
+          console.log("here")
           this.resetTimetable(true);
         }
       }

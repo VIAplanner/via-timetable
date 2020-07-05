@@ -5,12 +5,12 @@
             <v-col class="time-axis">
                 <div class="top-margin"></div>
                 <v-row
-                    v-for="time in timeRange"
-                    :key="time"
+                    v-for="(time, index) in timeRange"
+                    :key="index"
                     class="time-axis-number"
                 >
-                    <hour-switch :time="time"></hour-switch>
-                    <!-- <h3 class="time-label">{{ time }}</h3> -->
+                    <hour-switch v-if="index != timeRange.length - 1" :time="time" :last="false"></hour-switch>
+                    <hour-switch v-else :time="time" :last="true"></hour-switch>
                 </v-row>
             </v-col>
             <v-col cols="11">
@@ -128,14 +128,16 @@ export default {
                 const event = meetingSections[i];
                 let eventStart = convertSecondsToHours(event.start);
                 let eventEnd = convertSecondsToHours(event.end);
-                // Pad empty events before the start of the first class
-                // one hour
 
                 // if the current locked event starts before the timetable start time
                 if (eventStart < this.timetableStart) {
                     continue;
+                } else if (eventStart >= this.timetableEnd) {
+                    break;
                 }
-
+                
+                //Pad empty hour or half hours before the event
+                //If event starts at whole hour
                 if (Number.isInteger(eventStart - currTime)) {
                     for (let j = 0; j < eventStart - currTime; j++) {
                         result.push({
@@ -145,7 +147,9 @@ export default {
                         });
                         invalidStart--;
                     }
-                } else {
+                } 
+                //If event starts at half hour
+                else {
                     //there is half hour exist
                     //previous end time is one hour
                     if (Number.isInteger(currTime)) {
@@ -181,6 +185,8 @@ export default {
                         }
                     }
                 }
+
+                //Make a block for the current event
                 // if the section is a user locked section, pass it in as a locked event
                 if (event.code.includes("Lock")) {
                     result.push({
@@ -195,14 +201,10 @@ export default {
                 }
 
                 currTime = eventEnd;
-
-                // if we reached the timetable end time
-                if (currTime === this.timetableEnd) {
-                    break;
-                }
-
+        
                 //If last event, pad empty events after it
-                if (i === meetingSections.length - 1) {
+                if (i === meetingSections.length - 1 || 
+                convertSecondsToHours(meetingSections[i+1].start) >= this.timetableEnd) {
                     //half hour
                     if (!Number.isInteger(currTime)) {
                         result.push({

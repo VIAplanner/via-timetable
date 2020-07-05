@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             hovered: false,
-            currStart: 32400,
+            currStart: 28800,
         };
     },
     props: {
