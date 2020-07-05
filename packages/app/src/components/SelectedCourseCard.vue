@@ -5,7 +5,7 @@
     >
         <v-expansion-panel-header
             class="pa-0 pr-2"
-            style="max-height: 50px !important"
+            style="max-height: 50px !important; border-top-left-radius: 5px; border-bottom-left-radius: 5px;"
         >
             <div
                 class="mr-3 card-header"
@@ -50,33 +50,31 @@
         <v-expansion-panel-content>
             <hr class="mb-1" />
             <div class="pa-3">
-                <div v-for="(section, code) of meetingSections"
-                        :key="code">
+                <div v-for="(section, code) of meetingSections" :key="code">
                     <v-row>
                         <div style="font-size: 15px">
-                                {{code}}
+                            {{ code }}
                         </div>
                     </v-row>
-                    <v-row 
-                    v-for="time in section" 
-                    :key="`${time.day}${time.start}`"
-                    class="ml-2"
-                    style="font-size: small">
+                    <v-row
+                        v-for="time in section"
+                        :key="`${time.day}${time.start}`"
+                        class="ml-2"
+                        style="font-size: small"
+                    >
                         <v-col class="pa-0" cols="3">
                             <p>
-                                {{getProperDayName(time.day)}}
+                                {{ getProperDayName(time.day) }}
                             </p>
                         </v-col>
                         <v-col class="pa-0" cols="5">
-                        <p>{{
-                            getFormattedTime(
-                                time.start,
-                                time.end
-                            )
-                        }}</p></v-col>
+                            <p>
+                                {{ getFormattedTime(time.start, time.end) }}
+                            </p></v-col
+                        >
                         <v-col cols="4" class="pa-0">
                             <p style="text-align: center">
-                                {{time.location}}
+                                {{ time.location }}
                             </p>
                         </v-col>
                     </v-row>
@@ -113,22 +111,19 @@ export default {
                             event.instructors.length === 0
                                 ? "TBA"
                                 : event.instructors[0];
-                        const loc = 
-                            event.location.length <= 1
-                                ? "Online"
-                                : event.location
+                        const loc =
+                            event.location.length <= 1 ? "Online" : event.location;
                         const info = {
                             day: day,
                             start: event.start,
                             end: event.end,
                             instructorName: instructor,
                             location: loc,
-                        }
+                        };
                         if (event.sectionCode in sections) {
-                            sections[event.sectionCode].push(info)
-                        }
-                        else {
-                            sections[event.sectionCode] = [info]
+                            sections[event.sectionCode].push(info);
+                        } else {
+                            sections[event.sectionCode] = [info];
                         }
                     }
                 }
@@ -158,7 +153,7 @@ export default {
                 endHalf / 6 / 10}:${endHalf}`;
         },
         getProperDayName(day) {
-            return `${day.slice(0,1)}${day.slice(1,3).toLowerCase()}`
+            return `${day.slice(0, 1)}${day.slice(1, 3).toLowerCase()}`;
         },
         atInput() {
             // console.log('pop up toggled')

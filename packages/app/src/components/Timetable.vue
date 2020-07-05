@@ -9,7 +9,11 @@
                     :key="index"
                     class="time-axis-number"
                 >
-                    <hour-switch v-if="index != timeRange.length - 1" :time="time" :last="false"></hour-switch>
+                    <hour-switch
+                        v-if="index != timeRange.length - 1"
+                        :time="time"
+                        :last="false"
+                    ></hour-switch>
                     <hour-switch v-else :time="time" :last="true"></hour-switch>
                 </v-row>
             </v-col>
@@ -32,6 +36,12 @@
                 </v-row>
             </v-col>
         </v-row>
+        <timetable-course-card
+            class="my-4 mx-8"
+            v-for="(course, code) in getSelectedCourses"
+            :key="code"
+            :course="course"
+        />
     </v-container>
 </template>
 
@@ -40,6 +50,7 @@ import TimetableEvent from "./TimetableEvent";
 import NoTimetablePopup from "./NoTimetablePopup";
 import HourSwitch from "./HourSwitch";
 import WeekdaySwitch from "./WeekdaySwitch";
+import TimetableCourseCard from "../components/TimetableCourseCard";
 import { mapMutations, mapGetters } from "vuex";
 
 const convertSecondsToHours = (seconds) => {
@@ -53,6 +64,7 @@ export default {
         WeekdaySwitch,
         HourSwitch,
         NoTimetablePopup,
+        TimetableCourseCard,
     },
     props: {
         timetable: {
@@ -60,7 +72,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["getLockedSections"]),
+        ...mapGetters(["getLockedSections", "selectedCourses"]),
         timetableStart() {
             var earliest = 9;
             for (let day in this.timetable) {
@@ -100,6 +112,17 @@ export default {
             }
             return result;
         },
+        // filters user lock timeslots
+        getSelectedCourses() {
+            this.timetable; //force re-render the selected courses
+            const filteredCourses = {};
+            for (var code in this.selectedCourses) {
+                if (!code.includes("Lock")) {
+                    filteredCourses[code] = this.selectedCourses[code];
+                }
+            }
+            return filteredCourses;
+        },
     },
     data() {
         return {
@@ -135,7 +158,7 @@ export default {
                 } else if (eventStart >= this.timetableEnd) {
                     break;
                 }
-                
+
                 //Pad empty hour or half hours before the event
                 //If event starts at whole hour
                 if (Number.isInteger(eventStart - currTime)) {
@@ -147,7 +170,7 @@ export default {
                         });
                         invalidStart--;
                     }
-                } 
+                }
                 //If event starts at half hour
                 else {
                     //there is half hour exist
@@ -201,10 +224,13 @@ export default {
                 }
 
                 currTime = eventEnd;
-        
+
                 //If last event, pad empty events after it
-                if (i === meetingSections.length - 1 || 
-                convertSecondsToHours(meetingSections[i+1].start) >= this.timetableEnd) {
+                if (
+                    i === meetingSections.length - 1 ||
+                    convertSecondsToHours(meetingSections[i + 1].start) >=
+                        this.timetableEnd
+                ) {
                     //half hour
                     if (!Number.isInteger(currTime)) {
                         result.push({

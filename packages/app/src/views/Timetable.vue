@@ -1,28 +1,24 @@
 <template>
     <div :style="contentHeight">
         <help-dial />
-        <!-- <v-col class="pb-0 pr-0; timetableColumn"> -->
-        <!-- <smooth-scrollbar> -->
-            <v-carousel
-                v-model="whichTimetable"
-                :height="contentHeight"
-                hide-delimiters
-                light
-                :show-arrows="false"
-            >
-                <v-carousel-item>
-                    <smooth-scrollbar :style="contentHeightCSS">
-                        <timetable :timetable="timetable" id="exportMe" />
-                    </smooth-scrollbar>
-                </v-carousel-item>
-                <v-carousel-item>
-                    <smooth-scrollbar :style="contentHeightCSS">
-                        <timetable :timetable="timetable"/>
-                    </smooth-scrollbar>
-                </v-carousel-item>
-            </v-carousel>
-        <!-- </smooth-scrollbar> -->
-        <!-- </v-col> -->
+        <v-carousel
+            v-model="whichTimetable"
+            :height="contentHeight"
+            hide-delimiters
+            light
+            :show-arrows="false"
+        >
+            <v-carousel-item>
+                <smooth-scrollbar :style="contentHeightCSS">
+                    <timetable :timetable="timetable" id="exportMe" />
+                </smooth-scrollbar>
+            </v-carousel-item>
+            <v-carousel-item>
+                <smooth-scrollbar :style="contentHeightCSS">
+                    <timetable :timetable="timetable" />
+                </smooth-scrollbar>
+            </v-carousel-item>
+        </v-carousel>
     </div>
 </template>
 
@@ -42,7 +38,7 @@ export default {
             return `height: ${window.innerHeight - 110}px`;
         },
         contentHeight() {
-            return window.innerHeight - 100
+            return window.innerHeight - 100;
         },
         whichTimetable() {
             if (this.getSemesterStatus === "F") {
