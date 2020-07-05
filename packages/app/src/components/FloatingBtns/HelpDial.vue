@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import TutorialBtn from "../components/TutorialBtn";
-import AboutBtn from "../components/AboutBtn";
-import ExportBtn from "../components/ExportBtn";
+import TutorialBtn from "./TutorialBtn";
+import AboutBtn from "./AboutBtn";
+import ExportBtn from "./ExportBtn";
 
 export default {
     components: {

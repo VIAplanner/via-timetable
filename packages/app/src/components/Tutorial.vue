@@ -23,7 +23,7 @@
                                 <p class="text-h5 ml-3 mb-0">{{ tut.step }}</p>
                                 <p class="text-h4 ml-3">{{ tut.title }}</p>
                                 <v-img eager :src="tut.path"></v-img>
-                                <p class="text-h6 ml-3 mb-0 mt-4 text-center">
+                                <p class="text-h6 ml-3 mb-1 mt-4 text-center">
                                     {{ tut.description }}
                                 </p>
                             </v-col>
@@ -60,7 +60,7 @@ export default {
                     title: "Adjust your times",
                     path: require("../assets/tut2.gif"),
                     description:
-                        "Click on the pencil icon or the course itself to adjust the times",
+                        "Click on the pencil icon or the course to adjust the times",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
                 },
                 {

@@ -24,7 +24,7 @@
 
 <script>
 import Timetable from "../components/Timetable";
-import HelpDial from "../components/HelpDial";
+import HelpDial from "../components/FloatingBtns/HelpDial";
 import { mapGetters } from "vuex";
 
 export default {
