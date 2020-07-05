@@ -78,6 +78,22 @@ export default {
                         "Click on the top right to switch between fall and winter",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
                 },
+                {
+                    step: "Step 5",
+                    title: "Export timetables",
+                    path: require("../../assets/tut5.gif"),
+                    description:
+                        "Export your timetables as png",
+                    backgroundColor: genColor(0.7, 0.85).hexString(),
+                },
+                {
+                    step: "Step 6",
+                    title: "Lock Courses",
+                    path: require("../../assets/tut6.gif"),
+                    description:
+                        "Lock your courses in place and we won't move it",
+                    backgroundColor: genColor(0.7, 0.85).hexString(),
+                },
             ],
         };
     },

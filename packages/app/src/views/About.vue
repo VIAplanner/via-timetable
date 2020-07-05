@@ -400,7 +400,7 @@
                             <h1 class="ma-3">Features</h1>
                             <v-carousel
                                 show-arrows-on-hover
-                                :height="$isMobile() ? 350 : 600"
+                                :height="$isMobile() ? 350 : 780"
                             >
                                 <v-carousel-item
                                     v-for="(path, text) in slideData"
@@ -524,6 +524,7 @@ export default {
                 "Block Times: can't go to class during a time? Just block it": require("../assets/slide3.gif"),
                 "Lock Sections: lock specific sections and we won't change it": require("../assets/slide4.gif"),
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
+                "Export Timetable: export your timetable as png": require("../assets/slide6.gif"),
             },
             mobileAlert: false,
             darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
