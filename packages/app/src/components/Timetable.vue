@@ -1,48 +1,62 @@
 <template>
-    <v-container class="background" style="padding-right: 50px !important">
-        <v-row>
-            <NoTimetablePopup></NoTimetablePopup>
-            <v-col class="time-axis">
-                <div class="top-margin"></div>
-                <v-row
-                    v-for="(time, index) in timeRange"
-                    :key="index"
-                    class="time-axis-number"
-                >
-                    <hour-switch
-                        v-if="index != timeRange.length - 1"
-                        :time="time"
-                        :last="false"
-                    ></hour-switch>
-                    <hour-switch v-else :time="time" :last="true"></hour-switch>
-                </v-row>
-            </v-col>
-            <v-col cols="11">
-                <v-row name="week-days-axis">
-                    <v-col v-for="weekday in weekdays" :key="weekday">
-                        <weekday-switch :weekday="weekday"></weekday-switch>
-                    </v-col>
-                </v-row>
-                <v-row name="timetable-content">
-                    <v-col v-for="(meetingSections, day) in timetable" :key="day">
-                        <div
-                            v-for="event in getEventsForDay(meetingSections)"
-                            :key="event.start"
+    <div>
+        <v-container class="background" style="padding-right: 50px !important">
+            <v-row>
+                <NoTimetablePopup></NoTimetablePopup>
+                <v-col class="time-axis">
+                    <div class="top-margin"></div>
+                    <v-row
+                        v-for="(time, index) in timeRange"
+                        :key="index"
+                        class="time-axis-number"
+                    >
+                        <hour-switch
+                            v-if="index != timeRange.length - 1"
+                            :time="time"
+                            :last="false"
+                        ></hour-switch>
+                        <hour-switch v-else :time="time" :last="true"></hour-switch>
+                    </v-row>
+                </v-col>
+                <v-col cols="11">
+                    <v-row name="week-days-axis">
+                        <v-col v-for="weekday in weekdays" :key="weekday">
+                            <weekday-switch :weekday="weekday"></weekday-switch>
+                        </v-col>
+                    </v-row>
+                    <v-row name="timetable-content">
+                        <v-col
+                            v-for="(meetingSections, day) in timetable"
+                            :key="day"
                         >
-                            <timetable-event :event="event" v-if="event.start > 0" />
-                            <timetable-event :event="event" v-else :currDay="day" />
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-col>
-        </v-row>
-        <timetable-course-card
-            class="my-4 mx-8"
-            v-for="(course, code) in getSelectedCourses"
-            :key="code"
-            :course="course"
-        />
-    </v-container>
+                            <div
+                                v-for="event in getEventsForDay(meetingSections)"
+                                :key="event.start"
+                            >
+                                <timetable-event
+                                    :event="event"
+                                    v-if="event.start > 0"
+                                />
+                                <timetable-event
+                                    :event="event"
+                                    v-else
+                                    :currDay="day"
+                                />
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-col>
+            </v-row>
+        </v-container>
+        <div v-if="getExportOverlay">
+            <timetable-course-card
+                class="my-4 mr-7 ml-11"
+                v-for="(course, code) in getSelectedCourses"
+                :key="code"
+                :course="course"
+            />
+        </div>
+    </div>
 </template>
 
 <script>
@@ -72,7 +86,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["getLockedSections", "selectedCourses"]),
+        ...mapGetters(["getLockedSections", "selectedCourses", "getExportOverlay"]),
         timetableStart() {
             var earliest = 9;
             for (let day in this.timetable) {
