@@ -67,7 +67,7 @@ export default {
                     step: "Step 3",
                     title: "Select and lock",
                     path: require("../../assets/tut3.gif"),
-                    description: "Lock times in place and we won't change it",
+                    description: "Block rows and columns and we won't schedule those times",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
                 },
                 {
