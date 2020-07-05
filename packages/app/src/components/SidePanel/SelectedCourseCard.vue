@@ -86,7 +86,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import CourseSectionPicker from "../components/CourseSectionPicker";
+import CourseSectionPicker from "../Popup/CourseSectionPicker";
 
 export default {
     name: "selected-course-card",

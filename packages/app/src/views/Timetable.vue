@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Timetable from "../components/Timetable";
+import Timetable from "../components/Timetable/Timetable";
 import HelpDial from "../components/FloatingBtns/HelpDial";
 import { mapGetters } from "vuex";
 

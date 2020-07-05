@@ -16,7 +16,7 @@
 
 <script>
 import { mapGetters} from "vuex";
-import SelectedCourseCard from "../components/SelectedCourseCard";
+import SelectedCourseCard from "./SelectedCourseCard";
 import VueCustomScrollbar from 'vue-custom-scrollbar';
 
 export default {

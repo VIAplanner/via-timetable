@@ -199,7 +199,6 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 import OverwriteLockedSectionPopup from "./OverwriteLockedSectionPopup";
 
 export default {
-    name: "course-section-picker",
     components: {
         OverwriteLockedSectionPopup,
     },

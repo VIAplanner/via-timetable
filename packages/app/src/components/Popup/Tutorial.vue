@@ -50,7 +50,7 @@ export default {
                 {
                     step: "Step 1",
                     title: "Select some courses",
-                    path: require("../assets/tut1.gif"),
+                    path: require("../../assets/tut1.gif"),
                     description:
                         "Just click on a course and we will generate a timetable",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
@@ -58,7 +58,7 @@ export default {
                 {
                     step: "Step 2",
                     title: "Adjust your times",
-                    path: require("../assets/tut2.gif"),
+                    path: require("../../assets/tut2.gif"),
                     description:
                         "Click on the pencil icon or the course to adjust the times",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
@@ -66,14 +66,14 @@ export default {
                 {
                     step: "Step 3",
                     title: "Select and lock",
-                    path: require("../assets/tut3.gif"),
+                    path: require("../../assets/tut3.gif"),
                     description: "Lock times in place and we won't change it",
                     backgroundColor: genColor(0.7, 0.85).hexString(),
                 },
                 {
                     step: "Step 4",
                     title: "Switch between semesters",
-                    path: require("../assets/tut4.gif"),
+                    path: require("../../assets/tut4.gif"),
                     description:
                         "Click on the top right to switch between fall and winter",
                     backgroundColor: genColor(0.7, 0.85).hexString(),

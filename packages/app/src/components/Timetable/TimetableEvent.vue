@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import CourseSectionPicker from "../components/CourseSectionPicker";
+import CourseSectionPicker from "../Popup/CourseSectionPicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 const convertSecondsToHours = (seconds) => {
     return seconds / 3600;

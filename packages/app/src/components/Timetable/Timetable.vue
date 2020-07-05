@@ -61,10 +61,10 @@
 
 <script>
 import TimetableEvent from "./TimetableEvent";
-import NoTimetablePopup from "./NoTimetablePopup";
+import NoTimetablePopup from "../Popup/NoTimetablePopup";
 import HourSwitch from "./HourSwitch";
 import WeekdaySwitch from "./WeekdaySwitch";
-import TimetableCourseCard from "../components/TimetableCourseCard";
+import TimetableCourseCard from "./TimetableCourseCard";
 import { mapMutations, mapGetters } from "vuex";
 
 const convertSecondsToHours = (seconds) => {

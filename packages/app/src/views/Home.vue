@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import CourseSearchBar from "../components/CourseSearchBar";
-import Tutorial from "../components/Tutorial";
-import SwitchSem from "../components/SwitchSem";
+import CourseSearchBar from "../components/AppBar/CourseSearchBar";
+import Tutorial from "../components/Popup/Tutorial";
+import SwitchSem from "../components/AppBar/SwitchSem";
+import SideBar from "../components/SidePanel/SideBar";
 import { mapGetters } from "vuex";
-import SideBar from "../components/SideBar";
 
 export default {
     created() {

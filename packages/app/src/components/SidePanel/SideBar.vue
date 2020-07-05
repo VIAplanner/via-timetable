@@ -39,7 +39,7 @@
     </div>
 </template>
 <script>
-import SelectedCourseCard from "../components/SelectedCourseCard";
+import SelectedCourseCard from "./SelectedCourseCard";
 import { mapGetters } from "vuex";
 
 export default {
@@ -71,9 +71,9 @@ export default {
         },
         imgSrc() {
             if (this.getSemesterStatus === "F") {
-                return require("../assets/fall-background.png");
+                return require("../../assets/fall-background.png");
             } else {
-                return require("../assets/winter-background.png");
+                return require("../../assets/winter-background.png");
             }
         },
         filterCourses() {
