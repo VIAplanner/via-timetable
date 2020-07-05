@@ -242,6 +242,15 @@
                                 </v-timeline-item>
 
                                 <v-timeline-item
+                                    left
+                                    color="green lighten-1"
+                                    class="text-lg-right text-left"
+                                    fill-dot
+                                >
+                                    Brand new UI
+                                </v-timeline-item>
+
+                                <v-timeline-item
                                     color="red lighten-1"
                                     fill-dot
                                     right
@@ -269,7 +278,10 @@
                                                     Course suggestion based on
                                                     programs (selected programs)
                                                 </li>
-                                                <li>UI improvement such as minimizing scrolling</li>
+                                                <li>
+                                                    UI improvement such as minimizing
+                                                    scrolling
+                                                </li>
                                             </ul>
                                             <v-btn
                                                 class="ma-4 start"
@@ -330,7 +342,7 @@
                                             ? ['center', 'ma-3']
                                             : ['center', 'mt-3', 'mb-7', 'mr-5']
                                     "
-                                    src="../assets/img2.gif"
+                                    src="../assets/img1.gif"
                                     max-width="800"
                                     :eager="true"
                                 ></v-img>
@@ -348,7 +360,7 @@
                                             ? ['center', 'ma-3']
                                             : ['center', 'mt-3', 'mb-7', 'ml-5']
                                     "
-                                    src="../assets/img3.gif"
+                                    src="../assets/img2.gif"
                                     max-width="800"
                                     :eager="true"
                                 ></v-img>
@@ -368,7 +380,7 @@
                                         Block Times Off
                                     </h1>
                                     <h3 class="font-weight-medium">
-                                        Can't go to school on Mondays?
+                                        Can't go to school on Tuesdays?
                                     </h3>
                                     <h3
                                         style="margin-bottom: 40px;"
@@ -388,7 +400,7 @@
                             <h1 class="ma-3">Features</h1>
                             <v-carousel
                                 show-arrows-on-hover
-                                :height="$isMobile() ? 350 : 600"
+                                :height="$isMobile() ? 350 : 780"
                             >
                                 <v-carousel-item
                                     v-for="(path, text) in slideData"
@@ -512,6 +524,7 @@ export default {
                 "Block Times: can't go to class during a time? Just block it": require("../assets/slide3.gif"),
                 "Lock Sections: lock specific sections and we won't change it": require("../assets/slide4.gif"),
                 "Switch Semesters: easily switch between your timetables": require("../assets/slide5.gif"),
+                "Export Timetable: export your timetable as png": require("../assets/slide6.gif"),
             },
             mobileAlert: false,
             darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,

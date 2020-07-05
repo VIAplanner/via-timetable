@@ -1,67 +1,65 @@
 <template>
-    <div>
-        <v-overlay :value="getExportOverlay">
-            <v-row>
-                <h1 class="ma-3">Exporting</h1>
-            </v-row>
-            <v-row justify="center">
-                <v-progress-circular
-                    indeterminate
-                    size="64"
-                    style="margin-left: auto ; margin-right: auto ;"
-                ></v-progress-circular>
-            </v-row>
-        </v-overlay>
-        <v-row>
-            <v-col class="py-0">
-                <v-toolbar dark color="#012B5C">
-                    <v-img
-                        src="../assets/VIA-Planner-White.png"
-                        max-width="130"
-                        contain
-                    />
-                    <course-search-bar
-                        class="mx-4"
-                    />
-                    <switch-sem />
-                </v-toolbar>
-            </v-col>
-        </v-row>
+    <v-row>
+        <v-col class="ma-0 pt-0 pb-0">
+            <!-- Popup tutorial -->
+            <tutorial />
+            <!--Exporting Progress Overlay-->
+            <v-overlay :value="getExportOverlay">
+                <v-row>
+                    <h1 class="ma-3">Exporting</h1>
+                </v-row>
+                <v-row justify="center">
+                    <v-progress-circular
+                        indeterminate
+                        size="64"
+                        style="margin-left: auto ; margin-right: auto ;"
+                    ></v-progress-circular>
+                </v-row>
+            </v-overlay>
 
-        <v-container id="exportMe">
+            <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
+                <v-img
+                    src="../assets/VIA-Planner-White.png"
+                    max-width="130"
+                    contain
+                    class="ma-2 ml-1"
+                />
+                <v-tab>PROGRAMS</v-tab>
+                <v-tab>TIMETABLE</v-tab>
+                <course-search-bar style="margin: auto" />
+                <switch-sem style="margin: auto" class="pr-3" />
+            </v-tabs>
             <v-row>
-                <help-dial />
-                <v-col class="mr-8 pb-0">
-                    <timetable :timetable="timetable" />
+                <v-col class="pa-0">
+                    <router-view />
+                    <v-footer class="white">
+                        <v-row>
+                            <v-col class="pa-0">
+                                <h1
+                                    style="text-align:center"
+                                    class="text-subtitle-1"
+                                >
+                                    Copyright © 2020 VIAplanner - Data updated for
+                                    the 2020 - 2021 school year
+                                </h1>
+                            </v-col>
+                        </v-row>
+                    </v-footer>
+                </v-col>
+                <v-col cols="3" class="grey lighten-4 mr-2">
+                    <side-bar />
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col class="pt-0">
-                    <h1 style="text-align:center" class="text-subtitle-1">
-                        Copyright © 2020 VIAplanner - Data updated for the 2020 -
-                        2021 school year
-                    </h1>
-                    <tutorial />
-                    <timetable-course-card
-                        class="my-4 mx-8"
-                        v-for="(course, code) in getSelectedCourses(selectedCourses)"
-                        :key="code"
-                        :course="course"
-                    />
-                </v-col>
-            </v-row>
-        </v-container>
-    </div>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
-import CourseSearchBar from "../components/CourseSearchBar";
-import Timetable from "../components/Timetable";
-import Tutorial from "../components/Tutorial";
-import TimetableCourseCard from "../components/TimetableCourseCard";
-import SwitchSem from "../components/SwitchSem";
-import HelpDial from "../components/HelpDial";
-import { mapGetters} from "vuex";
+import CourseSearchBar from "../components/AppBar/CourseSearchBar";
+import Tutorial from "../components/Popup/Tutorial";
+import SwitchSem from "../components/AppBar/SwitchSem";
+import SideBar from "../components/SidePanel/SideBar";
+import { mapGetters } from "vuex";
 
 export default {
     created() {
@@ -72,46 +70,37 @@ export default {
     components: {
         SwitchSem,
         CourseSearchBar,
-        Timetable,
-        TimetableCourseCard,
         Tutorial,
-        HelpDial,
+        SideBar,
     },
     computed: {
-        ...mapGetters(["selectedCourses", "timetable", "getExportOverlay"]),
-        formattedCourses() {
-            if (!this.courses) {
-                return [];
-            }
-            return this.courses.map((course) => {
-                if (course.code[8] === "F") {
-                    return `🍂   ${course.code}: ${course.name}`;
-                } else if (course.code[8] === "S") {
-                    return `❄️   ${course.code}: ${course.name}`;
-                } else {
-                    return `🍂❄️ ${course.code}: ${course.name}`;
-                }
-            });
-        },
+        ...mapGetters(["getSemesterStatus", "getExportOverlay"]),
     },
     data() {
         return {
-            optimizationOpen: false,
+            scrollBarSettings: {
+                wheelPropagation: false,
+                maxScrollbarLength: 240,
+                swipeEasing: true,
+                wheelSpeed: 0.1,
+            },
+            whichTab: 1,
         };
     },
-    methods: {
-        // filters user lock timeslots
-        getSelectedCourses(selectedCourses) {
-            const filteredCourses = {};
-
-            for (var code in selectedCourses) {
-                if (!code.includes("Lock")) {
-                    filteredCourses[code] = selectedCourses[code];
-                }
+    watch: {
+        whichTab() {
+            if (this.whichTab === 0) {
+                this.$router.push({ name: "program" });
+            } else if (this.whichTab === 1) {
+                this.$router.push({ name: "timetable" });
             }
-
-            return filteredCourses;
         },
     },
 };
 </script>
+<style scoped>
+.timetableColumn {
+    padding-top: 0px;
+    height: 100%;
+}
+</style>
