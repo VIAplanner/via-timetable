@@ -132,6 +132,12 @@ export default new Vuex.Store({
                 let whichDay = payload.course.meeting_sections[0].times[0].day;
 
                 if (state.semesterStatus === "F") {
+
+                    // already in the timetable
+                    if (payload.course.courseCode in state.fallSelectedCourses) {
+                        return
+                    }
+
                     state.fallSelectedCourses[payload.course.courseCode] =
                         payload.course;
 
@@ -149,6 +155,12 @@ export default new Vuex.Store({
                         return a.start - b.start;
                     });
                 } else {
+
+                    // already in the timetable
+                    if (payload.course.courseCode in state.winterSelectedCourses) {
+                        return
+                    }
+
                     state.winterSelectedCourses[payload.course.courseCode] =
                         payload.course;
 
@@ -206,19 +218,35 @@ export default new Vuex.Store({
             state.winterSelectedCourses = payload[1];
         },
         lockSection(state, payload) {
+            let index;
             if (payload.slice(0, 4) === "Lock") {
                 if (state.semesterStatus === "F") {
-                    state.fallLockedSections.push(payload);
+                    index = state.fallLockedSections.indexOf(payload);
+                    if (index == -1) {
+                        state.fallLockedSections.push(payload);
+                    }
                 } else {
-                    state.winterLockedSections.push(payload);
+                    index = state.winterLockedSections.indexOf(payload);
+                    if (index == -1) {
+                        state.winterLockedSections.push(payload);
+                    }
                 }
             } else if (payload[8] === "F") {
-                state.fallLockedSections.push(payload);
+                index = state.fallLockedSections.indexOf(payload);
+                if (index === -1) {
+                    state.fallLockedSections.push(payload);
+                }
             } else if (payload[8] === "S") {
-                state.winterLockedSections.push(payload);
+                index = state.winterLockedSections.indexOf(payload);
+                if (index === -1) {
+                    state.winterLockedSections.push(payload);
+                }
             } else if (payload[8] === "Y") {
-                state.fallLockedSections.push(payload);
-                state.winterLockedSections.push(payload);
+                index = state.fallLockedSections.indexOf(payload);
+                if (index === -1) {
+                    state.fallLockedSections.push(payload);
+                    state.winterLockedSections.push(payload);
+                }
             }
         },
         unlockSection(state, payload) {
@@ -236,8 +264,7 @@ export default new Vuex.Store({
                         state.winterLockedSections.splice(index, 1);
                     }
                 }
-            }
-            if (payload[8] === "F") {
+            } else if (payload[8] === "F") {
                 //Fall
                 index = state.fallLockedSections.indexOf(payload);
                 if (index != -1) {
@@ -405,8 +432,6 @@ export default new Vuex.Store({
         },
         //Recalculate timetable when switching sections with conflict
         resetTimetable(context, payload) {
-            // Save the timetable before it gets reset
-
             if (!payload) {
                 context.dispatch("saveTimetable");
             }
