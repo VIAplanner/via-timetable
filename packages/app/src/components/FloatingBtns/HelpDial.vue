@@ -5,7 +5,6 @@
         bottom
         fixed
         direction="top"
-        open-on-hover
         transition="scale-transition"
     >
         <template v-slot:activator>

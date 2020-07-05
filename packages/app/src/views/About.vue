@@ -134,6 +134,21 @@
                                         style="text-transform: none; border-width: medium"
                                         class="ma-4"
                                         @click="
+                                            $isMobile()
+                                                ? (mobileAlert = true)
+                                                : $router.push({ name: 'home' })
+                                        "
+                                    >
+                                        Try out the Alpha
+                                    </v-btn>
+                                    <v-btn
+                                        rounded
+                                        color="white"
+                                        x-large
+                                        outlined
+                                        style="text-transform: none; border-width: medium"
+                                        class="ma-4"
+                                        @click="
                                             $vuetify.goTo('#schedule', {
                                                 offset: 78,
                                             })
@@ -158,14 +173,15 @@
                                 <v-timeline-item
                                     color="green lighten-1"
                                     fill-dot
-                                    icon="mdi-party-popper"
                                     left
                                 >
                                     <v-card color="green lighten-1">
                                         <v-card-title color="green lighten-1">
                                             <v-row>
                                                 <v-col>
-                                                    <h1 class="text-start">Alpha</h1>
+                                                    <h1 class="text-start">
+                                                        PreAlpha
+                                                    </h1>
                                                     <h1
                                                         class="text-start text-subtitle-1"
                                                     >
@@ -195,9 +211,58 @@
                                                     semesters)
                                                 </li>
                                             </ul>
+                                            <v-btn class="ma-4 start" disabled>
+                                                Upgraded to Alpha
+                                            </v-btn>
+                                        </v-sheet>
+                                    </v-card>
+                                </v-timeline-item>
+
+                                <v-timeline-item
+                                    color="blue lighten-1"
+                                    fill-dot
+                                    icon="mdi-party-popper"
+                                    right
+                                    large
+                                >
+                                    <v-card color="blue lighten-1">
+                                        <v-card-title color="blue lighten-1">
+                                            <v-row>
+                                                <v-col>
+                                                    <h1 class="text-start">Alpha</h1>
+                                                    <h1
+                                                        class="text-start text-subtitle-1"
+                                                    >
+                                                        Available Now
+                                                    </h1>
+                                                </v-col>
+                                                <v-icon size="64">
+                                                    mdi-progress-upload
+                                                </v-icon>
+                                            </v-row>
+                                        </v-card-title>
+                                        <v-sheet class="pa-5 text-left">
+                                            <ul>
+                                                <li>
+                                                    Brand new UI!
+                                                </li>
+                                                <li>
+                                                    Course data updated for 2020 -
+                                                    2021 school year (UTM)
+                                                </li>
+                                                <li>
+                                                    Courses now show their delivery
+                                                    methods
+                                                </li>
+                                                <li>
+                                                    Export timetable as png
+                                                </li>
+                                                <li>Horizontal lock</li>
+                                                <li>Bug fixes</li>
+                                            </ul>
                                             <v-btn
                                                 class="ma-4 start"
-                                                color="green lighten-1"
+                                                color="blue lighten-1"
                                                 dark
                                                 @click="
                                                     $isMobile()
@@ -213,48 +278,7 @@
                                     </v-card>
                                 </v-timeline-item>
 
-                                <v-timeline-item
-                                    right
-                                    color="green lighten-1"
-                                    class="text-left"
-                                    fill-dot
-                                >
-                                    Course data updated for 2020 - 2021 school year
-                                    (UTM)
-                                </v-timeline-item>
-
-                                <v-timeline-item
-                                    left
-                                    color="green lighten-1"
-                                    class="text-lg-right text-left"
-                                    fill-dot
-                                >
-                                    Courses now show their delivery methods
-                                </v-timeline-item>
-
-                                <v-timeline-item
-                                    right
-                                    color="green lighten-1"
-                                    class="text-left"
-                                    fill-dot
-                                >
-                                    Export timetable as png
-                                </v-timeline-item>
-
-                                <v-timeline-item
-                                    left
-                                    color="green lighten-1"
-                                    class="text-lg-right text-left"
-                                    fill-dot
-                                >
-                                    Brand new UI
-                                </v-timeline-item>
-
-                                <v-timeline-item
-                                    color="red lighten-1"
-                                    fill-dot
-                                    right
-                                >
+                                <v-timeline-item color="red lighten-1" fill-dot left>
                                     <v-card color="red lighten-1">
                                         <v-card-title class="red lighten-1">
                                             <v-row>
@@ -267,21 +291,26 @@
                                                     </h1>
                                                 </v-col>
                                                 <v-icon size="64">
-                                                    mdi-server
+                                                    mdi-nuke
                                                 </v-icon>
                                             </v-row>
                                         </v-card-title>
                                         <v-sheet class="pa-5 text-left">
                                             <ul>
-                                                <li>Save timetables as png</li>
                                                 <li>
                                                     Course suggestion based on
-                                                    programs (selected programs)
+                                                    programs (only for selected
+                                                    programs)
+                                                </li>
+                                                <li>Bird course recommendations</li>
+                                                <li>
+                                                    More UI improvement
                                                 </li>
                                                 <li>
-                                                    UI improvement such as minimizing
-                                                    scrolling
+                                                    Work flawlessly with
+                                                    self-conflicting courses
                                                 </li>
+                                                <li>Bug fixes</li>
                                             </ul>
                                             <v-btn
                                                 class="ma-4 start"
