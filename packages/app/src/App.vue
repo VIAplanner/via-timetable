@@ -11,4 +11,8 @@
     max-width: 100%;
     overflow: hidden;
 }
+.v-toolbar__content, .v-toolbar__extension{
+    padding-left: 10px !important;
+    padding-right: 0px !important;
+}
 </style>

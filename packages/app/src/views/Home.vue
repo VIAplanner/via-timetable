@@ -17,18 +17,25 @@
                 </v-row>
             </v-overlay>
 
-            <v-tabs dark background-color="#012B5C" height="58px" v-model="whichTab">
+            <v-toolbar dark color="#012B5C" height="58px">
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     max-width="130"
                     contain
                     class="ma-2 ml-1"
                 />
-                <v-tab>PROGRAMS</v-tab>
-                <v-tab>TIMETABLE</v-tab>
+                <v-tabs
+                    grow
+                    show-arrows
+                    v-model="whichTab"
+                    style="max-width: 250px"
+                >
+                    <v-tab>PROGRAMS</v-tab>
+                    <v-tab>TIMETABLE</v-tab>
+                </v-tabs>
                 <course-search-bar style="margin: auto" />
-                <switch-sem style="margin: auto" class="pr-3" />
-            </v-tabs>
+                <switch-sem style="margin: auto" />
+            </v-toolbar>
             <v-row>
                 <v-col class="pa-0">
                     <router-view />

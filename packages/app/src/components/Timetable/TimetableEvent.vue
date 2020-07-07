@@ -280,7 +280,7 @@ export default {
   height: 192px;
 }
 .four-hours {
-  height: 336px;
+  height: 256px;
 }
 .course-code {
   margin-left: 3px;
