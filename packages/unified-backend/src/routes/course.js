@@ -6,10 +6,6 @@ const router = new express.Router()
 router.get("/courses/searchbar", async (req, res) => {
     try {
 
-        if (req.query.api_key != process.env.API_KEY) {
-            throw new Error("Invalid API key")
-        }
-
         const allCourses = await Course.find({})
         let allSearchBarValues = []
         for (let course of allCourses) {
@@ -27,9 +23,6 @@ router.get("/courses/searchbar", async (req, res) => {
 router.get("/courses/:courseCode", async (req, res) => {
 
     try {
-        if (req.query.api_key != process.env.API_KEY) {
-            throw new Error("Invalid API key")
-        }
 
         const course = await Course.findOne({ courseCode: req.params.courseCode })
 
@@ -50,10 +43,6 @@ router.get("/courses/:courseCode", async (req, res) => {
 router.get("/courses", async (req, res) => {
 
     try {
-        if (req.query.api_key != process.env.API_KEY) {
-            throw new Error("Invalid API key")
-        }
-
         const allCourses = await Course.find({})
         res.send(allCourses)
     } catch (e) {
@@ -66,10 +55,6 @@ router.get("/courses", async (req, res) => {
 router.post("/courses", async (req, res) => {
 
     try {
-        if (req.query.api_key != process.env.API_KEY) {
-            throw new Error("Invalid API key")
-        }
-
         const currCourse = new Course(req.body)
 
         await currCourse.save()
