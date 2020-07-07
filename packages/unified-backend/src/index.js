@@ -6,7 +6,13 @@ const courseRouter = require("./routes/course")
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(cors()) // allow access from all origins
+let corsOptions = {
+    origin: 'https://viaplanner.ca',
+    optionsSuccessStatus: 200
+}
+
+
+app.use(cors(corsOptions))
 app.use(express.json()) // parse request as json
 app.use(courseRouter)
 
