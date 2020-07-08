@@ -62,6 +62,7 @@
                     outlined
                     color="white"
                     target="blank"
+                    class="mr-3"
                 >
                     <v-icon small left>mdi-star</v-icon>
                     <animated-number
@@ -182,11 +183,6 @@
                                                     <h1 class="text-start">
                                                         PreAlpha
                                                     </h1>
-                                                    <h1
-                                                        class="text-start text-subtitle-1"
-                                                    >
-                                                        Available Now
-                                                    </h1>
                                                 </v-col>
                                                 <v-icon size="64">
                                                     mdi-notebook
@@ -303,6 +299,7 @@
                                                     programs)
                                                 </li>
                                                 <li>Bird course recommendations</li>
+                                                <li>Save timetable in the browser for when you visit again</li>
                                                 <li>
                                                     More UI improvement
                                                 </li>
