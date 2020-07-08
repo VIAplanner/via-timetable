@@ -39,18 +39,6 @@ router.get("/courses/:courseCode", async (req, res) => {
 
 })
 
-// route to get all courses
-router.get("/courses", async (req, res) => {
-
-    try {
-        const allCourses = await Course.find({})
-        res.send(allCourses)
-    } catch (e) {
-        res.status(500).send({ message: e.message })
-    }
-
-})
-
 // route for create a course
 router.post("/courses", async (req, res) => {
 

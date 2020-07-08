@@ -6,6 +6,7 @@ from tqdm import tqdm  # progress bar magic
 
 
 # the mongodb server
+# the url is deprecated
 cluster = MongoClient(
     "mongodb+srv://user_1:coursetools@coursetoolscluster-wjb51.mongodb.net/test?retryWrites=true&w=majority")
 db = cluster["UofT"]
