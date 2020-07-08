@@ -28,7 +28,6 @@ export default {
     },
     async mounted() {
         let rawCourses = [];
-
         try {
             rawCourses = await axios.get(
                 `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`
