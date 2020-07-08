@@ -31,7 +31,7 @@ export default {
 
         try {
             rawCourses = await axios.get(
-                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar?api_key=${process.env.VUE_APP_API_KEY}`
+                `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`
             );
             rawCourses = rawCourses.data;
         } catch (e) {
@@ -109,7 +109,7 @@ export default {
 
             try {
                 course = await axios.get(
-                    `${process.env.VUE_APP_API_BASE_URL}/courses/${courseCode}?api_key=${process.env.VUE_APP_API_KEY}`
+                    `${process.env.VUE_APP_API_BASE_URL}/courses/${courseCode}`
                 );
                 course = course.data;
             } catch (e) {
