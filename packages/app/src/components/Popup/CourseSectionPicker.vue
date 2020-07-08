@@ -5,191 +5,212 @@
             @Cancel="clearTempVars"
         ></OverwriteLockedSectionPopup>
         <v-toolbar :color="course.color" dark style="z-index: 1">
-            <v-toolbar-title class="text-wrap"
-                >{{ course.courseCode }} {{ course.name }}</v-toolbar-title
-            >
+            <v-toolbar-title class="text-wrap ml-2">
+                {{ course.courseCode }} {{ course.name }}
+            </v-toolbar-title>
             <v-spacer />
-            <v-btn text @click="onClickDone">Done</v-btn>
+            <v-btn class="mr-2" text @click="onClickDone">Done</v-btn>
         </v-toolbar>
         <smooth-scrollbar>
-        <v-card-text height="600px">
-            <v-list rounded subheader two-line flat>
-                <v-container
-                    v-for="(meetingSections, activityType) in activities"
-                    :key="activityType"
-                >
-                    <div v-if="meetingSections.length > 0">
-                        <v-radio-group
-                            v-model="selectedMeetingSections[activityType]"
-                            :mandatory="false"
-                            style="top-margin: 0px;"
-                        >
-                            <v-subheader
-                                v-if="meetingSections.length > 0"
-                                class="activity-header"
-                                >{{ activityType }}s</v-subheader
+            <v-card-text height="600px">
+                <v-list rounded subheader two-line flat>
+                    <v-container
+                        v-for="(meetingSections, activityType) in activities"
+                        :key="activityType"
+                    >
+                        <div v-if="meetingSections.length > 0">
+                            <v-radio-group
+                                v-model="selectedMeetingSections[activityType]"
+                                :mandatory="false"
+                                style="top-margin: 0px;"
                             >
-                            <v-row class="activity-label">
-                                <v-col>
-                                    <h4 style="margin-left: 70px;">Activity</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 60px">Time</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 70px">Location</h4>
-                                </v-col>
-                                <v-col>
-                                    <h4 style="margin-left: 37px">Instructor</h4>
-                                </v-col>
-                            </v-row>
-                            <v-divider class="activity-divider" />
-                            <v-list-item-group>
-                                <v-list-item
-                                    v-for="meetingSection in meetingSections"
-                                    :key="meetingSection.sectionCode"
-                                    style="margin-bottom: 0px;"
+                                <v-subheader
+                                    v-if="meetingSections.length > 0"
+                                    class="activity-header"
+                                    >{{ activityType }}s</v-subheader
                                 >
-                                    <v-list-item-action>
-                                        <v-radio
-                                            :value="meetingSection.sectionCode"
-                                        ></v-radio>
-                                    </v-list-item-action>
+                                <v-row class="activity-label">
+                                    <v-col>
+                                        <h4 style="margin-left: 70px;">Activity</h4>
+                                    </v-col>
+                                    <v-col>
+                                        <h4 style="margin-left: 60px">Time</h4>
+                                    </v-col>
+                                    <v-col>
+                                        <h4 style="margin-left: 70px">Location</h4>
+                                    </v-col>
+                                    <v-col>
+                                        <h4 style="margin-left: 37px">Instructor</h4>
+                                    </v-col>
+                                </v-row>
+                                <v-divider class="activity-divider" />
+                                <v-list-item-group>
+                                    <v-list-item
+                                        v-for="meetingSection in meetingSections"
+                                        :key="meetingSection.sectionCode"
+                                        style="margin-bottom: 0px;"
+                                    >
+                                        <v-list-item-action>
+                                            <v-radio
+                                                :value="meetingSection.sectionCode"
+                                            ></v-radio>
+                                        </v-list-item-action>
 
-                                    <v-list-item-content class="content-no-padding">
-                                        <v-row>
-                                            <v-col class="contain" cols="2">
-                                                <v-row class="center-vertical">
-                                                    <v-col>
-                                                        <v-list-item-title>
-                                                            {{
-                                                                meetingSection.sectionCode
-                                                            }}
-                                                        </v-list-item-title>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
+                                        <v-list-item-content
+                                            class="content-no-padding"
+                                        >
+                                            <v-row>
+                                                <v-col class="contain" cols="2">
+                                                    <v-row class="center-vertical">
+                                                        <v-col>
+                                                            <v-list-item-title>
+                                                                {{
+                                                                    meetingSection.sectionCode
+                                                                }}
+                                                            </v-list-item-title>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
 
-                                            <v-col cols="5">
-                                                <v-row
-                                                    v-for="time in meetingSection.times"
-                                                    :key="`${time.day}${time.start}`"
-                                                >
-                                                    <v-col>
-                                                        <v-tooltip
-                                                            top
-                                                            v-if="
-                                                                _checkConflict(
-                                                                    time.day,
-                                                                    time.start,
-                                                                    time.end,
-                                                                    timetableSelectedMeetingSections[
-                                                                        activityType
-                                                                    ]
-                                                                ) != null
-                                                            "
-                                                        >
-                                                            <template
-                                                                v-slot:activator="{
-                                                                    on,
-                                                                }"
-                                                            >
-                                                                <div
-                                                                    class="conflicting-time-orange"
-                                                                    v-on="on"
-                                                                >
-                                                                    {{
-                                                                        getProperDayName(
-                                                                            time.day
-                                                                        ).slice(0, 3)
-                                                                    }}
-                                                                    {{
-                                                                        getFormattedTime(
-                                                                            time.start,
-                                                                            time.end
-                                                                        )
-                                                                    }}
-                                                                </div>
-                                                            </template>
-                                                            <div
-                                                                v-for="conflictSection in _checkConflict(
-                                                                    time.day,
-                                                                    time.start,
-                                                                    time.end,
-                                                                    timetableSelectedMeetingSections[
-                                                                        activityType
-                                                                    ]
-                                                                )"
-                                                                :key="
-                                                                    `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                                                <v-col cols="5">
+                                                    <v-row
+                                                        v-for="time in meetingSection.times"
+                                                        :key="
+                                                            `${time.day}${time.start}`
+                                                        "
+                                                    >
+                                                        <v-col>
+                                                            <v-tooltip
+                                                                top
+                                                                v-if="
+                                                                    _checkConflict(
+                                                                        time.day,
+                                                                        time.start,
+                                                                        time.end,
+                                                                        timetableSelectedMeetingSections[
+                                                                            activityType
+                                                                        ]
+                                                                    ) != null
                                                                 "
                                                             >
-                                                                Conflicts with
+                                                                <template
+                                                                    v-slot:activator="{
+                                                                        on,
+                                                                    }"
+                                                                >
+                                                                    <div
+                                                                        class="conflicting-time-orange"
+                                                                        v-on="on"
+                                                                    >
+                                                                        {{
+                                                                            getProperDayName(
+                                                                                time.day
+                                                                            ).slice(
+                                                                                0,
+                                                                                3
+                                                                            )
+                                                                        }}
+                                                                        {{
+                                                                            getFormattedTime(
+                                                                                time.start,
+                                                                                time.end
+                                                                            )
+                                                                        }}
+                                                                    </div>
+                                                                </template>
+                                                                <div
+                                                                    v-for="conflictSection in _checkConflict(
+                                                                        time.day,
+                                                                        time.start,
+                                                                        time.end,
+                                                                        timetableSelectedMeetingSections[
+                                                                            activityType
+                                                                        ]
+                                                                    )"
+                                                                    :key="
+                                                                        `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                                                                    "
+                                                                >
+                                                                    Conflicts with
+                                                                    {{
+                                                                        conflictSection.conflictString
+                                                                    }}
+                                                                </div>
+                                                            </v-tooltip>
+                                                            <div v-else>
                                                                 {{
-                                                                    conflictSection.conflictString
+                                                                    getProperDayName(
+                                                                        time.day
+                                                                    )
+                                                                }}
+                                                                {{
+                                                                    getFormattedTime(
+                                                                        time.start,
+                                                                        time.end
+                                                                    )
                                                                 }}
                                                             </div>
-                                                        </v-tooltip>
-                                                        <div v-else>
-                                                            {{
-                                                                getProperDayName(
-                                                                    time.day
-                                                                )
-                                                            }}
-                                                            {{
-                                                                getFormattedTime(
-                                                                    time.start,
-                                                                    time.end
-                                                                )
-                                                            }}
-                                                        </div>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
 
-                                            <v-col cols="2">
-                                                <v-row
-                                                    v-for="time in meetingSection.times"
-                                                    :key="`${time.day}${time.start}`"
-                                                >
-                                                    <v-col>
-                                                        <div v-if="time.location.length > 1">
-                                                            {{ time.location }}
-                                                        </div>
-                                                        <div v-else>
-                                                            Online
-                                                        </div>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-col>
+                                                <v-col cols="2">
+                                                    <v-row
+                                                        v-for="time in meetingSection.times"
+                                                        :key="
+                                                            `${time.day}${time.start}`
+                                                        "
+                                                    >
+                                                        <v-col>
+                                                            <div
+                                                                v-if="
+                                                                    time.location
+                                                                        .length > 1
+                                                                "
+                                                            >
+                                                                {{ time.location }}
+                                                            </div>
+                                                            <div v-else>
+                                                                Online
+                                                            </div>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
 
-                                            <v-col class="contain">
-                                                <div
-                                                    v-if="activityType ==='lecture' && 
-                                                    meetingSection.instructors.length != 0"
-                                                    class="center-vertical"
-                                                    style="text-align: center; width: 100%"
-                                                >
-                                                    {{
-                                                        meetingSection.instructors[0]
-                                                    }}
-                                                </div>
-                                                <div
-                                                    v-else
-                                                    class="center-vertical"
-                                                    style="text-align: center; width: 100%"
-                                                    >TBA
-                                                </div>
-                                            </v-col>
-                                        </v-row>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list-item-group>
-                        </v-radio-group>
-                    </div>
-                </v-container>
-            </v-list>
-        </v-card-text>
+                                                <v-col class="contain">
+                                                    <div
+                                                        v-if="
+                                                            activityType ===
+                                                                'lecture' &&
+                                                                meetingSection
+                                                                    .instructors
+                                                                    .length != 0
+                                                        "
+                                                        class="center-vertical"
+                                                        style="text-align: center; width: 100%"
+                                                    >
+                                                        {{
+                                                            meetingSection
+                                                                .instructors[0]
+                                                        }}
+                                                    </div>
+                                                    <div
+                                                        v-else
+                                                        class="center-vertical"
+                                                        style="text-align: center; width: 100%"
+                                                    >
+                                                        TBA
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-list-item-group>
+                            </v-radio-group>
+                        </div>
+                    </v-container>
+                </v-list>
+            </v-card-text>
         </smooth-scrollbar>
     </v-card>
 </template>
