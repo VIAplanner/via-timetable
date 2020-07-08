@@ -18,7 +18,7 @@ fs.readdirSync(outputPath).forEach(async (fileName, index, arr) => {
     let rawCourseData = fs.readFileSync(outputPath + fileName);
     let courseData = JSON.parse(rawCourseData);
     try {
-        await axios.post(`${process.env.API_BASE_URL}/courses?api_key=${process.env.API_KEY}`, courseData)
+        await axios.post(`${process.env.API_BASE_URL}/courses`, courseData)
     } catch (e) {
         console.log(e.message)
     }
