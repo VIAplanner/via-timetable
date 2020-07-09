@@ -8,8 +8,7 @@
             @mouseleave="hovered = false"
             v-on="on"
             class="event"
-            :class="durationClass(event.start, event.end)"
-            :style="{ background: getCourseColor(event.code) }"
+            :style="{ background: getCourseColor(event.code), height: getHeight}"
           >
             <h4>{{ event.code }}</h4>
 
@@ -25,18 +24,16 @@
             <v-row class="px-3">
               <div>{{ event.sectionCode }} ({{deliveryMethod}})</div>
               <v-spacer />
-              <div v-if="locations.length === 2 && durationClass === 'one-hour'">{{locations[0]}}</div>
+              <div v-if="locations.length === 2 && duration === 1">{{locations[0]}}</div>
             </v-row>
 
             <v-row class="px-3">
               <div>{{ getFormattedTime(event.start, event.end) }}</div>
               <v-spacer />
-              <div v-if="locations.length === 1 || durationClass != 'one-hour'">{{locations[0]}}</div>
-              <div
-                v-else-if="locations.length === 2 && durationClass === 'one-hour'"
-              >{{locations[1]}}</div>
+              <div v-if="locations.length === 1 || duration != 1">{{locations[0]}}</div>
+              <div v-else-if="locations.length === 2 && duration === 1">{{locations[1]}}</div>
             </v-row>
-            <v-row class="px-3" v-if="locations.length === 2 && durationClass != 'one-hour'">
+            <v-row class="px-3" v-if="locations.length === 2 && duration != 1">
               <v-spacer />
               <div>{{locations[1]}}</div>
             </v-row>
@@ -47,13 +44,14 @@
     </div>
     <div
       v-else-if="checkHalfHour(event.currStart, event.currEnd)"
-      class="event empty-event half-hour"
+      class="event empty-event"
+      :style="{ height: getHeight }"
     />
     <div
       v-else
       v-ripple
-      class="event empty-event one-hour"
-      :style="dynamicColor"
+      class="event empty-event"
+      :style="{ height: getHeight, background: dynamicColor }"
       @mouseover="hovered = true"
       @mouseleave="hovered = false"
       @click.stop="lockedSectionToggle"
@@ -98,6 +96,23 @@ export default {
   },
   computed: {
     ...mapGetters(["getCourseColor", "getLockedSections"]),
+    //Duration of the event in hours
+    duration() {
+      //Real course
+      if (this.event.start < 0) {
+        return 1;
+      } 
+      //Empty
+      else {
+        return convertSecondsToHours(this.event.end - this.event.start)
+      }
+    },
+    getHeight() {
+      return `${this.duration * this.oneHourHeight}px`;
+    },
+    oneHourHeight() {
+      return (window.innerHeight - 168) / 9;
+    },
     deliveryMethod() {
       if (this.event.sectionCode[1] === "0") {
         return "In Person";
@@ -116,11 +131,9 @@ export default {
     // change the color in the event so it correct based on hovering or locked
     dynamicColor() {
       if (this.locked) {
-        return { background: "#d9d9d9", cursor: "pointer" };
+        return "#d9d9d9";
       } else {
-        return this.hovered
-          ? { background: "#d9d9d9", cursor: "pointer" }
-          : { background: "white", cursor: "pointer" };
+        return this.hovered ? "#d9d9d9" : "white";
       }
     },
     // stores the info of the current section
@@ -181,22 +194,6 @@ export default {
       !this.locked
         ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
         : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
-    },
-    durationClass(start, end) {
-      const duration = convertSecondsToHours(end - start);
-      if (duration === 1) {
-        return "one-hour";
-      } else if (duration === 1.5) {
-        return "one-hour-half";
-      } else if (duration === 2) {
-        return "two-hours";
-      } else if (duration === 2.5) {
-        return "two-hours-half";
-      } else if (duration === 3) {
-        return "three-hours";
-      } else if (duration === 4) {
-        return "four-hours";
-      }
     },
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
@@ -259,28 +256,7 @@ export default {
 .empty-event {
   background: white;
   border: 0.2px solid gray;
-  cursor: default;
-}
-.half-hour {
-  height: 32px;
-}
-.one-hour {
-  height: 64px;
-}
-.one-hour-half {
-  height: 96px;
-}
-.two-hours {
-  height: 128px;
-}
-.two-hours-half {
-  height: 160px;
-}
-.three-hours {
-  height: 192px;
-}
-.four-hours {
-  height: 256px;
+  cursor: pointer;
 }
 .course-code {
   margin-left: 3px;
