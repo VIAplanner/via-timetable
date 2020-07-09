@@ -56,6 +56,10 @@ router.get("/courses/:courseCode", [limiter, cors(corsOptions)], async (req, res
 // route for create a course
 router.post("/courses", cors(), async (req, res) => {
 
+    if(req.headers["x-api-key"] !== process.env.API_KEY){
+        return res.status(400).send({ message: "Invalid api key" })
+    }
+
     try {
         const currCourse = new Course(req.body)
 
