@@ -38,7 +38,7 @@
             </v-toolbar>
             <v-row>
                 <v-col class="pa-0">
-                    <router-view />
+                    <router-view/>
                     <v-footer class="white">
                         <v-row>
                             <v-col class="pa-0">
