@@ -1,9 +1,23 @@
 const express = require("express")
 const Course = require("../models/course")
+const cors = require("cors")
+const rateLimit = require("express-rate-limit");
 const router = new express.Router()
 
+let corsOptions = {
+    origin: 'https://viaplanner.ca', // allow only viaplanner to use the api 
+    optionsSuccessStatus: 200
+}
+
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per 15 minutes, so 9 requests per seconds
+});
+
+
 // route to get all course data for the search bar
-router.get("/courses/searchbar", async (req, res) => {
+router.get("/courses/searchbar", [limiter, cors(corsOptions)], async (req, res) => {
     try {
 
         const allCourses = await Course.find({})
@@ -20,7 +34,7 @@ router.get("/courses/searchbar", async (req, res) => {
 })
 
 // route for getting data about a specific course
-router.get("/courses/:courseCode", async (req, res) => {
+router.get("/courses/:courseCode", [limiter, cors(corsOptions)], async (req, res) => {
 
     try {
 
