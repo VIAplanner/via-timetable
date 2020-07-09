@@ -42,10 +42,11 @@
         <course-section-picker v-on:done="dialog = false" :code="event.code" ref="popUp" />,
       </v-dialog>
     </div>
-    <!-- <div
+    <div
       v-else-if="checkHalfHour(event.currStart, event.currEnd)"
-      class="event empty-event half-hour"
-    />-->
+      class="event empty-event"
+      :style="{ height: getHeight }"
+    />
     <div
       v-else
       v-ripple
@@ -98,19 +99,18 @@ export default {
     duration() {
       //Real course
       if (this.event.currStart < 0) {
-        // console.log(convertSecondsToHours(this.event.end - this.event.start));
         return convertSecondsToHours(this.event.end - this.event.start);
-      } else {
-        console.log("empty")
-        return 1
+      } 
+      //Empty
+      else {
+        return convertSecondsToHours(this.event.currEnd - this.event.currStart)
       }
     },
     getHeight() {
-      return `${this.duration * this.oneHourHeight}px;`;
+      return `${this.duration * this.oneHourHeight}px`;
     },
     oneHourHeight() {
-      //console.log((window.innerHeight - 158)/9.71)
-      return (window.innerHeight - 158) / 9;
+      return (window.innerHeight - 168) / 9;
     },
     deliveryMethod() {
       if (this.event.sectionCode[1] === "0") {
@@ -230,7 +230,7 @@ export default {
 * {
   font-family: "Montserrat", sans-serif;
 }
-$ .unselectable {
+.unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -256,9 +256,6 @@ $ .unselectable {
   background: white;
   border: 0.2px solid gray;
   cursor: default;
-}
-.four-hours {
-  height: 336px;
 }
 .course-code {
   margin-left: 3px;
