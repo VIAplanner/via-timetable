@@ -99,12 +99,12 @@ export default {
     //Duration of the event in hours
     duration() {
       //Real course
-      if (this.event.currStart < 0) {
-        return convertSecondsToHours(this.event.end - this.event.start);
+      if (this.event.start < 0) {
+        return 1;
       } 
       //Empty
       else {
-        return convertSecondsToHours(this.event.currEnd - this.event.currStart)
+        return convertSecondsToHours(this.event.end - this.event.start)
       }
     },
     getHeight() {
@@ -256,7 +256,7 @@ export default {
 .empty-event {
   background: white;
   border: 0.2px solid gray;
-  cursor: default;
+  cursor: pointer;
 }
 .course-code {
   margin-left: 3px;
