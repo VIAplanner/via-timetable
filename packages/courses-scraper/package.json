@@ -8,7 +8,7 @@
     "utm:third": "node api/node/scraper.js third",
     "upload": "node api/node/uploader.js"
   },
-  "author": "UoftCourseTools",
+  "author": "VIAplanner",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",

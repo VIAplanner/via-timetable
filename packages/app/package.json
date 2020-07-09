@@ -13,6 +13,7 @@
         "axios": "^0.19.2",
         "color-generator": "^0.1.0",
         "core-js": "^3.6.4",
+        "html2canvas": "^1.0.0-rc.5",
         "roboto-fontface": "*",
         "vue": "^2.6.11",
         "vue-analytics": "^5.22.1",

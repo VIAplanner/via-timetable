@@ -1,18 +1,12 @@
 require("./db/mongoose")
 const express = require("express")
-const cors = require("cors")
 const courseRouter = require("./routes/course")
 
 const app = express()
 const port = process.env.PORT || 3000
 
-let corsOptions = {
-    origin: 'https://viaplanner.ca', // allow only viaplanner to use the api 
-    optionsSuccessStatus: 200
-}
+app.set('trust proxy', 1);
 
-
-app.use(cors(corsOptions))
 app.use(express.json()) // parse request as json
 app.use(courseRouter)
 

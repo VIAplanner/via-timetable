@@ -4,6 +4,6 @@ module.exports = {
         devtool: "source-map",
     },
     devServer: {
-        proxy: "https://api.viaplanner.ca/"
+        proxy: 'https://api.viaplanner.ca/',
     }
 };
