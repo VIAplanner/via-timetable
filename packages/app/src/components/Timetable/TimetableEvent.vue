@@ -96,6 +96,7 @@ export default {
   },
   computed: {
     ...mapGetters(["getCourseColor", "getLockedSections"]),
+    //Duration of the event in hours
     duration() {
       //Real course
       if (this.event.currStart < 0) {
