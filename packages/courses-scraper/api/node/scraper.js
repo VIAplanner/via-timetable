@@ -238,8 +238,8 @@ const scrape = async (startRatio, endRatio) => {
     let start = 0
     let end = courseCodes.length
     if (startRatio != -1 && endRatio != -1) {
-        start = parseInt(courseCodes.length / 3) * startRatio
-        end = parseInt(courseCodes.length / 3) * endRatio
+        start = Math.floor(parseInt(courseCodes.length / 3) * startRatio)
+        end = math.floor(parseInt(courseCodes.length / 3) * endRatio)
     }
 
     spinner.stop()
