@@ -1,9 +1,9 @@
 <template>
-    <div :style="contentHeight">
+    <div>
         <help-dial />
         <v-carousel
             v-model="whichTimetable"
-            :height="contentHeight"
+            :height="carouselHeight"
             hide-delimiters
             light
             :show-arrows="false"
@@ -37,7 +37,7 @@ export default {
         contentHeightCSS() {
             return `height: ${window.innerHeight - 110}px`;
         },
-        contentHeight() {
+        carouselHeight() {
             return window.innerHeight - 100;
         },
         whichTimetable() {
