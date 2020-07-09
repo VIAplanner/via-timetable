@@ -14,19 +14,25 @@ const timeToSeconds = (hour) => {
 // return an array of all locations for the current section
 const formatLocations = (rawLocations, fullCourseCode) => {
 
+    let allLocations = []
     // skip every other location since it's for the next semester
     if (fullCourseCode[8] === "Y") {
-        let allLocations = []
 
         for (let i = 0; i < rawLocations.length; i += 2) {
             allLocations.push(rawLocations[i])
         }
 
-        return allLocations
     }
     else {
-        return rawLocations.split("\n")
+        allLocations = rawLocations.split("\n") 
+        allLocations.forEach((location, index, arr)=>{
+            if(location.length <= 2){
+                arr[index] = ""
+            }
+        })
     }
+
+    return allLocations
 
 }
 
@@ -213,7 +219,7 @@ const scrape = async (startRatio, endRatio) => {
     }).start();
 
     const browser = await puppeteer.launch({
-        headless: false, //  comment this out if you don't want to see the browser
+        executablePath: "/usr/bin/chromium-browser"
     });
     const page = await browser.newPage();
     await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
