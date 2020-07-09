@@ -54,7 +54,7 @@ router.get("/courses/:courseCode", [limiter, cors(corsOptions)], async (req, res
 })
 
 // route for create a course
-router.post("/courses", async (req, res) => {
+router.post("/courses", cors(), async (req, res) => {
 
     try {
         const currCourse = new Course(req.body)
