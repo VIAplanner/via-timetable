@@ -97,7 +97,11 @@ const checkOverlapForDay = (timetable, day) => {
             if ((timetable[day][section].start >= timetable[day][section2].start &&
                 timetable[day][section].start < timetable[day][section2].end) ||
                 (timetable[day][section].end > timetable[day][section2].start &&
-                    timetable[day][section].end <= timetable[day][section2].end)) {
+                timetable[day][section].end <= timetable[day][section2].end)||
+                (timetable[day][section2].start >= timetable[day][section].start &&
+                    timetable[day][section2].start < timetable[day][section].end) ||
+                    (timetable[day][section2].end > timetable[day][section].start &&
+                    timetable[day][section2].end <= timetable[day][section].end)) {
                 return true;
             }
             section2++;
@@ -254,7 +258,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                     const tempPraList = temp
                                     addSectionToTimetable(temp, fallTimetable)
                                     if (overlapExists(fallTimetable)) {
-
+                                        
                                         fallTimetable = createShallowCopyOfTimetable(prevTimetable)
                                         let j = -1;
                                         for (let i = 0; i < temp.length; i++) {
