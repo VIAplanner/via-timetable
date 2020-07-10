@@ -165,13 +165,16 @@
                                                             <div
                                                                 v-if="
                                                                     time.location
-                                                                        .length > 1
+                                                                        .length > 0
                                                                 "
                                                             >
                                                                 {{ time.location }}
                                                             </div>
-                                                            <div v-else>
+                                                            <div v-else-if="meetingSection.sectionCode[1]==='9'">
                                                                 Online
+                                                            </div>
+                                                            <div v-else>
+                                                                TBA
                                                             </div>
                                                         </v-col>
                                                     </v-row>

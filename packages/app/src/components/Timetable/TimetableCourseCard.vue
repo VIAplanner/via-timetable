@@ -50,7 +50,15 @@
             cols="3"
             style="margin-left: 15px"
           >{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
-          <v-col>{{meetingsection.location}}</v-col>
+          <v-col v-if="meetingsection.location.length > 0">
+            {{meetingsection.location}}
+          </v-col>
+          <v-col v-else-if="meetingsection.sectionCode[1] === '9'">
+            Online
+          </v-col>
+          <v-col v-else>
+            TBA
+          </v-col>
           <v-col>{{meetingsection.instructorName}}</v-col>
         </v-row>
       </div>
