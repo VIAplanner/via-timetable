@@ -10,12 +10,12 @@
         >
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="timetable" id="exportMe" />
+                    <timetable v-if="getSemesterStatus === 'F'" :timetable="timetable" id="exportMe" />
                 </smooth-scrollbar>
             </v-carousel-item>
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="timetable" />
+                    <timetable v-if="getSemesterStatus === 'S'" :timetable="timetable" />
                 </smooth-scrollbar>
             </v-carousel-item>
         </v-carousel>

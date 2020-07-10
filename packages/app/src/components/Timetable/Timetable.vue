@@ -94,7 +94,10 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const start = convertSecondsToHours(event.start);
-                    if (start < earliest && !event.code.includes("Lock")) {
+                    // if (start < earliest && !event.code.includes("Lock")) {
+                    //     earliest = start;
+                    // }
+                    if (start < earliest) {
                         earliest = start;
                     }
                 }
@@ -105,8 +108,7 @@ export default {
             // the height of the axis will be be at least 65 px
             if ((window.innerHeight - 175) / 9 > 60) {
                 return `${(window.innerHeight - 175) / 9}px`;
-            }
-            else{
+            } else {
                 return `65px`;
             }
         },
@@ -116,9 +118,12 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const end = convertSecondsToHours(event.end);
-                    if (end > latest && !event.code.includes("Lock")) {
+                    if (end > latest) {
                         latest = end;
                     }
+                    // if (end > latest && !event.code.includes("Lock")) {
+                    //     latest = end;
+                    // }
                 }
             }
             return latest;
@@ -160,7 +165,17 @@ export default {
             const result = [];
             let currTime = this.timetableStart;
             let invalidStart = -1;
-            if (meetingSections.length === 0) {
+            let flag = meetingSections.every((event) => {
+                console.log(this.timetableStart)
+                let eventStart = convertSecondsToHours(event.start);
+                let eventEnd = convertSecondsToHours(event.end);
+
+                return (
+                    eventStart < this.timetableStart ||
+                    eventEnd > this.timetableEnd
+                );
+            });
+            if (meetingSections.length === 0 || flag) {
                 for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
                     result.push({
                         start: invalidStart,

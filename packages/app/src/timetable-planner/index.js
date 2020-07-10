@@ -555,7 +555,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                 const temp = [...output2];
                 temp.push(arrayElement2);
                 const tempPraList = temp
-                console.log(temp)
                 addSectionToTimetable(temp, fallTimetable)
                 if (overlapExists(fallTimetable)) {
                     fallTimetable = {
@@ -961,7 +960,6 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
                                             }
                                             const temp = [...output2];
                                             temp.push(arrayElement2);
-                                            console.log(temp)
                                             addSectionToTimetable(temp, winterTimetable)
                                             if (overlapExists(winterTimetable)) {
                                                 winterTimetable = createShallowCopyOfTimetable(prevTimetable)
