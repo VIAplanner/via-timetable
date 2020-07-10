@@ -17,19 +17,14 @@
                 </v-row>
             </v-overlay>
 
-            <v-toolbar dark color="#012B5C" height="58px" elevation=0>
+            <v-toolbar dark color="#012B5C" height="58px" elevation="0">
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     max-width="130"
                     contain
                     class="ma-2 ml-1"
                 />
-                <v-tabs
-                    grow
-                    show-arrows
-                    v-model="whichTab"
-                    style="max-width: 250px"
-                >
+                <v-tabs grow show-arrows v-model="whichTab" style="max-width: 250px">
                     <v-tab>PROGRAMS</v-tab>
                     <v-tab>TIMETABLE</v-tab>
                 </v-tabs>
@@ -38,7 +33,7 @@
             </v-toolbar>
             <v-row>
                 <v-col class="pa-0">
-                    <router-view/>
+                    <router-view />
                     <v-footer class="white">
                         <v-row>
                             <v-col class="pa-0">
@@ -72,6 +67,8 @@ export default {
     created() {
         if (this.$isMobile()) {
             this.$router.push({ name: "about" });
+        } else {
+            window.addEventListener("beforeunload", this.saveData);
         }
     },
     components: {
@@ -81,7 +78,27 @@ export default {
         SideBar,
     },
     computed: {
-        ...mapGetters(["getSemesterStatus", "getExportOverlay"]),
+        ...mapGetters([
+            "getSemesterStatus",
+            "getExportOverlay",
+            "fallTimetable",
+            "winterTimetable",
+            "fallSelectedCourses",
+            "winterSelectedCourses",
+            "fallLockedSections",
+            "winterLockedSections",
+        ]),
+    },
+    methods: {
+        // save the timetable data in the browser
+        saveData() {
+            localStorage.fallLockedSections =  JSON.stringify(this.fallLockedSections)
+            localStorage.fallSelectedCourses = JSON.stringify(this.fallSelectedCourses)
+            localStorage.fallTimetable = JSON.stringify(this.fallTimetable)
+            localStorage.winterLockedSections = JSON.stringify(this.winterLockedSections)
+            localStorage.winterSelectedCourses = JSON.stringify(this.winterSelectedCourses)
+            localStorage.winterTimetable = JSON.stringify(this.winterTimetable)
+        },
     },
     data() {
         return {
