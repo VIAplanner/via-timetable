@@ -49,6 +49,12 @@
                                         v-for="meetingSection in meetingSections"
                                         :key="meetingSection.sectionCode"
                                         style="margin-bottom: 0px;"
+                                        @click="
+                                            setMeetingSection(
+                                                meetingSection.sectionCode,
+                                                activityType
+                                            )
+                                        "
                                     >
                                         <v-list-item-action>
                                             <v-radio
@@ -269,6 +275,9 @@ export default {
             "unlockSection",
             "setOverwriteLockedSectionPopup",
         ]),
+        setMeetingSection(courseCode, activityType) {
+            this.selectedMeetingSections[activityType] = courseCode;
+        },
         getFormattedTime(start, end) {
             var s = (start / 3600) % 12;
             if (s == 0) {
