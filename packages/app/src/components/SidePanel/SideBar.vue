@@ -34,7 +34,7 @@
             <hr class="mb-3" />
             <v-skeleton-loader type="list-item-avatar" />
             <v-skeleton-loader type="list-item-avatar-two-line" />
-            <v-skeleton-loader v-if="programPanelHeight > 192" type="list-item-avatar" />
+            <v-skeleton-loader v-if="programPanelHeight > 195" type="list-item-avatar" />
         </v-card>
     </div>
 </template>
