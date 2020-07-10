@@ -99,10 +99,10 @@ export default {
     //Duration of the event in hours
     duration() {
       //Real course
-      if (this.event.currStart < 0) {
+      if (this.event.start > 0) {
         return convertSecondsToHours(this.event.end - this.event.start);
       } 
-      //Empty
+      //Empty or blocked hour
       else {
         return convertSecondsToHours(this.event.currEnd - this.event.currStart)
       }
