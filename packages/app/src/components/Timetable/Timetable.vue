@@ -103,7 +103,7 @@ export default {
         },
         oneHourHeight() {
             // the height of the axis will be be at least 65 px
-            if ((window.innerHeight - 175) / 9 > 65) {
+            if ((window.innerHeight - 175) / 9 > 60) {
                 return `${(window.innerHeight - 175) / 9}px`;
             }
             else{

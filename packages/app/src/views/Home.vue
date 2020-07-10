@@ -17,7 +17,7 @@
                 </v-row>
             </v-overlay>
 
-            <v-toolbar dark color="#012B5C" height="58px">
+            <v-toolbar dark color="#012B5C" height="58px" elevation=0>
                 <v-img
                     src="../assets/VIA-Planner-White.png"
                     max-width="130"
