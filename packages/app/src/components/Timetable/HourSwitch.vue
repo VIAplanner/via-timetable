@@ -46,6 +46,7 @@ export default {
             "deleteCourse",
             "saveTimetable",
             "resetTimetable",
+            "saveLockedHourStatus"
         ]),
         ...mapMutations(["lockSection", "setLockedHourStatus", "addCourse"]),
         currSecData(weekday) {
@@ -97,21 +98,23 @@ export default {
             var weekdays = Object.keys(this.timetable);
             for (var weekday of weekdays) {
                 this.timetable[weekday].forEach((element) => {
-                    if (
-                        element.start <= this.converter() &&
-                        this.converter() < element.end &&
-                        !element.code.includes("Lock")
-                    ) {
-                        courses.push(element);
+                    if(!element.code.includes("Lock")){
+                        if (element.start < this.converter() && element.end > this.converter()) {
+                            courses.push(element);
+                        } else if (this.converter() <= element.start && element.start < this.converter() + 3600) {
+                            courses.push(element);
+                        }
                     }
                 });
             }
             return courses;
         },
         lockDay() {
+            this.saveLockedHourStatus()
             this.setLockedHourStatus(this.time);
             this.saveTimetable();
             var weekdays = Object.keys(this.timetable);
+            console.log(this.courseAtTheHour())
             let flag = this.courseAtTheHour().some((element) => {
                 return !this.getLockedSections.includes(
                     `${element.code}${element.sectionCode}`

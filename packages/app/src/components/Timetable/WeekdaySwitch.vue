@@ -75,13 +75,19 @@ export default {
             "selectCourse",
             "deleteCourse",
             "saveTimetable",
-            "resetTimetable"
+            "resetTimetable",
+            "saveLockedDayStatus"
         ]),
         ...mapMutations(["lockSection", "setLockedDayStatus", "addCourse"]),
         lockDay() {
             let i = 0;
+
+            // save lock status
+            this.saveLockedDayStatus()
+
             this.setLockedDayStatus(this.weekday);
-            // save a copy before the change
+
+            // save a copy of the timetable before the change
             this.saveTimetable()
 
             //Flag is true if there is at least one course on the day that's unlocked

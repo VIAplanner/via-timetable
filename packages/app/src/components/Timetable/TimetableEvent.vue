@@ -104,112 +104,119 @@ const convertSecondsToHours = (seconds) => {
     return seconds / 3600;
 };
 export default {
-    name: "timetable-event",
-    props: {
-        event: {
-            type: Object,
-            default: () => {},
-        },
-        currDay: {
-            type: String,
-            default: "",
-        },
+  name: "timetable-event",
+  props: {
+    event: {
+      type: Object,
+      default: () => {}
     },
-    components: {
-        CourseSectionPicker,
+    currDay: {
+      type: String,
+      default: ""
+    }
+  },
+  components: {
+    CourseSectionPicker
+  },
+  data() {
+    return {
+      hovered: false,
+      dialog: false,
+      height: window.innerHeight,
+    };
+  },
+  created() {
+    window.addEventListener("resize", this.handleResize)
+  },
+  computed: {
+    ...mapGetters(["getCourseColor", "getLockedSections"]),
+    //Duration of the event in hours
+    duration() {
+      //Real course
+      if (this.event.start > 0) {
+        return convertSecondsToHours(this.event.end - this.event.start);
+      } 
+      //Empty or blocked hour
+      else {
+        return convertSecondsToHours(this.event.currEnd - this.event.currStart)
+      }
     },
-    data() {
-        return {
-            hovered: false,
-            dialog: false,
-        };
+    getHeight() {
+      return `${this.duration * this.oneHourHeight}px`;
     },
-    computed: {
-        ...mapGetters(["getCourseColor", "getLockedSections"]),
-        //Duration of the event in hours
-        duration() {
-            //Real course
-            if (this.event.start < 0) {
-                return 1;
-            }
-            //Empty
-            else {
-                return convertSecondsToHours(this.event.end - this.event.start);
-            }
-        },
-        getHeight() {
-            return `${this.duration * this.oneHourHeight}px`;
-        },
-        oneHourHeight() {
-            // the height of a timetable event will be at least 65 px
-            return (window.innerHeight - 168) / 9 > 55 ? (window.innerHeight - 168) / 9 : 65;
-        },
-        deliveryMethod() {
-            if (this.event.sectionCode[1] === "0") {
-                return "In Person";
-            } else if (this.event.sectionCode[1] === "8") {
-                return "Rotate";
-            } else {
-                return "Sync";
-            }
-        },
-        locations() {
-            return this.event.location.split("; ");
-        },
-        dynamicText() {
-            return !this.locked ? "Block This Time" : "Unblock This Time";
-        },
-        // change the color in the event so it correct based on hovering or locked
-        dynamicColor() {
-            if (this.locked) {
-                return "#d9d9d9";
-            } else {
-                return this.hovered ? "#d9d9d9" : "white";
-            }
-        },
-        // stores the info of the current section
-        currSecData() {
-            return {
-                name: `Locked Section`,
-                courseCode: `Lock${this.currDay}${this.event.currStart}`,
-                meeting_sections: [
-                    {
-                        sectionCode: "L0001",
-                        instructors: ["NA"],
-                        times: [
-                            {
-                                day: this.currDay,
-                                start: this.event.currStart,
-                                end: this.event.currStart + 3600,
-                                location: "NA",
-                            },
-                        ],
-                    },
-                ],
-            };
-        },
-        // lock the status of the current section
-        locked() {
-            for (var section of this.getLockedSections) {
-                if (
-                    section === `${this.event.code}${this.event.sectionCode}` ||
-                    section ===
-                        `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        },
+    oneHourHeight() {
+        // the height of a timetable event will be at least 65 px
+        return (this.height - 168) / 9 > 65 ? (this.height - 168) / 9 : 65;
     },
-    methods: {
-        ...mapActions(["deleteCourse"]),
-        ...mapMutations(["lockSection", "unlockSection", "addCourse"]),
-        atInput() {
-            var courseSectionPicker = this.$refs.popUp;
-            if (typeof courseSectionPicker != "undefined") {
-                courseSectionPicker.resetSelectedMeetingSections();
-            }
+    deliveryMethod() {
+      if (this.event.sectionCode[1] === "0") {
+        return "In Person";
+      } else if (this.event.sectionCode[1] === "8") {
+        return "Rotate";
+      } else {
+        return "Sync";
+      }
+    },
+    locations() {
+      return this.event.location.split("; ");
+    },
+    dynamicText() {
+      return !this.locked ? "Block This Time" : "Unblock This Time";
+    },
+    // change the color in the event so it correct based on hovering or locked
+    dynamicColor() {
+      if (this.locked) {
+        return "#d9d9d9";
+      } else {
+        return this.hovered ? "#d9d9d9" : "white";
+      }
+    },
+    // stores the info of the current section
+    currSecData() {
+      return {
+        name: `Locked Section`,
+        courseCode: `Lock${this.currDay}${this.event.currStart}`,
+        meeting_sections: [
+          {
+            sectionCode: "L0001",
+            instructors: ["NA"],
+            times: [
+              {
+                day: this.currDay,
+                start: this.event.currStart,
+                end: this.event.currStart + 3600,
+                location: "NA"
+              }
+            ]
+          }
+        ]
+      };
+    },
+    // lock the status of the current section
+    locked() {
+      for (var section of this.getLockedSections) {
+        if (
+          section === `${this.event.code}${this.event.sectionCode}` ||
+          section ===
+            `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+  },
+  methods: {
+    ...mapActions(["deleteCourse"]),
+    ...mapMutations(["lockSection", "unlockSection", "addCourse"]),
+    handleResize(){
+      this.height = window.innerHeight
+    },
+    atInput() {
+      var courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker != "undefined") {
+        courseSectionPicker.resetSelectedMeetingSections();
+      }
         },
         checkHalfHour(currStart, end) {
             // if one hour

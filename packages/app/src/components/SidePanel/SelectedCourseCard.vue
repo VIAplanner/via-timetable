@@ -111,8 +111,14 @@ export default {
                             event.instructors.length === 0
                                 ? "TBA"
                                 : event.instructors[0];
-                        const loc =
-                            event.location.length <= 1 ? "Online" : event.location;
+                        let loc
+                        if (event.location.length > 0) {
+                            loc = event.location
+                        } else if(event.sectionCode[1] === "9") {
+                            loc = "Online"
+                        } else {
+                            loc = "TBA"
+                        }
                         const info = {
                             day: day,
                             start: event.start,

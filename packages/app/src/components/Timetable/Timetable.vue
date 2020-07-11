@@ -86,6 +86,9 @@ export default {
             type: Object,
         },
     },
+    created(){
+          window.addEventListener('resize', this.handleResize);
+    },
     computed: {
         ...mapGetters(["getLockedSections", "selectedCourses", "getExportOverlay"]),
         timetableStart() {
@@ -94,9 +97,6 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const start = convertSecondsToHours(event.start);
-                    // if (start < earliest && !event.code.includes("Lock")) {
-                    //     earliest = start;
-                    // }
                     if (start < earliest) {
                         earliest = start;
                     }
@@ -106,8 +106,8 @@ export default {
         },
         oneHourHeight() {
             // the height of the axis will be be at least 65 px
-            if ((window.innerHeight - 175) / 9 > 60) {
-                return `${(window.innerHeight - 175) / 9}px`;
+            if ((this.height - 168) / 9 > 65) {
+                return `${(this.height - 168) / 9}px`;
             } else {
                 return `65px`;
             }
@@ -157,10 +157,14 @@ export default {
         return {
             colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
             weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            height: window.innerHeight
         };
     },
     methods: {
         ...mapMutations(["lockSection", "unlockSection"]),
+        handleResize() {
+            this.height = window.innerHeight
+        },
         getEventsForDay(meetingSections) {
             const result = [];
             let currTime = this.timetableStart;

@@ -78,6 +78,28 @@ export default new Vuex.Store({
         savedWinterSelectedCourses: {},
         savedFallLockedSections: [],
         savedWinterLockedSections: [],
+        savedLockedHourStatus: {
+            "9 AM": false,
+            "10 AM": false,
+            "11 AM": false,
+            "12 PM": false,
+            "1 PM": false,
+            "2 PM": false,
+            "3 PM": false,
+            "4 PM": false,
+            "5 PM": false,
+            "6 PM": false,
+            "7 PM": false,
+            "8 PM": false,
+            "9 PM": false,
+        },
+        savedLockedDayStatus: {
+            MONDAY: false,
+            TUESDAY: false,
+            WEDNESDAY: false,
+            THURSDAY: false,
+            FRIDAY: false,
+        },
         semesterStatus: "F",
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
@@ -308,6 +330,26 @@ export default new Vuex.Store({
                 ...context.state.winterLockedSections,
             ];
         },
+        saveLockedDayStatus(context){
+            if (context.state.semesterStatus === "F") {
+                context.state.savedLockedDayStatus = JSON.parse(
+                    JSON.stringify(context.state.fallLockedDayStatus))
+            }
+            else{
+                context.state.savedLockedDayStatus = JSON.parse(
+                    JSON.stringify(context.state.winterLockedDayStatus))
+            }
+        },
+        saveLockedHourStatus(context) {
+            if (context.state.semesterStatus === "F") {
+                context.state.savedLockedHourStatus = JSON.parse(
+                    JSON.stringify(context.state.fallLockedHourStatus))
+            }
+            else{
+                context.state.savedLockedHourStatus = JSON.parse(
+                    JSON.stringify(context.state.winterLockedHourStatus))
+            }
+        },
         revertTimetable(context) {
             context.commit("setTimetables", [
                 context.state.savedFallTimetable,
@@ -321,6 +363,14 @@ export default new Vuex.Store({
                 context.state.savedFallLockedSections,
                 context.state.savedWinterLockedSections,
             ]);
+            if (context.state.semesterStatus === "F") {
+                context.state.fallLockedHourStatus = context.state.savedLockedHourStatus
+                context.state.fallLockedDayStatus = context.state.savedLockedDayStatus
+            }
+            else{
+                context.state.winterLockedHourStatus = context.state.savedLockedHourStatus
+                context.state.winterLockedDayStatus = context.state.savedLockedDayStatus
+            }
         },
         validateTimetable(context, payload) {
             if (payload === null) {

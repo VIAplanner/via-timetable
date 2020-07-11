@@ -50,38 +50,31 @@ export default {
             
             this.setExportOverlay(true)
 
-            let fileName = "";
+            if (this.getSemesterStatus === "F") {
+                this.setSemesterStatus("S");
+                await this.exportTimetable("Winter-Timetable.png", "#exportWinterMe")
+            } else {
+                this.setSemesterStatus("F");
+                await this.exportTimetable("Fall-Timetable.png", "#exportFallMe")
+            }
 
             if (this.getSemesterStatus === "F") {
                 this.setSemesterStatus("S");
-                fileName = "Winter-Timetable.png";
+                await this.exportTimetable("Winter-Timetable.png", "#exportWinterMe")
             } else {
                 this.setSemesterStatus("F");
-                fileName = "Fall-Timetable.png";
+                await this.exportTimetable("Fall-Timetable.png", "#exportFallMe")
             }
-
-            // wait until the page is full loaded
-            await this.sleep(50);
-            this.exportCurrTimetable(fileName);
-
-            if (this.getSemesterStatus === "F") {
-                this.setSemesterStatus("S");
-                fileName = "Winter-Timetable.png";
-            } else {
-                this.setSemesterStatus("F");
-                fileName = "Fall-Timetable.png";
-            }
-
-            await this.sleep(50);
-            this.exportCurrTimetable(fileName);
 
             this.setExportOverlay(false)
-
         },
 
-        async exportCurrTimetable(fileName) {
+        async exportTimetable(filename, id) {
+
+            await this.sleep(50);
+
             // grab the entire screen element
-            const el = document.querySelector("#exportMe");
+            const el = document.querySelector(id);
 
             const options = {
                 type: "dataURL",
@@ -93,7 +86,7 @@ export default {
                 console.log("conversion error");
             }
 
-            this.downloadWithAxios(fileName);
+            this.downloadWithAxios(filename);
         },
 
         // magic
