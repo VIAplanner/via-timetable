@@ -10,12 +10,12 @@
         >
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="timetable" id="exportMe" />
+                    <timetable :timetable="fallTimetable" id="exportFallMe" />
                 </smooth-scrollbar>
             </v-carousel-item>
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="timetable" />
+                    <timetable :timetable="winterTimetable" id="exportWinterMe"/>
                 </smooth-scrollbar>
             </v-carousel-item>
         </v-carousel>
@@ -36,7 +36,7 @@ export default {
         window.addEventListener("resize", this.handleResize)
     },
     computed: {
-        ...mapGetters(["timetable", "getSemesterStatus"]),
+        ...mapGetters(["fallTimetable", "winterTimetable","getSemesterStatus"]),
         contentHeightCSS() {
             return `height: ${this.height - 110}px`;
         },

@@ -105,11 +105,11 @@ export default {
             return earliest;
         },
         oneHourHeight() {
-            // the height of the axis will be be at least 61 px
-            if ((this.height - 168) / 9 > 61) {
+            // the height of the axis will be be at least 65 px
+            if ((this.height - 168) / 9 > 65) {
                 return `${(this.height - 168) / 9}px`;
             } else {
-                return `61px`;
+                return `65px`;
             }
         },
         timetableEnd() {

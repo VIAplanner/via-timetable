@@ -116,7 +116,7 @@ export default {
     },
     oneHourHeight() {
         // the height of a timetable event will be at least 65 px
-        return (this.height - 168) / 9 > 61 ? (this.height - 168) / 9 : 61;
+        return (this.height - 168) / 9 > 65 ? (this.height - 168) / 9 : 65;
     },
     deliveryMethod() {
       if (this.event.sectionCode[1] === "0") {
