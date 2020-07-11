@@ -32,13 +32,16 @@ export default {
         Timetable,
         HelpDial,
     },
+    created() {
+        window.addEventListener("resize", this.handleResize)
+    },
     computed: {
         ...mapGetters(["timetable", "getSemesterStatus"]),
         contentHeightCSS() {
-            return `height: ${window.innerHeight - 110}px`;
+            return `height: ${this.height - 110}px`;
         },
         carouselHeight() {
-            return window.innerHeight - 100;
+            return this.height - 100;
         },
         whichTimetable() {
             if (this.getSemesterStatus === "F") {
@@ -48,6 +51,16 @@ export default {
             }
         },
     },
+    data() {
+        return {
+            height: window.innerHeight
+        }
+    },
+    methods: {
+        handleResize() {
+            this.height = window.innerHeight
+        }
+    }
 };
 </script>
 <style scoped>

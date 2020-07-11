@@ -91,8 +91,12 @@ export default {
   data() {
     return {
       hovered: false,
-      dialog: false
+      dialog: false,
+      height: window.innerHeight,
     };
+  },
+  created() {
+    window.addEventListener("resize", this.handleResize)
   },
   computed: {
     ...mapGetters(["getCourseColor", "getLockedSections"]),
@@ -111,7 +115,8 @@ export default {
       return `${this.duration * this.oneHourHeight}px`;
     },
     oneHourHeight() {
-      return (window.innerHeight - 168) / 9;
+        // the height of a timetable event will be at least 65 px
+        return (this.height - 168) / 9 > 61 ? (this.height - 168) / 9 : 61;
     },
     deliveryMethod() {
       if (this.event.sectionCode[1] === "0") {
@@ -174,6 +179,9 @@ export default {
   methods: {
     ...mapActions(["deleteCourse"]),
     ...mapMutations(["lockSection", "unlockSection", "addCourse"]),
+    handleResize(){
+      this.height = window.innerHeight
+    },
     atInput() {
       var courseSectionPicker = this.$refs.popUp;
       if (typeof courseSectionPicker != "undefined") {

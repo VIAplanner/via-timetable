@@ -9,6 +9,7 @@
                         v-for="(time, index) in timeRange"
                         :key="index"
                         class="time-axis-number"
+                        :style="{ height: oneHourHeight }"
                     >
                         <hour-switch
                             v-if="index != timeRange.length - 1"
@@ -85,6 +86,9 @@ export default {
             type: Object,
         },
     },
+    created(){
+          window.addEventListener('resize', this.handleResize);
+    },
     computed: {
         ...mapGetters(["getLockedSections", "selectedCourses", "getExportOverlay"]),
         timetableStart() {
@@ -93,12 +97,20 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const start = convertSecondsToHours(event.start);
-                    if (start < earliest && !event.code.includes("Lock")) {
+                    if (start < earliest) {
                         earliest = start;
                     }
                 }
             }
             return earliest;
+        },
+        oneHourHeight() {
+            // the height of the axis will be be at least 61 px
+            if ((this.height - 168) / 9 > 61) {
+                return `${(this.height - 168) / 9}px`;
+            } else {
+                return `61px`;
+            }
         },
         timetableEnd() {
             var latest = 18;
@@ -106,7 +118,7 @@ export default {
                 const dayEvents = this.timetable[day];
                 for (let event of dayEvents) {
                     const end = convertSecondsToHours(event.end);
-                    if (end > latest && !event.code.includes("Lock")) {
+                    if (end > latest) {
                         latest = end;
                     }
                 }
@@ -142,15 +154,29 @@ export default {
         return {
             colors: ["#FBB347", "#83CC77", "#4C91F9", "#F26B83", "#5CD1EB"],
             weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            height: window.innerHeight
         };
     },
     methods: {
         ...mapMutations(["lockSection", "unlockSection"]),
+        handleResize() {
+            this.height = window.innerHeight
+        },
         getEventsForDay(meetingSections) {
             const result = [];
             let currTime = this.timetableStart;
             let invalidStart = -1;
-            if (meetingSections.length === 0) {
+            let flag = meetingSections.every((event) => {
+                console.log(this.timetableStart)
+                let eventStart = convertSecondsToHours(event.start);
+                let eventEnd = convertSecondsToHours(event.end);
+
+                return (
+                    eventStart < this.timetableStart ||
+                    eventEnd > this.timetableEnd
+                );
+            });
+            if (meetingSections.length === 0 || flag) {
                 for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
                     result.push({
                         start: invalidStart,
@@ -292,7 +318,6 @@ export default {
 }
 
 .time-axis-number {
-    height: 64px;
     text-align: right;
 }
 .top-margin {
