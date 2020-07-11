@@ -1,77 +1,107 @@
 <template>
-  <div>
-    <div v-if="event.start > 0">
-      <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
-        <template v-slot:activator="{ on }">
-          <div
+    <div>
+        <div v-if="event.start > 0">
+            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
+                <template v-slot:activator="{ on }">
+                    <div
+                        @mouseover="hovered = true"
+                        @mouseleave="hovered = false"
+                        v-on="on"
+                        class="event"
+                        :style="{
+                            background: getCourseColor(event.code),
+                            height: getHeight,
+                        }"
+                    >
+                        <h4>{{ event.code }}</h4>
+
+                        <div class="lock-button">
+                            <v-btn
+                                small
+                                dark
+                                @click.stop="lockToggle"
+                                v-if="locked"
+                                icon
+                            >
+                                <v-icon>mdi-lock</v-icon>
+                            </v-btn>
+                            <v-btn
+                                small
+                                dark
+                                @click.stop="lockToggle"
+                                v-if="!locked && hovered"
+                                icon
+                            >
+                                <v-icon>mdi-lock-open</v-icon>
+                            </v-btn>
+                        </div>
+
+                        <v-row class="px-3">
+                            <div>{{ event.sectionCode }} ({{ deliveryMethod }})</div>
+                            <v-spacer />
+                            <div v-if="locations.length === 2 && duration === 1">
+                                {{ locations[0] }}
+                            </div>
+                        </v-row>
+
+                        <v-row class="px-3">
+                            <div>{{ getFormattedTime(event.start, event.end) }}</div>
+                            <v-spacer />
+                            <div v-if="locations.length === 1 || duration != 1">
+                                {{ locations[0] }}
+                            </div>
+                            <div
+                                v-else-if="locations.length === 2 && duration === 1"
+                            >
+                                {{ locations[1] }}
+                            </div>
+                        </v-row>
+                        <v-row
+                            class="px-3"
+                            v-if="locations.length === 2 && duration != 1"
+                        >
+                            <v-spacer />
+                            <div>{{ locations[1] }}</div>
+                        </v-row>
+                    </div>
+                </template>
+                <course-section-picker
+                    v-on:done="dialog = false"
+                    :code="event.code"
+                    ref="popUp"
+                />,
+            </v-dialog>
+        </div>
+        <div
+            v-else-if="checkHalfHour(event.currStart, event.currEnd)"
+            class="event empty-event"
+            :style="{ height: getHeight }"
+        />
+        <div
+            v-else
+            v-ripple
+            class="event empty-event"
+            :style="{ height: getHeight, background: dynamicColor }"
             @mouseover="hovered = true"
             @mouseleave="hovered = false"
-            v-on="on"
-            class="event"
-            :style="{ background: getCourseColor(event.code), height: getHeight}"
-          >
-            <h4>{{ event.code }}</h4>
-
-            <div class="lock-button">
-              <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
-                <v-icon>mdi-lock</v-icon>
-              </v-btn>
-              <v-btn small dark @click.stop="lockToggle" v-if="!locked && hovered" icon>
-                <v-icon>mdi-lock-open</v-icon>
-              </v-btn>
+            @click.stop="lockedSectionToggle"
+        >
+            <div v-if="hovered">
+                <v-row>
+                    <v-col>
+                        <p class="center unselectable">{{ dynamicText }}</p>
+                    </v-col>
+                </v-row>
             </div>
-
-            <v-row class="px-3">
-              <div>{{ event.sectionCode }} ({{deliveryMethod}})</div>
-              <v-spacer />
-              <div v-if="locations.length === 2 && duration === 1">{{locations[0]}}</div>
-            </v-row>
-
-            <v-row class="px-3">
-              <div>{{ getFormattedTime(event.start, event.end) }}</div>
-              <v-spacer />
-              <div v-if="locations.length === 1 || duration != 1">{{locations[0]}}</div>
-              <div v-else-if="locations.length === 2 && duration === 1">{{locations[1]}}</div>
-            </v-row>
-            <v-row class="px-3" v-if="locations.length === 2 && duration != 1">
-              <v-spacer />
-              <div>{{locations[1]}}</div>
-            </v-row>
-          </div>
-        </template>
-        <course-section-picker v-on:done="dialog = false" :code="event.code" ref="popUp" />,
-      </v-dialog>
+        </div>
     </div>
-    <div
-      v-else-if="checkHalfHour(event.currStart, event.currEnd)"
-      class="event empty-event"
-      :style="{ height: getHeight }"
-    />
-    <div
-      v-else
-      v-ripple
-      class="event empty-event"
-      :style="{ height: getHeight, background: dynamicColor }"
-      @mouseover="hovered = true"
-      @mouseleave="hovered = false"
-      @click.stop="lockedSectionToggle"
-    >
-      <div v-if="hovered">
-        <v-row>
-          <v-col>
-            <p class="center unselectable">{{ dynamicText }}</p>
-          </v-col>
-        </v-row>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import CourseSectionPicker from "../Popup/CourseSectionPicker";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-const convertSecondsToHours = seconds => {
-  return seconds / 3600;
+const convertSecondsToHours = (seconds) => {
+    return seconds / 3600;
 };
 export default {
   name: "timetable-event",
@@ -187,100 +217,100 @@ export default {
       if (typeof courseSectionPicker != "undefined") {
         courseSectionPicker.resetSelectedMeetingSections();
       }
+        },
+        checkHalfHour(currStart, end) {
+            // if one hour
+            if (Number.isInteger((end - currStart) / 3600)) {
+                return false;
+            }
+            // half hour
+            return true;
+        },
+        //Toggle locked status of this TimetableEvent when it is not empty (lock/unlock this section)
+        lockToggle() {
+            // modifies vuex based on the current section's lock status
+            !this.locked
+                ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
+                : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
+        },
+        getFormattedTime(start, end) {
+            var s = (start / 3600) % 12;
+            if (s == 0) {
+                s = 12;
+            }
+            var e = (end / 3600) % 12;
+            if (e == 0) {
+                e = 12;
+            }
+            let startHalf = Number.isInteger(s) ? "00" : "30";
+            let endHalf = Number.isInteger(e) ? "00" : "30";
+            return `${s - startHalf / 6 / 10}:${startHalf} - ${e -
+                endHalf / 6 / 10}:${endHalf}`;
+        },
+        //Toggle locked status of this TimetableEvent when it is empty (block/unblock this hour)
+        lockedSectionToggle() {
+            if (!this.locked) {
+                // if the user clicks on an empty timeslot, it will be added as a course in vuex
+                this.addCourse({ course: this.currSecData });
+                this.lockSection(
+                    `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
+                );
+            } else {
+                // if the user clicks on a lock timeslot, it will be removed
+                this.deleteCourse({ code: this.currSecData.courseCode });
+            }
+        },
     },
-    checkHalfHour(currStart, end) {
-      // if one hour
-      if (Number.isInteger((end - currStart) / 3600)) {
-        return false;
-      }
-      // half hour
-      return true;
-    },
-    //Toggle locked status of this TimetableEvent when it is not empty (lock/unlock this section)
-    lockToggle() {
-      // modifies vuex based on the current section's lock status
-      !this.locked
-        ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
-        : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
-    },
-    getFormattedTime(start, end) {
-      var s = (start / 3600) % 12;
-      if (s == 0) {
-        s = 12;
-      }
-      var e = (end / 3600) % 12;
-      if (e == 0) {
-        e = 12;
-      }
-      let startHalf = Number.isInteger(s) ? "00" : "30";
-      let endHalf = Number.isInteger(e) ? "00" : "30";
-      return `${s - startHalf / 6 / 10}:${startHalf} - ${e -
-        endHalf / 6 / 10}:${endHalf}`;
-    },
-    //Toggle locked status of this TimetableEvent when it is empty (block/unblock this hour)
-    lockedSectionToggle() {
-      if (!this.locked) {
-        // if the user clicks on an empty timeslot, it will be added as a course in vuex
-        this.addCourse({ course: this.currSecData });
-        this.lockSection(
-          `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`
-        );
-      } else {
-        // if the user clicks on a lock timeslot, it will be removed
-        this.deleteCourse({ code: this.currSecData.courseCode });
-      }
-    }
-  }
 };
 </script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 * {
-  font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 .unselectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .center {
-  color: black;
-  text-align: center;
-  padding-top: 8px !important;
+    color: black;
+    text-align: center;
+    padding-top: 8px !important;
 }
 .event {
-  border: 1px solid gray;
-  color: white;
-  padding: 8px;
-  padding-top: 3px;
-  position: relative;
-  cursor: pointer;
-  font-size: small;
+    border: 1px solid gray;
+    color: white;
+    padding: 8px;
+    padding-top: 3px;
+    position: relative;
+    cursor: pointer;
+    font-size: small;
 }
 .empty-event {
-  background: white;
-  border: 0.2px solid gray;
-  cursor: default;
+    background: white;
+    border: 0.2px solid gray;
+    cursor: pointer;
 }
 .course-code {
-  margin-left: 3px;
+    margin-left: 3px;
 }
 .align-left {
-  position: absolute;
-  left: 0px;
+    position: absolute;
+    left: 0px;
 }
 .align-right {
-  position: absolute;
-  right: 0px;
+    position: absolute;
+    right: 0px;
 }
 .lock-button {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  z-index: 1;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    z-index: 1;
 }
 </style>

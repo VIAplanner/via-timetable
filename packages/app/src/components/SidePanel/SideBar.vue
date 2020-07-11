@@ -6,7 +6,7 @@
             <v-row
                 justify="center"
                 align="center"
-                :style="`height: ${coursePanelHeight * 0.9}px`"
+                :style="`height: ${coursePanelHeight * 0.85}px`"
                 style="z-index: -1"
             >
                 <img :src="imgSrc" style="position: absolute" :width="imgWidth" />
@@ -34,7 +34,7 @@
             <hr class="mb-3" />
             <v-skeleton-loader type="list-item-avatar" />
             <v-skeleton-loader type="list-item-avatar-two-line" />
-            <v-skeleton-loader type="list-item-avatar" />
+            <v-skeleton-loader v-if="programPanelHeight > 195" type="list-item-avatar" />
         </v-card>
     </div>
 </template>

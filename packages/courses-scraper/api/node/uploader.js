@@ -17,8 +17,13 @@ progressBar.start(numFiles, 0, {speed: "N/A"});
 fs.readdirSync(outputPath).forEach(async (fileName, index, arr) => {
     let rawCourseData = fs.readFileSync(outputPath + fileName);
     let courseData = JSON.parse(rawCourseData);
+    let config = {
+        headers: {
+            "x-api-key": process.env.API_KEY
+        }
+    }
     try {
-        await axios.post(`${process.env.API_BASE_URL}/courses`, courseData)
+        await axios.post(`${process.env.API_BASE_URL}/courses`, courseData, config)
     } catch (e) {
         console.log(e.message)
     }

@@ -121,6 +121,9 @@ export default {
                     if (end > latest) {
                         latest = end;
                     }
+                    // if (end > latest && !event.code.includes("Lock")) {
+                    //     latest = end;
+                    // }
                 }
             }
             return latest;
