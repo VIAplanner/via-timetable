@@ -121,9 +121,6 @@ export default {
                     if (end > latest) {
                         latest = end;
                     }
-                    // if (end > latest && !event.code.includes("Lock")) {
-                    //     latest = end;
-                    // }
                 }
             }
             return latest;
@@ -170,7 +167,6 @@ export default {
             let currTime = this.timetableStart;
             let invalidStart = -1;
             let flag = meetingSections.every((event) => {
-                console.log(this.timetableStart)
                 let eventStart = convertSecondsToHours(event.start);
                 let eventEnd = convertSecondsToHours(event.end);
 
