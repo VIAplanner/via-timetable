@@ -24,7 +24,7 @@
                     contain
                     class="ma-2 ml-1"
                 />
-                <v-tabs grow show-arrows v-model="whichTab" style="max-width: 250px">
+                <v-tabs grow show-arrows v-model="whichTab" style="max-width: 250px; min-width: 250px">
                     <v-tab>PROGRAMS</v-tab>
                     <v-tab>TIMETABLE</v-tab>
                 </v-tabs>
