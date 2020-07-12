@@ -1,7 +1,11 @@
-const puppeteer = require('puppeteer');
-const cliProgress = require('cli-progress'); // magic progress bar
-const ora = require('ora'); // spinning circle
-const fs = require("fs");
+// const puppeteer = require('puppeteer');
+// const cliProgress = require('cli-progress'); // magic progress bar
+// const ora = require('ora'); // spinning circle
+// const fs = require("fs");
+import puppeteer from "puppeteer"
+import cliProgress from "cli-progress"
+import ora from "ora"
+import fs from "fs"
 
 (async () => {
     const spinner = ora({
@@ -67,7 +71,7 @@ const fs = require("fs");
 
 
         let endResultNum = await page.evaluate(() => {
-            return parseInt(document.querySelector("div.dataTables_info").innerText.split(" ")[1].split("-")[1].replace(",",""))
+            return parseInt(document.querySelector("div.dataTables_info").innerText.split(" ")[1].split("-")[1].replace(",", ""))
         })
 
         // if we have reached the final course, stop the loop
