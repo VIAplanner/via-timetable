@@ -44,7 +44,20 @@ const scrape = async () => {
 
         let coursesRawInfo = await page.evaluate(() => {
             let allData = []
-            allData.push(document.querySelector("div.dataTables_info").innerText)
+            let rawOdd = document.querySelectorAll("tr.odd")
+            let rawEven = document.querySelectorAll("tr.even")
+
+            rawOdd.forEach((element)=>{
+                let courseCode = element.querySelectorAll("td")[1].innerText
+                let term = element.querySelectorAll("td")[6].innerText
+                allData.push({courseCode, term})
+            })
+            rawEven.forEach((element)=>{
+                let courseCode = element.querySelectorAll("td")[1].innerText
+                let term = element.querySelectorAll("td")[6].innerText
+                allData.push({courseCode, term})
+            })
+
             return allData
         })
 
@@ -53,9 +66,6 @@ const scrape = async () => {
     });
 
     cluster.queue('https://coursefinder.utoronto.ca/course-search/search/courseSearch?viewId=CourseSearch-FormView&methodToCall=start#search');
-    cluster.queue('https://coursefinder.utoronto.ca/course-search/search/courseSearch?viewId=CourseSearch-FormView&methodToCall=start#search');
-    // cluster.queue('http://www.wikipedia.org/');
-    // many more pages
 
     await cluster.idle();
     await cluster.close();

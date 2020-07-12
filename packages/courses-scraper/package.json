@@ -6,6 +6,7 @@
     "utm:first": "node api/node/scraper.js first",
     "utm:second": "node api/node/scraper.js second",
     "utm:third": "node api/node/scraper.js third",
+    "scrape:code": "node api/node/tri-campus/scrape-code.js",
     "upload": "node api/node/uploader.js"
   },
   "author": "VIAplanner",
