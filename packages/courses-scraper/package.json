@@ -7,12 +7,14 @@
         "utm:second": "node api/node/scraper.js second",
         "utm:third": "node api/node/scraper.js third",
         "scrape:code": "babel-node api/node/tri-campus/scrape-code.js",
+        "scrape":"babel-node api/node/tri-campus/scraper.js",
         "upload": "node api/node/uploader.js"
     },
     "author": "VIAplanner",
     "license": "MIT",
     "dependencies": {
         "axios": "^0.19.2",
+        "babel-cli": "^6.26.0",
         "cli-progress": "^3.8.2",
         "dotenv": "^8.2.0",
         "ora": "^4.0.4",
@@ -20,8 +22,7 @@
         "puppeteer-cluster": "^0.21.0"
     },
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
-        "nodemon": "^2.0.4"
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.7.0"
     }
 }

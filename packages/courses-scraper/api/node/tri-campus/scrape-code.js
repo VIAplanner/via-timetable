@@ -1,7 +1,3 @@
-// const puppeteer = require('puppeteer');
-// const cliProgress = require('cli-progress'); // magic progress bar
-// const ora = require('ora'); // spinning circle
-// const fs = require("fs");
 import puppeteer from "puppeteer"
 import cliProgress from "cli-progress"
 import ora from "ora"
