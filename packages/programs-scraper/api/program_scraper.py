@@ -102,18 +102,22 @@ for subject_id in tqdm(subject_ids):
         notes = body.find('ol', class_="numbers")
         programs = body.find_all('p', class_="title_program")
 
-        if notes is not None:
+        try:
             notes = notes.find_all('li')
+        except AttributeError:
+            pass
 
-        curr_subject.set_name(title.text.split(' (')[0])
-
-        for degree in all_degrees:
-            if degree in title.text:
-                curr_subject.add_degree(degree)
-
-        if notes is not None:
+        try:
             for note in notes:
                 curr_subject.add_note(note.text.replace("\r", "").strip())
+        except TypeError:
+            pass
+
+        subject_name, degrees_unparsed = curr_subject.set_name(title.text.split(' ('))
+
+        for degree in all_degrees:
+            if degree in degrees_unparsed:
+                curr_subject.add_degree(degree)
 
         for program_soup in programs:
             curr_program = Program()
@@ -131,9 +135,8 @@ for subject_id in tqdm(subject_ids):
             curr_program.set_level(code_name_level[2])
             curr_program.set_program_type(all_program_types[curr_program.code])
 
-
             next_line_soup = program_soup.next_sibling
-            while(not title_reached(next_line_soup)):
+            while not title_reached(next_line_soup):
 
                 if isinstance(next_line_soup, element.Tag):
 
@@ -141,17 +144,22 @@ for subject_id in tqdm(subject_ids):
                     if next_line_soup.name == 'div' and next_line_soup['class'][0] == "lim_enrol":
                         all_notes = next_line_soup.find_all('li')
 
-                        if all_notes is not None:
+                        try:
                             for note_soup in all_notes:
                                 curr_program.add_note(note_soup.text.replace(
                                     "\r", "").replace("\t", "").strip())
+                        except TypeError:
+                            pass
 
                     # courses of the program
                     all_courses = next_line_soup.find_all('a')
-                    if all_courses is not None:
+
+                    try:
                         for course_soup in all_courses:
                             if len(course_soup.text) == 8:
                                 curr_program.add_course(course_soup.text)
+                    except TypeError:
+                        pass
 
                 # reached the end of the page
                 if next_line_soup is None:
