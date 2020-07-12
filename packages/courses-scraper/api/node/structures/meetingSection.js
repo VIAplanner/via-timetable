@@ -1,4 +1,4 @@
-class MeetingSection {
+export default class MeetingSection {
     constructor(){
         this.sectionCode = ""
         this.instructors = []

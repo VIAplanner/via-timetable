@@ -1,4 +1,4 @@
-class Time {
+export default class Time {
     constructor() {
         this.day = ""
         this.start = 0

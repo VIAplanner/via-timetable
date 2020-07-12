@@ -1,5 +1,5 @@
-class Course {
-    constructor(){
+export default class Course {
+    constructor() {
         this.id = ""
         this.courseCode = ""
         this.name = ""
@@ -19,52 +19,51 @@ class Course {
         this.id = id
     }
 
-    setCourseCode(courseCode){
+    setCourseCode(courseCode) {
         this.courseCode = courseCode
     }
 
-    setName(name){
+    setName(name) {
         this.name = name
     }
 
-    setDescription(description){
+    setDescription(description) {
         this.description = description
     }
 
-    setDivision(division){
+    setDivision(division) {
         this.division = division
     }
 
-    setDepartment(department){
+    setDepartment(department) {
         this.department = department
     }
 
-    setPrerequisites(prerequisites){
+    setPrerequisites(prerequisites) {
         this.prerequisites = prerequisites
     }
 
-    setExclusions(exclusions){
+    setExclusions(exclusions) {
         this.exclusions = exclusions
     }
 
-    setLevel(level){
+    setLevel(level) {
         this.level = level
     }
 
-    setCampus(campus){
+    setCampus(campus) {
         this.campus = campus
     }
 
-    setTerm(term){
+    setTerm(term) {
         this.term = term
     }
 
-    addBreath(breath){
+    addBreath(breath) {
         this.breadths.push(breath)
     }
 
-    addMeetingSection(meetingSection){
+    addMeetingSection(meetingSection) {
         this.meetingSections.push(meetingSection)
     }
-
 }
