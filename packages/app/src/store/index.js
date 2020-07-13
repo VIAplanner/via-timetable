@@ -104,6 +104,7 @@ export default new Vuex.Store({
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
         tutorialPopup: !localStorage.visited,
+        deliveryMethod: "Mixed"
     },
     mutations: {
         setExportOverlay(state, payload) {
@@ -308,6 +309,9 @@ export default new Vuex.Store({
                 }
             }
         },
+        setPreferredDeliveryMethod(state, payload) {
+            state.deliveryMethod = payload
+        }
     },
     actions: {
         saveTimetable(context) {

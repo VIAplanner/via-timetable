@@ -56,7 +56,7 @@ export default {
             } else {
                 this.setSemesterStatus("F");
                 await this.exportTimetable("Fall-Timetable.png", "#exportFallMe")
-            }
+            } 
 
             if (this.getSemesterStatus === "F") {
                 this.setSemesterStatus("S");
