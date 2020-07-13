@@ -413,7 +413,8 @@ export default new Vuex.Store({
                 fallCourses,
                 context.state.fallLockedSections,
                 winterCourses,
-                context.state.winterLockedSections
+                context.state.winterLockedSections,
+                context.state.deliveryMethod
             );
 
             context.dispatch("validateTimetable", timetables);
@@ -501,7 +502,8 @@ export default new Vuex.Store({
                 fallCourses,
                 context.state.fallLockedSections,
                 winterCourses,
-                context.state.winterLockedSections
+                context.state.winterLockedSections,
+                context.state.deliveryMethod
             );
 
             context.dispatch("validateTimetable", bothTimetables);

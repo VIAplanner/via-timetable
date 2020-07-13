@@ -168,12 +168,13 @@ const lockSectionOfCourse = (courseSections, lockSections) => {
  * 2 == no preference
  */
 const sortCourseSections = (course, online) => {
-    if (online === 0){
+    console.log(online)
+    if (online === "InPerson"){
         course.lecture.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
         course.practical.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
         course.tutorial.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
     }
-    else if (online === 1){
+    else if (online === "Online"){
         course.lecture.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
         course.practical.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
         course.tutorial.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
@@ -1266,7 +1267,7 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
  * @param {Course[]} courses
  * @returns {Timetable[]}
  */
-const generateTimetables = (fallCourses, fallLockSections, winterCourses, winterLockSections, online = 1) => {
+const generateTimetables = (fallCourses, fallLockSections, winterCourses, winterLockSections, online) => {
     // Generate all valid combinations of MeetingSections for a course
     const fallCourseSections = fallCourses.map(course => sortCourseSection(course));
     const winterCourseSections = winterCourses.map(course => sortCourseSection(course));
