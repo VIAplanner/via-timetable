@@ -8,6 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         fallLockedHourStatus: {
+            "8 AM": false,
             "9 AM": false,
             "10 AM": false,
             "11 AM": false,
@@ -39,6 +40,7 @@ export default new Vuex.Store({
             FRIDAY: [],
         } : JSON.parse(localStorage.fallTimetable),
         winterLockedHourStatus: {
+            "8 AM": false,
             "9 AM": false,
             "10 AM": false,
             "11 AM": false,
