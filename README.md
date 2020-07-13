@@ -2,9 +2,11 @@
   <a href="https://docs.viaplanner.ca/" target="_blank">
     <img alt="VIAplanner" width="300" src="./logo-with-text.png">
   </a>
+
 </p>
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/84bc999c-5549-415d-8d1e-f8c03324c2e4/deploy-status)](https://app.netlify.com/sites/viaplanner/deploys)
+[![License](https://img.shields.io/badge/license-GPL-green?style=flat-square&logo=appveyor)](https://github.com/UTM-Hacklab/VIAplanner/blob/master/LICENSE)
 
 # VIAplanner
 
@@ -27,3 +29,5 @@ cd VIAplanner/packages/app
 npm install
 npm run serve
 ```
+
+# Document
