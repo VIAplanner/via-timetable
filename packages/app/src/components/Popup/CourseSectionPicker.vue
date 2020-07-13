@@ -314,11 +314,17 @@ export default {
                 } else {
                     conflictEmoji = "🍂❄️";
                 }
+                let conflictString
+                if (event.code.slice(0, 4) === "Lock") {
+                    conflictString = `Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                } else {
+                    conflictString = `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`
+                }
                 const ret = {
                     courseCode: event.code,
                     sectionCode: event.sectionCode,
                     time: time,
-                    conflictString: `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`,
+                    conflictString
                 };
                 if (event.start < start && event.end > start) {
                     return ret;
