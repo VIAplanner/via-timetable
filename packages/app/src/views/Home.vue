@@ -30,6 +30,7 @@
                 </v-tabs>
                 <course-search-bar style="margin: auto" />
                 <switch-sem style="margin: auto" />
+                <delivery-method-setting/>
             </v-toolbar>
             <v-row>
                 <v-col class="pa-0">
@@ -61,6 +62,8 @@ import CourseSearchBar from "../components/AppBar/CourseSearchBar";
 import Tutorial from "../components/Popup/Tutorial";
 import SwitchSem from "../components/AppBar/SwitchSem";
 import SideBar from "../components/SidePanel/SideBar";
+import DeliveryMethodSetting from "../components/AppBar/DeliveryMethodSetting";
+
 import { mapGetters } from "vuex";
 
 export default {
@@ -76,6 +79,7 @@ export default {
         CourseSearchBar,
         Tutorial,
         SideBar,
+        DeliveryMethodSetting
     },
     computed: {
         ...mapGetters([

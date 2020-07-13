@@ -104,6 +104,7 @@ export default new Vuex.Store({
         noTimetablePopup: false,
         overwriteLockedSectionPopup: false,
         tutorialPopup: !localStorage.visited,
+        deliveryMethod: "Mixed"
     },
     mutations: {
         setExportOverlay(state, payload) {
@@ -308,6 +309,9 @@ export default new Vuex.Store({
                 }
             }
         },
+        setPreferredDeliveryMethod(state, payload) {
+            state.deliveryMethod = payload
+        }
     },
     actions: {
         saveTimetable(context) {
@@ -409,7 +413,8 @@ export default new Vuex.Store({
                 fallCourses,
                 context.state.fallLockedSections,
                 winterCourses,
-                context.state.winterLockedSections
+                context.state.winterLockedSections,
+                context.state.deliveryMethod
             );
 
             context.dispatch("validateTimetable", timetables);
@@ -497,7 +502,8 @@ export default new Vuex.Store({
                 fallCourses,
                 context.state.fallLockedSections,
                 winterCourses,
-                context.state.winterLockedSections
+                context.state.winterLockedSections,
+                context.state.deliveryMethod
             );
 
             context.dispatch("validateTimetable", bothTimetables);

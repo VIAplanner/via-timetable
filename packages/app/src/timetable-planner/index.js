@@ -162,6 +162,37 @@ const lockSectionOfCourse = (courseSections, lockSections) => {
 }
 
 /**
+ * sort course's sections based on the user's preference
+ * 0 == in person sections has higher priority
+ * 1 == online sections has higher priority
+ * 2 == no preference
+ */
+const sortCourseSections = (course, online) => {
+    console.log(online)
+    if (online === "InPerson"){
+        course.lecture.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
+        course.practical.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
+        course.tutorial.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
+    }
+    else if (online === "Online"){
+        course.lecture.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
+        course.practical.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
+        course.tutorial.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
+    }
+}
+
+/**
+ * sort courses' sections based on the user's preference 
+ * @param {*} courses 
+ * @param {*} online 
+ */
+const sortCourses = (courses, online) => {
+    for (const course of courses){
+        sortCourseSections(course, online)
+    }
+}
+
+/**
  *
  * Creates timetable by parse the meetingSections into each day and check for validity
  * @param {MeetingSection[]} fallCourseSection
@@ -1236,12 +1267,14 @@ const createTimetable = (fallCourseSection, winterCourseSection, state) => {
  * @param {Course[]} courses
  * @returns {Timetable[]}
  */
-const generateTimetables = (fallCourses, fallLockSections, winterCourses, winterLockSections) => {
+const generateTimetables = (fallCourses, fallLockSections, winterCourses, winterLockSections, online) => {
     // Generate all valid combinations of MeetingSections for a course
     const fallCourseSections = fallCourses.map(course => sortCourseSection(course));
     const winterCourseSections = winterCourses.map(course => sortCourseSection(course));
     lockSectionOfCourse(fallCourseSections, fallLockSections)
     lockSectionOfCourse(winterCourseSections, winterLockSections)
+    sortCourses(fallCourseSections, online)
+    sortCourses(winterCourseSections, online)
     let timetables = createTimetable(fallCourseSections, winterCourseSections, "F")
     if ((JSON.stringify(timetables[0]) === JSON.stringify({
         MONDAY: [],
