@@ -251,7 +251,7 @@ export default {
             "winterLockedSections",
         ]),
         course() {
-            return this.selectedCourses[this.code];
+            return this.selectedCourses(this.code[8])[this.code];
         },
         activities() {
             return {
@@ -366,19 +366,19 @@ export default {
                     start,
                     end
                 );
-                fallConflicts = fallConflicts.filter(conflict => 
+                let tempFall = fallConflicts.filter(conflict => 
                     `${conflict.courseCode}${conflict.sectionCode}` !=
                     `${this.code}${timetableSection}`
                 )
-                ret.push(...fallConflicts);
-                winterConflicts = winterConflicts.filter(conflict => 
+                ret.push(...tempFall);
+                let tempWinter = winterConflicts.filter(conflict => 
                     `${conflict.courseCode}${conflict.sectionCode}` !=
                     `${this.code}${timetableSection}` &&
                     !ret.some(itemInRet =>
                         itemInRet.conflictString === conflict.conflictString
                     )
                 )
-                ret.push(...winterConflicts);
+                ret.push(...tempWinter);
             }
             if (ret.length == 0) {
                 return null;
@@ -466,10 +466,12 @@ export default {
         autoResolveConflict() {
             // unlock old sections regardless if they are locked
             for (var oldSection of this.oldSectionsWithConflict) {
+                // console.log(oldSection)
                 this.unlockSection(oldSection);
             }
             // Unlock all the conflicting sections
             for (var conflictSection of this.totalConflictSections) {
+                // console.log(conflictSection)
                 this.unlockSection(
                     `${conflictSection.courseCode}${conflictSection.sectionCode}`
                 );
@@ -481,6 +483,7 @@ export default {
             }
             // Temporarily lock the new sections, regenerate timetable, and unlock the new sections
             for (var newSection of this.newSectionsWithConflict) {
+                // console.log(newSection)
                 this.lockSection(newSection);
             }
             this.resetTimetable();

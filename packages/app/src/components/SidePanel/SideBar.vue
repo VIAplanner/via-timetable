@@ -85,10 +85,10 @@ export default {
         filterCourses() {
             this.timetable; //force re-render the selected courses
             const filteredCourses = {};
-
-            for (var code in this.selectedCourses) {
+            
+            for (var code in this.selectedCourses("")) {
                 if (!code.includes("Lock")) {
-                    filteredCourses[code] = this.selectedCourses[code];
+                    filteredCourses[code] = this.selectedCourses("")[code];
                 }
             }
 

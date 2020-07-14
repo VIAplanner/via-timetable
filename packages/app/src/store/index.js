@@ -584,7 +584,13 @@ export default new Vuex.Store({
         winterTimetable: (state) => {
             return state.winterTimetable;
         },
-        selectedCourses: (state) => {
+        selectedCourses: (state) => (whichSemester) => {
+            if (whichSemester === "F") {
+                return state.fallSelectedCourses;
+            }
+            else if (whichSemester === "S") {
+                return state.winterSelectedCourses;
+            }
             if (state.semesterStatus === "F") {
                 return state.fallSelectedCourses;
             } else {
@@ -611,7 +617,7 @@ export default new Vuex.Store({
             return state.winterLockedSections;
         },
         getCourseColor: (state) => (code) => {
-            if (state.semesterStatus === "F") {
+            if (code[8] === "F") {
                 return state.fallSelectedCourses[code].color;
             } else {
                 return state.winterSelectedCourses[code].color;
