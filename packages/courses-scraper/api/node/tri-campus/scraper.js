@@ -3,6 +3,7 @@ import Course from "../structures/course"
 import MeetingSection from "../structures/meetingSection"
 import Time from "../structures/time"
 import fs from "fs"
+import { S_IFREG } from 'constants';
 
 const formatID = (rawCourseCode, rawTerm) => {
     let strippedTerm = rawTerm.split(" ")
@@ -61,13 +62,26 @@ const scrape = async () => {
                 rawName: document.querySelector("span.uif-headerText-span").innerText,
                 rawDescription: document.querySelector("span[id='u32']").innerText,
                 rawDivision: document.querySelector("span[id='u23']").innerText,
-                rawDepartment: document.querySelector("span[id='u41']").innerText, 
-                rawPrerequisites: document.querySelector("span[id='u50']") != null ? document.querySelector("span[id='u50']").innerText : "", 
-                rawExclusions: document.querySelector("span[id='u68']") != null ? document.querySelector("span[id='u68']").innerText : "", 
+                rawDepartment: document.querySelector("span[id='u41']").innerText,
+                rawPrerequisites: document.querySelector("span[id='u50']") ? document.querySelector("span[id='u50']").innerText : "",
+                rawCorequisite: document.querySelector("span[id='u59']") ? document.querySelector("span[id='u59']").innerText : "",
+                rawExclusions: document.querySelector("span[id='u68']") ? document.querySelector("span[id='u68']").innerText : "",
                 rawCampus: document.querySelector("span[id='u149']").innerText,
-                rawBreadth: document.querySelector("span[id='u12']") != null ?document.querySelector("span[id='u12']").innerText : "",
-                rawDistribution: document.querySelector("span[id='u122']") != null ? document.querySelector("span[id='u122']").innerText : "",
+                rawBreadth: "",
+                rawDistribution: "",
                 rawMeetingSections: []
+            }
+
+            let campusNumber = courseInfo.rawName[7]
+            if (campusNumber === "1") {
+                courseInfo.rawDistribution = document.querySelector("span[id='u131']") ? document.querySelector("span[id='u131']").innerText : ""
+                courseInfo.rawBreadth = document.querySelector("span[id='u122']") ? document.querySelector("span[id='u122']").innerText : ""
+            }
+            else if (campusNumber === "3") {
+                courseInfo.rawBreadth = document.querySelector("span[id='u104']") ? document.querySelector("span[id='u104']").innerText : ""
+            }
+            else if (campusNumber === "5") {
+                courseInfo.rawDistribution = document.querySelector("span[id='u113']") ? document.querySelector("span[id='u113']").innerText : ""
             }
 
             return courseInfo
@@ -79,7 +93,7 @@ const scrape = async () => {
 
     // let rawInfo = fs.readFileSync("output/allCourseCodes.json");
     // let allCourseInfo = JSON.parse(rawInfo)
-    let allCourseInfo = [{ courseCode: "CSC108H5", term: "2020 Fall" }]
+    let allCourseInfo = [{ courseCode: "CHE213H1", term: "2021 Winter" }]
     let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
 
     allCourseInfo.forEach((currCourseInfo) => {
