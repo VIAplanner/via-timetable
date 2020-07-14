@@ -81,6 +81,7 @@ export default new Vuex.Store({
         savedFallLockedSections: [],
         savedWinterLockedSections: [],
         savedLockedHourStatus: {
+            "8 AM": false,
             "9 AM": false,
             "10 AM": false,
             "11 AM": false,
