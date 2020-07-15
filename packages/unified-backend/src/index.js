@@ -1,9 +1,16 @@
 require("./db/mongoose")
 const express = require("express")
 const courseRouter = require("./routes/course")
-
+const rateLimit = require("express-rate-limit");
+const cors = require("cors")
+const axios = require("axios")
 const app = express()
 const port = process.env.PORT || 3000
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per 15 minutes, so 9 requests per seconds
+});
 
 app.set('trust proxy', 1);
 
@@ -22,6 +29,41 @@ if (process.env.NODE_ENV === 'production') {
 
 app.get("/", (req, res) => {
     res.redirect('https://docs.viaplanner.ca/course-api/');
+})
+
+app.get("/status", async (req, res) => {
+    try{
+        await axios.get("https://viaplanner.ca")
+        res.send({
+            schemaVersion: 1,
+            label: "Status",
+            message: "up",
+            color: "success"
+        })
+    }catch(e){
+        res.send({
+            schemaVersion: 1,
+            label: "Status",
+            message: "down",
+            color: "critical",
+        })
+    }
+})
+
+app.get("/instagram", [cors(), limiter], async (req, res) => {
+    try {
+        let igData = await axios.get("https://www.instagram.com/viaplanner.ca/?__a=1")
+        igData = igData.data
+        let followerCount = igData.graphql.user.edge_followed_by.count
+        res.send({
+            schemaVersion: 1,
+            label: "Instagram",
+            message: followerCount,
+            color: "#962fbf"
+        })
+    } catch (e) {
+        res.status(500).send({ message: e.message })
+    }
 })
 
 app.get("*", (req, res) => {

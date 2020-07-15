@@ -22,7 +22,7 @@ const timeSchema = new Schema({
     },
     location: {
         type: String,
-        default: "NA"
+        default: ""
     }
 })
 
@@ -51,9 +51,9 @@ const meetingSectionSchema = new Schema({
         type: Number,
         default: 0
     },
-    notes: {
-        type: String,
-        default: "NA"
+    method: {
+        type: Number,
+        required: true
     }
 })
 
@@ -77,19 +77,23 @@ const courseSchema = new Schema({
     },
     division: {
         type: String,
-        default: "NA"
+        default: ""
     },
     department: {
         type: String,
-        default: "NA"
+        default: ""
     },
     prerequisites: {
         type: String,
-        default: "NA"
+        default: ""
+    },
+    corequisites: {
+        type: String,
+        default: ""
     },
     exclusions: {
         type: String,
-        default: "NA"
+        default: ""
     },
     level: {
         type: Number,
@@ -97,21 +101,21 @@ const courseSchema = new Schema({
     },
     campus: {
         type: String,
-        default: "NA"
+        default: ""
     },
     term: {
         type: String,
-        default: "NA"
+        default: ""
     },
-    breadths: {
-        type: Array,
-        validate(value) {
-            if (value.some(isNaN)) {
-                throw new Error("breath must be numbers")
-            }
-        }
+    breadth: {
+        type: String,
+        default: ""
     },
-    meeting_sections:  [meetingSectionSchema]
+    distribution: {
+        type: String,
+        default: ""
+    },
+    meeting_sections: [meetingSectionSchema]
 })
 
 const Course = mongoose.model("Course", courseSchema)
