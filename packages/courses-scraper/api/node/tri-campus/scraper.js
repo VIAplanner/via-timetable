@@ -284,23 +284,23 @@ const scrape = async () => {
     });
 
     let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
-    // let rawInfo = fs.readFileSync("output/allCourseCodes.json");
-    // let allCourseInfo = JSON.parse(rawInfo)
+    let rawInfo = fs.readFileSync("output/allCourseCodes.json");
+    let allCourseInfo = JSON.parse(rawInfo)
 
     // these are for testing only
-    let allCourseInfo = [
-        { courseCode: "ABP101Y1", term: "2020 Fall +" },
-        { courseCode: "ECO100Y5", term: "2020 Fall +" },
-        { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
-        { courseCode: "CSC108H5", term: "2020 Fall" },
-        { courseCode: "CSCA08H3", term: "2020 Fall" },
-        { courseCode: "CSCA08H3", term: "2021 Winter" },
-        { courseCode: "CSC108H1", term: "2020 Fall" },
-        { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
-        { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
-        { courseCode: "ANT299Y5", term: "2020 Fall" }, // Invalid
-        { courseCode: "ANT366H1", term: "2020 Fall +" }, // Exception
-    ]
+    // let allCourseInfo = [
+    //     { courseCode: "ABP101Y1", term: "2020 Fall +" },
+    //     { courseCode: "ECO100Y5", term: "2020 Fall +" },
+    //     { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
+    //     { courseCode: "CSC108H5", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2021 Winter" },
+    //     { courseCode: "CSC108H1", term: "2020 Fall" },
+    //     { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
+    //     { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
+    //     { courseCode: "ANT299Y5", term: "2020 Fall" }, // Invalid
+    //     { courseCode: "ANT366H1", term: "2020 Fall +" }, // Exception
+    // ]
 
     allCourseInfo.forEach((currCourseInfo) => {
         if (!currCourseInfo.term.includes("Summer")) {
