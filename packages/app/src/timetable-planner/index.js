@@ -168,7 +168,6 @@ const lockSectionOfCourse = (courseSections, lockSections) => {
  * 2 == no preference
  */
 const sortCourseSections = (course, online) => {
-    console.log(online)
     if (online === "InPerson"){
         course.lecture.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
         course.practical.sort((a,b) => (a.sectionCode > b.sectionCode)? 1 : -1)
