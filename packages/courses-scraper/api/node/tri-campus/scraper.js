@@ -2,7 +2,6 @@ import { Cluster } from 'puppeteer-cluster';
 import Course from "../structures/course"
 import MeetingSection from "../structures/meetingSection"
 import Time from "../structures/time"
-import fs from "fs"
 
 // convert 24 hours to seconds
 const timeToSeconds = (hour) => {
@@ -15,6 +14,24 @@ const timeToSeconds = (hour) => {
 // remove course code form the rawName
 const formatName = (rawName) => {
     return rawName.slice(10, rawName.length)
+}
+
+// returns the level of the courses
+const formatLevel = (courseCode) => {
+    let levelChar = courseCode[3]
+
+    if (levelChar === "1" || levelChar === "A") {
+        return 1
+    }
+    else if (levelChar === "2" || levelChar === "B") {
+        return 2
+    }
+    else if (levelChar === "3" || levelChar === "C") {
+        return 3
+    }
+    else if (levelChar === "4" || levelChar === "D") {
+        return 4
+    }
 }
 
 // return the section code acronym
@@ -47,7 +64,7 @@ const formatLocations = (rawLocations) => {
 // given a time such as 9:00-10:00, return a object containing these times in seconds, and duration
 const formatTime = (rawTime) => {
     let strippedTimes = rawTime.split("-")
-    strippedTimes.forEach((time, index, arr)=>{
+    strippedTimes.forEach((time, index, arr) => {
         arr[index] = timeToSeconds(time)
     })
 
@@ -59,13 +76,13 @@ const formatTime = (rawTime) => {
 }
 
 // return a list of time object with the correct information
-const createTime = (rawTime, rawLocations) => {
+const createTime = (rawTimes, rawLocations) => {
     let allTimes = []
-    let timeStrings = rawTime.split("\n")
+    let timeStrings = rawTimes.split("\n")
     let strippedLocations = formatLocations(rawLocations)
-    timeStrings.splice(strippedTimes.length - 1, 1)
+    timeStrings.splice(timeStrings.length - 1, 1)
 
-    timeStrings.forEach((timeString, index)=>{
+    timeStrings.forEach((timeString, index) => {
         let strippedTimes = timeString.split(" ")
         let currTime = new Time()
         let currDay = strippedTimes[0]
@@ -75,13 +92,15 @@ const createTime = (rawTime, rawLocations) => {
         currTime.setDuration(timeData.duration)
         currTime.setStart(timeData.start)
         currTime.setEnd(timeData.end)
-        currTime.setLocation(strippedLocations[index] ? strippedLocations[index]: "")
+        currTime.setLocation(strippedLocations[index] ? strippedLocations[index] : "")
 
         allTimes.push(currTime)
     })
 
+    return allTimes
 }
 
+// return the id of the courses, empty string is it's a summer course
 const formatID = (rawCourseCode, rawTerm) => {
     let strippedTerm = rawTerm.split(" ")
     let year = parseInt(strippedTerm[0])
@@ -129,9 +148,6 @@ const scrape = async () => {
 
     await cluster.task(async ({ page, data }) => {
         await page.goto(data.url, { waitUntil: 'networkidle0' });
-        let currCourse = new Course()
-        currCourse.setCourseCode(data.courseCode)
-        currCourse.setTerm(data.term)
 
         let rawCourseData = await page.evaluate(() => {
 
@@ -141,7 +157,7 @@ const scrape = async () => {
                 rawDivision: document.querySelector("span[id='u23']").innerText,
                 rawDepartment: document.querySelector("span[id='u41']").innerText,
                 rawPrerequisites: document.querySelector("span[id='u50']") ? document.querySelector("span[id='u50']").innerText : "",
-                rawCorequisite: document.querySelector("span[id='u59']") ? document.querySelector("span[id='u59']").innerText : "",
+                rawCorequisites: document.querySelector("span[id='u59']") ? document.querySelector("span[id='u59']").innerText : "",
                 rawExclusions: document.querySelector("span[id='u68']") ? document.querySelector("span[id='u68']").innerText : "",
                 rawCampus: document.querySelector("span[id='u149']").innerText,
                 rawBreadth: "",
@@ -202,10 +218,44 @@ const scrape = async () => {
             return rawCourseInfo
         })
 
-        currCourse.setId(formatID(courseCode, term))
+        let currCourse = new Course()
+        currCourse.setId(formatID(data.courseCode, data.term))
+        currCourse.setCourseCode(data.courseCode)
+        currCourse.setName(formatName(rawCourseData.rawName))
+        currCourse.setDescription(rawCourseData.rawDescription)
+        currCourse.setDivision(rawCourseData.rawDivision)
+        currCourse.setDepartment(rawCourseData.rawDepartment)
+        currCourse.setPrerequisites(rawCourseData.rawPrerequisites)
+        currCourse.setCorequisites(rawCourseData.rawCorequisites)
+        currCourse.setExclusions(rawCourseData.rawExclusions)
+        currCourse.setLevel(formatLevel(data.courseCode))
+        currCourse.setCampus(rawCourseData.rawCampus)
+        currCourse.setTerm(data.term)
+        currCourse.setBreath(rawCourseData.rawBreadth)
+        currCourse.setDistribution(rawCourseData.rawDistribution)
 
-        console.log(currCourse)
-        // console.log(rawCourseData)
+        rawCourseData.rawMeetingSections.forEach((rawMeetingSection)=>{
+            let currMeetingSection = new MeetingSection()
+            let strippedInstructors = formatInstructors(rawMeetingSection.rawInstructors)
+            let strippedTimes = createTime(rawMeetingSection.rawTimes, rawMeetingSection.rawLocations)
+
+            currMeetingSection.setSectionCode(formatSectionCode(rawMeetingSection.rawSectionCode))
+            currMeetingSection.setSize(formatSize(rawMeetingSection.rawSize))
+            currMeetingSection.setEnrolment(formatEnrolment(rawMeetingSection.rawEnrolment))
+            
+            strippedInstructors.forEach(currInstructor=>{
+                currMeetingSection.addInstructor(currInstructor)
+            })
+
+            strippedTimes.forEach(currTime => {
+                currMeetingSection.addTime(currTime)
+            })
+
+            currCourse.addMeetingSection(currMeetingSection)
+        })
+
+        currCourse.save()
+        // console.log(JSON.stringify(currCourse))
     });
 
     let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="

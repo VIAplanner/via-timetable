@@ -16,7 +16,7 @@ export default class MeetingSection {
         this.instructors.push(instructor)
     }
 
-    addTimes(time){
+    addTime(time){
         this.times.push(time)
     }
 

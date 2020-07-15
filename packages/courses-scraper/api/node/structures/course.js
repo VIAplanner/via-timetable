@@ -1,3 +1,5 @@
+import fs from "fs"
+
 export default class Course {
     constructor() {
         this.id = ""
@@ -7,11 +9,13 @@ export default class Course {
         this.division = ""
         this.department = ""
         this.prerequisites = ""
+        this.corequisites = ""
         this.exclusions = ""
         this.level = 0
         this.campus = ""
         this.term = ""
-        this.breadths = []
+        this.breadth = ""
+        this.distribution = ""
         this.meetingSections = []
     }
 
@@ -43,6 +47,10 @@ export default class Course {
         this.prerequisites = prerequisites
     }
 
+    setCorequisites(corequisites) {
+        this.corequisites = corequisites
+    }
+
     setExclusions(exclusions) {
         this.exclusions = exclusions
     }
@@ -59,11 +67,28 @@ export default class Course {
         this.term = term
     }
 
-    addBreath(breath) {
-        this.breadths.push(breath)
+    setBreath(breath) {
+        this.breadth = breath
+    }
+
+    setDistribution(distribution) {
+        this.distribution = distribution
     }
 
     addMeetingSection(meetingSection) {
         this.meetingSections.push(meetingSection)
     }
+
+    // save the current course as json in output
+    save() {
+        // if the course is not empty
+        if (this.meetingSections.length !== 0) {
+            fs.writeFile(`output/courses/${this.courseCode}.json`, JSON.stringify(this), (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+    }
+
 }
