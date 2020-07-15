@@ -3,7 +3,84 @@ import Course from "../structures/course"
 import MeetingSection from "../structures/meetingSection"
 import Time from "../structures/time"
 import fs from "fs"
-import { S_IFREG } from 'constants';
+
+// convert 24 hours to seconds
+const timeToSeconds = (hour) => {
+    let splitTimes = hour.split(":")
+    let hourSeconds = parseInt(splitTimes[0]) * 3600
+    let minuteSeconds = parseInt(splitTimes[1]) * 60
+    return hourSeconds + minuteSeconds
+}
+
+// remove course code form the rawName
+const formatName = (rawName) => {
+    return rawName.slice(10, rawName.length)
+}
+
+// return the section code acronym
+const formatSectionCode = (rawSectionCode) => {
+    return rawSectionCode[0] + rawSectionCode.slice(4, rawSectionCode.length)
+}
+
+const formatEnrolment = (rawEnrolment) => {
+    return parseInt(rawEnrolment)
+}
+
+const formatSize = (rawSize) => {
+    return parseInt(rawSize)
+}
+
+// returns the instructors in a list
+const formatInstructors = (rawInstructors) => {
+    let strippedInstructors = rawInstructors.split("\n")
+    strippedInstructors.splice(strippedInstructors.length - 1, 1)
+    return strippedInstructors
+}
+
+// returns the locations in a list
+const formatLocations = (rawLocations) => {
+    let strippedLocations = rawLocations.split("\n")
+    strippedLocations.splice(strippedLocations.length - 1, 1)
+    return strippedLocations
+}
+
+// given a time such as 9:00-10:00, return a object containing these times in seconds, and duration
+const formatTime = (rawTime) => {
+    let strippedTimes = rawTime.split("-")
+    strippedTimes.forEach((time, index, arr)=>{
+        arr[index] = timeToSeconds(time)
+    })
+
+    return {
+        start: strippedTimes[0],
+        end: strippedTimes[1],
+        duration: strippedTimes[1] = strippedTimes[0]
+    }
+}
+
+// return a list of time object with the correct information
+const createTime = (rawTime, rawLocations) => {
+    let allTimes = []
+    let timeStrings = rawTime.split("\n")
+    let strippedLocations = formatLocations(rawLocations)
+    timeStrings.splice(strippedTimes.length - 1, 1)
+
+    timeStrings.forEach((timeString, index)=>{
+        let strippedTimes = timeString.split(" ")
+        let currTime = new Time()
+        let currDay = strippedTimes[0]
+        let timeData = formatTime(strippedTimes[1])
+
+        currTime.setDay(currDay)
+        currTime.setDuration(timeData.duration)
+        currTime.setStart(timeData.start)
+        currTime.setEnd(timeData.end)
+        currTime.setLocation(strippedLocations[index] ? strippedLocations[index]: "")
+
+        allTimes.push(currTime)
+    })
+
+}
 
 const formatID = (rawCourseCode, rawTerm) => {
     let strippedTerm = rawTerm.split(" ")
@@ -58,7 +135,7 @@ const scrape = async () => {
 
         let rawCourseData = await page.evaluate(() => {
 
-            let courseInfo = {
+            let rawCourseInfo = {
                 rawName: document.querySelector("span.uif-headerText-span").innerText,
                 rawDescription: document.querySelector("span[id='u32']").innerText,
                 rawDivision: document.querySelector("span[id='u23']").innerText,
@@ -72,29 +149,69 @@ const scrape = async () => {
                 rawMeetingSections: []
             }
 
-            let campusNumber = courseInfo.rawName[7]
+            // distribution and breadth requirement
+            let campusNumber = rawCourseInfo.rawName[7]
             if (campusNumber === "1") {
-                courseInfo.rawDistribution = document.querySelector("span[id='u131']") ? document.querySelector("span[id='u131']").innerText : ""
-                courseInfo.rawBreadth = document.querySelector("span[id='u122']") ? document.querySelector("span[id='u122']").innerText : ""
+                rawCourseInfo.rawDistribution = document.querySelector("span[id='u131']") ? document.querySelector("span[id='u131']").innerText : ""
+                rawCourseInfo.rawBreadth = document.querySelector("span[id='u122']") ? document.querySelector("span[id='u122']").innerText : ""
             }
             else if (campusNumber === "3") {
-                courseInfo.rawBreadth = document.querySelector("span[id='u104']") ? document.querySelector("span[id='u104']").innerText : ""
+                rawCourseInfo.rawBreadth = document.querySelector("span[id='u104']") ? document.querySelector("span[id='u104']").innerText : ""
             }
             else if (campusNumber === "5") {
-                courseInfo.rawDistribution = document.querySelector("span[id='u113']") ? document.querySelector("span[id='u113']").innerText : ""
+                rawCourseInfo.rawDistribution = document.querySelector("span[id='u113']") ? document.querySelector("span[id='u113']").innerText : ""
             }
 
-            return courseInfo
+            let rawMeetingSectionsOdd = document.querySelectorAll("tr.odd")
+            let rawMeetingSectionsEven = document.querySelectorAll("tr.even")
+
+            rawMeetingSectionsOdd.forEach(rawMeetingSection => {
+
+                let rawRowInfo = rawMeetingSection.querySelectorAll("td")
+
+                let rawSectionInfo = {
+                    rawSectionCode: rawRowInfo[0].innerText,
+                    rawTimes: rawRowInfo[1].innerText,
+                    rawInstructors: rawRowInfo[2].innerText,
+                    rawLocations: rawRowInfo[3].innerText,
+                    rawSize: rawRowInfo[4].innerText,
+                    rawEnrolment: rawRowInfo[5].innerText,
+                    rawMethod: rawRowInfo[7].innerText,
+                }
+
+                rawCourseInfo.rawMeetingSections.push(rawSectionInfo)
+            })
+
+            rawMeetingSectionsEven.forEach(rawMeetingSection => {
+
+                let rawRowInfo = rawMeetingSection.querySelectorAll("td")
+
+                let rawSectionInfo = {
+                    rawSectionCode: rawRowInfo[0].innerText,
+                    rawTimes: rawRowInfo[1].innerText,
+                    rawInstructors: rawRowInfo[2].innerText,
+                    rawLocations: rawRowInfo[3].innerText,
+                    rawSize: rawRowInfo[4].innerText,
+                    rawEnrolment: rawRowInfo[5].innerText,
+                    rawMethod: rawRowInfo[7].innerText,
+                }
+
+                rawCourseInfo.rawMeetingSections.push(rawSectionInfo)
+            })
+
+            return rawCourseInfo
         })
 
-        // console.log(currCourse)
-        console.log(rawCourseData)
+        currCourse.setId(formatID(courseCode, term))
+
+        console.log(currCourse)
+        // console.log(rawCourseData)
     });
 
+    let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
     // let rawInfo = fs.readFileSync("output/allCourseCodes.json");
     // let allCourseInfo = JSON.parse(rawInfo)
-    let allCourseInfo = [{ courseCode: "CHE213H1", term: "2021 Winter" }]
-    let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
+    let allCourseInfo = [{ courseCode: "CSCA08H3", term: "2020 Fall" }]
 
     allCourseInfo.forEach((currCourseInfo) => {
         let courseID = formatID(currCourseInfo.courseCode, currCourseInfo.term)
