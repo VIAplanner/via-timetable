@@ -112,7 +112,7 @@ const formatID = (rawCourseCode, rawTerm) => {
     let semester = strippedTerm[1]
 
     if (semester === "Fall") {
-        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y" 
+        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y"
         return `${rawCourseCode}${termLetter}${year}9`
     }
     else if (semester === "Winter") {
@@ -126,9 +126,9 @@ const formatID = (rawCourseCode, rawTerm) => {
 const formatCourseCode = (rawCourseCode, rawTerm) => {
     let strippedTerm = rawTerm.split(" ")
     let semester = strippedTerm[1]
-    
+
     if (semester === "Fall") {
-        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y" 
+        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y"
         return `${rawCourseCode}${termLetter}`
     }
     else if (semester === "Winter") {
@@ -142,7 +142,7 @@ const formatCourseCode = (rawCourseCode, rawTerm) => {
 const scrape = async () => {
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 10,
+        maxConcurrency: 20,
         monitor: true,
         skipDuplicateUrls: true,
         puppeteerOptions: { executablePath: "/usr/bin/chromium-browser" },
@@ -158,6 +158,11 @@ const scrape = async () => {
         await page.goto(data.url, { waitUntil: 'networkidle0' });
 
         let rawCourseData = await page.evaluate(() => {
+
+            // if the current URL is incorrect
+            if (document.querySelector("span.uif-headerText-span").innerText === "Error") {
+                return
+            }
 
             let rawCourseInfo = {
                 rawName: document.querySelector("span.uif-headerText-span").innerText,
@@ -226,6 +231,11 @@ const scrape = async () => {
             return rawCourseInfo
         })
 
+        // if the course is empty
+        if (!rawCourseData) {
+            return
+        }
+
         let currCourse = new Course()
         currCourse.setId(formatID(data.courseCode, data.term))
         currCourse.setCourseCode(formatCourseCode(data.courseCode, data.term))
@@ -242,7 +252,7 @@ const scrape = async () => {
         currCourse.setBreath(rawCourseData.rawBreadth)
         currCourse.setDistribution(rawCourseData.rawDistribution)
 
-        rawCourseData.rawMeetingSections.forEach((rawMeetingSection)=>{
+        rawCourseData.rawMeetingSections.forEach((rawMeetingSection) => {
             let currMeetingSection = new MeetingSection()
             let strippedInstructors = formatInstructors(rawMeetingSection.rawInstructors)
             let strippedTimes = createTime(rawMeetingSection.rawTimes, rawMeetingSection.rawLocations)
@@ -251,8 +261,8 @@ const scrape = async () => {
             currMeetingSection.setSize(formatSize(rawMeetingSection.rawSize))
             currMeetingSection.setEnrolment(formatEnrolment(rawMeetingSection.rawEnrolment))
             currMeetingSection.setMethod(rawMeetingSection.rawMethod)
-            
-            strippedInstructors.forEach(currInstructor=>{
+
+            strippedInstructors.forEach(currInstructor => {
                 currMeetingSection.addInstructor(currInstructor)
             })
 
@@ -270,7 +280,7 @@ const scrape = async () => {
     let rawInfo = fs.readFileSync("output/allCourseCodes.json");
     let allCourseInfo = JSON.parse(rawInfo)
 
-    // these are for testing only
+    // // these are for testing only
     // let allCourseInfo = [
     //     { courseCode: "ABP101Y1", term: "2020 Fall +" },
     //     { courseCode: "ECO100Y5", term: "2020 Fall +" },
@@ -280,14 +290,33 @@ const scrape = async () => {
     //     { courseCode: "CSCA08H3", term: "2021 Winter" },
     //     { courseCode: "CSC108H1", term: "2020 Fall" },
     //     { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
+    //     { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
+    //     { courseCode: "ANT299Y5", term: "2021 Fall Y" }, // Invalid
     // ]
 
     allCourseInfo.forEach((currCourseInfo) => {
-        let courseID = formatID(currCourseInfo.courseCode, currCourseInfo.term)
 
-        if (courseID !== "") {
-            cluster.queue({ url: `${baseURL}${courseID}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
-        }
+        let possibleEndings = [
+            "F20209",
+            "Y20209",
+            "S20211"
+        ]
+
+        let possibleTerms = [
+            "2020 Fall",
+            "2020 Fall +",
+            "2021 Winter"
+        ]
+
+        // can't use this solution because there are mistakes on uoft course finder
+        // let courseID = formatID(currCourseInfo.courseCode, currCourseInfo.term)
+        // if (courseID !== "") {
+        //     cluster.queue({ url: `${baseURL}${courseID}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
+        // }
+
+        possibleEndings.forEach((ending, index) => {
+            cluster.queue({ url: `${baseURL}${currCourseInfo.courseCode}${ending}`, courseCode: currCourseInfo.courseCode, term: possibleTerms[index] })
+        })
 
     })
 
