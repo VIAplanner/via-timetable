@@ -62,8 +62,18 @@ const formatLocations = (rawLocations) => {
     return strippedLocations
 }
 
-const formatTerm = (rawTerm) => {
-    return rawTerm.replace("Fall +", "Full Year")
+const formatTerm = (rawCourseCode, rawTerm) => {
+    if (rawTerm.includes("Fall")) {
+        if (rawTerm.includes("+") && rawCourseCode[6] === "Y") {
+            return "2020 Full Year"
+        }
+        else {
+            return "2020 Fall"
+        }
+    }
+    else if (rawTerm.includes("Winter")) {
+        return "2021 Winter"
+    }
 }
 
 // given a time such as 9:00-10:00, return a object containing these times in seconds, and duration
@@ -77,6 +87,18 @@ const formatTime = (rawTime) => {
         start: strippedTimes[0],
         end: strippedTimes[1],
         duration: strippedTimes[1] - strippedTimes[0]
+    }
+}
+
+const termToEnding = (rawTerm) => {
+    if (rawTerm === "2020 Fall") {
+        return "F20209"
+    }
+    else if (rawTerm === "2020 Fall +") {
+        return "Y20209"
+    }
+    else if (rawTerm === "2021 Winter") {
+        return "S20211"
     }
 }
 
@@ -106,21 +128,8 @@ const createTime = (rawTimes, rawLocations) => {
 }
 
 // return the id of the courses, empty string is it's a summer course
-const formatID = (rawCourseCode, rawTerm) => {
-    let strippedTerm = rawTerm.split(" ")
-    let year = parseInt(strippedTerm[0])
-    let semester = strippedTerm[1]
-
-    if (semester === "Fall") {
-        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y"
-        return `${rawCourseCode}${termLetter}${year}9`
-    }
-    else if (semester === "Winter") {
-        return `${rawCourseCode}S${year}1`
-    }
-    else {
-        return ""
-    }
+const formatID = (rawCourseCode, ending) => {
+    return `${rawCourseCode}${ending}`
 }
 
 const formatCourseCode = (rawCourseCode, rawTerm) => {
@@ -144,7 +153,6 @@ const scrape = async () => {
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 20,
         monitor: true,
-        skipDuplicateUrls: true,
         puppeteerOptions: { executablePath: "/usr/bin/chromium-browser" },
     });
 
@@ -159,7 +167,6 @@ const scrape = async () => {
 
         let rawCourseData = await page.evaluate(() => {
 
-            // if the current URL is incorrect
             if (document.querySelector("span.uif-headerText-span").innerText === "Error") {
                 return
             }
@@ -233,11 +240,11 @@ const scrape = async () => {
 
         // if the course is empty
         if (!rawCourseData) {
-            return
+            return console.log(data.courseCode, data.term)
         }
 
         let currCourse = new Course()
-        currCourse.setId(formatID(data.courseCode, data.term))
+        currCourse.setId(formatID(data.courseCode, termToEnding(data.term)))
         currCourse.setCourseCode(formatCourseCode(data.courseCode, data.term))
         currCourse.setName(formatName(rawCourseData.rawName))
         currCourse.setDescription(rawCourseData.rawDescription)
@@ -248,7 +255,7 @@ const scrape = async () => {
         currCourse.setExclusions(rawCourseData.rawExclusions)
         currCourse.setLevel(formatLevel(data.courseCode))
         currCourse.setCampus(rawCourseData.rawCampus)
-        currCourse.setTerm(formatTerm(data.term))
+        currCourse.setTerm(formatTerm(data.courseCode, data.term))
         currCourse.setBreath(rawCourseData.rawBreadth)
         currCourse.setDistribution(rawCourseData.rawDistribution)
 
@@ -277,47 +284,28 @@ const scrape = async () => {
     });
 
     let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
-    let rawInfo = fs.readFileSync("output/allCourseCodes.json");
-    let allCourseInfo = JSON.parse(rawInfo)
+    // let rawInfo = fs.readFileSync("output/allCourseCodes.json");
+    // let allCourseInfo = JSON.parse(rawInfo)
 
-    // // these are for testing only
-    // let allCourseInfo = [
-    //     { courseCode: "ABP101Y1", term: "2020 Fall +" },
-    //     { courseCode: "ECO100Y5", term: "2020 Fall +" },
-    //     { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
-    //     { courseCode: "CSC108H5", term: "2020 Fall" },
-    //     { courseCode: "CSCA08H3", term: "2020 Fall" },
-    //     { courseCode: "CSCA08H3", term: "2021 Winter" },
-    //     { courseCode: "CSC108H1", term: "2020 Fall" },
-    //     { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
-    //     { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
-    //     { courseCode: "ANT299Y5", term: "2021 Fall Y" }, // Invalid
-    // ]
+    // these are for testing only
+    let allCourseInfo = [
+        { courseCode: "ABP101Y1", term: "2020 Fall +" },
+        { courseCode: "ECO100Y5", term: "2020 Fall +" },
+        { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
+        { courseCode: "CSC108H5", term: "2020 Fall" },
+        { courseCode: "CSCA08H3", term: "2020 Fall" },
+        { courseCode: "CSCA08H3", term: "2021 Winter" },
+        { courseCode: "CSC108H1", term: "2020 Fall" },
+        { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
+        { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
+        { courseCode: "ANT299Y5", term: "2020 Fall" }, // Invalid
+        { courseCode: "ANT366H1", term: "2020 Fall +" }, // Exception
+    ]
 
     allCourseInfo.forEach((currCourseInfo) => {
-
-        let possibleEndings = [
-            "F20209",
-            "Y20209",
-            "S20211"
-        ]
-
-        let possibleTerms = [
-            "2020 Fall",
-            "2020 Fall +",
-            "2021 Winter"
-        ]
-
-        // can't use this solution because there are mistakes on uoft course finder
-        // let courseID = formatID(currCourseInfo.courseCode, currCourseInfo.term)
-        // if (courseID !== "") {
-        //     cluster.queue({ url: `${baseURL}${courseID}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
-        // }
-
-        possibleEndings.forEach((ending, index) => {
-            cluster.queue({ url: `${baseURL}${currCourseInfo.courseCode}${ending}`, courseCode: currCourseInfo.courseCode, term: possibleTerms[index] })
-        })
-
+        if (!currCourseInfo.term.includes("Summer")) {
+            cluster.queue({ url: `${baseURL}${formatID(currCourseInfo.courseCode, termToEnding(currCourseInfo.term))}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
+        }
     })
 
     await cluster.idle();

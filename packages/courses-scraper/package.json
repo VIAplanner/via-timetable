@@ -7,9 +7,9 @@
         "utm:second": "node api/node/scraper.js second",
         "utm:third": "node api/node/scraper.js third",
         "scrape:code": "babel-node api/node/tri-campus/scrape-code.js",
-        "scrape":"babel-node api/node/tri-campus/scraper.js",
+        "scrape": "babel-node api/node/tri-campus/scraper.js",
         "upload": "node api/node/uploader.js",
-        "test":"babel-node api/node/structures/course.js"
+        "test": "babel-node api/node/structures/course.js"
     },
     "author": "VIAplanner",
     "license": "MIT",

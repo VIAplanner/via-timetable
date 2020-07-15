@@ -48,18 +48,15 @@ import fs from "fs"
             let rawOdd = document.querySelectorAll("tr.odd")
             let rawEven = document.querySelectorAll("tr.even")
 
-            // cannot include terms for now
             rawOdd.forEach((element) => {
                 let courseCode = element.querySelectorAll("td")[1].innerText
                 let term = element.querySelectorAll("td")[6].innerText
-                // currCourseCodes.push({ courseCode, term })
-                currCourseCodes.push({ courseCode })
+                currCourseCodes.push({ courseCode, term })
             })
             rawEven.forEach((element) => {
                 let courseCode = element.querySelectorAll("td")[1].innerText
                 let term = element.querySelectorAll("td")[6].innerText
-                // currCourseCodes.push({ courseCode, term })
-                currCourseCodes.push({ courseCode })
+                currCourseCodes.push({ courseCode, term })
             })
 
             return currCourseCodes
@@ -83,12 +80,6 @@ import fs from "fs"
             })
         }
     }
-
-    // eliminate duplicate
-    allCourseCodes = allCourseCodes.filter((courseCode, index) => {
-        return allCourseCodes.indexOf(courseCode) >= index;
-    });
-
 
     fs.writeFile(`output/allCourseCodes.json`, JSON.stringify(allCourseCodes), (err) => {
         if (err) {
