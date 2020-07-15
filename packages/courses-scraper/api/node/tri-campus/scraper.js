@@ -151,7 +151,7 @@ const formatCourseCode = (rawCourseCode, rawTerm) => {
 const scrape = async () => {
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 20,
+        maxConcurrency: 15,
         monitor: true,
         puppeteerOptions: { executablePath: "/usr/bin/chromium-browser" },
     });
