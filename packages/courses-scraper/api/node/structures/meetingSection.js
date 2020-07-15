@@ -5,7 +5,7 @@ export default class MeetingSection {
         this.times = []
         this.size = 0
         this.enrolment = 0 
-        this.notes = ""
+        this.method = ""
     }
 
     setSectionCode(sectionCode){
@@ -28,8 +28,7 @@ export default class MeetingSection {
         this.enrolment = enrolment
     }
 
-    setNotes(notes){
-        this.notes = notes
+    setMethod(method){
+        this.method = method
     }
-
 }

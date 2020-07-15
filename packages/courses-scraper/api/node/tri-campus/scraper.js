@@ -61,6 +61,10 @@ const formatLocations = (rawLocations) => {
     return strippedLocations
 }
 
+const formatTerm = (rawTerm) => {
+    return rawTerm.replace("Fall +", "Full Year")
+}
+
 // given a time such as 9:00-10:00, return a object containing these times in seconds, and duration
 const formatTime = (rawTime) => {
     let strippedTimes = rawTime.split("-")
@@ -71,7 +75,7 @@ const formatTime = (rawTime) => {
     return {
         start: strippedTimes[0],
         end: strippedTimes[1],
-        duration: strippedTimes[1] = strippedTimes[0]
+        duration: strippedTimes[1] - strippedTimes[0]
     }
 }
 
@@ -107,7 +111,8 @@ const formatID = (rawCourseCode, rawTerm) => {
     let semester = strippedTerm[1]
 
     if (semester === "Fall") {
-        return `${rawCourseCode}F${year}9`
+        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y" 
+        return `${rawCourseCode}${termLetter}${year}9`
     }
     else if (semester === "Winter") {
         return `${rawCourseCode}S${year}1`
@@ -120,9 +125,10 @@ const formatID = (rawCourseCode, rawTerm) => {
 const formatCourseCode = (rawCourseCode, rawTerm) => {
     let strippedTerm = rawTerm.split(" ")
     let semester = strippedTerm[1]
-
+    
     if (semester === "Fall") {
-        return `${rawCourseCode}F`
+        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y" 
+        return `${rawCourseCode}${termLetter}`
     }
     else if (semester === "Winter") {
         return `${rawCourseCode}S`
@@ -137,12 +143,13 @@ const scrape = async () => {
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 10,
         monitor: true,
+        skipDuplicateUrls: true,
         puppeteerOptions: { executablePath: "/usr/bin/chromium-browser" },
     });
 
     // Event handler to be called in case of problems
     cluster.on('taskerror', (err, data) => {
-        console.log(`Error crawling ${data}: ${err.message}`);
+        console.log(`Error crawling ${JSON.stringify(data)}: ${err.message}`);
     });
 
 
@@ -220,7 +227,7 @@ const scrape = async () => {
 
         let currCourse = new Course()
         currCourse.setId(formatID(data.courseCode, data.term))
-        currCourse.setCourseCode(data.courseCode)
+        currCourse.setCourseCode(formatCourseCode(data.courseCode, data.term))
         currCourse.setName(formatName(rawCourseData.rawName))
         currCourse.setDescription(rawCourseData.rawDescription)
         currCourse.setDivision(rawCourseData.rawDivision)
@@ -230,7 +237,7 @@ const scrape = async () => {
         currCourse.setExclusions(rawCourseData.rawExclusions)
         currCourse.setLevel(formatLevel(data.courseCode))
         currCourse.setCampus(rawCourseData.rawCampus)
-        currCourse.setTerm(data.term)
+        currCourse.setTerm(formatTerm(data.term))
         currCourse.setBreath(rawCourseData.rawBreadth)
         currCourse.setDistribution(rawCourseData.rawDistribution)
 
@@ -242,6 +249,7 @@ const scrape = async () => {
             currMeetingSection.setSectionCode(formatSectionCode(rawMeetingSection.rawSectionCode))
             currMeetingSection.setSize(formatSize(rawMeetingSection.rawSize))
             currMeetingSection.setEnrolment(formatEnrolment(rawMeetingSection.rawEnrolment))
+            currMeetingSection.setMethod(rawMeetingSection.rawMethod)
             
             strippedInstructors.forEach(currInstructor=>{
                 currMeetingSection.addInstructor(currInstructor)
@@ -255,20 +263,29 @@ const scrape = async () => {
         })
 
         currCourse.save()
-        // console.log(JSON.stringify(currCourse))
     });
 
     let baseURL = "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId="
-    // let rawInfo = fs.readFileSync("output/allCourseCodes.json");
-    // let allCourseInfo = JSON.parse(rawInfo)
-    let allCourseInfo = [{ courseCode: "CSCA08H3", term: "2020 Fall" }]
+    let rawInfo = fs.readFileSync("output/allCourseCodes.json");
+    let allCourseInfo = JSON.parse(rawInfo)
+
+    // these are for testing only
+    // let allCourseInfo = [
+    //     { courseCode: "ABP101Y1", term: "2020 Fall +" },
+    //     { courseCode: "ECO100Y5", term: "2020 Fall +" },
+    //     { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
+    //     { courseCode: "CSC108H5", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2021 Winter" },
+    //     { courseCode: "CSC108H1", term: "2020 Fall" },
+    //     { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
+    // ]
 
     allCourseInfo.forEach((currCourseInfo) => {
         let courseID = formatID(currCourseInfo.courseCode, currCourseInfo.term)
-        let fullCourseCode = formatCourseCode(currCourseInfo.courseCode, currCourseInfo.term)
 
         if (courseID !== "") {
-            cluster.queue({ url: `${baseURL}${courseID}`, courseCode: fullCourseCode, term: currCourseInfo.term })
+            cluster.queue({ url: `${baseURL}${courseID}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
         }
 
     })
