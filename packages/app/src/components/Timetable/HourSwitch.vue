@@ -28,6 +28,7 @@ export default {
     props: {
         time: String,
         last: Boolean,
+        semester: String,
     },
     computed: {
         ...mapGetters([
@@ -52,7 +53,7 @@ export default {
         currSecData(weekday) {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${weekday}${this.currStart}`,
+                courseCode: `Lock${this.semester}${weekday}${this.currStart}`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",

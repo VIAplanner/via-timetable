@@ -219,7 +219,7 @@ export default new Vuex.Store({
         },
         removeCourse(state, payload) {
             if (payload.code.slice(0, 4) === "Lock") {
-                if (state.semesterStatus === "F") {
+                if (payload.code[4] === "F") {
                     Vue.delete(state.fallSelectedCourses, payload.code);
                 } else {
                     Vue.delete(state.winterSelectedCourses, payload.code);
@@ -246,7 +246,7 @@ export default new Vuex.Store({
         lockSection(state, payload) {
             let index;
             if (payload.slice(0, 4) === "Lock") {
-                if (state.semesterStatus === "F") {
+                if (payload[4] === "F") {
                     index = state.fallLockedSections.indexOf(payload);
                     if (index == -1) {
                         state.fallLockedSections.push(payload);
@@ -279,7 +279,7 @@ export default new Vuex.Store({
             let index;
             if (payload.slice(0, 4) === "Lock") {
                 //Block hour
-                if (state.semesterStatus === "F") {
+                if (payload[4] === "F") {
                     index = state.fallLockedSections.indexOf(payload);
                     if (index != -1) {
                         state.fallLockedSections.splice(index, 1);
@@ -448,7 +448,7 @@ export default new Vuex.Store({
 
             //Remove all sections of the deleted course from the correct timetable
             if (payload.code.includes("Lock")) {
-                if (context.state.semesterStatus === "F") {
+                if (payload.code[4] === "F") {
                     for (let day in context.state.fallTimetable) {
                         let dayEvents = context.state.fallTimetable[day];
                         for (let i = dayEvents.length - 1; i >= 0; i--) {
@@ -458,6 +458,7 @@ export default new Vuex.Store({
                             }
                         }
                     }
+                    context.state.fallTimetable
                 } else {
                     for (let day in context.state.winterTimetable) {
                         let dayEvents = context.state.winterTimetable[day];
@@ -468,6 +469,7 @@ export default new Vuex.Store({
                             }
                         }
                     }
+                    context.state.winterTimetable
                 }
             } else {
                 for (let day in context.state.fallTimetable) {

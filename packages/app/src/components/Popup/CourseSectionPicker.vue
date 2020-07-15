@@ -249,6 +249,7 @@ export default {
             "getLockedSections",
             "fallLockedSections",
             "winterLockedSections",
+            "getSemesterStatus"
         ]),
         course() {
             return this.selectedCourses(this.code[8])[this.code];
@@ -301,7 +302,7 @@ export default {
             var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
             return ret.slice(0, 3);
         },
-        checkConflict(timetable, day, start, end) {
+        checkConflict(semester, timetable, day, start, end) {
             const dayEvents = timetable[day];
             let ret = []
             for (var x = 0; x < dayEvents.length; x++) {
@@ -317,7 +318,10 @@ export default {
                 }
                 let conflictString
                 if (event.code.slice(0, 4) === "Lock") {
-                    conflictString = `Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                    if (semester === "F") 
+                        conflictString = `🍂 Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                    else 
+                        conflictString = `❄️ Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
                 } else {
                     conflictString = `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`
                 }
@@ -340,6 +344,7 @@ export default {
             if (this.code[8] === "F" || this.code[8] === "S") {
                 //Half year course
                 let semesterConflicts = this.checkConflict(
+                    this.getSemesterStatus,
                     this.timetable,
                     day,
                     start,
@@ -355,12 +360,14 @@ export default {
             } else {
                 //Full year course
                 let fallConflicts = this.checkConflict(
+                    "F",
                     this.fallTimetable,
                     day,
                     start,
                     end
                 );
                 let winterConflicts = this.checkConflict(
+                    "S",
                     this.winterTimetable,
                     day,
                     start,
@@ -375,7 +382,8 @@ export default {
                     `${conflict.courseCode}${conflict.sectionCode}` !=
                     `${this.code}${timetableSection}` &&
                     !ret.some(itemInRet =>
-                        itemInRet.conflictString === conflict.conflictString
+                        itemInRet.conflictString === conflict.conflictString &&
+                        !conflict.conflictString.slice(0, 4) === "Lock"
                     )
                 )
                 ret.push(...tempWinter);

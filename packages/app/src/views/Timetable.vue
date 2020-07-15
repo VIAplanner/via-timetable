@@ -10,12 +10,12 @@
         >
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="fallTimetable" id="exportFallMe" />
+                    <timetable :timetable="fallTimetable" semester='F' id="exportFallMe" />
                 </smooth-scrollbar>
             </v-carousel-item>
             <v-carousel-item>
                 <smooth-scrollbar :style="contentHeightCSS">
-                    <timetable :timetable="winterTimetable" id="exportWinterMe"/>
+                    <timetable :timetable="winterTimetable" semester='S' id="exportWinterMe"/>
                 </smooth-scrollbar>
             </v-carousel-item>
         </v-carousel>
