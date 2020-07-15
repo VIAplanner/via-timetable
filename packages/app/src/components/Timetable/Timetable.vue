@@ -148,9 +148,9 @@ export default {
         getSelectedCourses() {
             this.timetable; //force re-render the selected courses
             const filteredCourses = {};
-            for (var code in this.selectedCourses) {
+            for (var code in this.selectedCourses(this.semester)) {
                 if (!code.includes("Lock")) {
-                    filteredCourses[code] = this.selectedCourses[code];
+                    filteredCourses[code] = this.selectedCourses(this.semester)[code];
                 }
             }
             return filteredCourses;
