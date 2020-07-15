@@ -2,6 +2,7 @@ import { Cluster } from 'puppeteer-cluster';
 import Course from "../structures/course"
 import MeetingSection from "../structures/meetingSection"
 import Time from "../structures/time"
+import fs from "fs"
 
 // convert 24 hours to seconds
 const timeToSeconds = (hour) => {
