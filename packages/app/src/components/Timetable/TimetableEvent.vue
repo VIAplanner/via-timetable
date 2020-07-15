@@ -114,6 +114,7 @@ export default {
             type: String,
             default: "",
         },
+        semester: String,
     },
     components: {
         CourseSectionPicker,
@@ -129,7 +130,7 @@ export default {
         window.addEventListener("resize", this.handleResize);
     },
     computed: {
-        ...mapGetters(["getCourseColor", "getLockedSections"]),
+        ...mapGetters(["getCourseColor", "fallLockedSections", "winterLockedSections"]),
         //Duration of the event in hours
         duration() {
             //Real course
@@ -177,7 +178,7 @@ export default {
         currSecData() {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${this.currDay}${this.event.currStart}`,
+                courseCode: `Lock${this.semester}${this.currDay}${this.event.currStart}`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",
@@ -196,7 +197,8 @@ export default {
         },
         // lock the status of the current section
         locked() {
-            for (var section of this.getLockedSections) {
+            let lockedSections = this.semester === "F" ? this.fallLockedSections : this.winterLockedSections
+            for (var section of lockedSections) {
                 if (
                     section === `${this.event.code}${this.event.sectionCode}` ||
                     section ===

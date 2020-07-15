@@ -24,14 +24,14 @@
                 <v-checkbox
                     v-model="deliveryMethod"
                     value="Online"
-                    label="only online"
+                    label="prefer online"
                     append-icon="mdi-laptop"
                     @change="setDeliveryMethod('Online')"
                 ></v-checkbox>
                 <v-checkbox
                     v-model="deliveryMethod"
                     value="InPerson"
-                    label="only in-person"
+                    label="prefer in-person"
                     append-icon="mdi-teach"
                     @change="setDeliveryMethod('InPerson')"
                 ></v-checkbox>

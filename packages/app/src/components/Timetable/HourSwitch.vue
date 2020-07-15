@@ -6,10 +6,10 @@
     >
         <h2 class="hour-label">{{ time }}</h2>
         <div v-if="!last && (hovered || locked)">
-            <v-btn @click="unlockDay" v-if="locked" icon>
+            <v-btn @click="unlockHour" v-if="locked" icon>
                 <v-icon>mdi-lock</v-icon>
             </v-btn>
-            <v-btn @click="lockDay" v-else icon>
+            <v-btn @click="lockHour" v-else icon>
                 <v-icon>mdi-lock-open</v-icon>
             </v-btn>
         </div>
@@ -28,6 +28,7 @@ export default {
     props: {
         time: String,
         last: Boolean,
+        semester: String,
     },
     computed: {
         ...mapGetters([
@@ -52,7 +53,7 @@ export default {
         currSecData(weekday) {
             return {
                 name: `Locked Section`,
-                courseCode: `Lock${weekday}${this.currStart}`,
+                courseCode: `Lock${this.semester}${weekday}${this.currStart}`,
                 meeting_sections: [
                     {
                         sectionCode: "L0001",
@@ -109,12 +110,12 @@ export default {
             }
             return courses;
         },
-        lockDay() {
+        lockHour() {
             this.saveLockedHourStatus()
             this.setLockedHourStatus(this.time);
             this.saveTimetable();
             var weekdays = Object.keys(this.timetable);
-            console.log(this.courseAtTheHour())
+            // console.log(this.courseAtTheHour())
             let flag = this.courseAtTheHour().some((element) => {
                 return !this.getLockedSections.includes(
                     `${element.code}${element.sectionCode}`
@@ -137,7 +138,7 @@ export default {
                 this.resetTimetable(true);
             }
         },
-        unlockDay() {
+        unlockHour() {
             this.setLockedHourStatus(this.time);
             for (let i = 0; i < 4; i++) {
                 this.currStart = this.converter();

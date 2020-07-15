@@ -1,7 +1,13 @@
 <template>
     <div>
         <v-card :height="coursePanelHeight" class="pa-4">
-            <h1 class="text-h6">{{ sideBarTitle }}</h1>
+            <v-row class="px-4">
+                <h1 class="text-h6">{{ sideBarTitle }}</h1>
+                <v-spacer/>
+                <div>
+                    {{Object.keys(filterCourses).length * 0.5}} credit(s)
+                </div>
+            </v-row>
             <hr class="mb-1" />
             <v-row
                 justify="center"
@@ -79,10 +85,10 @@ export default {
         filterCourses() {
             this.timetable; //force re-render the selected courses
             const filteredCourses = {};
-
-            for (var code in this.selectedCourses) {
+            
+            for (var code in this.selectedCourses("")) {
                 if (!code.includes("Lock")) {
-                    filteredCourses[code] = this.selectedCourses[code];
+                    filteredCourses[code] = this.selectedCourses("")[code];
                 }
             }
 

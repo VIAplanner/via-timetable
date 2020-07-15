@@ -39,8 +39,8 @@
                                     <v-col>
                                         <h4 style="margin-left: 70px">Location</h4>
                                     </v-col>
-                                    <v-col>
-                                        <h4 style="margin-left: 37px">Instructor</h4>
+                                    <v-col style="text-align: center">
+                                        <h4>Instructor</h4>
                                     </v-col>
                                 </v-row>
                                 <v-divider class="activity-divider" />
@@ -196,7 +196,7 @@
                                                                     .length != 0
                                                         "
                                                         class="center-vertical"
-                                                        style="text-align: center; width: 100%"
+                                                        style="text-align: center; width: 88%; text-wrap: break-word"
                                                     >
                                                         {{
                                                             meetingSection
@@ -206,7 +206,7 @@
                                                     <div
                                                         v-else
                                                         class="center-vertical"
-                                                        style="text-align: center; width: 100%"
+                                                        style="text-align: center; width: 88%"
                                                     >
                                                         TBA
                                                     </div>
@@ -249,9 +249,10 @@ export default {
             "getLockedSections",
             "fallLockedSections",
             "winterLockedSections",
+            "getSemesterStatus"
         ]),
         course() {
-            return this.selectedCourses[this.code];
+            return this.selectedCourses(this.code[8])[this.code];
         },
         activities() {
             return {
@@ -301,8 +302,9 @@ export default {
             var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
             return ret.slice(0, 3);
         },
-        checkConflict(timetable, day, start, end) {
+        checkConflict(semester, timetable, day, start, end) {
             const dayEvents = timetable[day];
+            let ret = []
             for (var x = 0; x < dayEvents.length; x++) {
                 const event = dayEvents[x];
                 const time = this.getFormattedTime(event.start, event.end);
@@ -314,25 +316,35 @@ export default {
                 } else {
                     conflictEmoji = "🍂❄️";
                 }
-                const ret = {
+                let conflictString
+                if (event.code.slice(0, 4) === "Lock") {
+                    if (semester === "F") 
+                        conflictString = `🍂 Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                    else 
+                        conflictString = `❄️ Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                } else {
+                    conflictString = `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`
+                }
+                const possibleConflict = {
                     courseCode: event.code,
                     sectionCode: event.sectionCode,
                     time: time,
-                    conflictString: `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`,
+                    conflictString
                 };
                 if (event.start < start && event.end > start) {
-                    return ret;
+                    ret.push(possibleConflict);
                 } else if (start <= event.start && event.start < end) {
-                    return ret;
+                    ret.push(possibleConflict);
                 }
             }
-            return null;
+            return ret;
         },
         _checkConflict(day, start, end, timetableSection) {
             let ret = [];
             if (this.code[8] === "F" || this.code[8] === "S") {
                 //Half year course
-                const semesterConflict = this.checkConflict(
+                let semesterConflicts = this.checkConflict(
+                    this.getSemesterStatus,
                     this.timetable,
                     day,
                     start,
@@ -340,48 +352,41 @@ export default {
                 );
                 /*If there is conflict and the conflict is not with the selected section on the timetable which
               the user is trying to switch away from, in other words if the conflict is real*/
-                if (
-                    semesterConflict != null &&
-                    `${semesterConflict.courseCode}${semesterConflict.sectionCode}` !=
-                        `${this.code}${timetableSection}`
-                ) {
-                    ret.push(semesterConflict);
-                }
+                let temp = semesterConflicts.filter(conflict => 
+                    `${conflict.courseCode}${conflict.sectionCode}` !=
+                    `${this.code}${timetableSection}`
+                )
+                ret.push(...temp);
             } else {
                 //Full year course
-                const fallConflict = this.checkConflict(
+                let fallConflicts = this.checkConflict(
+                    "F",
                     this.fallTimetable,
                     day,
                     start,
                     end
                 );
-                const winterConflict = this.checkConflict(
+                let winterConflicts = this.checkConflict(
+                    "S",
                     this.winterTimetable,
                     day,
                     start,
                     end
                 );
-                if (
-                    fallConflict != null &&
-                    `${fallConflict.courseCode}${fallConflict.sectionCode}` !=
-                        `${this.code}${timetableSection}`
-                ) {
-                    ret.push(fallConflict);
-                }
-                if (
-                    winterConflict != null &&
-                    `${winterConflict.courseCode}${winterConflict.sectionCode}` !=
-                        `${this.code}${timetableSection}`
-                ) {
-                    if (
-                        !(
-                            ret.length === 1 &&
-                            ret[0].conflictString === winterConflict.conflictString
-                        )
-                    ) {
-                        ret.push(winterConflict);
-                    }
-                }
+                let tempFall = fallConflicts.filter(conflict => 
+                    `${conflict.courseCode}${conflict.sectionCode}` !=
+                    `${this.code}${timetableSection}`
+                )
+                ret.push(...tempFall);
+                let tempWinter = winterConflicts.filter(conflict => 
+                    `${conflict.courseCode}${conflict.sectionCode}` !=
+                    `${this.code}${timetableSection}` &&
+                    !ret.some(itemInRet =>
+                        itemInRet.conflictString === conflict.conflictString &&
+                        !conflict.conflictString.slice(0, 4) === "Lock"
+                    )
+                )
+                ret.push(...tempWinter);
             }
             if (ret.length == 0) {
                 return null;
@@ -469,10 +474,12 @@ export default {
         autoResolveConflict() {
             // unlock old sections regardless if they are locked
             for (var oldSection of this.oldSectionsWithConflict) {
+                // console.log(oldSection)
                 this.unlockSection(oldSection);
             }
             // Unlock all the conflicting sections
             for (var conflictSection of this.totalConflictSections) {
+                // console.log(conflictSection)
                 this.unlockSection(
                     `${conflictSection.courseCode}${conflictSection.sectionCode}`
                 );
@@ -484,6 +491,7 @@ export default {
             }
             // Temporarily lock the new sections, regenerate timetable, and unlock the new sections
             for (var newSection of this.newSectionsWithConflict) {
+                // console.log(newSection)
                 this.lockSection(newSection);
             }
             this.resetTimetable();

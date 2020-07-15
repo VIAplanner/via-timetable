@@ -15,14 +15,15 @@
                             v-if="index != timeRange.length - 1"
                             :time="time"
                             :last="false"
+                            :semester="semester"
                         ></hour-switch>
-                        <hour-switch v-else :time="time" :last="true"></hour-switch>
+                        <hour-switch v-else :time="time" :last="true" :semester="semester"></hour-switch>
                     </v-row>
                 </v-col>
                 <v-col cols="11">
                     <v-row name="week-days-axis">
                         <v-col v-for="weekday in weekdays" :key="weekday">
-                            <weekday-switch :weekday="weekday"></weekday-switch>
+                            <weekday-switch :weekday="weekday" :semester="semester"></weekday-switch>
                         </v-col>
                     </v-row>
                     <v-row name="timetable-content">
@@ -36,10 +37,12 @@
                             >
                                 <timetable-event
                                     :event="event"
+                                    :semester="semester"
                                     v-if="event.start > 0"
                                 />
                                 <timetable-event
                                     :event="event"
+                                    :semester="semester"
                                     v-else
                                     :currDay="day"
                                 />
@@ -85,6 +88,9 @@ export default {
         timetable: {
             type: Object,
         },
+        semester: {
+            type: String,
+        }
     },
     created(){
           window.addEventListener('resize', this.handleResize);
