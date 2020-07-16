@@ -52,7 +52,7 @@ const meetingSectionSchema = new Schema({
         default: 0
     },
     method: {
-        type: Number,
+        type: String,
         required: true
     }
 })

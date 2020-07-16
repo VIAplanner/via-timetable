@@ -3,7 +3,7 @@ const axios = require("axios")
 const fs = require('fs');
 const cliProgress = require('cli-progress'); // magic progress bar
 
-const outputPath = "./output/"
+const outputPath = "./output/courses/"
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 let numFiles = 0
 
