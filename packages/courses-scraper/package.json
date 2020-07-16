@@ -8,7 +8,7 @@
         "utm:third": "node api/node/scraper.js third",
         "scrape:code": "babel-node api/node/tri-campus/scrape-code.js",
         "scrape": "babel-node api/node/tri-campus/scraper.js",
-        "upload": "node api/node/uploader.js",
+        "upload": "node api/node/uploader-native.js",
         "test": "babel-node api/node/structures/course.js"
     },
     "author": "VIAplanner",
@@ -18,6 +18,7 @@
         "babel-cli": "^6.26.0",
         "cli-progress": "^3.8.2",
         "dotenv": "^8.2.0",
+        "mongodb": "^3.5.9",
         "ora": "^4.0.4",
         "puppeteer": "^4.0.0",
         "puppeteer-cluster": "^0.21.0"
