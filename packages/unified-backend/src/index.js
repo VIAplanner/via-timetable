@@ -27,12 +27,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-app.get("/", (req, res) => {
+app.get("/", cors(), (req, res) => {
     res.redirect('https://docs.viaplanner.ca/course-api/');
 })
 
-app.get("/status", async (req, res) => {
-    try{
+app.get("/status", [cors(), limiter], async (req, res) => {
+    try {
         await axios.get("https://viaplanner.ca")
         res.send({
             schemaVersion: 1,
@@ -40,7 +40,7 @@ app.get("/status", async (req, res) => {
             message: "up",
             color: "success"
         })
-    }catch(e){
+    } catch (e) {
         res.send({
             schemaVersion: 1,
             label: "Status",
@@ -50,7 +50,7 @@ app.get("/status", async (req, res) => {
     }
 })
 
-app.get("*", (req, res) => {
+app.get("*", cors(), (req, res) => {
     res.redirect('https://docs.viaplanner.ca/course-api/');
 })
 
