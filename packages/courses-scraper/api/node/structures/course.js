@@ -16,7 +16,7 @@ export default class Course {
         this.term = ""
         this.breadth = ""
         this.distribution = ""
-        this.meetingSections = []
+        this.meeting_sections = []
     }
 
     setId(id) {
@@ -76,13 +76,13 @@ export default class Course {
     }
 
     addMeetingSection(meetingSection) {
-        this.meetingSections.push(meetingSection)
+        this.meeting_sections.push(meetingSection)
     }
 
     // save the current course as json in output
     save() {
         // if the course is not empty
-        if (this.meetingSections.length !== 0) {
+        if (this.meeting_sections.length !== 0) {
             fs.writeFile(`output/courses/${this.courseCode}.json`, JSON.stringify(this), (err) => {
                 if (err) {
                     console.log(err);
