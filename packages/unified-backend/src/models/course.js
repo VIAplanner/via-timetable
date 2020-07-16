@@ -35,14 +35,7 @@ const meetingSectionSchema = new Schema({
         type: [String],
         required: true
     },
-    times: {
-        type: [timeSchema],
-        validate(value) {
-            if (value.length === 0) {
-                throw new Error("Times must be provided")
-            }
-        }
-    },
+    times: [timeSchema],
     size: {
         type: Number,
         default: 0,

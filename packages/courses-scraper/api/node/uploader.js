@@ -25,7 +25,7 @@ fs.readdirSync(outputPath).forEach(async (fileName, index, arr) => {
     try {
         await axios.post(`${process.env.API_BASE_URL}/courses`, courseData, config)
     } catch (e) {
-        console.log(e.message)
+        console.log(e.message, outputPath + fileName)
     }
 
     progressBar.increment()
