@@ -22,7 +22,7 @@ const timeSchema = new Schema({
     },
     location: {
         type: String,
-        default: "NA"
+        default: ""
     }
 })
 
@@ -35,14 +35,7 @@ const meetingSectionSchema = new Schema({
         type: [String],
         required: true
     },
-    times: {
-        type: [timeSchema],
-        validate(value) {
-            if (value.length === 0) {
-                throw new Error("Times must be provided")
-            }
-        }
-    },
+    times: [timeSchema],
     size: {
         type: Number,
         default: 0,
@@ -51,9 +44,9 @@ const meetingSectionSchema = new Schema({
         type: Number,
         default: 0
     },
-    notes: {
+    method: {
         type: String,
-        default: "NA"
+        required: true
     }
 })
 
@@ -73,23 +66,27 @@ const courseSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
+        default: ""
     },
     division: {
         type: String,
-        default: "NA"
+        default: ""
     },
     department: {
         type: String,
-        default: "NA"
+        default: ""
     },
     prerequisites: {
         type: String,
-        default: "NA"
+        default: ""
+    },
+    corequisites: {
+        type: String,
+        default: ""
     },
     exclusions: {
         type: String,
-        default: "NA"
+        default: ""
     },
     level: {
         type: Number,
@@ -97,21 +94,21 @@ const courseSchema = new Schema({
     },
     campus: {
         type: String,
-        default: "NA"
+        default: ""
     },
     term: {
         type: String,
-        default: "NA"
+        default: ""
     },
-    breadths: {
-        type: Array,
-        validate(value) {
-            if (value.some(isNaN)) {
-                throw new Error("breath must be numbers")
-            }
-        }
+    breadth: {
+        type: String,
+        default: ""
     },
-    meeting_sections:  [meetingSectionSchema]
+    distribution: {
+        type: String,
+        default: ""
+    },
+    meeting_sections: [meetingSectionSchema]
 })
 
 const Course = mongoose.model("Course", courseSchema)

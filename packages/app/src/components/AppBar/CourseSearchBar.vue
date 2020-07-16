@@ -28,6 +28,8 @@ export default {
     },
     async mounted() {
         let rawCourses = [];
+        let campus = ""
+
         try {
             rawCourses = await axios.get(
                 `${process.env.VUE_APP_API_BASE_URL}/courses/searchbar`
@@ -48,12 +50,22 @@ export default {
             });
 
             this.allCourses = rawCourses.map((course) => {
+                if(course.courseCode[7] === "1"){
+                    campus = "UTSG"
+                }
+                else if(course.courseCode[7] === "3"){
+                    campus = "UTSC"
+                }
+                else if(course.courseCode[7] === "5"){
+                    campus = "UTM"
+                }
+
                 if (course.courseCode[8] === "F") {
-                    return `🍂   ${course.courseCode}: ${course.name}`;
+                    return `🍂   ${course.courseCode}: ${course.name} (${campus})`;
                 } else if (course.courseCode[8] === "S") {
-                    return `❄️   ${course.courseCode}: ${course.name}`;
+                    return `❄️   ${course.courseCode}: ${course.name} (${campus})`;
                 } else {
-                    return `🍂❄️ ${course.courseCode}: ${course.name}`;
+                    return `🍂❄️ ${course.courseCode}: ${course.name} (${campus})`;
                 }
             });
         }
