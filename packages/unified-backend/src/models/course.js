@@ -66,7 +66,7 @@ const courseSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
+        default: ""
     },
     division: {
         type: String,
