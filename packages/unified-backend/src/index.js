@@ -50,22 +50,6 @@ app.get("/status", async (req, res) => {
     }
 })
 
-app.get("/instagram", [cors(), limiter], async (req, res) => {
-    try {
-        let igData = await axios.get("https://www.instagram.com/viaplanner.ca/?__a=1")
-        igData = igData.data
-        let followerCount = igData.graphql.user.edge_followed_by.count
-        res.send({
-            schemaVersion: 1,
-            label: "Instagram",
-            message: followerCount,
-            color: "#962fbf"
-        })
-    } catch (e) {
-        res.status(500).send({ message: e.message })
-    }
-})
-
 app.get("*", (req, res) => {
     res.redirect('https://docs.viaplanner.ca/course-api/');
 })
