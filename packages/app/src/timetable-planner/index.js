@@ -24,8 +24,9 @@ const searchForSectionIndex = (courseSection, type) => {
 const searchForSectionIndexAfterprevIndex = (courseSection, type, prevIndex) => {
     let index = -1
     for (const section of courseSection) {
-        if (section[type].length != 0 && courseSection.indexOf(section) > prevIndex) {
-            index = courseSection.indexOf(section)
+        const tempI = courseSection.indexOf(section)
+        if (section[type].length != 0 && tempI > prevIndex) {
+            index = tempI
             break
         }
     }
@@ -178,6 +179,7 @@ const sortCourseSections = (course, online) => {
         course.practical.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
         course.tutorial.sort((a,b) => (a.sectionCode < b.sectionCode)? 1 : -1)
     }
+    
 }
 
 /**
@@ -189,6 +191,9 @@ const sortCourses = (courses, online) => {
     for (const course of courses){
         sortCourseSections(course, online)
     }
+    courses.sort((a, b) => (a["lecture"].length > b["lecture"].length)? 1: -1)
+    courses.sort((a, b) => (a["practical"].length > b["practical"].length)? 1: -1)
+    courses.sort((a, b) => (a["tutorial"].length > b["tutorial"].length)? 1: -1)
 }
 
 /**
