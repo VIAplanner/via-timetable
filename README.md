@@ -2,16 +2,22 @@
   <a href="https://docs.viaplanner.ca/" target="_blank">
     <img alt="VIAplanner" width="300" src="./logo-with-text.png">
   </a>
-
 </p>
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/84bc999c-5549-415d-8d1e-f8c03324c2e4/deploy-status)](https://app.netlify.com/sites/viaplanner/deploys)
-[![License](https://img.shields.io/badge/license-GPL-green?style=flat)](https://github.com/UTM-Hacklab/VIAplanner/blob/master/LICENSE)
-[![Status](https://img.shields.io/endpoint?url=https://api.viaplanner.ca/status&style=flat)](https://viaplanner.ca)
+<h4 align="center">A timetable planner made by students, for students</h4>
 
+<p align="center"> 
+   <a href="https://app.netlify.com/sites/viaplanner/deploys">
+    <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/84bc999c-5549-415d-8d1e-f8c03324c2e4/deploy-status">
+  </a>
+  <a href="https://viaplanner.ca">
+    <img alt="Website Status" src="https://img.shields.io/endpoint?url=https://api.viaplanner.ca/status&style=flat">
+  </a>
+  <a href="https://github.com/UTM-Hacklab/VIAplanner/blob/master/LICENSE">
+    <img alt="License" src="https://img.shields.io/badge/license-GPL-green?style=flat">
+  </a>
+</p>
 
-# Documentation
-[VIAplanner Documentation](https://docs.viaplanner.ca)
 
 # VIAplanner
 
@@ -25,6 +31,9 @@ The fundamental problem we are trying to solve :
 2. With the help of this tool, we are making this process faster and easier than before.
 
 3. Furthermore, this will improve UofT's reputation since this tool will modernize a crucial part of a student's life.
+
+# Documentation
+[VIAplanner Documentation](https://docs.viaplanner.ca)
 
 ## Installation Using NPM
 
