@@ -298,6 +298,7 @@
                                                     programs (only for selected
                                                     programs)
                                                 </li>
+                                                <li>Added courses from all 3 campuses</li>
                                                 <li>Bird course recommendations</li>
                                                 <li>Save timetable in the browser for when you visit again</li>
                                                 <li>
