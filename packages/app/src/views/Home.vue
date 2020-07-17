@@ -91,6 +91,10 @@ export default {
             "winterSelectedCourses",
             "fallLockedSections",
             "winterLockedSections",
+            "getFallLockedDayStatus",
+            "getWinterLockedDayStatus",
+            "getFallLockedHourStatus",
+            "getWinterLockedHourStatus",
         ]),
     },
     methods: {
@@ -102,6 +106,10 @@ export default {
             localStorage.winterLockedSections = JSON.stringify(this.winterLockedSections)
             localStorage.winterSelectedCourses = JSON.stringify(this.winterSelectedCourses)
             localStorage.winterTimetable = JSON.stringify(this.winterTimetable)
+            localStorage.fallLockedDayStatus = JSON.stringify(this.getFallLockedDayStatus)
+            localStorage.winterLockedDayStatus = JSON.stringify(this.getWinterLockedDayStatus)
+            localStorage.fallLockedHourStatus = JSON.stringify(this.getFallLockedHourStatus)
+            localStorage.winterLockedHourStatus = JSON.stringify(this.getWinterLockedHourStatus)
         },
     },
     data() {

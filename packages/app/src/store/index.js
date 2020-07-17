@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        fallLockedHourStatus: {
+        fallLockedHourStatus: !localStorage.fallLockedHourStatus ? {
             "8 AM": false,
             "9 AM": false,
             "10 AM": false,
@@ -22,14 +22,14 @@ export default new Vuex.Store({
             "7 PM": false,
             "8 PM": false,
             "9 PM": false,
-        },
-        fallLockedDayStatus: {
+        } : JSON.parse(localStorage.fallLockedHourStatus),
+        fallLockedDayStatus: !localStorage.fallLockedDayStatus ? {
             Monday: false,
             Tuesday: false,
             Wednesday: false,
             Thursday: false,
             Friday: false,
-        },
+        } : JSON.parse(localStorage.fallLockedDayStatus),
         fallSelectedCourses: !localStorage.fallSelectedCourses ? {} : JSON.parse(localStorage.fallSelectedCourses),
         fallLockedSections: !localStorage.fallLockedSections ? [] : JSON.parse(localStorage.fallLockedSections),
         fallTimetable: !localStorage.fallTimetable ? {
@@ -39,7 +39,7 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         } : JSON.parse(localStorage.fallTimetable),
-        winterLockedHourStatus: {
+        winterLockedHourStatus:  !localStorage.winterLockedHourStatus ? {
             "8 AM": false,
             "9 AM": false,
             "10 AM": false,
@@ -54,14 +54,14 @@ export default new Vuex.Store({
             "7 PM": false,
             "8 PM": false,
             "9 PM": false,
-        },
-        winterLockedDayStatus: {
+        } : JSON.parse(localStorage.winterLockedHourStatus),
+        winterLockedDayStatus: !localStorage.winterLockedDayStatus ? {
             Monday: false,
             Tuesday: false,
             Wednesday: false,
             Thursday: false,
             Friday: false,
-        },
+        }: JSON.parse(localStorage.winterLockedDayStatus),
         winterSelectedCourses: !localStorage.winterSelectedCourses ? {} : JSON.parse(localStorage.winterSelectedCourses),
         winterLockedSections: !localStorage.winterLockedSections ? [] : JSON.parse(localStorage.winterLockedSections),
         winterTimetable: !localStorage.winterTimetable ? {
@@ -337,12 +337,12 @@ export default new Vuex.Store({
                 ...context.state.winterLockedSections,
             ];
         },
-        saveLockedDayStatus(context){
+        saveLockedDayStatus(context) {
             if (context.state.semesterStatus === "F") {
                 context.state.savedLockedDayStatus = JSON.parse(
                     JSON.stringify(context.state.fallLockedDayStatus))
             }
-            else{
+            else {
                 context.state.savedLockedDayStatus = JSON.parse(
                     JSON.stringify(context.state.winterLockedDayStatus))
             }
@@ -352,7 +352,7 @@ export default new Vuex.Store({
                 context.state.savedLockedHourStatus = JSON.parse(
                     JSON.stringify(context.state.fallLockedHourStatus))
             }
-            else{
+            else {
                 context.state.savedLockedHourStatus = JSON.parse(
                     JSON.stringify(context.state.winterLockedHourStatus))
             }
@@ -374,7 +374,7 @@ export default new Vuex.Store({
                 context.state.fallLockedHourStatus = context.state.savedLockedHourStatus
                 context.state.fallLockedDayStatus = context.state.savedLockedDayStatus
             }
-            else{
+            else {
                 context.state.winterLockedHourStatus = context.state.savedLockedHourStatus
                 context.state.winterLockedDayStatus = context.state.savedLockedDayStatus
             }
@@ -645,5 +645,17 @@ export default new Vuex.Store({
                 return state.winterLockedHourStatus;
             }
         },
+        getFallLockedHourStatus: (state) => {
+            return state.fallLockedHourStatus
+        },
+        getWinterLockedHourStatus: (state) => {
+            return state.winterLockedHourStatus
+        },
+        getFallLockedDayStatus: (state) => {
+            return state.fallLockedDayStatus
+        },
+        getWinterLockedDayStatus: (state) => {
+            return state.winterLockedDayStatus
+        }
     },
 });

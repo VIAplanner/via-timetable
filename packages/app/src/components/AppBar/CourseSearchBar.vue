@@ -27,6 +27,12 @@ export default {
         };
     },
     async mounted() {
+        // load from cache if it exists
+        if(localStorage.searchBar){
+            this.allCourses = JSON.parse(localStorage.searchBar)
+            return this.loading = false;
+        }
+
         let rawCourses = [];
         let campus = ""
 
@@ -69,7 +75,8 @@ export default {
                 }
             });
         }
-
+        
+        localStorage.searchBar = JSON.stringify(this.allCourses)
         this.loading = false;
     },
     computed: {
