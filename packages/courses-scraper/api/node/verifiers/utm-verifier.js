@@ -1,12 +1,35 @@
 import { Cluster } from 'puppeteer-cluster';
 import puppeteer from "puppeteer"
+import ora from 'ora' // spinning circle
 import fs from "fs"
 
 const formatCourseCode = (rawCourseCode) => {
+    return rawCourseCode.slice(0, 9)
+}
 
+const formatSectionCode = (rawSectionCode) => {
+    return rawSectionCode[0] + rawSectionCode.slice(3, 8)
 }
 
 (async () => {
+
+    const spinner = ora({
+        text: "Calculating total time", spinner: {
+            "interval": 80,
+            "frames": [
+                "⠋",
+                "⠙",
+                "⠹",
+                "⠸",
+                "⠼",
+                "⠴",
+                "⠦",
+                "⠧",
+                "⠇",
+                "⠏"
+            ]
+        }
+    }).start();
 
     const baseURL = "https://student.utm.utoronto.ca/timetable"
     const browser = await puppeteer.launch({
@@ -27,6 +50,7 @@ const formatCourseCode = (rawCourseCode) => {
     });
 
     await browser.close();
+    spinner.stop()
 
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
@@ -74,12 +98,29 @@ const formatCourseCode = (rawCourseCode) => {
             return finalCourses
 
         });
-        console.log(allCoursesRawInfo)
+
+        for (let currRawCourse of allCoursesRawInfo) {
+            let fullCourseCode = formatCourseCode(currRawCourse.rawTitle)
+            let currCourse = JSON.parse(fs.readFileSync(`output/courses/${fullCourseCode}.json`))
+
+            currRawCourse.rawClosedMeetingSections.forEach(currRawSection => {
+                let currSectionCode = formatSectionCode(currRawSection)
+
+                currCourse.meeting_sections.forEach((meetingSection, index, arr) => {
+                    if (meetingSection.sectionCode === currSectionCode) {
+                        arr.splice(index, 1)
+                    }
+                })
+            })
+
+            fs.writeFileSync(`output/courses/${fullCourseCode}.json`, JSON.stringify(currCourse))
+
+        }
 
     }
 
     // testing purpose only
-    courseCodes = ["MAT132"]
+    // courseCodes = ["MAT132"]
 
     courseCodes.forEach(courseCode => {
         cluster.queue({ url: `${baseURL}?course=${courseCode}` }, verify)
