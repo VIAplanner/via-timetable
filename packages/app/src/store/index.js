@@ -516,6 +516,7 @@ export default new Vuex.Store({
         //Switch a section of a course when there is no conflict
         switchSection(context, payload) {
             //Remove old section from locked sections
+            console.log(payload)
             context.commit(
                 "unlockSection",
                 `${payload.old.courseCode}${payload.old.sectionCode}`
@@ -534,13 +535,13 @@ export default new Vuex.Store({
             for (let semester of whichSemesters) {
                 //Remove old section from timetable
                 for (let d in semester) {
-                    let day = semester[d];
-                    for (let event of day) {
+                    let day = semester[d]
+                    for (let i = day.length - 1; i >= 0; i--) {
                         if (
-                            `${event.code}${event.sectionCode}` ==
+                            `${day[i].code}${day[i].sectionCode}` == 
                             `${payload.old.courseCode}${payload.old.sectionCode}`
                         ) {
-                            day.splice(day.indexOf(event), 1);
+                            day.splice(i, 1);
                         }
                     }
                 }

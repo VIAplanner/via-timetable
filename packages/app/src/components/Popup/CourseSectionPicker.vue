@@ -404,6 +404,9 @@ export default {
                     this.selectedMeetingSections[activityType] !=
                     this.timetableSelectedMeetingSections[activityType]
                 ) {
+                    // console.log(`${activityType} changed`)
+                    // console.log(this.selectedMeetingSections[activityType])
+                    // console.log(this.timetableSelectedMeetingSections[activityType])
                     const newSection = this.course.meeting_sections.filter(
                         (section) =>
                             section.sectionCode ===
