@@ -9,7 +9,7 @@
         "scrape:code": "babel-node api/node/tri-campus/scrape-code.js",
         "scrape": "babel-node api/node/tri-campus/scraper.js",
         "upload": "node api/node/uploaders/uploader-native.js",
-        "verify:utm": "babel-node api/node/verifiers/verifier.js",
+        "verify:utm": "babel-node api/node/verifiers/utm-verifier.js",
         "test": "babel-node api/node/structures/course.js"
     },
     "author": "VIAplanner",
