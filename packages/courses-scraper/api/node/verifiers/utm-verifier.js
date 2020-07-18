@@ -2,12 +2,18 @@ import { Cluster } from 'puppeteer-cluster';
 import puppeteer from "puppeteer"
 import fs from "fs"
 
+const formatCourseCode = (rawCourseCode) => {
+
+}
+
 (async () => {
+
+    const baseURL = "https://student.utm.utoronto.ca/timetable"
     const browser = await puppeteer.launch({
         executablePath: "/usr/bin/chromium-browser"
     });
     const page = await browser.newPage();
-    await page.goto('https://student.utm.utoronto.ca/timetable/', { waitUntil: 'networkidle0' });
+    await page.goto(baseURL, { waitUntil: 'networkidle0' });
 
     // get list of all courses offered at UTM
     let courseCodes = await page.evaluate(() => {
@@ -20,7 +26,6 @@ import fs from "fs"
         return codes
     });
 
-    console.log(courseCodes)
     await browser.close();
 
     const cluster = await Cluster.launch({
@@ -35,12 +40,50 @@ import fs from "fs"
         console.log(`Error crawling ${JSON.stringify(data)}: ${err.message}`);
     });
 
-    const verify = async ({ page, data: url }) => {
-        await page.goto(url, { waitUntil: 'networkidle0' });
+    const verify = async ({ page, data }) => {
+        await page.goto(data.url, { waitUntil: 'networkidle0' });
+        let allCoursesRawInfo = await page.evaluate(() => {
+
+            // array of courses raw info
+            let allCoursesRawInfo = document.querySelectorAll("div.course")
+            let finalCourses = []
+
+            for (let rawCourseInfo of allCoursesRawInfo) {
+
+                // object containing all info about the current course
+                let courseInfo = {
+                    rawTitle: rawCourseInfo.querySelector("span > h4").innerText,
+                    rawClosedMeetingSections: []
+                }
+
+                // raw html for all the sections
+                let allSectionDivs = rawCourseInfo.querySelectorAll("tr.meeting_section")
+
+                for (let currSectionDiv of allSectionDivs) {
+
+
+                    if (currSectionDiv.innerText.includes("Closed")) {
+                        let rawSectionCode = currSectionDiv.querySelectorAll("td")[1].innerText
+                        courseInfo.rawClosedMeetingSections.push(rawSectionCode)
+                    }
+                }
+
+                finalCourses.push(courseInfo)
+            }
+
+            return finalCourses
+
+        });
+        console.log(allCoursesRawInfo)
 
     }
 
+    // testing purpose only
+    courseCodes = ["MAT132"]
 
+    courseCodes.forEach(courseCode => {
+        cluster.queue({ url: `${baseURL}?course=${courseCode}` }, verify)
+    })
 
 
     await cluster.idle();
