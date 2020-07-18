@@ -7,6 +7,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        // change this number to clear storage
+        clearStorage: 0,
         fallLockedHourStatus: !localStorage.fallLockedHourStatus ? {
             "8 AM": false,
             "9 AM": false,
@@ -39,7 +41,7 @@ export default new Vuex.Store({
             THURSDAY: [],
             FRIDAY: [],
         } : JSON.parse(localStorage.fallTimetable),
-        winterLockedHourStatus:  !localStorage.winterLockedHourStatus ? {
+        winterLockedHourStatus: !localStorage.winterLockedHourStatus ? {
             "8 AM": false,
             "9 AM": false,
             "10 AM": false,
@@ -61,7 +63,7 @@ export default new Vuex.Store({
             Wednesday: false,
             Thursday: false,
             Friday: false,
-        }: JSON.parse(localStorage.winterLockedDayStatus),
+        } : JSON.parse(localStorage.winterLockedDayStatus),
         winterSelectedCourses: !localStorage.winterSelectedCourses ? {} : JSON.parse(localStorage.winterSelectedCourses),
         winterLockedSections: !localStorage.winterLockedSections ? [] : JSON.parse(localStorage.winterLockedSections),
         winterTimetable: !localStorage.winterTimetable ? {
@@ -119,8 +121,9 @@ export default new Vuex.Store({
                     payload
                 ];
             } else {
-                state.winterLockedHourStatus[payload] = !state
-                    .winterLockedHourStatus[payload];
+                state.winterLockedHourStatus[payload] = !state.winterLockedHourStatus[
+                    payload
+                ];
             }
         },
         setLockedDayStatus(state, payload) {
@@ -317,6 +320,73 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        clearStorage(context) {
+            context.state.fallLockedHourStatus = {
+                "8 AM": false,
+                "9 AM": false,
+                "10 AM": false,
+                "11 AM": false,
+                "12 PM": false,
+                "1 PM": false,
+                "2 PM": false,
+                "3 PM": false,
+                "4 PM": false,
+                "5 PM": false,
+                "6 PM": false,
+                "7 PM": false,
+                "8 PM": false,
+                "9 PM": false,
+            }
+            context.state.fallLockedDayStatus = {
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+            }
+            context.state.fallSelectedCourses = {}
+            context.state.fallLockedSections = []
+            context.state.fallTimetable = {
+                MONDAY: [],
+                TUESDAY: [],
+                WEDNESDAY: [],
+                THURSDAY: [],
+                FRIDAY: [],
+            }
+            context.state.winterLockedHourStatus = {
+                "8 AM": false,
+                "9 AM": false,
+                "10 AM": false,
+                "11 AM": false,
+                "12 PM": false,
+                "1 PM": false,
+                "2 PM": false,
+                "3 PM": false,
+                "4 PM": false,
+                "5 PM": false,
+                "6 PM": false,
+                "7 PM": false,
+                "8 PM": false,
+                "9 PM": false,
+            }
+            context.state.winterLockedDayStatus = {
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+            }
+            context.state.winterSelectedCourses = {}
+            context.state.winterLockedSections = []
+            context.state.winterTimetable = {
+                MONDAY: [],
+                TUESDAY: [],
+                WEDNESDAY: [],
+                THURSDAY: [],
+                FRIDAY: [],
+            }
+            context.state.tutorialPopup = false
+        },
         saveTimetable(context) {
             context.state.savedFallTimetable = JSON.parse(
                 JSON.stringify(context.state.fallTimetable)
@@ -656,6 +726,9 @@ export default new Vuex.Store({
         },
         getWinterLockedDayStatus: (state) => {
             return state.winterLockedDayStatus
+        },
+        getClearStorage: (state) => {
+            return state.clearStorage
         }
     },
 });
