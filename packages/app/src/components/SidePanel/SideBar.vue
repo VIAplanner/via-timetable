@@ -21,7 +21,7 @@
                         :v-model="whichCoursesExpanded"
                         multiple
                         hover
-                        class="expansion-panel-settings pa-1"
+                        class="pa-1"
                     >
                         <selected-course-card
                             v-for="(course, code) in filterCourses"
@@ -104,8 +104,5 @@ export default {
     background-color: transparent;
     padding-left: 10px;
     padding-right: 10px;
-}
-.expansion-panels-settings {
-    width: 90%;
 }
 </style>
