@@ -479,8 +479,7 @@ export default new Vuex.Store({
             while (inValid) {
                 inValid = false
                 for (let courseCode in currSemCourses) {
-                    console.log(colorDiff.compare(color, currSemCourses[courseCode].color))
-                    if (colorDiff.compare(color, currSemCourses[courseCode].color) < 60) {
+                    if (colorDiff.compare(color, currSemCourses[courseCode].color) < 50) {
                         inValid = true
                         color = genColor(0.7, 0.85).hexString();
                         break
