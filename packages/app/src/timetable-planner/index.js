@@ -211,6 +211,8 @@ const sortCourses = (courses, online) => {
     for (const course of courses) {
         sortCourseSections(course, online)
     }
+    courses.sort((a, b) => (a["practical"].length > b["lecture"].length) ? 1 : -1)
+    courses.sort((a, b) => (a["practical"].length > b["tutorial"].length) ? 1 : -1)
     courses.sort((a, b) => (a["practical"].length > b["practical"].length) ? 1 : -1)
 }
 
