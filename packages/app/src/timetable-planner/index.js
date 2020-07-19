@@ -45,6 +45,7 @@ const addSectionToTimetable = (sections, timetable) => {
                     code: section.comboCode.substring(0, section.comboCode.length - 3),
                     sectionCode: section.sectionCode,
                     instructors: section.instructors,
+                    method: section.method,
                     ...time,
                 };
                 timetable[time.day].push(timetableSection);
@@ -54,6 +55,7 @@ const addSectionToTimetable = (sections, timetable) => {
                     code: section.comboCode.substring(0, section.comboCode.length - 5),
                     sectionCode: section.sectionCode,
                     instructors: section.instructors,
+                    method: section.method,
                     ...time,
                 };
                 timetable[time.day].push(timetableSection);
