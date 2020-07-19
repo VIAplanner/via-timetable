@@ -114,7 +114,7 @@ export default {
                         let loc
                         if (event.location.length > 0) {
                             loc = event.location
-                        } else if(event.sectionCode[1] === "9") {
+                        } else if(event.method !== "INPER") {
                             loc = "Online"
                         } else {
                             loc = "TBA"

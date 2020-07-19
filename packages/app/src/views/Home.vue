@@ -24,13 +24,17 @@
                     contain
                     class="ma-2 ml-1"
                 />
-                <v-tabs grow v-model="whichTab" style="max-width: 250px; min-width: 250px">
+                <v-tabs
+                    grow
+                    v-model="whichTab"
+                    style="max-width: 250px; min-width: 250px"
+                >
                     <v-tab>PROGRAMS</v-tab>
                     <v-tab>TIMETABLE</v-tab>
                 </v-tabs>
                 <course-search-bar style="margin: auto" />
                 <switch-sem style="margin: auto" />
-                <delivery-method-setting/>
+                <delivery-method-setting />
             </v-toolbar>
             <v-row>
                 <v-col class="pa-0">
@@ -64,10 +68,15 @@ import SwitchSem from "../components/AppBar/SwitchSem";
 import SideBar from "../components/SidePanel/SideBar";
 import DeliveryMethodSetting from "../components/AppBar/DeliveryMethodSetting";
 
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
     created() {
+        if (localStorage.clearStorage != this.getClearStorage) {
+            localStorage.clear();
+            this.clearStorage()
+            localStorage.clearStorage = this.getClearStorage
+        }
         if (this.$isMobile()) {
             this.$router.push({ name: "about" });
         } else {
@@ -79,7 +88,7 @@ export default {
         CourseSearchBar,
         Tutorial,
         SideBar,
-        DeliveryMethodSetting
+        DeliveryMethodSetting,
     },
     computed: {
         ...mapGetters([
@@ -95,21 +104,39 @@ export default {
             "getWinterLockedDayStatus",
             "getFallLockedHourStatus",
             "getWinterLockedHourStatus",
+            "getClearStorage",
         ]),
     },
     methods: {
+          ...mapActions(["clearStorage"]),
         // save the timetable data in the browser
         saveData() {
-            localStorage.fallLockedSections =  JSON.stringify(this.fallLockedSections)
-            localStorage.fallSelectedCourses = JSON.stringify(this.fallSelectedCourses)
-            localStorage.fallTimetable = JSON.stringify(this.fallTimetable)
-            localStorage.winterLockedSections = JSON.stringify(this.winterLockedSections)
-            localStorage.winterSelectedCourses = JSON.stringify(this.winterSelectedCourses)
-            localStorage.winterTimetable = JSON.stringify(this.winterTimetable)
-            localStorage.fallLockedDayStatus = JSON.stringify(this.getFallLockedDayStatus)
-            localStorage.winterLockedDayStatus = JSON.stringify(this.getWinterLockedDayStatus)
-            localStorage.fallLockedHourStatus = JSON.stringify(this.getFallLockedHourStatus)
-            localStorage.winterLockedHourStatus = JSON.stringify(this.getWinterLockedHourStatus)
+            localStorage.fallLockedSections = JSON.stringify(
+                this.fallLockedSections
+            );
+            localStorage.fallSelectedCourses = JSON.stringify(
+                this.fallSelectedCourses
+            );
+            localStorage.fallTimetable = JSON.stringify(this.fallTimetable);
+            localStorage.fallLockedDayStatus = JSON.stringify(
+                this.getFallLockedDayStatus
+            );
+            localStorage.fallLockedHourStatus = JSON.stringify(
+                this.getFallLockedHourStatus
+            );
+            localStorage.winterLockedSections = JSON.stringify(
+                this.winterLockedSections
+            );
+            localStorage.winterSelectedCourses = JSON.stringify(
+                this.winterSelectedCourses
+            );
+            localStorage.winterTimetable = JSON.stringify(this.winterTimetable);
+            localStorage.winterLockedDayStatus = JSON.stringify(
+                this.getWinterLockedDayStatus
+            );
+            localStorage.winterLockedHourStatus = JSON.stringify(
+                this.getWinterLockedHourStatus
+            );
         },
     },
     data() {

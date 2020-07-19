@@ -79,108 +79,138 @@
                                                 </v-col>
 
                                                 <v-col cols="5">
-                                                    <v-row
-                                                        v-for="time in meetingSection.times"
-                                                        :key="
-                                                            `${time.day}${time.start}`
-                                                        "
-                                                    >
-                                                        <v-col>
-                                                            <v-tooltip
-                                                                top
-                                                                v-if="
-                                                                    _checkConflict(
-                                                                        time.day,
-                                                                        time.start,
-                                                                        time.end,
-                                                                        timetableSelectedMeetingSections[
-                                                                            activityType
-                                                                        ]
-                                                                    ) != null
-                                                                "
-                                                            >
-                                                                <template
-                                                                    v-slot:activator="{
-                                                                        on,
-                                                                    }"
-                                                                >
-                                                                    <div
-                                                                        class="conflicting-time-orange"
-                                                                        v-on="on"
-                                                                    >
-                                                                        {{
-                                                                            getProperDayName(
-                                                                                time.day
-                                                                            ).slice(
-                                                                                0,
-                                                                                3
-                                                                            )
-                                                                        }}
-                                                                        {{
-                                                                            getFormattedTime(
-                                                                                time.start,
-                                                                                time.end
-                                                                            )
-                                                                        }}
-                                                                    </div>
-                                                                </template>
-                                                                <div
-                                                                    v-for="conflictSection in _checkConflict(
-                                                                        time.day,
-                                                                        time.start,
-                                                                        time.end,
-                                                                        timetableSelectedMeetingSections[
-                                                                            activityType
-                                                                        ]
-                                                                    )"
-                                                                    :key="
-                                                                        `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                                                    <div v-if="meetingSection.times.length > 0">
+                                                        <v-row
+                                                            v-for="time in meetingSection.times"
+                                                            :key="
+                                                                `${time.day}${time.start}`
+                                                            "
+                                                        >
+                                                            <v-col>
+                                                                <v-tooltip
+                                                                    top
+                                                                    v-if="
+                                                                        _checkConflict(
+                                                                            time.day,
+                                                                            time.start,
+                                                                            time.end,
+                                                                            timetableSelectedMeetingSections[
+                                                                                activityType
+                                                                            ]
+                                                                        ) != null
                                                                     "
                                                                 >
-                                                                    Conflicts with
+                                                                    <template
+                                                                        v-slot:activator="{
+                                                                            on,
+                                                                        }"
+                                                                    >
+                                                                        <div
+                                                                            class="conflicting-time-orange"
+                                                                            v-on="on"
+                                                                        >
+                                                                            {{
+                                                                                getProperDayName(
+                                                                                    time.day
+                                                                                ).slice(
+                                                                                    0,
+                                                                                    3
+                                                                                )
+                                                                            }}
+                                                                            {{
+                                                                                getFormattedTime(
+                                                                                    time.start,
+                                                                                    time.end
+                                                                                )
+                                                                            }}
+                                                                        </div>
+                                                                    </template>
+                                                                    <div
+                                                                        v-for="conflictSection in _checkConflict(
+                                                                            time.day,
+                                                                            time.start,
+                                                                            time.end,
+                                                                            timetableSelectedMeetingSections[
+                                                                                activityType
+                                                                            ]
+                                                                        )"
+                                                                        :key="
+                                                                            `${conflictSection.courseCode}${conflictSection.sectionCode}`
+                                                                        "
+                                                                    >
+                                                                        Conflicts
+                                                                        with
+                                                                        {{
+                                                                            conflictSection.conflictString
+                                                                        }}
+                                                                    </div>
+                                                                </v-tooltip>
+                                                                <div v-else>
                                                                     {{
-                                                                        conflictSection.conflictString
+                                                                        getProperDayName(
+                                                                            time.day
+                                                                        )
+                                                                    }}
+                                                                    {{
+                                                                        getFormattedTime(
+                                                                            time.start,
+                                                                            time.end
+                                                                        )
                                                                     }}
                                                                 </div>
-                                                            </v-tooltip>
-                                                            <div v-else>
-                                                                {{
-                                                                    getProperDayName(
-                                                                        time.day
-                                                                    )
-                                                                }}
-                                                                {{
-                                                                    getFormattedTime(
-                                                                        time.start,
-                                                                        time.end
-                                                                    )
-                                                                }}
-                                                            </div>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </div>
+                                                    <v-row v-else>
+                                                        <v-col>
+                                                            <div class="ml-10">Asynchronous</div>
                                                         </v-col>
                                                     </v-row>
                                                 </v-col>
 
                                                 <v-col cols="2">
-                                                    <v-row
-                                                        v-for="time in meetingSection.times"
-                                                        :key="
-                                                            `${time.day}${time.start}`
+                                                    <div
+                                                        v-if="
+                                                            meetingSection.times
+                                                                .length > 0
                                                         "
                                                     >
+                                                        <v-row
+                                                            v-for="time in meetingSection.times"
+                                                            :key="
+                                                                `${time.day}${time.start}`
+                                                            "
+                                                        >
+                                                            <v-col>
+                                                                <div
+                                                                    v-if="
+                                                                        time.location
+                                                                            .length >
+                                                                            0
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        time.location
+                                                                    }}
+                                                                </div>
+                                                                <div
+                                                                    v-else-if="
+                                                                        meetingSection.method !==
+                                                                            'INPER'
+                                                                    "
+                                                                >
+                                                                    Online
+                                                                </div>
+                                                                <div v-else>
+                                                                    TBA
+                                                                </div>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </div>
+                                                    <v-row v-else cols="2">
                                                         <v-col>
-                                                            <div
-                                                                v-if="
-                                                                    time.location
-                                                                        .length > 0
-                                                                "
-                                                            >
-                                                                {{ time.location }}
-                                                            </div>
-                                                            <div v-else-if="meetingSection.sectionCode[1]==='9'">
+                                                            <div>
                                                                 Online
-                                                            </div>
-                                                            <div v-else>
-                                                                TBA
                                                             </div>
                                                         </v-col>
                                                     </v-row>
@@ -249,7 +279,7 @@ export default {
             "getLockedSections",
             "fallLockedSections",
             "winterLockedSections",
-            "getSemesterStatus"
+            "getSemesterStatus",
         ]),
         course() {
             return this.selectedCourses(this.code[8])[this.code];
@@ -304,7 +334,7 @@ export default {
         },
         checkConflict(semester, timetable, day, start, end) {
             const dayEvents = timetable[day];
-            let ret = []
+            let ret = [];
             for (var x = 0; x < dayEvents.length; x++) {
                 const event = dayEvents[x];
                 const time = this.getFormattedTime(event.start, event.end);
@@ -316,20 +346,24 @@ export default {
                 } else {
                     conflictEmoji = "🍂❄️";
                 }
-                let conflictString
+                let conflictString;
                 if (event.code.slice(0, 4) === "Lock") {
-                    if (semester === "F") 
-                        conflictString = `🍂 Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
-                    else 
-                        conflictString = `❄️ Locked ${day.slice(0, 1)}${day.substr(1).toLowerCase()} ${time}`
+                    if (semester === "F")
+                        conflictString = `🍂 Locked ${day.slice(0, 1)}${day
+                            .substr(1)
+                            .toLowerCase()} ${time}`;
+                    else
+                        conflictString = `❄️ Locked ${day.slice(0, 1)}${day
+                            .substr(1)
+                            .toLowerCase()} ${time}`;
                 } else {
-                    conflictString = `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`
+                    conflictString = `${conflictEmoji} ${event.code} ${event.sectionCode} ${time}`;
                 }
                 const possibleConflict = {
                     courseCode: event.code,
                     sectionCode: event.sectionCode,
                     time: time,
-                    conflictString
+                    conflictString,
                 };
                 if (event.start < start && event.end > start) {
                     ret.push(possibleConflict);
@@ -352,10 +386,11 @@ export default {
                 );
                 /*If there is conflict and the conflict is not with the selected section on the timetable which
               the user is trying to switch away from, in other words if the conflict is real*/
-                let temp = semesterConflicts.filter(conflict => 
-                    `${conflict.courseCode}${conflict.sectionCode}` !=
-                    `${this.code}${timetableSection}`
-                )
+                let temp = semesterConflicts.filter(
+                    (conflict) =>
+                        `${conflict.courseCode}${conflict.sectionCode}` !=
+                        `${this.code}${timetableSection}`
+                );
                 ret.push(...temp);
             } else {
                 //Full year course
@@ -373,19 +408,23 @@ export default {
                     start,
                     end
                 );
-                let tempFall = fallConflicts.filter(conflict => 
-                    `${conflict.courseCode}${conflict.sectionCode}` !=
-                    `${this.code}${timetableSection}`
-                )
+                let tempFall = fallConflicts.filter(
+                    (conflict) =>
+                        `${conflict.courseCode}${conflict.sectionCode}` !=
+                        `${this.code}${timetableSection}`
+                );
                 ret.push(...tempFall);
-                let tempWinter = winterConflicts.filter(conflict => 
-                    `${conflict.courseCode}${conflict.sectionCode}` !=
-                    `${this.code}${timetableSection}` &&
-                    !ret.some(itemInRet =>
-                        itemInRet.conflictString === conflict.conflictString &&
-                        !conflict.conflictString.slice(0, 4) === "Lock"
-                    )
-                )
+                let tempWinter = winterConflicts.filter(
+                    (conflict) =>
+                        `${conflict.courseCode}${conflict.sectionCode}` !=
+                            `${this.code}${timetableSection}` &&
+                        !ret.some(
+                            (itemInRet) =>
+                                itemInRet.conflictString ===
+                                    conflict.conflictString &&
+                                !conflict.conflictString.slice(0, 4) === "Lock"
+                        )
+                );
                 ret.push(...tempWinter);
             }
             if (ret.length == 0) {

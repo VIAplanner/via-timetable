@@ -30,7 +30,7 @@ export default {
         // load from cache if it exists
         if(localStorage.searchBar){
             this.allCourses = JSON.parse(localStorage.searchBar)
-            return this.loading = false;
+            this.loading = false;
         }
 
         let rawCourses = [];
