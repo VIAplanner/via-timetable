@@ -11,6 +11,7 @@
         "@mdi/font": "^5.3.45",
         "animated-number-vue": "^1.0.0",
         "axios": "^0.19.2",
+        "color-difference": "^0.3.4",
         "color-generator": "^0.1.0",
         "core-js": "^3.6.4",
         "html2canvas": "^1.0.0-rc.5",

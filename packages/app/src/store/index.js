@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { generateTimetables } from "../timetable-planner";
 import genColor from "color-generator";
+import colorDiff from "color-difference"
 
 Vue.use(Vuex);
 
@@ -465,7 +466,27 @@ export default new Vuex.Store({
             }
 
             // generate a color
-            const color = genColor(0.7, 0.85).hexString();
+            let color = genColor(0.7, 0.85).hexString();
+            let currSemCourses
+
+            if (context.state.semesterStatus === "F") {
+                currSemCourses = context.state.fallSelectedCourses;
+            } else {
+                currSemCourses = context.state.winterSelectedCourses;
+            }
+
+            let inValid = true
+            while (inValid) {
+                inValid = false
+                for (let courseCode in currSemCourses) {
+                    console.log(colorDiff.compare(color, currSemCourses[courseCode].color))
+                    if (colorDiff.compare(color, currSemCourses[courseCode].color) < 60) {
+                        inValid = true
+                        color = genColor(0.7, 0.85).hexString();
+                        break
+                    }
+                }
+            }
 
             //Add the course
             context.commit("addCourse", {
