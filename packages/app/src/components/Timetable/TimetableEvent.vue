@@ -37,7 +37,7 @@
                         </div>
 
                         <v-row class="px-3">
-                            <div>{{ event.sectionCode }} ({{ deliveryMethod }})</div>
+                            <div>{{ event.sectionCode }} {{ deliveryMethod }}</div>
                             <v-spacer />
                             <div v-if="locations.length === 2 && duration === 1">
                                 {{ locations[0] }}
@@ -152,12 +152,12 @@ export default {
             return (this.height - 168) / 9 > 65 ? (this.height - 168) / 9 : 65;
         },
         deliveryMethod() {
-            if (this.event.sectionCode[1] === "0") {
-                return "In Person";
-            } else if (this.event.sectionCode[1] === "8") {
-                return "Rotate";
+            if (this.event.method === "INPER") {
+                return "(In Person)";
+            } else if (this.event.method === "ROTATE") {
+                return "(Rotate)";
             } else {
-                return "Sync";
+                return "(Sync)";
             }
         },
         locations() {
