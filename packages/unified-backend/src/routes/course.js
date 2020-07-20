@@ -1,5 +1,6 @@
 const express = require("express")
 const Course = require("../models/course")
+const SearchBar = require("../models/searchbar")
 const cors = require("cors")
 const rateLimit = require("express-rate-limit");
 const router = new express.Router()
@@ -19,15 +20,8 @@ const limiter = rateLimit({
 // route to get all course data for the search bar
 router.get("/courses/searchbar", [limiter, cors(corsOptions)], async (req, res) => {
     try {
-
-        const allCourses = await Course.find({})
-        let allSearchBarValues = []
-        for (let course of allCourses) {
-            allSearchBarValues.push({ courseCode: course.courseCode, name: course.name })
-        }
-
-        res.send(allSearchBarValues)
-
+        const searchBarValues = await SearchBar.findOne({})
+        res.send(searchBarValues.values)
     } catch (e) {
         res.status(500).send({ message: e.message })
     }

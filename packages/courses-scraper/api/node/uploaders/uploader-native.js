@@ -41,14 +41,14 @@ MongoClient.connect(url, { useUnifiedTopology: true }, async (err, db) => {
     }
 
     try{
-        await Promise.all([db.db("data").collection("courses").insertMany(allCourseData), db.db("data").collection("searchbar").insertOne(allSearchbarValues)])
+        await Promise.all([db.db("data").collection("courses").insertMany(allCourseData), db.db("data").collection("searchbars").insertOne(allSearchbarValues)])
     }catch(err){
         db.close();
         spinner.stop()
         return console.log(err)
     }
 
-    console.log("\Uploaded all courses and search bar values onto database")
+    console.log("\nuploaded all courses and search bar values onto database")
 
     db.close();
     spinner.stop()
