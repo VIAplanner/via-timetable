@@ -24,21 +24,32 @@ const spinner = ora({
 }).start();
 
 
-// figure out how many files there are
 let allCourseData = []
+let allSearchbarValues = { values: [] }
 
 fs.readdirSync(outputPath).forEach((fileName) => {
     let rawCourseData = fs.readFileSync(outputPath + fileName);
-    let courseData = JSON.parse(rawCourseData);
-    allCourseData.push(courseData)
+    let currCourseData = JSON.parse(rawCourseData);
+    allCourseData.push(currCourseData)
+    allSearchbarValues.values.push({ courseCode: currCourseData.courseCode, name: currCourseData.name })
 })
 
-MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
-    if (err) throw err;
-    db.db("data").collection("courses").insertMany(allCourseData, (err, res) => {
-        if (err) throw err;
-        console.log("\nNumber of documents inserted: " + res.insertedCount);
+MongoClient.connect(url, { useUnifiedTopology: true }, async (err, db) => {
+    if (err) {
+        console.log(err)
+        return db.close();
+    }
+
+    try{
+        await Promise.all([db.db("data").collection("courses").insertMany(allCourseData), db.db("data").collection("searchbars").insertOne(allSearchbarValues)])
+    }catch(err){
         db.close();
         spinner.stop()
-    });
+        return console.log(err)
+    }
+
+    console.log("\nuploaded all courses and search bar values onto database")
+
+    db.close();
+    spinner.stop()
 });

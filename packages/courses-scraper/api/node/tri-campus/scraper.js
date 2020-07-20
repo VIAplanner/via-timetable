@@ -128,8 +128,8 @@ const createTime = (rawTimes, rawLocations) => {
 }
 
 // return the id of the courses, empty string is it's a summer course
-const formatID = (rawCourseCode, ending) => {
-    return `${rawCourseCode}${ending}`
+const formatID = (rawCourseCode, rawTerm) => {
+    return `${rawCourseCode}${termToEnding(rawTerm)}`
 }
 
 const formatCourseCode = (rawCourseCode, rawTerm) => {
@@ -137,7 +137,7 @@ const formatCourseCode = (rawCourseCode, rawTerm) => {
     let semester = strippedTerm[1]
 
     if (semester === "Fall") {
-        let termLetter = rawCourseCode[6] === "H" ? "F" : "Y"
+        let termLetter = strippedTerm[2] === "+" ? "Y" : "F"
         return `${rawCourseCode}${termLetter}`
     }
     else if (semester === "Winter") {
@@ -244,7 +244,7 @@ const scrape = async () => {
         }
 
         let currCourse = new Course()
-        currCourse.setId(formatID(data.courseCode, termToEnding(data.term)))
+        currCourse.setId(formatID(data.courseCode, data.term))
         currCourse.setCourseCode(formatCourseCode(data.courseCode, data.term))
         currCourse.setName(formatName(rawCourseData.rawName))
         currCourse.setDescription(rawCourseData.rawDescription)
@@ -289,23 +289,25 @@ const scrape = async () => {
 
     // these are for testing only
     // allCourseInfo = [
-        // { courseCode: "ABP101Y1", term: "2020 Fall +" },
-        // { courseCode: "ECO100Y5", term: "2020 Fall +" },
-        // { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
-        // { courseCode: "CSC108H5", term: "2020 Fall" },
-        // { courseCode: "CSCA08H3", term: "2020 Fall" },
-        // { courseCode: "CSCA08H3", term: "2021 Winter" },
-        // { courseCode: "CSC108H1", term: "2020 Fall" },
-        // { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
-        // { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
-        // { courseCode: "ANT299Y5", term: "2020 Fall" }, // Invalid
-        // { courseCode: "ANT366H1", term: "2020 Fall +" }, // Exception
-        // {courseCode: "HIS210H5", term: "2020 Fall"}
+    //     { courseCode: "ABP101Y1", term: "2020 Fall +" },
+    //     { courseCode: "ECO100Y5", term: "2020 Fall +" },
+    //     { courseCode: "STA257H1", term: "2020 Fall" }, // coreqs
+    //     { courseCode: "CSC108H5", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2020 Fall" },
+    //     { courseCode: "CSCA08H3", term: "2021 Winter" },
+    //     { courseCode: "CSC108H1", term: "2020 Fall" },
+    //     { courseCode: "CSC358H5", term: "2021 Winter" }, // locations
+    //     { courseCode: "ANT299Y5", term: "2020 Summer Y" }, // summer
+    //     { courseCode: "ANT299Y5", term: "2020 Fall" }, // Invalid
+    //     { courseCode: "ANT366H1", term: "2020 Fall +" }, // Exception
+    //     {courseCode: "HIS210H5", term: "2020 Fall"}, // empty meeting sections
+    //     {courseCode: "BIO328H5", term: "2020 Fall +"}, // full year 0.5 credit
+    //     {courseCode: "POL309Y5", term: "2020 Fall"}, // half year 1 credit
     // ]
 
     allCourseInfo.forEach((currCourseInfo) => {
         if (!currCourseInfo.term.includes("Summer")) {
-            cluster.queue({ url: `${baseURL}${formatID(currCourseInfo.courseCode, termToEnding(currCourseInfo.term))}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
+            cluster.queue({ url: `${baseURL}${formatID(currCourseInfo.courseCode, currCourseInfo.term)}`, courseCode: currCourseInfo.courseCode, term: currCourseInfo.term })
         }
     })
 

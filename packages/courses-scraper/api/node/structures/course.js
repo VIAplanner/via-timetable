@@ -81,14 +81,10 @@ export default class Course {
 
     // save the current course as json in output
     save() {
-        // if the course is not empty
-        if (this.meeting_sections.length !== 0) {
             fs.writeFile(`output/courses/${this.courseCode}.json`, JSON.stringify(this), (err) => {
                 if (err) {
                     console.log(err);
                 }
             });
-        }
     }
-
 }
