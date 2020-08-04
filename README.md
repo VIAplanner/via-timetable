@@ -4,11 +4,9 @@
   </a>
 </p>
 
-<h4 align="center">A timetable planner made by students, for students</h4>
-
 <p align="center"> 
-   <a href="https://app.netlify.com/sites/viaplanner/deploys">
-    <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/84bc999c-5549-415d-8d1e-f8c03324c2e4/deploy-status">
+   <a href="https://app.netlify.com/sites/viatimetable/deploys">
+    <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/3b870967-d243-450c-8672-3add3187a16f/deploy-status">
   </a>
   <a href="https://viaplanner.ca">
     <img alt="Website Status" src="https://img.shields.io/endpoint?url=https://api.viaplanner.ca/status&style=flat">
