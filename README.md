@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://docs.viaplanner.ca/" target="_blank">
-    <img alt="VIAplanner" width="300" src="src/VIA-Planner-Blue.png">
+    <img alt="VIAplanner" width="300" src="./VIA-Planner-Blue.png">
   </a>
 </p>
 
