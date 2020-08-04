@@ -1,9 +1,22 @@
-.history
+.DS_Store
 node_modules
-packages/docs/.vuepress/.DS_Store
-packages/unified-backend/graphqlapp/playground_ig.js
-packages/unified-backend/graphqlapp/schema_extra.js
-packages/unified-backend/.DS_Store
-packages/unified-backend/graphqlapp/.DS_Store
-packages/courses-scraper/output
-.vscode/
+storybook-static
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.env
