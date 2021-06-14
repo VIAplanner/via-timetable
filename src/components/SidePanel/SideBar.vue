@@ -15,7 +15,12 @@
       >
         <img :src="imgSrc" style="position: absolute" :width="imgWidth" />
         <smooth-scrollbar class="right-scroll-area">
-          <v-expansion-panels :v-model="whichCoursesExpanded" multiple hover class="pa-1">
+          <v-expansion-panels
+            :v-model="whichCoursesExpanded"
+            multiple
+            hover
+            class="pa-1"
+          >
             <selected-course-card
               v-for="(course, code) in filterCourses"
               :key="code"
@@ -33,13 +38,16 @@
       <hr class="mb-3" />
       <v-skeleton-loader type="list-item-avatar" />
       <v-skeleton-loader type="list-item-avatar-two-line" />
-      <v-skeleton-loader v-if="programPanelHeight > 195" type="list-item-avatar" />
+      <v-skeleton-loader
+        v-if="programPanelHeight > 195"
+        type="list-item-avatar"
+      />
     </v-card>
   </div>
 </template>
 <script>
-import SelectedCourseCard from './SelectedCourseCard';
 import { mapGetters } from 'vuex';
+import SelectedCourseCard from './SelectedCourseCard.vue';
 
 export default {
   components: {
@@ -76,10 +84,11 @@ export default {
       }
     },
     filterCourses() {
-      this.timetable; //force re-render the selected courses
+      // eslint-disable-next-line no-unused-expressions
+      this.timetable; // force re-render the selected courses
       const filteredCourses = {};
 
-      for (var code in this.selectedCourses('')) {
+      for (const code in this.selectedCourses('')) {
         if (!code.includes('Lock')) {
           filteredCourses[code] = this.selectedCourses('')[code];
         }

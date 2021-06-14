@@ -1,5 +1,9 @@
 <template>
-  <v-col @mouseover="hovered = true" @mouseleave="hovered = false" justify="center">
+  <v-col
+    @mouseover="hovered = true"
+    @mouseleave="hovered = false"
+    justify="center"
+  >
     <h2 class="hour-label">{{ time }}</h2>
     <div v-if="!last && (hovered || locked)">
       <v-btn @click="unlockHour" v-if="locked" icon>
@@ -14,6 +18,7 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -67,9 +72,9 @@ export default {
       };
     },
 
-    //Return the hour this switch is trying to lock
+    // Return the hour this switch is trying to lock
     converter() {
-      var partsOfTheDay, hours, parts;
+      let partsOfTheDay, hours, parts;
       if (this.time.length === 4) {
         partsOfTheDay = this.time.slice(2, 4);
         hours = this.time.slice(0, 1);
@@ -91,12 +96,15 @@ export default {
     },
     // Returns all sections occupying the hour to be locked excluding locked sections
     courseAtTheHour() {
-      var courses = [];
-      var weekdays = Object.keys(this.timetable);
-      for (var weekday of weekdays) {
-        this.timetable[weekday].forEach((element) => {
+      const courses = [];
+      const weekdays = Object.keys(this.timetable);
+      for (const weekday of weekdays) {
+        this.timetable[weekday].forEach(element => {
           if (!element.code.includes('Lock')) {
-            if (element.start < this.converter() && element.end > this.converter()) {
+            if (
+              element.start < this.converter() &&
+              element.end > this.converter()
+            ) {
               courses.push(element);
             } else if (
               this.converter() <= element.start &&
@@ -113,14 +121,17 @@ export default {
       this.saveLockedHourStatus();
       this.setLockedHourStatus(this.time);
       this.saveTimetable();
-      var weekdays = Object.keys(this.timetable);
+      const weekdays = Object.keys(this.timetable);
       // console.log(this.courseAtTheHour())
-      let flag = this.courseAtTheHour().some((element) => {
-        return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`);
-      });
+      const flag = this.courseAtTheHour().some(
+        element =>
+          !this.getLockedSections.includes(
+            `${element.code}${element.sectionCode}`,
+          ),
+      );
 
       this.currStart = this.converter();
-      for (var weekday of weekdays) {
+      for (const weekday of weekdays) {
         if (this.validLockSection(weekday)) {
           this.lockSection(
             `${this.currSecData(weekday).courseCode}${
@@ -137,9 +148,9 @@ export default {
     },
     unlockHour() {
       this.setLockedHourStatus(this.time);
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i += 1) {
         this.currStart = this.converter();
-        for (let lockedCourse of this.getLockedSections) {
+        for (const lockedCourse of this.getLockedSections) {
           if (lockedCourse.includes(this.currStart)) {
             this.deleteCourse({
               code: lockedCourse.slice(0, lockedCourse.length - 5),
@@ -149,7 +160,7 @@ export default {
       }
     },
     validLockSection(weekday) {
-      for (let course of this.courseAtTheHour()) {
+      for (const course of this.courseAtTheHour()) {
         if (
           course.day === weekday &&
           this.getLockedSections.includes(`${course.code}${course.sectionCode}`)

@@ -10,12 +10,20 @@
     >
       <v-carousel-item>
         <smooth-scrollbar :style="contentHeightCSS">
-          <timetable :timetable="fallTimetable" semester="F" id="exportFallMe" />
+          <timetable
+            :timetable="fallTimetable"
+            semester="F"
+            id="exportFallMe"
+          />
         </smooth-scrollbar>
       </v-carousel-item>
       <v-carousel-item>
         <smooth-scrollbar :style="contentHeightCSS">
-          <timetable :timetable="winterTimetable" semester="S" id="exportWinterMe" />
+          <timetable
+            :timetable="winterTimetable"
+            semester="S"
+            id="exportWinterMe"
+          />
         </smooth-scrollbar>
       </v-carousel-item>
     </v-carousel>
@@ -23,9 +31,9 @@
 </template>
 
 <script>
-import Timetable from '../components/Timetable/Timetable';
-import HelpDial from '../components/FloatingBtns/HelpDial';
 import { mapGetters } from 'vuex';
+import Timetable from '../components/Timetable/Timetable.vue';
+import HelpDial from '../components/FloatingBtns/HelpDial.vue';
 
 export default {
   components: {

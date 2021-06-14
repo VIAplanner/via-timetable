@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel style="min-width: 98%; border-radius: 5px !important;" class="mb-1">
+  <v-expansion-panel
+    style="min-width: 98%; border-radius: 5px !important;"
+    class="mb-1"
+  >
     <v-expansion-panel-header
       class="pa-0 pr-2"
       style="max-height: 50px !important; border-top-left-radius: 5px; border-bottom-left-radius: 5px;"
@@ -77,7 +80,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import CourseSectionPicker from '../Popup/CourseSectionPicker';
+import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
 
 export default {
   name: 'selected-course-card',
@@ -94,10 +97,10 @@ export default {
     ...mapGetters(['timetable', 'selectedCourses']),
     meetingSections() {
       const sections = {};
-      for (let day in this.timetable) {
+      for (const day in this.timetable) {
         const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (event.code == this.course.courseCode) {
+        for (const event of dayEvents) {
+          if (event.code === this.course.courseCode) {
             const instructor =
               event.instructors.length === 0 ? 'TBA' : event.instructors[0];
             let loc;
@@ -109,7 +112,7 @@ export default {
               loc = 'TBA';
             }
             const info = {
-              day: day,
+              day,
               start: event.start,
               end: event.end,
               instructorName: instructor,
@@ -134,16 +137,16 @@ export default {
   methods: {
     ...mapActions(['deleteCourse']),
     getFormattedTime(start, end) {
-      var s = (start / 3600) % 12;
-      if (s == 0) {
+      let s = (start / 3600) % 12;
+      if (s === 0) {
         s = 12;
       }
-      let startHalf = Number.isInteger(s) ? '00' : '30';
-      var e = (end / 3600) % 12;
-      if (e == 0) {
+      const startHalf = Number.isInteger(s) ? '00' : '30';
+      let e = (end / 3600) % 12;
+      if (e === 0) {
         e = 12;
       }
-      let endHalf = Number.isInteger(e) ? '00' : '30';
+      const endHalf = Number.isInteger(e) ? '00' : '30';
       return `${s - startHalf / 6 / 10}:${startHalf} - ${e -
         endHalf / 6 / 10}:${endHalf}`;
     },
@@ -152,8 +155,8 @@ export default {
     },
     atInput() {
       // console.log('pop up toggled')
-      var courseSectionPicker = this.$refs.popUp;
-      if (typeof courseSectionPicker != 'undefined') {
+      const courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker !== 'undefined') {
         courseSectionPicker.resetSelectedMeetingSections();
       }
     },

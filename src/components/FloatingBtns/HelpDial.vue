@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import TutorialBtn from './TutorialBtn';
-import AboutBtn from './AboutBtn';
-import ExportBtn from './ExportBtn';
+import TutorialBtn from './TutorialBtn.vue';
+import AboutBtn from './AboutBtn.vue';
+import ExportBtn from './ExportBtn.vue';
 
 export default {
   components: {

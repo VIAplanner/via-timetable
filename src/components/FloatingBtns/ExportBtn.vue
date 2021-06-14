@@ -42,7 +42,7 @@ export default {
 
     // timer function for making the system sleep
     sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+      return new Promise(resolve => setTimeout(resolve, ms));
     },
 
     // switch timetable download, then repeat
