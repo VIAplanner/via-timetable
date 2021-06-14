@@ -43,7 +43,7 @@
             <v-row>
               <v-col class="pa-0">
                 <h1 style="text-align:center" class="text-subtitle-1">
-                  Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
+                  Copyright © 2021 VIAplanner - Data updated for the 2021 - 2022
                   school year
                 </h1>
               </v-col>
@@ -59,33 +59,31 @@
 </template>
 
 <script>
-import CourseSearchBar from '../components/AppBar/CourseSearchBar';
-import Tutorial from '../components/Popup/Tutorial';
-import SwitchSem from '../components/AppBar/SwitchSem';
-import SideBar from '../components/SidePanel/SideBar';
-import DeliveryMethodSetting from '../components/AppBar/DeliveryMethodSetting';
-
 import { mapGetters, mapActions } from 'vuex';
+import CourseSearchBar from '../components/AppBar/CourseSearchBar.vue';
+import Tutorial from '../components/Popup/Tutorial.vue';
+import SwitchSem from '../components/AppBar/SwitchSem.vue';
+import SideBar from '../components/SidePanel/SideBar.vue';
+import DeliveryMethodSetting from '../components/AppBar/DeliveryMethodSetting.vue';
 
 export default {
-  created() {
-    if (localStorage.clearStorage != this.getClearStorage) {
-      localStorage.clear();
-      this.clearStorage();
-      localStorage.clearStorage = this.getClearStorage;
-    }
-    if (this.$isMobile()) {
-      this.$router.push({ name: 'about' });
-    } else {
-      window.addEventListener('beforeunload', this.saveData);
-    }
-  },
   components: {
     SwitchSem,
     CourseSearchBar,
     Tutorial,
     SideBar,
     DeliveryMethodSetting,
+  },
+  data() {
+    return {
+      scrollBarSettings: {
+        wheelPropagation: false,
+        maxScrollbarLength: 240,
+        swipeEasing: true,
+        wheelSpeed: 0.1,
+      },
+      whichTab: 1,
+    };
   },
   computed: {
     ...mapGetters([
@@ -103,6 +101,27 @@ export default {
       'getWinterLockedHourStatus',
       'getClearStorage',
     ]),
+  },
+  watch: {
+    whichTab() {
+      if (this.whichTab === 0) {
+        this.$router.push({ name: 'program' });
+      } else if (this.whichTab === 1) {
+        this.$router.push({ name: 'timetable' });
+      }
+    },
+  },
+  created() {
+    if (localStorage.clearStorage !== this.getClearStorage) {
+      localStorage.clear();
+      this.clearStorage();
+      localStorage.clearStorage = this.getClearStorage;
+    }
+    if (this.$isMobile()) {
+      this.$router.push({ name: 'about' });
+    } else {
+      window.addEventListener('beforeunload', this.saveData);
+    }
   },
   methods: {
     ...mapActions(['clearStorage']),
@@ -132,26 +151,6 @@ export default {
       localStorage.winterLockedHourStatus = JSON.stringify(
         this.getWinterLockedHourStatus,
       );
-    },
-  },
-  data() {
-    return {
-      scrollBarSettings: {
-        wheelPropagation: false,
-        maxScrollbarLength: 240,
-        swipeEasing: true,
-        wheelSpeed: 0.1,
-      },
-      whichTab: 1,
-    };
-  },
-  watch: {
-    whichTab() {
-      if (this.whichTab === 0) {
-        this.$router.push({ name: 'program' });
-      } else if (this.whichTab === 1) {
-        this.$router.push({ name: 'timetable' });
-      }
     },
   },
 };
