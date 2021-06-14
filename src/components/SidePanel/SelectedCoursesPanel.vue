@@ -13,8 +13,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SelectedCourseCard from './SelectedCourseCard';
+// eslint-disable-next-line import/no-unresolved
 import VueCustomScrollbar from 'vue-custom-scrollbar';
+import SelectedCourseCard from './SelectedCourseCard.vue';
 
 export default {
   name: 'selected-courses-panel',
@@ -40,7 +41,7 @@ export default {
     filterCourses(selectedCourses) {
       const filteredCourses = {};
 
-      for (var code in selectedCourses) {
+      for (const code in selectedCourses) {
         if (!code.includes('Lock')) {
           filteredCourses[code] = selectedCourses[code];
         }

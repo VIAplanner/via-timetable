@@ -1,7 +1,11 @@
 <template>
   <v-tooltip top>
     <template v-slot:activator="{ on }">
-      <v-row @mouseover="hovered = true" @mouseleave="hovered = false" justify="center">
+      <v-row
+        @mouseover="hovered = true"
+        @mouseleave="hovered = false"
+        justify="center"
+      >
         <h3 class="day-label">
           {{ weekday }}
         </h3>
@@ -49,7 +53,9 @@ export default {
     currSecData() {
       return {
         name: `Locked Section`,
-        courseCode: `Lock${this.semester}${this.weekday.toUpperCase()}${this.currStart}`,
+        courseCode: `Lock${this.semester}${this.weekday.toUpperCase()}${
+          this.currStart
+        }`,
         meeting_sections: [
           {
             sectionCode: 'L0001',
@@ -87,10 +93,13 @@ export default {
       // save a copy of the timetable before the change
       this.saveTimetable();
 
-      //Flag is true if there is at least one course on the day that's unlocked
-      let flag = this.timetable[this.weekday.toUpperCase()].some((element) => {
-        return !this.getLockedSections.includes(`${element.code}${element.sectionCode}`);
-      });
+      // Flag is true if there is at least one course on the day that's unlocked
+      const flag = this.timetable[this.weekday.toUpperCase()].some(
+        element =>
+          !this.getLockedSections.includes(
+            `${element.code}${element.sectionCode}`,
+          ),
+      );
       while (i < 13) {
         this.currStart = 28800 + i * 3600;
         if (this.validLockSection()) {
@@ -99,7 +108,7 @@ export default {
           );
           this.addCourse({ course: this.currSecData });
         }
-        i++;
+        i += 1;
       }
 
       if (flag) {
@@ -108,9 +117,9 @@ export default {
     },
     unlockDay() {
       this.setLockedDayStatus(this.weekday);
-      for (let i = 0; i < 13; i++) {
+      for (let i = 0; i < 13; i += 1) {
         this.currStart = 28800 + i * 3600;
-        for (let lockedCourse of this.getLockedSections) {
+        for (const lockedCourse of this.getLockedSections) {
           if (lockedCourse.includes(this.weekday.toUpperCase())) {
             this.deleteCourse({
               code: lockedCourse.slice(0, lockedCourse.length - 5),
@@ -121,13 +130,18 @@ export default {
     },
     validLockSection() {
       const currDayTimetable = this.timetable[this.weekday.toUpperCase()];
-      for (let section of currDayTimetable) {
+      for (const section of currDayTimetable) {
         // if the course on the timetable is locked, don't add one here
-        if (this.getLockedSections.includes(`${section.code}${section.sectionCode}`)) {
+        if (
+          this.getLockedSections.includes(
+            `${section.code}${section.sectionCode}`,
+          )
+        ) {
           // if the locked course is in between another course, then skip it
           if (
             (section.start <= this.currStart && this.currStart < section.end) ||
-            (section.start < this.currStart + 3600 && this.currStart + 3600 < section.end)
+            (section.start < this.currStart + 3600 &&
+              this.currStart + 3600 < section.end)
           ) {
             return false;
           }

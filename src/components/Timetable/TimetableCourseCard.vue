@@ -1,12 +1,22 @@
 <template>
   <div>
     <div class="course-info-card">
-      <div class="course-card-header pb-4" :style="{ background: course.color }">
+      <div
+        class="course-card-header pb-4"
+        :style="{ background: course.color }"
+      >
         <v-row class="pl-2 mb-2">
-          <v-col class="ml-2" cols="10">{{ course.courseCode }} {{ course.name }}</v-col>
+          <v-col class="ml-2" cols="10"
+            >{{ course.courseCode }} {{ course.name }}</v-col
+          >
           <v-spacer />
           <v-col cols="0.5" class="pr-0">
-            <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
+            <v-dialog
+              v-model="dialog"
+              scrollable
+              width="825px"
+              @input="atInput"
+            >
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on" color="white">
                   <v-icon>mdi-pencil-box-outline</v-icon>
@@ -20,7 +30,11 @@
             </v-dialog>
           </v-col>
           <v-col cols="0.5" class="pl-0">
-            <v-btn color="white" @click="deleteCourse({ code: course.courseCode })" icon>
+            <v-btn
+              color="white"
+              @click="deleteCourse({ code: course.courseCode })"
+              icon
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-col>
@@ -43,7 +57,10 @@
         </v-row>
       </div>
       <div class="sections-info">
-        <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
+        <v-row
+          v-for="meetingsection in meetingSections"
+          :key="meetingsection.section"
+        >
           <v-col>{{ meetingsection.sectionCode }}</v-col>
           <v-col cols="1">{{ getProperDayName(meetingsection.day) }}</v-col>
           <v-col cols="3" style="margin-left: 15px">{{
@@ -67,7 +84,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import CourseSectionPicker from '../Popup/CourseSectionPicker';
+import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
 
 export default {
   components: {
@@ -83,15 +100,15 @@ export default {
     ...mapGetters(['timetable', 'selectedCourses']),
     meetingSections() {
       const sections = [];
-      for (let day in this.timetable) {
+      for (const day in this.timetable) {
         const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
-          if (event.code == this.course.courseCode) {
+        for (const event of dayEvents) {
+          if (event.code === this.course.courseCode) {
             const instructor =
               event.instructors.length === 0 ? 'TBA' : event.instructors[0];
             sections.push({
               sectionCode: event.sectionCode,
-              day: day,
+              day,
               start: event.start,
               end: event.end,
               location: event.location,
@@ -111,18 +128,18 @@ export default {
   methods: {
     ...mapActions(['deleteCourse']),
     getFormattedTime(start, end) {
-      var s = (start / 3600) % 12;
-      if (s == 0) {
+      let s = (start / 3600) % 12;
+      if (s === 0) {
         s = 12;
       }
-      var startPeriod = start / 3600 < 12 ? 'AM' : 'PM';
-      let startHalf = Number.isInteger(s) ? '00' : '30';
-      var e = (end / 3600) % 12;
-      if (e == 0) {
+      const startPeriod = start / 3600 < 12 ? 'AM' : 'PM';
+      const startHalf = Number.isInteger(s) ? '00' : '30';
+      let e = (end / 3600) % 12;
+      if (e === 0) {
         e = 12;
       }
-      var endPeriod = end / 3600 < 12 ? 'AM' : 'PM';
-      let endHalf = Number.isInteger(e) ? '00' : '30';
+      const endPeriod = end / 3600 < 12 ? 'AM' : 'PM';
+      const endHalf = Number.isInteger(e) ? '00' : '30';
       return `${s - startHalf / 6 / 10}:${startHalf} ${startPeriod} - ${e -
         endHalf / 6 / 10}:${endHalf} ${endPeriod}`;
     },
@@ -131,8 +148,8 @@ export default {
     },
     atInput() {
       // console.log('pop up toggled')
-      var courseSectionPicker = this.$refs.popUp;
-      if (typeof courseSectionPicker != 'undefined') {
+      const courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker !== 'undefined') {
         courseSectionPicker.resetSelectedMeetingSections();
       }
     },

@@ -19,7 +19,13 @@
               <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
                 <v-icon>mdi-lock</v-icon>
               </v-btn>
-              <v-btn small dark @click.stop="lockToggle" v-if="!locked && hovered" icon>
+              <v-btn
+                small
+                dark
+                @click.stop="lockToggle"
+                v-if="!locked && hovered"
+                icon
+              >
                 <v-icon>mdi-lock-open</v-icon>
               </v-btn>
             </div>
@@ -81,11 +87,11 @@
 </template>
 
 <script>
-import CourseSectionPicker from '../Popup/CourseSectionPicker';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-const convertSecondsToHours = (seconds) => {
-  return seconds / 3600;
-};
+import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
+
+const convertSecondsToHours = seconds => seconds / 3600;
+
 export default {
   name: 'timetable-event',
   props: {
@@ -113,14 +119,18 @@ export default {
     window.addEventListener('resize', this.handleResize);
   },
   computed: {
-    ...mapGetters(['getCourseColor', 'fallLockedSections', 'winterLockedSections']),
-    //Duration of the event in hours
+    ...mapGetters([
+      'getCourseColor',
+      'fallLockedSections',
+      'winterLockedSections',
+    ]),
+    // Duration of the event in hours
     duration() {
-      //Real course
+      // Real course
       if (this.event.start > 0) {
         return convertSecondsToHours(this.event.end - this.event.start);
       }
-      //Empty or blocked hour
+      // Empty or blocked hour
       else {
         return convertSecondsToHours(this.event.currEnd - this.event.currStart);
       }
@@ -178,9 +188,11 @@ export default {
     },
     // lock the status of the current section
     locked() {
-      let lockedSections =
-        this.semester === 'F' ? this.fallLockedSections : this.winterLockedSections;
-      for (var section of lockedSections) {
+      const lockedSections =
+        this.semester === 'F'
+          ? this.fallLockedSections
+          : this.winterLockedSections;
+      for (const section of lockedSections) {
         if (
           section === `${this.event.code}${this.event.sectionCode}` ||
           section ===
@@ -199,8 +211,8 @@ export default {
       this.height = window.innerHeight;
     },
     atInput() {
-      var courseSectionPicker = this.$refs.popUp;
-      if (typeof courseSectionPicker != 'undefined') {
+      const courseSectionPicker = this.$refs.popUp;
+      if (typeof courseSectionPicker !== 'undefined') {
         courseSectionPicker.resetSelectedMeetingSections();
       }
     },
@@ -212,28 +224,29 @@ export default {
       // half hour
       return true;
     },
-    //Toggle locked status of this TimetableEvent when it is not empty (lock/unlock this section)
+    // Toggle locked status of this TimetableEvent when it is not empty (lock/unlock this section)
     lockToggle() {
       // modifies vuex based on the current section's lock status
+      // eslint-disable-next-line no-unused-expressions
       !this.locked
         ? this.lockSection(`${this.event.code}${this.event.sectionCode}`)
         : this.unlockSection(`${this.event.code}${this.event.sectionCode}`);
     },
     getFormattedTime(start, end) {
-      var s = (start / 3600) % 12;
-      if (s == 0) {
+      let s = (start / 3600) % 12;
+      if (s === 0) {
         s = 12;
       }
-      var e = (end / 3600) % 12;
-      if (e == 0) {
+      let e = (end / 3600) % 12;
+      if (e === 0) {
         e = 12;
       }
-      let startHalf = Number.isInteger(s) ? '00' : '30';
-      let endHalf = Number.isInteger(e) ? '00' : '30';
+      const startHalf = Number.isInteger(s) ? '00' : '30';
+      const endHalf = Number.isInteger(e) ? '00' : '30';
       return `${s - startHalf / 6 / 10}:${startHalf} - ${e -
         endHalf / 6 / 10}:${endHalf}`;
     },
-    //Toggle locked status of this TimetableEvent when it is empty (block/unblock this hour)
+    // Toggle locked status of this TimetableEvent when it is empty (block/unblock this hour)
     lockedSectionToggle() {
       if (!this.locked) {
         // if the user clicks on an empty timeslot, it will be added as a course in vuex
