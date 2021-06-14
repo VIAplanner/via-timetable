@@ -20,7 +20,7 @@
             </v-dialog>
           </v-col>
           <v-col cols="0.5" class="pl-0">
-            <v-btn color="white" @click="deleteCourse({code: course.courseCode})" icon>
+            <v-btn color="white" @click="deleteCourse({ code: course.courseCode })" icon>
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-col>
@@ -44,14 +44,13 @@
       </div>
       <div class="sections-info">
         <v-row v-for="meetingsection in meetingSections" :key="meetingsection.section">
-          <v-col>{{meetingsection.sectionCode}}</v-col>
-          <v-col cols="1">{{getProperDayName(meetingsection.day)}}</v-col>
-          <v-col
-            cols="3"
-            style="margin-left: 15px"
-          >{{getFormattedTime(meetingsection.start, meetingsection.end)}}</v-col>
+          <v-col>{{ meetingsection.sectionCode }}</v-col>
+          <v-col cols="1">{{ getProperDayName(meetingsection.day) }}</v-col>
+          <v-col cols="3" style="margin-left: 15px">{{
+            getFormattedTime(meetingsection.start, meetingsection.end)
+          }}</v-col>
           <v-col v-if="meetingsection.location.length > 0">
-            {{meetingsection.location}}
+            {{ meetingsection.location }}
           </v-col>
           <v-col v-else-if="meetingsection.sectionCode[1] === '9'">
             Online
@@ -59,7 +58,7 @@
           <v-col v-else>
             TBA
           </v-col>
-          <v-col>{{meetingsection.instructorName}}</v-col>
+          <v-col>{{ meetingsection.instructorName }}</v-col>
         </v-row>
       </div>
     </div>
@@ -67,21 +66,21 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import CourseSectionPicker from "../Popup/CourseSectionPicker";
+import { mapGetters, mapActions } from 'vuex';
+import CourseSectionPicker from '../Popup/CourseSectionPicker';
 
 export default {
   components: {
-    CourseSectionPicker
+    CourseSectionPicker,
   },
   props: {
     course: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    ...mapGetters(["timetable", "selectedCourses"]),
+    ...mapGetters(['timetable', 'selectedCourses']),
     meetingSections() {
       const sections = [];
       for (let day in this.timetable) {
@@ -89,42 +88,43 @@ export default {
         for (let event of dayEvents) {
           if (event.code == this.course.courseCode) {
             const instructor =
-              event.instructors.length === 0 ? "TBA" : event.instructors[0];
+              event.instructors.length === 0 ? 'TBA' : event.instructors[0];
             sections.push({
               sectionCode: event.sectionCode,
               day: day,
               start: event.start,
               end: event.end,
               location: event.location,
-              instructorName: instructor
+              instructorName: instructor,
             });
           }
         }
       }
       return sections;
-    }
+    },
   },
   data() {
     return {
-      dialog: false
+      dialog: false,
     };
   },
   methods: {
-    ...mapActions(["deleteCourse"]),
+    ...mapActions(['deleteCourse']),
     getFormattedTime(start, end) {
       var s = (start / 3600) % 12;
       if (s == 0) {
         s = 12;
       }
-      var startPeriod = start / 3600 < 12 ? "AM" : "PM";
-      let startHalf = Number.isInteger(s) ? "00":"30"
+      var startPeriod = start / 3600 < 12 ? 'AM' : 'PM';
+      let startHalf = Number.isInteger(s) ? '00' : '30';
       var e = (end / 3600) % 12;
       if (e == 0) {
         e = 12;
       }
-      var endPeriod = end / 3600 < 12 ? "AM" : "PM";
-      let endHalf = Number.isInteger(e) ? "00":"30"
-      return `${s-((startHalf/6)/10)}:${startHalf} ${startPeriod} - ${e-((endHalf/6)/10)}:${endHalf} ${endPeriod}`;
+      var endPeriod = end / 3600 < 12 ? 'AM' : 'PM';
+      let endHalf = Number.isInteger(e) ? '00' : '30';
+      return `${s - startHalf / 6 / 10}:${startHalf} ${startPeriod} - ${e -
+        endHalf / 6 / 10}:${endHalf} ${endPeriod}`;
     },
     getProperDayName(day) {
       return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
@@ -132,18 +132,18 @@ export default {
     atInput() {
       // console.log('pop up toggled')
       var courseSectionPicker = this.$refs.popUp;
-      if (typeof courseSectionPicker != "undefined") {
+      if (typeof courseSectionPicker != 'undefined') {
         courseSectionPicker.resetSelectedMeetingSections();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 * {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .course-info-card {
