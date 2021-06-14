@@ -12,8 +12,8 @@
       </v-card-title>
       <v-card-text class="text--primary">
         <div class="textStyle">
-          We are unable to generate a pair of timetables based on the changes you made. We
-          will roll back your previous timetable.
+          We are unable to generate a pair of timetables based on the changes
+          you made. We will roll back your previous timetable.
         </div>
       </v-card-text>
       <v-card-actions>

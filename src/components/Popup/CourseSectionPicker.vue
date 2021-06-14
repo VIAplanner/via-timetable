@@ -24,7 +24,9 @@
                 :mandatory="false"
                 style="top-margin: 0px;"
               >
-                <v-subheader v-if="meetingSections.length > 0" class="activity-header"
+                <v-subheader
+                  v-if="meetingSections.length > 0"
+                  class="activity-header"
                   >{{ activityType }}s</v-subheader
                 >
                 <v-row class="activity-label">
@@ -47,7 +49,12 @@
                     v-for="meetingSection in meetingSections"
                     :key="meetingSection.sectionCode"
                     style="margin-bottom: 0px;"
-                    @click="setMeetingSection(meetingSection.sectionCode, activityType)"
+                    @click="
+                      setMeetingSection(
+                        meetingSection.sectionCode,
+                        activityType,
+                      )
+                    "
                   >
                     <v-list-item-action>
                       <v-radio :value="meetingSection.sectionCode"></v-radio>
@@ -79,7 +86,9 @@
                                       time.day,
                                       time.start,
                                       time.end,
-                                      timetableSelectedMeetingSections[activityType],
+                                      timetableSelectedMeetingSections[
+                                        activityType
+                                      ],
                                     ) != null
                                   "
                                 >
@@ -88,9 +97,16 @@
                                       on,
                                     }"
                                   >
-                                    <div class="conflicting-time-orange" v-on="on">
-                                      {{ getProperDayName(time.day).slice(0, 3) }}
-                                      {{ getFormattedTime(time.start, time.end) }}
+                                    <div
+                                      class="conflicting-time-orange"
+                                      v-on="on"
+                                    >
+                                      {{
+                                        getProperDayName(time.day).slice(0, 3)
+                                      }}
+                                      {{
+                                        getFormattedTime(time.start, time.end)
+                                      }}
                                     </div>
                                   </template>
                                   <div
@@ -98,7 +114,9 @@
                                       time.day,
                                       time.start,
                                       time.end,
-                                      timetableSelectedMeetingSections[activityType],
+                                      timetableSelectedMeetingSections[
+                                        activityType
+                                      ],
                                     )"
                                     :key="
                                       `${conflictSection.courseCode}${conflictSection.sectionCode}`
@@ -132,7 +150,9 @@
                                 <div v-if="time.location.length > 0">
                                   {{ time.location }}
                                 </div>
-                                <div v-else-if="meetingSection.method !== 'INPER'">
+                                <div
+                                  v-else-if="meetingSection.method !== 'INPER'"
+                                >
                                   Online
                                 </div>
                                 <div v-else>
@@ -184,7 +204,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import OverwriteLockedSectionPopup from './OverwriteLockedSectionPopup';
+import OverwriteLockedSectionPopup from './OverwriteLockedSectionPopup.vue';
 
 export default {
   components: {
@@ -215,13 +235,13 @@ export default {
     activities() {
       return {
         lecture: this.course.meeting_sections.filter(
-          (section) => section.sectionCode.charAt(0) === 'L',
+          section => section.sectionCode.charAt(0) === 'L',
         ),
         tutorial: this.course.meeting_sections.filter(
-          (section) => section.sectionCode.charAt(0) === 'T',
+          section => section.sectionCode.charAt(0) === 'T',
         ),
         practical: this.course.meeting_sections.filter(
-          (section) => section.sectionCode.charAt(0) === 'P',
+          section => section.sectionCode.charAt(0) === 'P',
         ),
       };
     },
@@ -232,34 +252,38 @@ export default {
 
   methods: {
     ...mapActions(['switchSection', 'resetTimetable', 'deleteCourse']),
-    ...mapMutations(['lockSection', 'unlockSection', 'setOverwriteLockedSectionPopup']),
+    ...mapMutations([
+      'lockSection',
+      'unlockSection',
+      'setOverwriteLockedSectionPopup',
+    ]),
     setMeetingSection(courseCode, activityType) {
       this.selectedMeetingSections[activityType] = courseCode;
     },
     getFormattedTime(start, end) {
-      var s = (start / 3600) % 12;
-      if (s == 0) {
+      let s = (start / 3600) % 12;
+      if (s === 0) {
         s = 12;
       }
-      var startPeriod = start / 3600 < 12 ? 'AM' : 'PM';
-      var e = (end / 3600) % 12;
-      if (e == 0) {
+      const startPeriod = start / 3600 < 12 ? 'AM' : 'PM';
+      let e = (end / 3600) % 12;
+      if (e === 0) {
         e = 12;
       }
-      var endPeriod = end / 3600 < 12 ? 'AM' : 'PM';
-      let startHalf = Number.isInteger(s) ? '00' : '30';
-      let endHalf = Number.isInteger(e) ? '00' : '30';
+      const endPeriod = end / 3600 < 12 ? 'AM' : 'PM';
+      const startHalf = Number.isInteger(s) ? '00' : '30';
+      const endHalf = Number.isInteger(e) ? '00' : '30';
       return `${s - startHalf / 6 / 10}:${startHalf} ${startPeriod} - ${e -
         endHalf / 6 / 10}:${endHalf} ${endPeriod}`;
     },
     getProperDayName(day) {
-      var ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+      const ret = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
       return ret.slice(0, 3);
     },
     checkConflict(semester, timetable, day, start, end) {
       const dayEvents = timetable[day];
-      let ret = [];
-      for (var x = 0; x < dayEvents.length; x++) {
+      const ret = [];
+      for (let x = 0; x < dayEvents.length; x += 1) {
         const event = dayEvents[x];
         const time = this.getFormattedTime(event.start, event.end);
         let conflictEmoji;
@@ -286,7 +310,7 @@ export default {
         const possibleConflict = {
           courseCode: event.code,
           sectionCode: event.sectionCode,
-          time: time,
+          time,
           conflictString,
         };
         if (event.start < start && event.end > start) {
@@ -297,54 +321,61 @@ export default {
       }
       return ret;
     },
+    // eslint-disable-next-line no-underscore-dangle
     _checkConflict(day, start, end, timetableSection) {
-      let ret = [];
+      const ret = [];
       if (this.code[8] === 'F' || this.code[8] === 'S') {
-        //Half year course
-        let semesterConflicts = this.checkConflict(
+        // Half year course
+        const semesterConflicts = this.checkConflict(
           this.getSemesterStatus,
           this.timetable,
           day,
           start,
           end,
         );
-        /*If there is conflict and the conflict is not with the selected section on the timetable which
-              the user is trying to switch away from, in other words if the conflict is real*/
-        let temp = semesterConflicts.filter(
-          (conflict) =>
-            `${conflict.courseCode}${conflict.sectionCode}` !=
+        /* If there is conflict and the conflict is not with the selected section on the timetable which
+              the user is trying to switch away from, in other words if the conflict is real */
+        const temp = semesterConflicts.filter(
+          conflict =>
+            `${conflict.courseCode}${conflict.sectionCode}` !==
             `${this.code}${timetableSection}`,
         );
         ret.push(...temp);
       } else {
-        //Full year course
-        let fallConflicts = this.checkConflict('F', this.fallTimetable, day, start, end);
-        let winterConflicts = this.checkConflict(
+        // Full year course
+        const fallConflicts = this.checkConflict(
+          'F',
+          this.fallTimetable,
+          day,
+          start,
+          end,
+        );
+        const winterConflicts = this.checkConflict(
           'S',
           this.winterTimetable,
           day,
           start,
           end,
         );
-        let tempFall = fallConflicts.filter(
-          (conflict) =>
-            `${conflict.courseCode}${conflict.sectionCode}` !=
+        const tempFall = fallConflicts.filter(
+          conflict =>
+            `${conflict.courseCode}${conflict.sectionCode}` !==
             `${this.code}${timetableSection}`,
         );
         ret.push(...tempFall);
-        let tempWinter = winterConflicts.filter(
-          (conflict) =>
-            `${conflict.courseCode}${conflict.sectionCode}` !=
+        const tempWinter = winterConflicts.filter(
+          conflict =>
+            `${conflict.courseCode}${conflict.sectionCode}` !==
               `${this.code}${timetableSection}` &&
             !ret.some(
-              (itemInRet) =>
+              itemInRet =>
                 itemInRet.conflictString === conflict.conflictString &&
                 !conflict.conflictString.slice(0, 4) === 'Lock',
             ),
         );
         ret.push(...tempWinter);
       }
-      if (ret.length == 0) {
+      if (ret.length === 0) {
         return null;
       }
       return ret;
@@ -354,23 +385,25 @@ export default {
       this.$emit('done');
     },
     updateTimetable() {
-      for (var activityType of ['lecture', 'practical', 'tutorial']) {
-        //If section changed
+      for (const activityType of ['lecture', 'practical', 'tutorial']) {
+        // If section changed
         if (
-          this.selectedMeetingSections[activityType] !=
+          this.selectedMeetingSections[activityType] !==
           this.timetableSelectedMeetingSections[activityType]
         ) {
           // console.log(`${activityType} changed`)
           // console.log(this.selectedMeetingSections[activityType])
           // console.log(this.timetableSelectedMeetingSections[activityType])
           const newSection = this.course.meeting_sections.filter(
-            (section) =>
-              section.sectionCode === this.selectedMeetingSections[activityType],
+            section =>
+              section.sectionCode ===
+              this.selectedMeetingSections[activityType],
           )[0];
-          //Find all conflicting sections
+          // Find all conflicting sections
           const conflictSections = [];
-          for (var currTime of newSection.times) {
-            var conflictTimes = this._checkConflict(
+          for (const currTime of newSection.times) {
+            // eslint-disable-next-line no-underscore-dangle
+            const conflictTimes = this._checkConflict(
               currTime.day,
               currTime.start,
               currTime.end,
@@ -381,10 +414,12 @@ export default {
             }
           }
           // case 1, no conflicting times
-          if (conflictSections.length == 0) {
+          if (conflictSections.length === 0) {
             this.switchSection({
               old: {
-                sectionCode: this.timetableSelectedMeetingSections[activityType],
+                sectionCode: this.timetableSelectedMeetingSections[
+                  activityType
+                ],
                 courseCode: this.code,
               },
               new: newSection,
@@ -392,30 +427,30 @@ export default {
           }
           // case 2, there are conflicting time(s)
           else {
-            //All the sections the user is trying to switch away from
+            // All the sections the user is trying to switch away from
             this.oldSectionsWithConflict.push(
               `${this.code}${this.timetableSelectedMeetingSections[activityType]}`,
             );
-            //All the new sections to switch into
+            // All the new sections to switch into
             this.newSectionsWithConflict.push(
               `${this.code}${this.selectedMeetingSections[activityType]}`,
             );
-            //All the other sections the new sections conflict with
+            // All the other sections the new sections conflict with
             this.totalConflictSections.push(...conflictSections);
           }
         }
       }
-      if (this.totalConflictSections.length != 0) {
-        //Find if any conflicting section(s) is locked, if so, pop up a dialog
-        var popUp = false;
-        for (var conflictSection of this.totalConflictSections) {
-          let fallIndex = this.fallLockedSections.indexOf(
+      if (this.totalConflictSections.length !== 0) {
+        // Find if any conflicting section(s) is locked, if so, pop up a dialog
+        let popUp = false;
+        for (const conflictSection of this.totalConflictSections) {
+          const fallIndex = this.fallLockedSections.indexOf(
             `${conflictSection.courseCode}${conflictSection.sectionCode}`,
           );
-          let winterIndex = this.winterLockedSections.indexOf(
+          const winterIndex = this.winterLockedSections.indexOf(
             `${conflictSection.courseCode}${conflictSection.sectionCode}`,
           );
-          if (fallIndex != -1 || winterIndex != -1) {
+          if (fallIndex !== -1 || winterIndex !== -1) {
             popUp = true;
             break;
           }
@@ -429,14 +464,16 @@ export default {
     },
     autoResolveConflict() {
       // unlock old sections regardless if they are locked
-      for (var oldSection of this.oldSectionsWithConflict) {
+      for (const oldSection of this.oldSectionsWithConflict) {
         // console.log(oldSection)
         this.unlockSection(oldSection);
       }
       // Unlock all the conflicting sections
-      for (var conflictSection of this.totalConflictSections) {
+      for (const conflictSection of this.totalConflictSections) {
         // console.log(conflictSection)
-        this.unlockSection(`${conflictSection.courseCode}${conflictSection.sectionCode}`);
+        this.unlockSection(
+          `${conflictSection.courseCode}${conflictSection.sectionCode}`,
+        );
 
         // if the section that the user is switching to is a locked section, delete it
         if (conflictSection.courseCode.includes('Lock')) {
@@ -444,12 +481,12 @@ export default {
         }
       }
       // Temporarily lock the new sections, regenerate timetable, and unlock the new sections
-      for (var newSection of this.newSectionsWithConflict) {
+      for (const newSection of this.newSectionsWithConflict) {
         // console.log(newSection)
         this.lockSection(newSection);
       }
       this.resetTimetable();
-      for (var newSect of this.newSectionsWithConflict) {
+      for (const newSect of this.newSectionsWithConflict) {
         this.unlockSection(newSect);
       }
       this.clearTempVars();
@@ -463,18 +500,18 @@ export default {
       this.selectedMeetingSections = this.getTimetableMeetingSections();
     },
     getTimetableMeetingSections() {
-      let selectedMeetingSections = {
+      const selectedMeetingSections = {
         lecture: null,
         practical: null,
         tutorial: null,
       };
-      for (let day in this.timetable) {
+      for (const day in this.timetable) {
         const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
+        for (const event of dayEvents) {
           if (event.code === this.course.courseCode) {
-            if (event.sectionCode.charAt(0) == 'L') {
+            if (event.sectionCode.charAt(0) === 'L') {
               selectedMeetingSections.lecture = event.sectionCode;
-            } else if (event.sectionCode.charAt(0) == 'P') {
+            } else if (event.sectionCode.charAt(0) === 'P') {
               selectedMeetingSections.practical = event.sectionCode;
             } else selectedMeetingSections.tutorial = event.sectionCode;
           }

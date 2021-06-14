@@ -12,8 +12,8 @@
       </v-card-title>
       <v-card-text class="text--primary">
         <div class="textStyle">
-          You are trying to overwrite a section that is currently locked, do you want to
-          unlock it and proceed?
+          You are trying to overwrite a section that is currently locked, do you
+          want to unlock it and proceed?
         </div>
       </v-card-text>
       <v-card-actions>
