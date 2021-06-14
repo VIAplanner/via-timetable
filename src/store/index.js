@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { generateTimetables } from '../timetable-planner';
 import genColor from 'color-generator';
+import { generateTimetables } from '../timetable-planner';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
@@ -138,16 +138,24 @@ export default new Vuex.Store({
     },
     setLockedHourStatus(state, payload) {
       if (state.semesterStatus === 'F') {
-        state.fallLockedHourStatus[payload] = !state.fallLockedHourStatus[payload];
+        state.fallLockedHourStatus[payload] = !state.fallLockedHourStatus[
+          payload
+        ];
       } else {
-        state.winterLockedHourStatus[payload] = !state.winterLockedHourStatus[payload];
+        state.winterLockedHourStatus[payload] = !state.winterLockedHourStatus[
+          payload
+        ];
       }
     },
     setLockedDayStatus(state, payload) {
       if (state.semesterStatus === 'F') {
-        state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[payload];
+        state.fallLockedDayStatus[payload] = !state.fallLockedDayStatus[
+          payload
+        ];
       } else {
-        state.winterLockedDayStatus[payload] = !state.winterLockedDayStatus[payload];
+        state.winterLockedDayStatus[payload] = !state.winterLockedDayStatus[
+          payload
+        ];
       }
     },
     setTutorialPopup(state, payload) {
@@ -160,8 +168,7 @@ export default new Vuex.Store({
       state.searchBarValue = payload;
     },
     setTimetables(state, payload) {
-      state.fallTimetable = payload[0];
-      state.winterTimetable = payload[1];
+      [state.fallTimetable, state.winterTimetable] = payload;
     },
     setNoTimetablePopup(state, payload) {
       state.noTimetablePopup = payload;
@@ -171,7 +178,7 @@ export default new Vuex.Store({
     },
     addCourse(state, payload) {
       if (payload.course.courseCode.slice(0, 4) === 'Lock') {
-        let whichDay = payload.course.meeting_sections[0].times[0].day;
+        const whichDay = payload.course.meeting_sections[0].times[0].day;
 
         if (state.semesterStatus === 'F') {
           // already in the timetable
@@ -181,7 +188,7 @@ export default new Vuex.Store({
 
           state.fallSelectedCourses[payload.course.courseCode] = payload.course;
 
-          //Add new section into timetable
+          // Add new section into timetable
           state.fallTimetable[whichDay].push({
             code: payload.course.courseCode,
             sectionCode: payload.course.meeting_sections[0].sectionCode,
@@ -190,18 +197,17 @@ export default new Vuex.Store({
           });
 
           // sort it
-          state.fallTimetable[whichDay].sort((a, b) => {
-            return a.start - b.start;
-          });
+          state.fallTimetable[whichDay].sort((a, b) => a.start - b.start);
         } else {
           // already in the timetable
           if (payload.course.courseCode in state.winterSelectedCourses) {
             return;
           }
 
-          state.winterSelectedCourses[payload.course.courseCode] = payload.course;
+          state.winterSelectedCourses[payload.course.courseCode] =
+            payload.course;
 
-          //Add new section into timetable
+          // Add new section into timetable
           state.winterTimetable[whichDay].push({
             code: payload.course.courseCode,
             sectionCode: payload.course.meeting_sections[0].sectionCode,
@@ -210,9 +216,7 @@ export default new Vuex.Store({
           });
 
           // sort it
-          state.winterTimetable[whichDay].sort((a, b) => {
-            return a.start - b.start;
-          });
+          state.winterTimetable[whichDay].sort((a, b) => a.start - b.start);
         }
       } else if (payload.course.courseCode[8] === 'F') {
         state.fallSelectedCourses[payload.course.courseCode] = payload.course;
@@ -239,27 +243,25 @@ export default new Vuex.Store({
         Vue.delete(state.winterSelectedCourses, payload.code);
       }
     },
-    //Todo
+    // Todo
     setLockedSections(state, payload) {
-      state.fallLockedSections = payload[0];
-      state.winterLockedSections = payload[1];
+      [state.fallLockedSections, state.winterLockedSections] = payload;
     },
-    //Todo
+    // Todo
     setSelectedCourses(state, payload) {
-      state.fallSelectedCourses = payload[0];
-      state.winterSelectedCourses = payload[1];
+      [state.fallSelectedCourses, state.winterSelectedCourses] = payload;
     },
     lockSection(state, payload) {
       let index;
       if (payload.slice(0, 4) === 'Lock') {
         if (payload[4] === 'F') {
           index = state.fallLockedSections.indexOf(payload);
-          if (index == -1) {
+          if (index === -1) {
             state.fallLockedSections.push(payload);
           }
         } else {
           index = state.winterLockedSections.indexOf(payload);
-          if (index == -1) {
+          if (index === -1) {
             state.winterLockedSections.push(payload);
           }
         }
@@ -284,34 +286,34 @@ export default new Vuex.Store({
     unlockSection(state, payload) {
       let index;
       if (payload.slice(0, 4) === 'Lock') {
-        //Block hour
+        // Block hour
         if (payload[4] === 'F') {
           index = state.fallLockedSections.indexOf(payload);
-          if (index != -1) {
+          if (index !== -1) {
             state.fallLockedSections.splice(index, 1);
           }
         } else {
           index = state.winterLockedSections.indexOf(payload);
-          if (index != -1) {
+          if (index !== -1) {
             state.winterLockedSections.splice(index, 1);
           }
         }
       } else if (payload[8] === 'F') {
-        //Fall
+        // Fall
         index = state.fallLockedSections.indexOf(payload);
-        if (index != -1) {
+        if (index !== -1) {
           state.fallLockedSections.splice(index, 1);
         }
       } else if (payload[8] === 'S') {
-        //Winter
+        // Winter
         index = state.winterLockedSections.indexOf(payload);
-        if (index != -1) {
+        if (index !== -1) {
           state.winterLockedSections.splice(index, 1);
         }
       } else if (payload[8] === 'Y') {
-        //Year
+        // Year
         index = state.fallLockedSections.indexOf(payload);
-        if (index != -1) {
+        if (index !== -1) {
           state.fallLockedSections.splice(index, 1);
           index = state.winterLockedSections.indexOf(payload);
           state.winterLockedSections.splice(index, 1);
@@ -403,8 +405,12 @@ export default new Vuex.Store({
       context.state.savedWinterSelectedCourses = JSON.parse(
         JSON.stringify(context.state.winterSelectedCourses),
       );
-      context.state.savedFallLockedSections = [...context.state.fallLockedSections];
-      context.state.savedWinterLockedSections = [...context.state.winterLockedSections];
+      context.state.savedFallLockedSections = [
+        ...context.state.fallLockedSections,
+      ];
+      context.state.savedWinterLockedSections = [
+        ...context.state.winterLockedSections,
+      ];
     },
     saveLockedDayStatus(context) {
       if (context.state.semesterStatus === 'F') {
@@ -442,11 +448,14 @@ export default new Vuex.Store({
         context.state.savedWinterLockedSections,
       ]);
       if (context.state.semesterStatus === 'F') {
-        context.state.fallLockedHourStatus = context.state.savedLockedHourStatus;
+        context.state.fallLockedHourStatus =
+          context.state.savedLockedHourStatus;
         context.state.fallLockedDayStatus = context.state.savedLockedDayStatus;
       } else {
-        context.state.winterLockedHourStatus = context.state.savedLockedHourStatus;
-        context.state.winterLockedDayStatus = context.state.savedLockedDayStatus;
+        context.state.winterLockedHourStatus =
+          context.state.savedLockedHourStatus;
+        context.state.winterLockedDayStatus =
+          context.state.savedLockedDayStatus;
       }
     },
     validateTimetable(context, payload) {
@@ -465,7 +474,7 @@ export default new Vuex.Store({
       }
 
       // generate a color
-      let color = genColor(0.7, 0.85).hexString();
+      const color = genColor(0.7, 0.85).hexString();
       // let currSemCourses
 
       // if (context.state.semesterStatus === "F") {
@@ -486,7 +495,7 @@ export default new Vuex.Store({
       //     }
       // }
 
-      //Add the course
+      // Add the course
       context.commit('addCourse', {
         course: {
           color,
@@ -495,13 +504,13 @@ export default new Vuex.Store({
       });
 
       const fallCourses = Object.keys(context.state.fallSelectedCourses).map(
-        (code) => context.state.fallSelectedCourses[code],
+        code => context.state.fallSelectedCourses[code],
       );
-      const winterCourses = Object.keys(context.state.winterSelectedCourses).map(
-        (code) => context.state.winterSelectedCourses[code],
-      );
+      const winterCourses = Object.keys(
+        context.state.winterSelectedCourses,
+      ).map(code => context.state.winterSelectedCourses[code]);
 
-      let timetables = generateTimetables(
+      const timetables = generateTimetables(
         fallCourses,
         context.state.fallLockedSections,
         winterCourses,
@@ -514,64 +523,62 @@ export default new Vuex.Store({
     deleteCourse(context, payload) {
       // resets search bar value if the deleted course is the last searched course
       if (
-        context.state.searchBarValue != null &&
+        context.state.searchBarValue !== null &&
         context.state.searchBarValue.includes(payload.code)
       ) {
         context.commit('setSearchBarValue', null);
       }
 
-      //Remove course
+      // Remove course
       context.commit('removeCourse', payload);
 
-      //Unlock all sections of the deleted course
-      for (let lockedSection of context.state.fallLockedSections) {
+      // Unlock all sections of the deleted course
+      for (const lockedSection of context.state.fallLockedSections) {
         if (lockedSection.includes(payload.code)) {
           context.commit('unlockSection', lockedSection);
         }
       }
-      for (let lockedSection of context.state.winterLockedSections) {
+      for (const lockedSection of context.state.winterLockedSections) {
         if (lockedSection.includes(payload.code)) {
           context.commit('unlockSection', lockedSection);
         }
       }
 
-      //Remove all sections of the deleted course from the correct timetable
+      // Remove all sections of the deleted course from the correct timetable
       if (payload.code.includes('Lock')) {
         if (payload.code[4] === 'F') {
-          for (let day in context.state.fallTimetable) {
-            let dayEvents = context.state.fallTimetable[day];
-            for (let i = dayEvents.length - 1; i >= 0; i--) {
+          for (const day in context.state.fallTimetable) {
+            const dayEvents = context.state.fallTimetable[day];
+            for (let i = dayEvents.length - 1; i >= 0; i -= 1) {
               if (dayEvents[i].code === payload.code) {
                 dayEvents.splice(i, 1);
                 break;
               }
             }
           }
-          context.state.fallTimetable;
         } else {
-          for (let day in context.state.winterTimetable) {
-            let dayEvents = context.state.winterTimetable[day];
-            for (let i = dayEvents.length - 1; i >= 0; i--) {
+          for (const day in context.state.winterTimetable) {
+            const dayEvents = context.state.winterTimetable[day];
+            for (let i = dayEvents.length - 1; i >= 0; i -= 1) {
               if (dayEvents[i].code === payload.code) {
                 dayEvents.splice(i, 1);
                 break;
               }
             }
           }
-          context.state.winterTimetable;
         }
       } else {
-        for (let day in context.state.fallTimetable) {
-          let dayEvents = context.state.fallTimetable[day];
-          for (let i = dayEvents.length - 1; i >= 0; i--) {
+        for (const day in context.state.fallTimetable) {
+          const dayEvents = context.state.fallTimetable[day];
+          for (let i = dayEvents.length - 1; i >= 0; i -= 1) {
             if (dayEvents[i].code === payload.code) {
               dayEvents.splice(i, 1);
             }
           }
         }
-        for (let day in context.state.winterTimetable) {
-          let dayEvents = context.state.winterTimetable[day];
-          for (let i = dayEvents.length - 1; i >= 0; i--) {
+        for (const day in context.state.winterTimetable) {
+          const dayEvents = context.state.winterTimetable[day];
+          for (let i = dayEvents.length - 1; i >= 0; i -= 1) {
             if (dayEvents[i].code === payload.code) {
               dayEvents.splice(i, 1);
             }
@@ -579,20 +586,20 @@ export default new Vuex.Store({
         }
       }
     },
-    //Recalculate timetable when switching sections with conflict
+    // Recalculate timetable when switching sections with conflict
     resetTimetable(context, payload) {
       if (!payload) {
         context.dispatch('saveTimetable');
       }
 
       const fallCourses = Object.keys(context.state.fallSelectedCourses).map(
-        (code) => context.state.fallSelectedCourses[code],
+        code => context.state.fallSelectedCourses[code],
       );
-      const winterCourses = Object.keys(context.state.winterSelectedCourses).map(
-        (code) => context.state.winterSelectedCourses[code],
-      );
+      const winterCourses = Object.keys(
+        context.state.winterSelectedCourses,
+      ).map(code => context.state.winterSelectedCourses[code]);
 
-      let bothTimetables = generateTimetables(
+      const bothTimetables = generateTimetables(
         fallCourses,
         context.state.fallLockedSections,
         winterCourses,
@@ -602,16 +609,15 @@ export default new Vuex.Store({
 
       context.dispatch('validateTimetable', bothTimetables);
     },
-    //Switch a section of a course when there is no conflict
+    // Switch a section of a course when there is no conflict
     switchSection(context, payload) {
-      //Remove old section from locked sections
-      console.log(payload);
+      // Remove old section from locked sections
       context.commit(
         'unlockSection',
         `${payload.old.courseCode}${payload.old.sectionCode}`,
       );
 
-      let whichSemesters = [];
+      const whichSemesters = [];
       if (payload.old.courseCode[8] === 'F') {
         whichSemesters.push(context.state.fallTimetable);
       } else if (payload.old.courseCode[8] === 'S') {
@@ -621,62 +627,50 @@ export default new Vuex.Store({
         whichSemesters.push(context.state.winterTimetable);
       }
 
-      for (let semester of whichSemesters) {
-        //Remove old section from timetable
-        for (let d in semester) {
-          let day = semester[d];
-          for (let i = day.length - 1; i >= 0; i--) {
+      for (const semester of whichSemesters) {
+        // Remove old section from timetable
+        for (const d in semester) {
+          const day = semester[d];
+          for (let i = day.length - 1; i >= 0; i -= 1) {
             if (
-              `${day[i].code}${day[i].sectionCode}` ==
+              `${day[i].code}${day[i].sectionCode}` ===
               `${payload.old.courseCode}${payload.old.sectionCode}`
             ) {
               day.splice(i, 1);
             }
           }
         }
-        //Add new section into timetable
-        for (let time of payload.new.times) {
+        // Add new section into timetable
+        for (const time of payload.new.times) {
           semester[time.day].push({
             code: payload.old.courseCode,
             sectionCode: payload.new.sectionCode,
             instructors: payload.new.instructors,
             ...time,
           });
-          semester[time.day].sort((a, b) => {
-            return a.start - b.start;
-          });
+          semester[time.day].sort((a, b) => a.start - b.start);
         }
       }
     },
   },
   modules: {},
   getters: {
-    getExportOverlay: (state) => {
-      return state.exportOverlay;
-    },
-    getNoTimetablePopup: (state) => {
-      return state.noTimetablePopup;
-    },
-    getOverwriteLockedSectionPopup: (state) => {
-      return state.overwriteLockedSectionPopup;
-    },
+    getExportOverlay: state => state.exportOverlay,
+    getNoTimetablePopup: state => state.noTimetablePopup,
+    getOverwriteLockedSectionPopup: state => state.overwriteLockedSectionPopup,
     getTutorialPopup(state) {
       return state.tutorialPopup;
     },
-    timetable: (state) => {
+    timetable: state => {
       if (state.semesterStatus === 'F') {
         return state.fallTimetable;
       } else {
         return state.winterTimetable;
       }
     },
-    fallTimetable: (state) => {
-      return state.fallTimetable;
-    },
-    winterTimetable: (state) => {
-      return state.winterTimetable;
-    },
-    selectedCourses: (state) => (whichSemester) => {
+    fallTimetable: state => state.fallTimetable,
+    winterTimetable: state => state.winterTimetable,
+    selectedCourses: state => whichSemester => {
       if (whichSemester === 'F') {
         return state.fallSelectedCourses;
       } else if (whichSemester === 'S') {
@@ -688,66 +682,44 @@ export default new Vuex.Store({
         return state.winterSelectedCourses;
       }
     },
-    fallSelectedCourses: (state) => {
-      return state.fallSelectedCourses;
-    },
-    winterSelectedCourses: (state) => {
-      return state.winterSelectedCourses;
-    },
-    getLockedSections: (state) => {
+    fallSelectedCourses: state => state.fallSelectedCourses,
+    winterSelectedCourses: state => state.winterSelectedCourses,
+    getLockedSections: state => {
       if (state.semesterStatus === 'F') {
         return state.fallLockedSections;
       } else {
         return state.winterLockedSections;
       }
     },
-    fallLockedSections: (state) => {
-      return state.fallLockedSections;
-    },
-    winterLockedSections: (state) => {
-      return state.winterLockedSections;
-    },
-    getCourseColor: (state) => (code) => {
+    fallLockedSections: state => state.fallLockedSections,
+    winterLockedSections: state => state.winterLockedSections,
+    getCourseColor: state => code => {
       if (code[8] === 'F') {
         return state.fallSelectedCourses[code].color;
       } else {
         return state.winterSelectedCourses[code].color;
       }
     },
-    getSearchBarValue: (state) => {
-      return state.searchBarValue;
-    },
-    getSemesterStatus: (state) => {
-      return state.semesterStatus;
-    },
-    getLockedDayStatus: (state) => {
+    getSearchBarValue: state => state.searchBarValue,
+    getSemesterStatus: state => state.semesterStatus,
+    getLockedDayStatus: state => {
       if (state.semesterStatus === 'F') {
         return state.fallLockedDayStatus;
       } else {
         return state.winterLockedDayStatus;
       }
     },
-    getLockedHourStatus: (state) => {
+    getLockedHourStatus: state => {
       if (state.semesterStatus === 'F') {
         return state.fallLockedHourStatus;
       } else {
         return state.winterLockedHourStatus;
       }
     },
-    getFallLockedHourStatus: (state) => {
-      return state.fallLockedHourStatus;
-    },
-    getWinterLockedHourStatus: (state) => {
-      return state.winterLockedHourStatus;
-    },
-    getFallLockedDayStatus: (state) => {
-      return state.fallLockedDayStatus;
-    },
-    getWinterLockedDayStatus: (state) => {
-      return state.winterLockedDayStatus;
-    },
-    getClearStorage: (state) => {
-      return state.clearStorage;
-    },
+    getFallLockedHourStatus: state => state.fallLockedHourStatus,
+    getWinterLockedHourStatus: state => state.winterLockedHourStatus,
+    getFallLockedDayStatus: state => state.fallLockedDayStatus,
+    getWinterLockedDayStatus: state => state.winterLockedDayStatus,
+    getClearStorage: state => state.clearStorage,
   },
 });

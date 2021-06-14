@@ -44,7 +44,7 @@ export default {
       console.log(e.message);
     }
 
-    if (rawCourses.length != 0) {
+    if (rawCourses.length !== 0) {
       // sort the search bar
       rawCourses.sort((a, b) => {
         if (a.courseCode < b.courseCode) {
@@ -88,10 +88,7 @@ export default {
       },
     },
     semCourses() {
-      return this.allCourses.filter((courseString) => {
-        // filter out all summer courses
-        return courseString[14] === ':';
-      });
+      return this.allCourses.filter((courseString) => courseString[14] === ':');
     },
   },
   methods: {
@@ -108,7 +105,7 @@ export default {
       }
 
       // Checks if the course is already added
-      for (let courseCode in this.selectedCourses) {
+      for (const courseCode in this.selectedCourses) {
         if (this.selectedCourse.includes(courseCode)) return;
       }
 
@@ -117,7 +114,7 @@ export default {
       this.loading = true;
 
       let course = {};
-      let courseCode = this.selectedCourse.slice(5, this.selectedCourse.indexOf(':'));
+      const courseCode = this.selectedCourse.slice(5, this.selectedCourse.indexOf(':'));
 
       try {
         course = await axios.get(
@@ -137,6 +134,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .styles {
   border: 5px solid #012b5c;
