@@ -28,12 +28,18 @@
         <v-col cols="11">
           <v-row name="week-days-axis">
             <v-col v-for="weekday in weekdays" :key="weekday">
-              <weekday-switch :weekday="weekday" :semester="semester"></weekday-switch>
+              <weekday-switch
+                :weekday="weekday"
+                :semester="semester"
+              ></weekday-switch>
             </v-col>
           </v-row>
           <v-row name="timetable-content">
             <v-col v-for="(meetingSections, day) in timetable" :key="day">
-              <div v-for="event in getEventsForDay(meetingSections)" :key="event.start">
+              <div
+                v-for="event in getEventsForDay(meetingSections)"
+                :key="event.start"
+              >
                 <timetable-event
                   :event="event"
                   :semester="semester"
@@ -63,17 +69,14 @@
 </template>
 
 <script>
-import TimetableEvent from './TimetableEvent';
-import NoTimetablePopup from '../Popup/NoTimetablePopup';
-import HourSwitch from './HourSwitch';
-import WeekdaySwitch from './WeekdaySwitch';
-import TimetableCourseCard from './TimetableCourseCard';
 import { mapMutations, mapGetters } from 'vuex';
+import TimetableEvent from './TimetableEvent.vue';
+import NoTimetablePopup from '../Popup/NoTimetablePopup.vue';
+import HourSwitch from './HourSwitch.vue';
+import WeekdaySwitch from './WeekdaySwitch.vue';
+import TimetableCourseCard from './TimetableCourseCard.vue';
 
-const convertSecondsToHours = (seconds) => {
-  return seconds / 3600;
-};
-
+const convertSecondsToHours = seconds => seconds / 3600;
 export default {
   name: 'Timetable',
   components: {
@@ -97,10 +100,10 @@ export default {
   computed: {
     ...mapGetters(['getLockedSections', 'selectedCourses', 'getExportOverlay']),
     timetableStart() {
-      var earliest = 9;
-      for (let day in this.timetable) {
+      let earliest = 9;
+      for (const day in this.timetable) {
         const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
+        for (const event of dayEvents) {
           const start = convertSecondsToHours(event.start);
           if (start < earliest) {
             earliest = start;
@@ -118,10 +121,10 @@ export default {
       }
     },
     timetableEnd() {
-      var latest = 18;
-      for (let day in this.timetable) {
+      let latest = 18;
+      for (const day in this.timetable) {
         const dayEvents = this.timetable[day];
-        for (let event of dayEvents) {
+        for (const event of dayEvents) {
           const end = convertSecondsToHours(event.end);
           if (end > latest) {
             latest = end;
@@ -132,10 +135,10 @@ export default {
     },
     timeRange() {
       const result = [];
-      for (let i = this.timetableStart; i <= this.timetableEnd; i++) {
+      for (let i = this.timetableStart; i <= this.timetableEnd; i += 1) {
         if (i > 12) {
           result.push(`${i % 12} PM`);
-        } else if (i == 12) {
+        } else if (i === 12) {
           result.push(`${12} PM`);
         } else {
           result.push(`${i % 12} AM`);
@@ -145,9 +148,10 @@ export default {
     },
     // filters user lock timeslots
     getSelectedCourses() {
-      this.timetable; //force re-render the selected courses
+      // eslint-disable-next-line no-unused-expressions
+      this.timetable; // force re-render the selected courses
       const filteredCourses = {};
-      for (var code in this.selectedCourses(this.semester)) {
+      for (const code in this.selectedCourses(this.semester)) {
         if (!code.includes('Lock')) {
           filteredCourses[code] = this.selectedCourses(this.semester)[code];
         }
@@ -171,66 +175,68 @@ export default {
       const result = [];
       let currTime = this.timetableStart;
       let invalidStart = -1;
-      let flag = meetingSections.every((event) => {
-        let eventStart = convertSecondsToHours(event.start);
-        let eventEnd = convertSecondsToHours(event.end);
+      const flag = meetingSections.every(event => {
+        const eventStart = convertSecondsToHours(event.start);
+        const eventEnd = convertSecondsToHours(event.end);
 
         return eventStart < this.timetableStart || eventEnd > this.timetableEnd;
       });
       if (meetingSections.length === 0 || flag) {
-        for (let j = 0; j < this.timetableEnd - this.timetableStart; j++) {
+        for (let j = 0; j < this.timetableEnd - this.timetableStart; j += 1) {
           result.push({
             start: invalidStart,
             currStart: (currTime + j) * 3600,
             currEnd: (currTime + j + 1) * 3600,
           });
-          invalidStart--;
+          invalidStart -= 1;
         }
         return result;
       }
-      for (let i = 0; i < meetingSections.length; i++) {
+      for (let i = 0; i < meetingSections.length; i += 1) {
         const event = meetingSections[i];
-        let eventStart = convertSecondsToHours(event.start);
-        let eventEnd = convertSecondsToHours(event.end);
+        const eventStart = convertSecondsToHours(event.start);
+        const eventEnd = convertSecondsToHours(event.end);
 
         // if the current locked event starts before the timetable start time
         if (eventStart < this.timetableStart) {
+          // eslint-disable-next-line no-continue
           continue;
         } else if (eventStart >= this.timetableEnd) {
           break;
         }
 
-        //Pad empty hour or half hours before the event
-        //If event starts at whole hour
+        // Pad empty hour or half hours before the event
+        // If event starts at whole hour
         if (Number.isInteger(eventStart - currTime)) {
-          for (let j = 0; j < eventStart - currTime; j++) {
+          for (let j = 0; j < eventStart - currTime; j += 1) {
             result.push({
               start: invalidStart,
               currStart: (currTime + j) * 3600,
               currEnd: (currTime + j + 1) * 3600,
             });
-            invalidStart--;
+            invalidStart -= 1;
           }
         }
-        //If event starts at half hour
+        // If event starts at half hour
         else {
-          //there is half hour exist
-          //previous end time is one hour
+          // there is half hour exist
+          // previous end time is one hour
+          // eslint-disable-next-line no-lonely-if
           if (Number.isInteger(currTime)) {
-            for (let j = 0; j < eventStart - currTime - 1; j++) {
+            for (let j = 0; j < eventStart - currTime - 1; j += 1) {
               result.push({
                 start: invalidStart,
                 currStart: (currTime + j) * 3600,
                 currEnd: (currTime + j + 1) * 3600,
               });
-              invalidStart--;
-            } //pushing in half hour
+              invalidStart -= 1;
+            } // pushing in half hour
             result.push({
               start: invalidStart,
               currStart: (eventStart - 0.5) * 3600,
               currEnd: eventStart * 3600,
             });
-            invalidStart--;
+            invalidStart -= 1;
             // previous end time is full hour
           } else {
             result.push({
@@ -238,19 +244,19 @@ export default {
               currStart: currTime * 3600,
               currEnd: (currTime + 0.5) * 3600,
             });
-            invalidStart--;
-            for (let j = 0; j < eventStart - (currTime + 0.5); j++) {
+            invalidStart -= 1;
+            for (let j = 0; j < eventStart - (currTime + 0.5); j += 1) {
               result.push({
                 start: invalidStart,
                 currStart: (currTime + 0.5 + j) * 3600,
                 currEnd: (currTime + 0.5 + j + 1) * 3600,
               });
-              invalidStart--;
+              invalidStart -= 1;
             }
           }
         }
 
-        //Make a block for the current event
+        // Make a block for the current event
         // if the section is a user locked section, pass it in as a locked event
         if (event.code.includes('Lock')) {
           result.push({
@@ -258,36 +264,37 @@ export default {
             currStart: event.start,
             currEnd: event.start + 3600,
           });
-          invalidStart--;
+          invalidStart -= 1;
         } else {
-          event['currStart'] = event.start;
+          event.currStart = event.start;
           result.push(event);
         }
 
         currTime = eventEnd;
 
-        //If last event, pad empty events after it
+        // If last event, pad empty events after it
         if (
           i === meetingSections.length - 1 ||
-          convertSecondsToHours(meetingSections[i + 1].start) >= this.timetableEnd
+          convertSecondsToHours(meetingSections[i + 1].start) >=
+            this.timetableEnd
         ) {
-          //half hour
+          // half hour
           if (!Number.isInteger(currTime)) {
             result.push({
               start: invalidStart,
               currStart: currTime * 3600,
               currEnd: (currTime + 0.5) * 3600,
             });
-            invalidStart--;
-            currTime = currTime + 0.5;
+            invalidStart -= 1;
+            currTime += 0.5;
           }
-          for (let k = 0; k < this.timetableEnd - currTime; k++) {
+          for (let k = 0; k < this.timetableEnd - currTime; k += 1) {
             result.push({
               start: invalidStart,
               currStart: (currTime + k) * 3600,
               currEnd: (currTime + k + 1) * 3600,
             });
-            invalidStart--;
+            invalidStart -= 1;
           }
         }
       }
