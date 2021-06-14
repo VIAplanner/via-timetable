@@ -13,12 +13,16 @@
 
       <v-carousel hide-delimiter-background show-arrows-on-hover height="480">
         <v-carousel-item v-for="tut in allTut" :key="tut.step">
-          <v-sheet style="border-radius: 0px" :color="tut.backgroundColor" height="100%">
+          <v-sheet
+            style="border-radius: 0px"
+            :color="tut.backgroundColor"
+            height="100%"
+          >
             <v-row class="ma-0" style="width: 600px">
               <v-col>
                 <p class="text-h5 ml-3 mb-0">{{ tut.step }}</p>
                 <p class="text-h4 ml-3">{{ tut.title }}</p>
-                <v-img eager :src="tut.path"></v-img>
+                <v-img max-height="280" contain eager :src="tut.path"></v-img>
                 <p class="text-h6 ml-3 mb-1 mt-4 text-center">
                   {{ tut.description }}
                 </p>
@@ -34,6 +38,7 @@
 <script>
 import genColor from 'color-generator';
 import { mapMutations, mapGetters } from 'vuex';
+
 export default {
   mounted() {
     if (!localStorage.visited) {
@@ -44,31 +49,42 @@ export default {
     return {
       allTut: [
         {
+          step: 'We have an exciting annoccument:',
+          title: 'Our data has been updated!',
+          path: require('../../assets/updated-courses.png'),
+          description: 'Courses for 2021F-2022W is here!',
+          backgroundColor: genColor(0.7, 0.85).hexString(),
+        },
+        {
           step: 'Step 1',
           title: 'Select some courses',
           path: require('../../assets/tut1.gif'),
-          description: 'Just click on a course and we will generate a timetable',
+          description:
+            'Just click on a course and we will generate a timetable',
           backgroundColor: genColor(0.7, 0.85).hexString(),
         },
         {
           step: 'Step 2',
           title: 'Adjust your times',
           path: require('../../assets/tut2.gif'),
-          description: 'Click on the pencil icon or the course to adjust the times',
+          description:
+            'Click on the pencil icon or the course to adjust the times',
           backgroundColor: genColor(0.7, 0.85).hexString(),
         },
         {
           step: 'Step 3',
           title: 'Select and lock',
           path: require('../../assets/tut3.gif'),
-          description: "Block rows and columns and we won't schedule those times",
+          description:
+            "Block rows and columns and we won't schedule those times",
           backgroundColor: genColor(0.7, 0.85).hexString(),
         },
         {
           step: 'Step 4',
           title: 'Switch between semesters',
           path: require('../../assets/tut4.gif'),
-          description: 'Click on the top right to switch between fall and winter',
+          description:
+            'Click on the top right to switch between fall and winter',
           backgroundColor: genColor(0.7, 0.85).hexString(),
         },
         {

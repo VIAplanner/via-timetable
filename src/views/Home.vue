@@ -24,7 +24,11 @@
           contain
           class="ma-2 ml-1"
         />
-        <v-tabs grow v-model="whichTab" style="max-width: 250px; min-width: 250px">
+        <v-tabs
+          grow
+          v-model="whichTab"
+          style="max-width: 250px; min-width: 250px"
+        >
           <v-tab>PROGRAMS</v-tab>
           <v-tab>TIMETABLE</v-tab>
         </v-tabs>
@@ -39,8 +43,8 @@
             <v-row>
               <v-col class="pa-0">
                 <h1 style="text-align:center" class="text-subtitle-1">
-                  Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021 school
-                  year
+                  Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021
+                  school year
                 </h1>
               </v-col>
             </v-row>
@@ -105,14 +109,26 @@ export default {
     // save the timetable data in the browser
     saveData() {
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
-      localStorage.fallSelectedCourses = JSON.stringify(this.fallSelectedCourses);
+      localStorage.fallSelectedCourses = JSON.stringify(
+        this.fallSelectedCourses,
+      );
       localStorage.fallTimetable = JSON.stringify(this.fallTimetable);
-      localStorage.fallLockedDayStatus = JSON.stringify(this.getFallLockedDayStatus);
-      localStorage.fallLockedHourStatus = JSON.stringify(this.getFallLockedHourStatus);
-      localStorage.winterLockedSections = JSON.stringify(this.winterLockedSections);
-      localStorage.winterSelectedCourses = JSON.stringify(this.winterSelectedCourses);
+      localStorage.fallLockedDayStatus = JSON.stringify(
+        this.getFallLockedDayStatus,
+      );
+      localStorage.fallLockedHourStatus = JSON.stringify(
+        this.getFallLockedHourStatus,
+      );
+      localStorage.winterLockedSections = JSON.stringify(
+        this.winterLockedSections,
+      );
+      localStorage.winterSelectedCourses = JSON.stringify(
+        this.winterSelectedCourses,
+      );
       localStorage.winterTimetable = JSON.stringify(this.winterTimetable);
-      localStorage.winterLockedDayStatus = JSON.stringify(this.getWinterLockedDayStatus);
+      localStorage.winterLockedDayStatus = JSON.stringify(
+        this.getWinterLockedDayStatus,
+      );
       localStorage.winterLockedHourStatus = JSON.stringify(
         this.getWinterLockedHourStatus,
       );

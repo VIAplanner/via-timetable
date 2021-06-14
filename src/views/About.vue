@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-content
-      :style="darkMode ? 'background-color: #000000' : 'background-color: #F5F5F6'"
+      :style="
+        darkMode ? 'background-color: #000000' : 'background-color: #F5F5F6'
+      "
       class="pt-0"
     >
       <v-app-bar
@@ -9,13 +11,17 @@
         elevation="0"
         dark
         class="pa-0"
-        :style="top ? 'background-color: transparent' : 'background-color: #012B5C'"
+        :style="
+          top ? 'background-color: transparent' : 'background-color: #012B5C'
+        "
       >
         <v-img
           src="../assets/VIA-Planner-White.png"
           :max-width="$isMobile() ? 100 : 130"
           contain
-          @click="$isMobile() ? (mobileAlert = true) : $router.push({ name: 'home' })"
+          @click="
+            $isMobile() ? (mobileAlert = true) : $router.push({ name: 'home' })
+          "
           style="cursor: pointer"
         />
         <v-spacer></v-spacer>
@@ -27,11 +33,20 @@
           <v-icon left>mdi-text-box-check-outline</v-icon>
           Survey
         </v-btn>
-        <v-btn v-if="!$isMobile()" text href="https://docs.viaplanner.ca/" target="blank">
+        <v-btn
+          v-if="!$isMobile()"
+          text
+          href="https://docs.viaplanner.ca/"
+          target="blank"
+        >
           <v-icon left>mdi-file-document</v-icon>
           Docs
         </v-btn>
-        <v-btn text href="https://github.com/UTM-Hacklab/VIAplanner" target="blank">
+        <v-btn
+          text
+          href="https://github.com/UTM-Hacklab/VIAplanner"
+          target="blank"
+        >
           <v-icon left>mdi-github</v-icon>
           GitHub
         </v-btn>
@@ -53,12 +68,25 @@
         <v-snackbar v-model="mobileAlert">
           Sorry! The mobile view is not ready yet 😢
           <template v-slot:action="{ attrs }">
-            <v-btn color="pink" text v-bind="attrs" @click="mobileAlert = false">
+            <v-btn
+              color="pink"
+              text
+              v-bind="attrs"
+              @click="mobileAlert = false"
+            >
               Close
             </v-btn>
           </template>
         </v-snackbar>
-        <v-btn fab dark bottom right fixed color="primary" @click="darkMode = !darkMode">
+        <v-btn
+          fab
+          dark
+          bottom
+          right
+          fixed
+          color="primary"
+          @click="darkMode = !darkMode"
+        >
           <v-icon v-if="darkMode" dark>mdi-brightness-4</v-icon>
           <v-icon v-else dark>mdi-brightness-6</v-icon>
         </v-btn>
@@ -80,8 +108,12 @@
                   >
                     Course Selection Made Easy
                   </h1>
-                  <h1 class="text-h5 ma-4" style="font-weight: 300; color: white">
-                    A tool for tailoring your University timetable based on your programs
+                  <h1
+                    class="text-h5 ma-4"
+                    style="font-weight: 300; color: white"
+                  >
+                    A tool for tailoring your University timetable based on your
+                    programs
                   </h1>
                   <v-btn
                     rounded
@@ -91,7 +123,9 @@
                     style="text-transform: none; border-width: medium"
                     class="ma-4"
                     @click="
-                      $isMobile() ? (mobileAlert = true) : $router.push({ name: 'home' })
+                      $isMobile()
+                        ? (mobileAlert = true)
+                        : $router.push({ name: 'home' })
                     "
                   >
                     Try out the Alpha
@@ -120,7 +154,11 @@
           <v-row justify="center">
             <v-col class="text-center">
               <h1 class="ma-3">Release Schedule</h1>
-              <v-timeline :dense="$vuetify.breakpoint.smAndDown" class="ma-3" align-top>
+              <v-timeline
+                :dense="$vuetify.breakpoint.smAndDown"
+                class="ma-3"
+                align-top
+              >
                 <v-timeline-item color="green lighten-1" fill-dot left>
                   <v-card color="green lighten-1">
                     <v-card-title color="green lighten-1">
@@ -231,11 +269,14 @@
                     <v-sheet class="pa-5 text-left">
                       <ul>
                         <li>
-                          Course suggestion based on programs (only for selected programs)
+                          Course suggestion based on programs (only for selected
+                          programs)
                         </li>
                         <li>Added courses from all 3 campuses</li>
                         <li>Bird course recommendations</li>
-                        <li>Save timetable in the browser for when you visit again</li>
+                        <li>
+                          Save timetable in the browser for when you visit again
+                        </li>
                         <li>
                           More UI improvement
                         </li>
@@ -253,8 +294,8 @@
               </v-timeline>
               <h1 class="text-body-1 ma-1">
                 Keep in mind, the deadlines for each release is when
-                <strong>ALL</strong> the features will be ready. So come back frequently
-                to check if a new feature has been released 😀
+                <strong>ALL</strong> the features will be ready. So come back
+                frequently to check if a new feature has been released 😀
               </h1>
             </v-col>
           </v-row>
@@ -267,7 +308,11 @@
                 :justify="$isMobile() ? 'center' : 'end'"
                 class="fill-height"
               >
-                <div :style="$isMobile() ? 'text-align: center' : 'text-align: right'">
+                <div
+                  :style="
+                    $isMobile() ? 'text-align: center' : 'text-align: right'
+                  "
+                >
                   <h3>Generate</h3>
                   <h1 style="margin-bottom: 20px">
                     Schedule Automatically
@@ -285,7 +330,9 @@
               <div style="text-align:center">
                 <v-img
                   :class="
-                    $isMobile() ? ['center', 'ma-3'] : ['center', 'mt-3', 'mb-7', 'mr-5']
+                    $isMobile()
+                      ? ['center', 'ma-3']
+                      : ['center', 'mt-3', 'mb-7', 'mr-5']
                   "
                   src="../assets/img1.gif"
                   max-width="800"
@@ -301,7 +348,9 @@
               <div style="text-align:center">
                 <v-img
                   :class="
-                    $isMobile() ? ['center', 'ma-3'] : ['center', 'mt-3', 'mb-7', 'ml-5']
+                    $isMobile()
+                      ? ['center', 'ma-3']
+                      : ['center', 'mt-3', 'mb-7', 'ml-5']
                   "
                   src="../assets/img2.gif"
                   max-width="800"
@@ -335,7 +384,10 @@
           <v-row justify="center">
             <v-col style="text-align: center">
               <h1 class="ma-3">Features</h1>
-              <v-carousel show-arrows-on-hover :height="$isMobile() ? 350 : 780">
+              <v-carousel
+                show-arrows-on-hover
+                :height="$isMobile() ? 350 : 780"
+              >
                 <v-carousel-item
                   v-for="(path, text) in slideData"
                   :key="text"
@@ -366,16 +418,17 @@
             <v-sheet :dark="darkMode" :color="darkMode ? 'black' : '#F5F5F6'">
               <h1>Open Source</h1>
               <h3 class="text-body-1 ma-5">
-                This is a platform built for students, by students. Universities can't
-                always keep up with the
+                This is a platform built for students, by students. Universities
+                can't always keep up with the
                 <strong>cutting-edge</strong>
                 technologies, but we have made it our mission to do so.
               </h3>
               <h3 class="text-body-1">
-                That's why we need your help. At VIAplanner, we are strong believers in
-                <strong>collaboration</strong>. Thus, we've decided to display all of our
-                source code. If you have any ideas that you think would be useful, please
-                don't hesitate to
+                That's why we need your help. At VIAplanner, we are strong
+                believers in
+                <strong>collaboration</strong>. Thus, we've decided to display
+                all of our source code. If you have any ideas that you think
+                would be useful, please don't hesitate to
                 <strong>make it happen.</strong>
               </h3>
               <v-row class="mt-5" justify="center">
@@ -423,7 +476,8 @@
     <v-footer absolute :dark="darkMode" :color="darkMode ? 'black' : '#F5F5F6'">
       <v-row justify="center">
         <h1 class="text-subtitle-1 text-center">
-          Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021 school year
+          Copyright © 2020 VIAplanner - Data updated for the 2020 - 2021 school
+          year
         </h1>
       </v-row>
     </v-footer>
@@ -457,10 +511,10 @@ export default {
   mounted() {
     axios
       .get('https://api.github.com/repos/UTM-Hacklab/VIAplanner')
-      .then((response) => {
+      .then(response => {
         this.starCount = response.data.stargazers_count;
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   },

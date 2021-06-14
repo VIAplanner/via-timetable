@@ -54,7 +54,7 @@ export default {
         }
       });
 
-      this.allCourses = rawCourses.map((course) => {
+      this.allCourses = rawCourses.map(course => {
         if (course.courseCode[7] === '1') {
           campus = 'UTSG';
         } else if (course.courseCode[7] === '3') {
@@ -77,7 +77,11 @@ export default {
     this.loading = false;
   },
   computed: {
-    ...mapGetters(['getSearchBarValue', 'getSemesterStatus', 'selectedCourses']),
+    ...mapGetters([
+      'getSearchBarValue',
+      'getSemesterStatus',
+      'selectedCourses',
+    ]),
     selectedCourse: {
       // used as v-model for the search bar
       get() {
@@ -88,7 +92,7 @@ export default {
       },
     },
     semCourses() {
-      return this.allCourses.filter((courseString) => courseString[14] === ':');
+      return this.allCourses.filter(courseString => courseString[14] === ':');
     },
   },
   methods: {
@@ -114,7 +118,10 @@ export default {
       this.loading = true;
 
       let course = {};
-      const courseCode = this.selectedCourse.slice(5, this.selectedCourse.indexOf(':'));
+      const courseCode = this.selectedCourse.slice(
+        5,
+        this.selectedCourse.indexOf(':'),
+      );
 
       try {
         course = await axios.get(

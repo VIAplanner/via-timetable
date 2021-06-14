@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:vue/essential", "airbnb-base", "prettier"],
+  "extends": ["airbnb-base", "prettier", "plugin:vue/essential"],
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module"
