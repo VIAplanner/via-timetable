@@ -43,6 +43,7 @@ export default {
   mounted() {
     if (!localStorage.visited) {
       localStorage.visited = true;
+      this.setTutorialPopup(true);
     }
   },
   data() {

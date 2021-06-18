@@ -64,11 +64,11 @@ export default {
         }
 
         if (course.courseCode[8] === 'F') {
-          return `🍂   ${course.courseCode}: ${course.name} (${campus})`;
+          return `🍂   ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
         } else if (course.courseCode[8] === 'S') {
-          return `❄️   ${course.courseCode}: ${course.name} (${campus})`;
+          return `❄️   ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
         } else {
-          return `🍂❄️ ${course.courseCode}: ${course.name} (${campus})`;
+          return `🍂❄️ ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
         }
       });
     }
