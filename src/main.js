@@ -13,6 +13,7 @@ import ToggleButton from 'vue-js-toggle-button';
 import VueMobileDetection from 'vue-mobile-detection';
 import VueAnalytics from 'vue-analytics';
 import VueHtml2Canvas from 'vue-html2canvas';
+import ICS from 'vue-ics';
 import SmoothScrollbar from 'vue-smooth-scrollbar';
 
 Vue.config.productionTip = false;
@@ -21,6 +22,7 @@ Vue.use(SmoothScrollbar);
 Vue.use(VueHtml2Canvas);
 Vue.use(ToggleButton);
 Vue.use(VueMobileDetection);
+Vue.use(ICS);
 Vue.use(VueAnalytics, {
   id: 'UA-165919387-2',
   router,
