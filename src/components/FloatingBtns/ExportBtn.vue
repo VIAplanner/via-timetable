@@ -15,7 +15,7 @@
           <v-icon>mdi-download</v-icon>
         </v-btn>
       </template>
-      <span>Export Timetables</span>
+      <span>Export Timetable as Image</span>
     </v-tooltip>
     <v-btn v-else fab dark small color="green">
       <v-icon>mdi-download</v-icon>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
 import axios from 'axios';
 import { mapGetters, mapMutations } from 'vuex';
 
