@@ -26,10 +26,8 @@
         />
         <v-tabs
           grow
-          v-model="whichTab"
           style="max-width: 250px; min-width: 250px"
         >
-          <v-tab>PROGRAMS</v-tab>
           <v-tab>TIMETABLE</v-tab>
         </v-tabs>
         <course-search-bar style="margin: auto" />
@@ -82,7 +80,6 @@ export default {
         swipeEasing: true,
         wheelSpeed: 0.1,
       },
-      whichTab: 1,
     };
   },
   computed: {
@@ -101,15 +98,6 @@ export default {
       'getWinterLockedHourStatus',
       'getClearStorage',
     ]),
-  },
-  watch: {
-    whichTab() {
-      if (this.whichTab === 0) {
-        this.$router.push({ name: 'program' });
-      } else if (this.whichTab === 1) {
-        this.$router.push({ name: 'timetable' });
-      }
-    },
   },
   created() {
     if (localStorage.clearStorage !== this.getClearStorage) {
