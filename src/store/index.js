@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // change this number to clear storage
-    clearStorage: '0',
+    clearStorage: '1',
     fallLockedHourStatus: !localStorage.fallLockedHourStatus
       ? {
           '8 AM': false,
