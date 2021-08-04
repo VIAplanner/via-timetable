@@ -104,7 +104,7 @@ export default {
       // Switch the semester based on the course
       if (this.selectedCourse[13] === 'F') {
         this.setSemesterStatus('F');
-      } else {
+      } else if (this.selectedCourse[13] === 'S'){
         this.setSemesterStatus('S');
       }
 
