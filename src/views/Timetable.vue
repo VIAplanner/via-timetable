@@ -5,6 +5,7 @@
       v-model="whichTimetable"
       :height="carouselHeight"
       hide-delimiters
+      style="marginTop: 20px;"
       light
       :show-arrows="false"
     >

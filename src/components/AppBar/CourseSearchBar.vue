@@ -5,7 +5,7 @@
     v-model="selectedCourse"
     :items="allCourses"
     flat
-    class="ml-2 mr-2"
+    class="ma-2 ml-2 mr-2"
     hide-no-data
     hide-details
     :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"

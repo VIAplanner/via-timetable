@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="background" style="padding-right: 50px !important">
+    <v-container class="background" style="padding-top: 50px !important; padding-right: 50px !important;">
       <v-row>
         <NoTimetablePopup></NoTimetablePopup>
         <v-col class="time-axis">
@@ -34,7 +34,7 @@
               ></weekday-switch>
             </v-col>
           </v-row>
-          <v-row name="timetable-content">
+          <v-row name="timetable-content" style="padding-top: 20px !important;">
             <v-col v-for="(meetingSections, day) in timetable" :key="day">
               <div
                 v-for="event in getEventsForDay(meetingSections)"
