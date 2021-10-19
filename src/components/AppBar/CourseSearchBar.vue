@@ -41,6 +41,7 @@ export default {
       );
       rawCourses = rawCourses.data;
     } catch (e) {
+      // eslint-disable-next-line
       console.log(e.message);
     }
 
@@ -129,6 +130,7 @@ export default {
         );
         course = course.data;
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e.message);
       }
 
