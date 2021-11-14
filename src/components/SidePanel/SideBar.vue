@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-card :height="coursePanelHeight" class="pa-4">
+    <v-card :height="coursePanelHeight" class="pa-4 mt-3">
       <v-row class="px-4">
-        <h1 class="text-h6">{{ sideBarTitle }}</h1>
-        <v-spacer />
-        <div>{{ Object.keys(filterCourses).length * 0.5 }} credit(s)</div>
+        <h1 class="text-h6 ma-3">{{ sideBarTitle }}</h1>
+        <v-spacer class="ma-3" />
+        <div class="ma-3">{{ Object.keys(filterCourses).length * 0.5 }} credit(s)</div>
       </v-row>
       <hr class="mb-1" />
       <v-row

@@ -515,6 +515,7 @@ export default {
         this.starCount = response.data.stargazers_count;
       })
       .catch(error => {
+        // eslint-disable-next-line
         console.log(error);
       });
   },

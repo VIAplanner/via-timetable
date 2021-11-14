@@ -18,7 +18,10 @@
       <div style="color: #474747">
         <h3>{{ course.courseCode }}</h3>
       </div>
-      <v-spacer />
+       <v-btn icon @click.native.stop @click="addOrRemoveConflictCourse({code: course.courseCode } )" color="#474747" max-width="40" max-height="40">
+            <v-icon v-if="isConflict">mdi-book-multiple</v-icon>
+            <v-icon v-else>mdi-book-variant</v-icon>
+      </v-btn>
       <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on" color="#474747" max-width="40" max-height="40">
@@ -79,7 +82,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
 
 export default {
@@ -94,7 +97,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['timetable', 'selectedCourses']),
+    ...mapGetters(['timetable', 'selectedCourses', 'isConflictedCourse']),
+    isConflict(){
+      return this.isConflictedCourse(this.course.courseCode);
+    },
     meetingSections() {
       const sections = {};
       for (const day in this.timetable) {
@@ -136,6 +142,7 @@ export default {
   },
   methods: {
     ...mapActions(['deleteCourse']),
+    ...mapMutations(['addOrRemoveConflictCourse']),
     getFormattedTime(start, end) {
       let s = (start / 3600) % 12;
       if (s === 0) {
