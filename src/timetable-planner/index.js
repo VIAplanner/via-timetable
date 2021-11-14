@@ -1592,8 +1592,10 @@ const generateTimetables = (
   winterCourses,
   winterLockSections,
   online,
+  excludedConflictCourses = [],
 ) => {
   // Generate all valid combinations of MeetingSections for a course
+  console.log(excludedConflictCourses);
   const fallCourseSections = fallCourses.map(course =>
     sortCourseSection(course),
   );
@@ -1604,6 +1606,7 @@ const generateTimetables = (
   lockSectionOfCourse(winterCourseSections, winterLockSections);
   sortCourses(fallCourseSections, online);
   sortCourses(winterCourseSections, online);
+  
   let timetables = createTimetable(
     fallCourseSections,
     winterCourseSections,

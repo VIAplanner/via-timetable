@@ -91,6 +91,7 @@ export default {
       'fallSelectedCourses',
       'winterSelectedCourses',
       'fallLockedSections',
+      'allowedConflictCourses',
       'winterLockedSections',
       'getFallLockedDayStatus',
       'getWinterLockedDayStatus',
@@ -116,6 +117,7 @@ export default {
     // save the timetable data in the browser
     saveData() {
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
+      localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
       localStorage.fallSelectedCourses = JSON.stringify(
         this.fallSelectedCourses,
       );

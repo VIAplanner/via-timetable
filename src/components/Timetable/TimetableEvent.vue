@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;">
     <div v-if="event.start > 0">
       <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
         <template v-slot:activator="{ on }">
@@ -10,10 +10,12 @@
             class="event"
             :style="{
               background: getCourseColor(event.code),
-              height: getHeight,
+              marginTop: getMarginTop,
+              marginBot: getMarginBot,
+              height: getHeight
             }"
           >
-            <h4>{{ event.code }}</h4>
+            <h4 class="pb-2">{{ event.code }}</h4>
 
             <div class="lock-button">
               <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
@@ -128,12 +130,20 @@ export default {
     duration() {
       // Real course
       if (this.event.start > 0) {
-        return convertSecondsToHours(this.event.end - this.event.start);
+        return convertSecondsToHours(this.event.currEnd - this.event.start);
       }
       // Empty or blocked hour
       else {
         return convertSecondsToHours(this.event.currEnd - this.event.currStart);
       }
+    },
+
+    getMarginTop() {
+      return "olap_start" in this.event ? `${convertSecondsToHours(this.event.start - this.event.olap_start) * this.oneHourHeight}px` : `0`;
+    },
+    getMarginBot() {
+    // If a bottom margin is applicable
+    return "olap_end" in this.event ? `${convertSecondsToHours(this.event.olap_end - this.event.currEnd) * this.oneHourHeight}px` : `0`;
     },
     getHeight() {
       return `${this.duration * this.oneHourHeight}px`;
