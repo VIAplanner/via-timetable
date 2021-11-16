@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import genColor from 'color-generator';
-import { generateTimetables } from '../timetable-planner';
+import { generateTimetables } from '../timetable-planner/index2';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
@@ -10,6 +10,9 @@ export default new Vuex.Store({
   state: {
     // change this number to clear storage
     clearStorage: '1',
+    allowedConflictCourses: !localStorage.allowedConflictCourses
+      ? []
+      : JSON.parse(localStorage.allowedConflictCourses),
     fallLockedHourStatus: !localStorage.fallLockedHourStatus
       ? {
           '8 AM': false,
@@ -250,6 +253,16 @@ export default new Vuex.Store({
     // Todo
     setSelectedCourses(state, payload) {
       [state.fallSelectedCourses, state.winterSelectedCourses] = payload;
+    },
+    addOrRemoveConflictCourse(state, payload) {
+      const index = state.allowedConflictCourses.findIndex(
+        course => course.code === payload.code,
+      );
+      if (index === -1) {
+        state.allowedConflictCourses.push(payload);
+      } else {
+        state.allowedConflictCourses.splice(index, 1);
+      }
     },
     lockSection(state, payload) {
       let index;
@@ -516,6 +529,7 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
+        context.state.allowedConflictCourses
       );
 
       context.dispatch('validateTimetable', timetables);
@@ -531,6 +545,15 @@ export default new Vuex.Store({
 
       // Remove course
       context.commit('removeCourse', payload);
+
+      // Remove from allowed conflict courses
+      if (
+        context.state.allowedConflictCourses.findIndex(
+          course => course.code === payload.code,
+        ) !== -1
+      ) {
+        context.commit('addOrRemoveConflictCourse', payload);
+      }
 
       // Unlock all sections of the deleted course
       for (const lockedSection of context.state.fallLockedSections) {
@@ -605,6 +628,7 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
+        context.state.allowedConflictCourses
       );
 
       context.dispatch('validateTimetable', bothTimetables);
@@ -682,6 +706,10 @@ export default new Vuex.Store({
         return state.winterSelectedCourses;
       }
     },
+    isConflictedCourse: state => courseCode => 
+        state.allowedConflictCourses.findIndex(
+          curCourse => curCourse.code === courseCode,
+        ) !== -1,
     fallSelectedCourses: state => state.fallSelectedCourses,
     winterSelectedCourses: state => state.winterSelectedCourses,
     getLockedSections: state => {
@@ -692,6 +720,7 @@ export default new Vuex.Store({
       }
     },
     fallLockedSections: state => state.fallLockedSections,
+    allowedConflictCourses: state => state.allowedConflictCourses,
     winterLockedSections: state => state.winterLockedSections,
     getCourseColor: state => code => {
       if (code[8] === 'F') {

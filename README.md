@@ -38,6 +38,14 @@ The fundamental problem we are trying to solve :
 ```sh
 git clone https://github.com/UTM-Hacklab/VIAplanner.git
 cd VIAplanner/packages/app
-npm install
-npm run serve
+yarn
+yarn serve
+```
+
+## Testing
+
+Tests are found in `tests/`
+
+```sh
+yarn run test:unit
 ```

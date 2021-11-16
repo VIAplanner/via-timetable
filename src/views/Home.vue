@@ -12,12 +12,12 @@
           <v-progress-circular
             indeterminate
             size="64"
-            style="margin-left: auto ; margin-right: auto ;"
+            style="margin-left: auto; margin-right: auto;"
           ></v-progress-circular>
         </v-row>
       </v-overlay>
 
-      <v-toolbar dark color="#012B5C" height="58px" elevation="0">
+      <v-toolbar dark color="#012B5C" height="65px" class="pa-1" elevation="0">
         <v-img
           src="../assets/VIA-Planner-White.png"
           max-width="130"
@@ -91,6 +91,7 @@ export default {
       'fallSelectedCourses',
       'winterSelectedCourses',
       'fallLockedSections',
+      'allowedConflictCourses',
       'winterLockedSections',
       'getFallLockedDayStatus',
       'getWinterLockedDayStatus',
@@ -116,6 +117,7 @@ export default {
     // save the timetable data in the browser
     saveData() {
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
+      localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
       localStorage.fallSelectedCourses = JSON.stringify(
         this.fallSelectedCourses,
       );
