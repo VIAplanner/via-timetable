@@ -15,6 +15,7 @@ import VueAnalytics from 'vue-analytics';
 import VueHtml2Canvas from 'vue-html2canvas';
 import ICS from 'vue-ics';
 import SmoothScrollbar from 'vue-smooth-scrollbar';
+import VCalendar from 'v-calendar';
 
 Vue.config.productionTip = false;
 
@@ -27,6 +28,9 @@ Vue.use(VueAnalytics, {
   id: 'UA-165919387-2',
   router,
 });
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',
+})
 
 new Vue({
   router,

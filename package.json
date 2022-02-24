@@ -20,6 +20,7 @@
     "html2canvas": "^1.0.0-rc.5",
     "jest": "^27.2.4",
     "roboto-fontface": "*",
+    "v-calendar": "^2.4.1",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
     "vue-html2canvas": "0.0.4",

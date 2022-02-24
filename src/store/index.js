@@ -134,6 +134,16 @@ export default new Vuex.Store({
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
+
+    // calendar state
+    focus: '',
+    type: 'month',
+    selectedEvent: {},
+    selectedElement: null,
+    selectedOpen: false,
+    calendarEventColors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'], // TODO: calendar colors should be made dynamic
+    calendarCurrId: !localStorage.calendarCurrId ? 0 : JSON.parse(localStorage.calendarCurrId),
+    calendarEvents: !localStorage.calendarEvents ? [] : JSON.parse(localStorage.calendarEvents),
   },
   mutations: {
     setExportOverlay(state, payload) {
@@ -335,6 +345,64 @@ export default new Vuex.Store({
     },
     setPreferredDeliveryMethod(state, payload) {
       state.deliveryMethod = payload;
+    },
+
+    // calendar mutations
+    setToday (state) {
+      state.focus = '';
+    },
+    setType (state, payload) {
+      state.type = payload.type;
+    },
+    setSelectedOpen(state, payload) {
+      state.selectedOpen = payload;
+    },
+    setFocus (state, payload) {
+      if (typeof(payload) === 'string') {
+        state.focus = payload;
+      } else {
+        state.focus = payload.date;
+      }
+    },
+    viewDay (state, payload) {
+      state.focus = payload.date;
+      state.type = 'day';
+    },
+    showEvent (state, payload) {
+      const open = () => {
+        state.selectedEvent = payload.event;
+        state.selectedElement = payload.nativeEvent.target;
+        requestAnimationFrame(() => requestAnimationFrame(() => {state.selectedOpen = true}));
+      };
+
+      if (state.selectedOpen) {
+        state.selectedOpen = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => open()));
+      } else {
+        open();
+      }
+      payload.nativeEvent.stopPropagation();
+    },
+    deleteEvent(state, payload) {
+      state.calendarEvents = state.calendarEvents.filter(event => event.id !== payload.id);
+      state.selectedOpen = false;
+    },
+    createCalendarEvent(state, payload) {
+      const { eventName, eventCourse, eventDetails, eventDate } = payload
+      const eventId = state.calendarCurrId;
+      const newEvent = {
+        name: eventName,
+        category: eventCourse,
+        details: eventDetails,
+        // start date converted to epoch since when you stringify the normal date object its 
+        // iso and the calender doesn't accept iso timestamps 
+        start: new Date(eventDate.toString()).getTime(),
+        id: eventId,
+        timed: true,
+        color: state.calendarEventColors[Math.floor(Math.random() * 7)],  // TODO: should be changed to not random
+      }
+      state.calendarEvents.push(newEvent);
+      state.calendarCurrId += 1;
     },
   },
   actions: {
@@ -750,5 +818,14 @@ export default new Vuex.Store({
     getFallLockedDayStatus: state => state.fallLockedDayStatus,
     getWinterLockedDayStatus: state => state.winterLockedDayStatus,
     getClearStorage: state => state.clearStorage,
+
+    // calendar getters
+    getFocus: state => state.focus,
+    getType: state => state.type,
+    getSelectedEvent: state => state.selectedEvent,
+    getSelectedElement: state => state.selectedElement,
+    getSelectedOpen: state => state.selectedOpen,
+    getCalendarCurrId: state => state.calendarCurrId,
+    getCalendarEvents: state => state.calendarEvents,
   },
 });

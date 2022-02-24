@@ -16,61 +16,26 @@
           ></v-progress-circular>
         </v-row>
       </v-overlay>
-
-      <v-toolbar dark color="#012B5C" height="65px" class="pa-1" elevation="0">
-        <v-img
-          src="../assets/VIA-Planner-White.png"
-          max-width="130"
-          contain
-          class="ma-2 ml-1"
-        />
-        <v-tabs
-          grow
-          style="max-width: 250px; min-width: 250px"
-        >
-          <v-tab>TIMETABLE</v-tab>
-        </v-tabs>
-        <course-search-bar style="margin: auto" />
-        <switch-sem style="margin: auto" />
-        <delivery-method-setting />
-      </v-toolbar>
-      <v-row>
-        <v-col class="pa-0">
-          <router-view />
-          <v-footer class="white">
-            <v-row>
-              <v-col class="pa-0">
-                <h1 style="text-align:center" class="text-subtitle-1">
-                  Copyright © 2021 VIAplanner - Data updated for the 2021 - 2022
-                  school year
-                </h1>
-              </v-col>
-            </v-row>
-          </v-footer>
-        </v-col>
-        <v-col cols="3" class="grey lighten-4 mr-2">
-          <side-bar />
-        </v-col>
-      </v-row>
+      <toolbar />
+      <Footer />
+      <help-dial />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import CourseSearchBar from '../components/AppBar/CourseSearchBar.vue';
 import Tutorial from '../components/Popup/Tutorial.vue';
-import SwitchSem from '../components/AppBar/SwitchSem.vue';
-import SideBar from '../components/SidePanel/SideBar.vue';
-import DeliveryMethodSetting from '../components/AppBar/DeliveryMethodSetting.vue';
+import Toolbar from '../components/AppBar/Toolbar.vue';
+import HelpDial from '../components/FloatingBtns/HelpDial.vue';
+import Footer from '../components/Footer/Footer.vue';
 
 export default {
   components: {
-    SwitchSem,
-    CourseSearchBar,
     Tutorial,
-    SideBar,
-    DeliveryMethodSetting,
+    Toolbar,
+    HelpDial,
+    Footer,
   },
   data() {
     return {
@@ -98,6 +63,8 @@ export default {
       'getFallLockedHourStatus',
       'getWinterLockedHourStatus',
       'getClearStorage',
+      'getCalendarCurrId',
+      'getCalendarEvents',
     ]),
   },
   created() {
@@ -118,29 +85,17 @@ export default {
     saveData() {
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
       localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
-      localStorage.fallSelectedCourses = JSON.stringify(
-        this.fallSelectedCourses,
-      );
+      localStorage.fallSelectedCourses = JSON.stringify(this.fallSelectedCourses);
       localStorage.fallTimetable = JSON.stringify(this.fallTimetable);
-      localStorage.fallLockedDayStatus = JSON.stringify(
-        this.getFallLockedDayStatus,
-      );
-      localStorage.fallLockedHourStatus = JSON.stringify(
-        this.getFallLockedHourStatus,
-      );
-      localStorage.winterLockedSections = JSON.stringify(
-        this.winterLockedSections,
-      );
-      localStorage.winterSelectedCourses = JSON.stringify(
-        this.winterSelectedCourses,
-      );
+      localStorage.fallLockedDayStatus = JSON.stringify(this.getFallLockedDayStatus);
+      localStorage.fallLockedHourStatus = JSON.stringify(this.getFallLockedHourStatus);
+      localStorage.winterLockedSections = JSON.stringify(this.winterLockedSections);
+      localStorage.winterSelectedCourses = JSON.stringify(this.winterSelectedCourses);
       localStorage.winterTimetable = JSON.stringify(this.winterTimetable);
-      localStorage.winterLockedDayStatus = JSON.stringify(
-        this.getWinterLockedDayStatus,
-      );
-      localStorage.winterLockedHourStatus = JSON.stringify(
-        this.getWinterLockedHourStatus,
-      );
+      localStorage.winterLockedDayStatus = JSON.stringify(this.getWinterLockedDayStatus);
+      localStorage.winterLockedHourStatus = JSON.stringify(this.getWinterLockedHourStatus);
+      localStorage.calendarCurrId = JSON.stringify(this.getCalendarCurrId);
+      localStorage.calendarEvents = JSON.stringify(this.getCalendarEvents);
     },
   },
 };
