@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import home from '../views/Home.vue';
 import about from '../views/About.vue';
 import timetable from '../views/Timetable.vue';
+import calendar from '../views/Calendar.vue';
+import manager from '../views/Manager.vue';
 import program from '../views/Program.vue';
 
 Vue.use(VueRouter);
@@ -18,6 +20,16 @@ const routes = [
         name: 'timetable',
         path: 'timetable',
         component: timetable,
+      },
+      {
+        name: 'calendar',
+        path: 'calendar',
+        component: calendar,
+      },
+      {
+        name: 'manager',
+        path: 'manager',
+        component: manager,
       },
       {
         name: 'program',

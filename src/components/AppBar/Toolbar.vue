@@ -12,15 +12,22 @@
           style="max-width: 450px; min-width: 200px"
           v-model="tabs"
         >
-        <v-tab>TIMETABLE</v-tab>
-        <v-tab>MANAGER</v-tab>  
-        <v-tab>CALENDAR</v-tab>  
+        <v-tab key='timetable' to='/timetable'>
+          TIMETABLE
+        </v-tab>
+        <v-tab key='calendar' to='/calendar'>
+          CALENDAR
+        </v-tab>
+        <v-tab key='manager' to='/manager'>
+          MANAGER
+        </v-tab>
       </v-tabs>
       <course-search-bar style="margin: auto" />
       <switch-sem style="margin: auto" />
       <delivery-method-setting />
     </v-toolbar>
     <tabs-items v-model="tabs"/>
+    <router-view :key="$route.path"></router-view>
   </div>
 </template>
 
@@ -29,19 +36,12 @@
 import CourseSearchBar from './CourseSearchBar.vue';
 import SwitchSem from './SwitchSem.vue';
 import DeliveryMethodSetting from './DeliveryMethodSetting.vue';
-import TabsItems from './TabsItems.vue';
 
 export default {
   components: {
     CourseSearchBar,
     SwitchSem,
     DeliveryMethodSetting,
-    TabsItems,
   },
-  data() {
-    return {
-      tabs: null
-    }
-  }
 }
 </script>
