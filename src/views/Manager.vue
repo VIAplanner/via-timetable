@@ -28,15 +28,12 @@ export default {
   data() {
     const currDate = new Date();
     let courses;
-    console.log("BEFORE DATECHECK");
     if (currDate.getMonth() <= 11 && currDate.getMonth() >= 8) {
       courses = JSON.parse(localStorage.get("fallSelectedCourses"));
     }
     else if (currDate.getMonth() >= 0 && currDate.getMonth() <= 4) {
       courses = JSON.parse(localStorage.getItem("winterSelectedCourses"));
     }
-    console.log("AFTER DATECHECK");
-    console.log(Object.keys(courses));
     const timetable = [];
     for (const course of Object.keys(courses)) {
       timetable.push({ name: courses[course].name, courseCode: courses[course].courseCode });
