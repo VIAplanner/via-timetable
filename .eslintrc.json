@@ -21,6 +21,10 @@
     "one-var": 0,
     "radix": 0,
     "no-debugger": 0,
-    "prettier/prettier": 0
+    "prettier/prettier": 0,
+    "prefer-destructuring": ["error", {
+      "object": true,
+      "array": false
+    }]
   }
 }

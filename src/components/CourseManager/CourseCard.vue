@@ -7,10 +7,24 @@
         </div>
         <div class="text-h5 text--primary">{{ name }}</div>
         <div align="center" justify="end" style="width: max-content">
-          <v-icon class="mr-1"> mdi-download </v-icon>
-          <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
-          <v-icon class="mr-1"> mdi-delete </v-icon>
-          <v-icon class="mr-1"> mdi-chevron-right </v-icon>
+           <v-btn
+            icon
+          >
+            <v-icon class="mr-1"> mdi-download </v-icon>
+          </v-btn>
+          <v-btn
+            icon
+          >
+            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
+          </v-btn>
+          <v-btn
+            icon
+          >
+            <v-icon class="mr-1"> mdi-delete </v-icon>
+          </v-btn>
+          <router-link class="redirect-icon" :to="'manager/' + courseCode">
+            <v-icon class="mr-1"> mdi-chevron-right </v-icon>
+          </router-link>
         </div>
       </v-row>
     </v-list-item>
@@ -28,6 +42,9 @@ export default {
 
 <style scoped>
 .course-card {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
+}
+.redirect-icon {
+  text-decoration: none;
 }
 </style>

@@ -34,8 +34,8 @@ export default {
           courseCode: 'CSC148',
         },
         {
-          name: 'Intro to Computer Science',
-          courseCode: 'CSC148',
+          name: 'Intro to Math Proof',
+          courseCode: 'MAT102',
         },
       ],
     };
