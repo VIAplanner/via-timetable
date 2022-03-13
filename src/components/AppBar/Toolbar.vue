@@ -18,7 +18,7 @@
         <v-tab key='calendar' to='/calendar'>
           CALENDAR
         </v-tab>
-        <v-tab key='manager' to='/manager'>
+        <v-tab key='manager' to='/manager' @click="refresh">
           MANAGER
         </v-tab>
       </v-tabs>
@@ -42,6 +42,11 @@ export default {
     CourseSearchBar,
     SwitchSem,
     DeliveryMethodSetting,
+  },
+  methods: {
+    refresh() {
+      window.location.reload()
+    }
   },
 }
 </script>
