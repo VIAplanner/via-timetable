@@ -29,7 +29,12 @@
         />
         <div>
           <v-expansion-panels focusable>
-            <assessment-item :assessment="item" :index="i" v-for="(item, i) in $store.state.assessments" :key="i" />
+            <assessment-item
+              :assessment="item"
+              :index="i"
+              v-for="(item, i) in $store.state.semesterStatus === 'F' ? $store.state.fallSelectedCourses[$route.params.id].assessments : $store.state.winterSelectedCourses[$route.params.id].assessments" 
+              :key="i"
+            />
           </v-expansion-panels>
         </div>
       </v-sheet>
@@ -38,12 +43,11 @@
 </template>
 
 <script>
-import axios from 'axios';
-import AssessmentItem from '../components/CourseManager/AssessmentItem.vue'
+import AssessmentItem from '../components/CourseManager/AssessmentItem.vue';
 
 export default {
   components: {
-    AssessmentItem
+    AssessmentItem,
   },
   created() {
     window.addEventListener('resize', this.handleResize);
@@ -73,25 +77,10 @@ export default {
       if (window.confirm(`Do you want to use this syllabus: ${filename}?`)) {
         const formData = new FormData();
         formData.append('syllabus', this.file);
-        axios
-          .post(
-            `${process.env.VUE_APP_API_BASE_URL}/manager/parser`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            },
-          )
-          .then((res) => {
-            for (const data of res.data) {
-              this.assessments.push({...data, grade: null})
-            }
-          })
-          .catch((err) => {
-            this.file = null;
-            console.error(err.message);
-          });
+        this.$store.dispatch(
+          'importAssessmentFromParser',
+          { courseCode: this.$route.params.id, file: formData },
+        );
       } else {
         this.file = null;
       }

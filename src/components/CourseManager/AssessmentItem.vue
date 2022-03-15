@@ -112,6 +112,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     assessment: Object,
@@ -151,16 +152,19 @@ export default {
     removeTodo(i) {
       this.todos.splice(i, 1);
     },
-    editTodo(i) {
-      console.log(i);
-    },
-    editAssessment(e) {
-      e.stopPropagation();
-      this.$store.commit('editAssessmet', this.index)
-    },
+    // editTodo(i) {
+    //   console.log(i);
+    // },
+    // editAssessment(e) {
+    //   e.stopPropagation();
+    //   this.$store.commit('editAssessment', this.index)
+    // },
     deleteAssessment(e) {
       e.stopPropagation();
-      this.$store.commit('deleteAssessment', this.index)
+      this.$store.commit('deleteAssessment', {
+        index: this.index,
+        courseCode: this.$route.params.id,
+      })
     }
   },
   computed: {

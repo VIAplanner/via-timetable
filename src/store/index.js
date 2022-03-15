@@ -747,6 +747,7 @@ export default new Vuex.Store({
         }
       }
     },
+    ...CourseManagementState.actions,
   },
   modules: {},
   getters: {
