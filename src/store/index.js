@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import genColor from 'color-generator';
 import { generateTimetables } from '../timetable-planner/index2';
+import CourseManagementState from './CourseManagement';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
@@ -144,6 +145,7 @@ export default new Vuex.Store({
     calendarEventColors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'], // TODO: calendar colors should be made dynamic
     calendarCurrId: !localStorage.calendarCurrId ? 0 : JSON.parse(localStorage.calendarCurrId),
     calendarEvents: !localStorage.calendarEvents ? [] : JSON.parse(localStorage.calendarEvents),
+    ...CourseManagementState.state
   },
   mutations: {
     setExportOverlay(state, payload) {
@@ -404,6 +406,7 @@ export default new Vuex.Store({
       state.calendarEvents.push(newEvent);
       state.calendarCurrId += 1;
     },
+    ...CourseManagementState.mutations,
   },
   actions: {
     clearStorage(context) {

@@ -29,57 +29,7 @@
         />
         <div>
           <v-expansion-panels focusable>
-            <v-expansion-panel v-for="(item, i) in assessments" :key="i">
-              <v-expansion-panel-header>
-                <template>
-                  <v-row no-gutters>
-                    <v-col cols="1" class="assessment-item">
-                      {{ item.grade ? item.grade : 'N/A' }}
-                    </v-col>
-                    <v-col cols="7" class="assessment-item">
-                      {{ item.type }}: {{ item.description }}
-                    </v-col>
-                    <v-col cols="1" class="text--secondary assessment-item">
-                      <v-fade-transition leave-absolute>
-                        <span>
-                          {{ item.weight }}
-                        </span>
-                      </v-fade-transition>
-                    </v-col>
-                    <v-col cols="2" class="text--secondary assessment-item">
-                      <v-fade-transition leave-absolute>
-                        <span>
-                          {{
-                            item.deadline
-                              ? item.deadline
-                              : item.on_going
-                              ? 'On-going'
-                              : 'TBD'
-                          }}
-                        </span>
-                      </v-fade-transition>
-                    </v-col>
-                    <v-col cols="1">
-                      <v-fade-transition leave-absolute>
-                        <span>
-                          <v-btn icon>
-                            <v-icon class="mr-1">
-                              mdi-square-edit-outline
-                            </v-icon>
-                          </v-btn>
-                          <v-btn icon>
-                            <v-icon class="mr-1"> mdi-delete </v-icon>
-                          </v-btn>
-                        </span>
-                      </v-fade-transition>
-                    </v-col>
-                  </v-row>
-                </template>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <!-- TODO: Subtasks -->
-              </v-expansion-panel-content>
-            </v-expansion-panel>
+            <assessment-item :assessment="item" :index="i" v-for="(item, i) in $store.state.assessments" :key="i" />
           </v-expansion-panels>
         </div>
       </v-sheet>
@@ -89,8 +39,12 @@
 
 <script>
 import axios from 'axios';
+import AssessmentItem from '../components/CourseManager/AssessmentItem.vue'
 
 export default {
+  components: {
+    AssessmentItem
+  },
   created() {
     window.addEventListener('resize', this.handleResize);
   },
@@ -98,7 +52,6 @@ export default {
     return {
       height: window.innerHeight,
       file: null,
-      assessments: []
     };
   },
   methods: {
@@ -158,11 +111,5 @@ export default {
 }
 .redirect {
   text-decoration: none;
-}
-.assessment-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 </style>
