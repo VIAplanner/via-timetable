@@ -5,7 +5,7 @@
         <h1>
           {{ $route.params.id }}
           <v-btn icon>
-            <v-icon class="mr-1"> mdi-download </v-icon>
+            <v-icon class="mr-1" @click="onPickExport"> mdi-download </v-icon>
           </v-btn>
           <v-btn icon>
             <v-icon class="mr-1" @click="onPickJsonFile"> mdi-square-edit-outline </v-icon>
@@ -75,6 +75,17 @@ export default {
     onPickJsonFile() {
       this.$refs.jsonFileInput.click();
     },
+    onPickExport() {
+      const data = "{\"assessments\":".concat(JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)).concat("}");
+      const blob = new Blob([data], {type: 'text/plain'})
+      const e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+      a.download = this.$route.params.id.concat(".json");
+      a.href = window.URL.createObjectURL(blob);
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      a.dispatchEvent(e);
+    },
     onFilePicked(event) {
       const { files } = event.target;
       const filename = files[0].name;
@@ -106,9 +117,10 @@ export default {
           this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
           this.$router.go();
         })
-      } else {
+      } 
+      else {
           this.file = null;
-        }
+      }
     },
   },
   computed: {
