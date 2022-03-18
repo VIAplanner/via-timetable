@@ -8,7 +8,7 @@
             <v-icon class="mr-1"> mdi-download </v-icon>
           </v-btn>
           <v-btn icon>
-            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
+            <v-icon class="mr-1" @click="onPickJsonFile"> mdi-square-edit-outline </v-icon>
           </v-btn>
           <v-btn icon>
             <v-icon class="mr-1"> mdi-delete </v-icon>
@@ -26,6 +26,13 @@
           ref="fileInput"
           accept="application/pdf"
           @change="onFilePicked"
+        />
+        <input
+          type="file"
+          style="display: none"
+          ref="jsonFileInput"
+          accept="application/json"
+          @change="onJsonPicked"
         />
         <div>
           <v-expansion-panels focusable>
@@ -65,6 +72,9 @@ export default {
     onPickFile() {
       this.$refs.fileInput.click();
     },
+    onPickJsonFile() {
+      this.$refs.jsonFileInput.click();
+    },
     onFilePicked(event) {
       const { files } = event.target;
       const filename = files[0].name;
@@ -84,6 +94,21 @@ export default {
       } else {
         this.file = null;
       }
+    },
+    onJsonPicked(event) {
+      this.file = event.target.files[0];
+      if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
+        const reader = new FileReader();
+        reader.readAsText(this.file);
+        reader.onload = ((evt) => {
+          const { result } = evt.target
+          const content = JSON.parse(result);
+          this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+          this.$router.go();
+        })
+      } else {
+          this.file = null;
+        }
     },
   },
   computed: {
