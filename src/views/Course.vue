@@ -76,11 +76,11 @@ export default {
       this.$refs.jsonFileInput.click();
     },
     onPickExport() {
-      const data = "{\"assessments\":".concat(JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)).concat("}");
+      const data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)}}`
       const blob = new Blob([data], {type: 'text/plain'})
       const e = document.createEvent('MouseEvents'),
       a = document.createElement('a');
-      a.download = this.$route.params.id.concat(".json");
+      a.download = `${this.$route.params.id}.json`;
       a.href = window.URL.createObjectURL(blob);
       a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
       e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
