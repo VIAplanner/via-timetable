@@ -113,9 +113,14 @@ export default {
         reader.readAsText(this.file);
         reader.onload = ((evt) => {
           const { result } = evt.target
-          const content = JSON.parse(result);
-          this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
-          this.$router.go();
+          try {
+            const content = JSON.parse(result);
+            this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            this.$router.go();
+          } 
+          catch (error) {
+            console.log(`Caught invalid JSON: ${this.file.name}`);
+          }
         })
       } 
       else {
