@@ -3,7 +3,7 @@
     <v-col>
       <v-sheet :height="managerHeight">
         <h1 style="margin: 24px 0">Course Manager</h1>
-        <div v-for="course in this.getSemesterStatus === 'F' ? this.fallSelectedCourses : this.winterSelectedCourses" :key="course.courseCode">
+        <div v-for="course in this.filterCourses" :key="course.courseCode">
           <course-card
             :name="course.name"
             :courseCode="course.courseCode"
@@ -36,7 +36,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['fallSelectedCourses', 'winterSelectedCourses', 'getSemesterStatus']),
+    ...mapGetters(['fallSelectedCourses', 'winterSelectedCourses', 'getSemesterStatus', 'timetable']),
+    filterCourses() {
+      // eslint-disable-next-line no-unused-expressions
+      this.timetable // force re-render the selected courses
+      if (this.getSemesterStatus === 'F') {
+        return this.fallSelectedCourses
+      } else {
+        return this.winterSelectedCourses
+      }
+    },
     managerHeight() {
       return this.height - 104;
     },
