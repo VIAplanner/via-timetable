@@ -5,10 +5,10 @@
         <h1>
           {{ $route.params.id }}
           <v-btn icon>
-            <v-icon class="mr-1"> mdi-download </v-icon>
+            <v-icon class="mr-1" @click="onPickExport"> mdi-download </v-icon>
           </v-btn>
           <v-btn icon>
-            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
+            <v-icon class="mr-1" @click="onPickJsonFile"> mdi-square-edit-outline </v-icon>
           </v-btn>
           <v-btn icon>
             <v-icon class="mr-1"> mdi-delete </v-icon>
@@ -26,6 +26,13 @@
           ref="fileInput"
           accept="application/pdf"
           @change="onFilePicked"
+        />
+        <input
+          type="file"
+          style="display: none"
+          ref="jsonFileInput"
+          accept="application/json"
+          @change="onJsonPicked"
         />
         <div>
           <v-expansion-panels focusable>
@@ -65,6 +72,20 @@ export default {
     onPickFile() {
       this.$refs.fileInput.click();
     },
+    onPickJsonFile() {
+      this.$refs.jsonFileInput.click();
+    },
+    onPickExport() {
+      const data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)}}`
+      const blob = new Blob([data], {type: 'text/plain'})
+      const e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+      a.download = `${this.$route.params.id}.json`;
+      a.href = window.URL.createObjectURL(blob);
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      a.dispatchEvent(e);
+    },
     onFilePicked(event) {
       // TODO: For improvement, we can display picked PDF file for user to confirm!
       const { files } = event.target;
@@ -87,6 +108,27 @@ export default {
         );
       } else {
         this.file = null;
+      }
+    },
+    onJsonPicked(event) {
+      this.file = event.target.files[0];
+      if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
+        const reader = new FileReader();
+        reader.readAsText(this.file);
+        reader.onload = ((evt) => {
+          const { result } = evt.target
+          try {
+            const content = JSON.parse(result);
+            this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            this.$router.go();
+          } 
+          catch (error) {
+            console.log(`Caught invalid JSON: ${this.file.name}`);
+          }
+        })
+      } 
+      else {
+          this.file = null;
       }
     },
   },
