@@ -66,7 +66,11 @@ export default {
       this.$refs.fileInput.click();
     },
     onFilePicked(event) {
+      // TODO: For improvement, we can display picked PDF file for user to confirm!
       const { files } = event.target;
+      if (!files[0]) {
+        return
+      }
       const filename = files[0].name;
       const fileReader = new FileReader();
       fileReader.addEventListener('load', () => {
@@ -88,7 +92,7 @@ export default {
   },
   computed: {
     managerHeight() {
-      return this.height - 104;
+      return this.height - 104; // TODO: We may need to add documentation for computed height - why we choose such numbers
     },
   },
 };
