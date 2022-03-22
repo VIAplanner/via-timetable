@@ -1,9 +1,7 @@
 <template>
   <div>
     <v-btn
-      outlined
       class="mr-4"
-      color="blue"
       @click="dialog = true"
     >
       Add Assessment
@@ -21,7 +19,7 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="assessmentName"
+                  v-model="name"
                   label="Name"
                   hint="The name of this assessment"
                   required
@@ -29,17 +27,17 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="assessmentCourse"
-                  label="Course"
-                  hint="The course that this assessment is for"
+                  v-model="weight"
+                  label="Weight"
+                  hint="The weight of this assessment"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="assessmentDetails"
-                  label="Details"
-                  hint="Details for this assessment"
+                  v-model="grade"
+                  label="Grade"
+                  hint="Your grade for this assessment. Leave blank if you don't have a grade yet.'"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -48,7 +46,7 @@
                     <v-text-field
                       :value="inputValue" 
                       v-on="inputEvents"
-                      label="Due date"
+                      label="Deadline"
                     ></v-text-field>
                   </template>
                 </vc-date-picker>
@@ -82,30 +80,30 @@
 
 import { mapMutations } from 'vuex'
 
+const defaultStatus = {
+  dialog: false,
+  name: null,
+  weight: null,
+  grade: null,
+  assessmentDate: null,
+}
+
 export default {
   data() {
     return {
-      dialog: false,
-      assessmentName: null,
-      assessmentCourse: null,
-      assessmentDetails: null,
-      assessmentDate: null,
+      ...defaultStatus
     }
   },
   methods: {
     ...mapMutations(['createCalendarEvent']),
     saveAssessment() {
       this.createCalendarEvent({
-        eventName: this.assessmentName,
-        eventCourse: this.assessmentCourse,
-        eventDetails: this.assessmentDetails,
+        eventName: this.name,
+        eventCourse: this.weight,
+        eventDetails: this.grade,
         eventDate: this.assessmentDate,
       })
-      this.dialog = false
-      this.assessmentName = null
-      this.assessmentCourse = null
-      this.assessmentDetails = null
-      this.assessmentDate = null
+      Object.assign(this.$data, defaultStatus)
     },
   }
 }
