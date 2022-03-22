@@ -27,6 +27,13 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
+                  v-model="details"
+                  label="Details"
+                  hint="The description of this assessment"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
                   v-model="weight"
                   label="Weight"
                   hint="The weight of this assessment"
@@ -78,11 +85,12 @@
 
 <script>
 
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 const defaultStatus = {
   dialog: false,
   name: null,
+  details: '',
   weight: null,
   grade: null,
   assessmentDate: null,
@@ -95,13 +103,17 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['createCalendarEvent']),
+    ...mapActions(['addAssessment']),
     saveAssessment() {
-      this.createCalendarEvent({
-        eventName: this.name,
-        eventCourse: this.weight,
-        eventDetails: this.grade,
-        eventDate: this.assessmentDate,
+      this.addAssessment({
+        courseCode: this.$route.params.id,
+        assessment: {
+          type: this.name,
+          description: this.details,
+          weight: `${this.weight}%`,
+          grade: `${this.grade}%`,
+          deadline: `${this.assessmentDate.getFullYear()}-${this.assessmentDate.getMonth()}-${this.assessmentDate.getDate()}`
+        }
       })
       Object.assign(this.$data, defaultStatus)
     },

@@ -390,12 +390,12 @@ export default new Vuex.Store({
       state.selectedOpen = false;
     },
     createCalendarEvent(state, payload) {
-      const { eventName, eventCourse, eventDetails, eventDate } = payload
+      const { eventName, eventCourse, eventDetails, eventWeight, eventDate } = payload
       const eventId = state.calendarCurrId;
       const newEvent = {
         name: eventName,
         category: eventCourse,
-        details: eventDetails,
+        details: `${eventDetails} \n\nWeight: ${eventWeight}`,
         // start date converted to epoch since when you stringify the normal date object its 
         // iso and the calender doesn't accept iso timestamps 
         start: new Date(eventDate.toString()).getTime(),

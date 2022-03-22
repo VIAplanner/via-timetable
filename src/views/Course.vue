@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import AddAssessmentMenu from '../components/AddAssessment/AddAssessmentMenu.vue';
 import AssessmentItem from '../components/CourseManager/AssessmentItem.vue';
 
@@ -73,6 +73,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['deleteCourse']),
     handleResize() {
       this.height = window.innerHeight;
     },

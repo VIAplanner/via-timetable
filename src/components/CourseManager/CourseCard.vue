@@ -19,6 +19,7 @@
           </v-btn>
           <v-btn
             icon
+            @click="deleteCourse({ code: courseCode })"
           >
             <v-icon class="mr-1"> mdi-delete </v-icon>
           </v-btn>
@@ -32,11 +33,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   props: {
     name: String,
     courseCode: String,
   },
+  methods: {
+    ...mapActions(['deleteCourse']),
+  }
 };
 </script>
 

@@ -4,7 +4,7 @@
       <template>
         <v-row no-gutters>
           <v-col cols="1" class="assessment-item">
-            {{ assessment.grade ? assessment.grade : 'N/A' }}
+            {{ assessment.grade ? assessment.grade : '--' }}
           </v-col>
           <v-col cols="7" class="assessment-item">
             {{ assessment.type }}: {{ assessment.description }}
