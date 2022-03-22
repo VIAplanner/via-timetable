@@ -21,12 +21,15 @@
             <v-icon class="mr-1"> mdi-delete </v-icon>
           </v-btn>
         </h1>
-        <router-link class="redirect" to="/manager">
-          <v-btn elevation="2" style="margin: 24px 0">Return to Manager</v-btn>
-        </router-link>
-        <v-btn elevation="2" style="margin: 24px" @click="onPickFile"
-          >Import Syllabus</v-btn
-        >
+        <v-row style="margin: 24px 0">
+          <router-link class="redirect" to="/manager">
+            <v-btn elevation="2" class="mr-4">Return to Manager</v-btn>
+          </router-link>
+          <add-assessment-menu />
+          <v-btn elevation="2" @click="onPickFile"
+            >Import Syllabus</v-btn
+          >
+        </v-row>
         <input
           type="file"
           style="display: none"
@@ -52,10 +55,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import AddAssessmentMenu from '../components/AddAssessment/AddAssessmentMenu.vue';
 import AssessmentItem from '../components/CourseManager/AssessmentItem.vue';
 
 export default {
   components: {
+    AddAssessmentMenu,
     AssessmentItem,
   },
   created() {

@@ -9,11 +9,6 @@
               <v-toolbar
                 flat
               >
-                <!-- 
-                add assessment menu includes the add 
-                assessment button and the pop up dialog menu 
-                -->
-                <add-assessment-menu />
                 <v-btn
                   outlined
                   class="mr-4"
@@ -142,12 +137,10 @@
 <script>
 
 import { mapGetters, mapMutations } from 'vuex';
-import AddAssessmentMenu from '../components/AddAssessment/AddAssessmentMenu.vue';
 import SideBar from '../components/SidePanel/SideBar.vue';
 
 export default {
   components: {
-    AddAssessmentMenu,
     SideBar,
   },
   created() {
