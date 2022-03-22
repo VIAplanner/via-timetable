@@ -30,12 +30,23 @@ export default {
     async importAssessmentFromParser({
       commit
     }, payload) {
-      await api.post('/manager/parser', payload.file, {
+      const res = await api.post('/manager/parser', payload.file, {
         'Content-Type': 'multipart/form-data',
-      }, ).then((res) => commit('addAssessment', {
+      }, 
+      );
+      commit('addAssessment', {
         courseCode: payload.courseCode,
         assessments: res.data,
-      }))
+      });
+
+      res.data.forEach((event) => {
+        commit('createCalendarEvent', {
+          eventName: event.name,
+          eventCourse: payload.courseCode,
+          eventDetails: event.description,
+          eventDate: new Date(event.deadline)
+        });
+      })
     }
   },
 }
