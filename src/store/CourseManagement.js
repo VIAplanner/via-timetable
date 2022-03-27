@@ -34,6 +34,8 @@ export default {
         payload.assessment.grade = null
       }
 
+      payload.assessment.subtasks = [];
+
       course.assessments.push(payload.assessment)
 
       commit('createCalendarEvent', {

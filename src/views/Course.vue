@@ -1,7 +1,7 @@
 <template>
   <v-row class="main">
     <v-col>
-      <v-sheet :height="managerHeight">
+      <v-sheet>
         <h1>
           {{ $route.params.id }}
           <v-btn 
@@ -153,9 +153,6 @@ export default {
       } else {
         return this.winterSelectedCourses[this.$route.params.id].assessments
       }
-    },
-    managerHeight() {
-      return this.height - 104; // TODO: We may need to add documentation for computed height - why we choose such numbers
     },
   },
 };

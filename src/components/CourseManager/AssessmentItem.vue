@@ -64,7 +64,6 @@
         class="shrink mr-2 mt-0"
         hide-details
         style="align-items: center"
-        prepend-icon="mdi-square-edit-outline"
         append-icon="mdi-delete"
         @click:append="removeTodo(i)"
       >
@@ -75,7 +74,7 @@
                 :class="{
                   'checkbox-marked': todo.done,
                 }"
-                >{{ todo.content }}
+                >{{ todo.description }}
               </span>
             </v-col>
             <v-col cols="2">
@@ -96,6 +95,7 @@
                     readonly
                     v-bind="attrs"
                     v-on="on"
+                    :disabled=todo.done
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -125,8 +125,8 @@ export default {
     return {
       height: window.innerHeight,
       defaultTodo: false,
+      todos: this.$props.assessment.subtasks,
       newTodo: '',
-      todos: [],
     };
   },
   methods: {
@@ -138,23 +138,22 @@ export default {
         return;
       }
       const todo = {
-        content: this.newTodo,
+        description: this.newTodo,
         deadline: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
           .toISOString()
           .substr(0, 10),
-        dateMenu: false,
-        editMenu: false,
         done: false,
       };
-      this.todos.push(todo);
+      this.todos.push({
+        ...todo,
+        dateMenu: false,
+        editMenu: false,
+      });
       this.newTodo = '';
     },
     removeTodo(i) {
       this.todos.splice(i, 1);
     },
-    // editTodo(i) {
-    //   console.log(i);
-    // },
     // editAssessment(e) {
     //   e.stopPropagation();
     //   this.$store.commit('editAssessment', this.index)
@@ -166,11 +165,6 @@ export default {
         courseCode: this.$route.params.id,
       })
     }
-  },
-  computed: {
-    managerHeight() {
-      return this.height - 104;
-    },
   },
 };
 </script>
