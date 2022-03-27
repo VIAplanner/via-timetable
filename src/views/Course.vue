@@ -4,11 +4,17 @@
       <v-sheet :height="managerHeight">
         <h1>
           {{ $route.params.id }}
-          <v-btn icon>
-            <v-icon class="mr-1" @click="onPickExport"> mdi-download </v-icon>
+          <v-btn 
+            icon
+            @click="onPickExport"
+          >
+            <v-icon class="mr-1"> mdi-download </v-icon>
           </v-btn>
-          <v-btn icon>
-            <v-icon class="mr-1" @click="onPickJsonFile"> mdi-square-edit-outline </v-icon>
+          <v-btn 
+            icon
+            @click="onPickJsonFile"
+          >
+            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
           </v-btn>
           <input
             type="file"
@@ -26,9 +32,7 @@
             <v-btn elevation="2" class="mr-4">Return to Manager</v-btn>
           </router-link>
           <add-assessment-menu />
-          <v-btn elevation="2" @click="onPickFile"
-            >Import Syllabus</v-btn
-          >
+          <v-btn elevation="2" @click="onPickFile">Import Syllabus</v-btn>
         </v-row>
         <input
           type="file"

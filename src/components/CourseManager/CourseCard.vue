@@ -9,14 +9,23 @@
         <div align="center" justify="end" style="width: max-content">
            <v-btn
             icon
+            @click="onPickExport"
           >
             <v-icon class="mr-1"> mdi-download </v-icon>
           </v-btn>
           <v-btn
             icon
+            @click="onPickJsonFile"
           >
             <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
           </v-btn>
+          <input
+            type="file"
+            style="display: none"
+            ref="jsonFileInput"
+            accept="application/json"
+            @change="onJsonPicked"
+          />
           <v-btn
             icon
             @click="deleteCourse({ code: courseCode })"
@@ -42,6 +51,40 @@ export default {
   },
   methods: {
     ...mapActions(['deleteCourse']),
+    onPickJsonFile() {
+      this.$refs.jsonFileInput.click();
+    },
+    onJsonPicked(event) {
+      this.file = event.target.files[0];
+      if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
+        const reader = new FileReader();
+        reader.readAsText(this.file);
+        reader.onload = ((evt) => {
+          const { result } = evt.target
+          try {
+            const content = JSON.parse(result);
+            this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
+          } 
+          catch (error) {
+            console.log(`Caught invalid JSON: ${this.file.name}`);
+          }
+        })
+      } 
+      else {
+          this.file = null;
+      }
+    },
+    onPickExport() {
+      const data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.courseCode].assessments)}}`
+      const blob = new Blob([data], {type: 'text/plain'})
+      const e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+      a.download = `${this.courseCode}.json`;
+      a.href = window.URL.createObjectURL(blob);
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      a.dispatchEvent(e);
+    },
   }
 };
 </script>
