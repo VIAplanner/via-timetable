@@ -165,7 +165,7 @@ export default {
         return 0;
       }
       for (const assessment of this.courseAssessments) {
-        if (assessment.grade !== null) {
+        if (assessment.grade !== null || Number(assessment.grade.split('%')[0]) >= 0) {
           grade += (Number(assessment.grade.split('%')[0]) * Number(assessment.weight.split('%')[0]));
           weight += Number(assessment.weight.split('%')[0]);
         }
