@@ -1,14 +1,17 @@
 <template>
   <v-row class="main">
     <v-col>
-      <v-sheet :height="managerHeight">
+      <v-sheet>
         <h1 style="margin: 24px 0">Course Manager</h1>
-        <div v-for="course in this.filterCourses" :key="course.courseCode">
-          <course-card
-            :name="course.name"
-            :courseCode="course.courseCode"
-          ></course-card>
+        <div v-if="this.filterCourses.length !== 0">
+          <div v-for="course in this.filterCourses" :key="course.courseCode">
+            <course-card
+              :name="course.name"
+              :courseCode="course.courseCode"
+            ></course-card>
+          </div>
         </div>
+        <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
       </v-sheet>
     </v-col>
   </v-row>
@@ -45,9 +48,6 @@ export default {
       } else {
         return this.winterSelectedCourses
       }
-    },
-    managerHeight() {
-      return this.height - 104;
     },
   },
 };
