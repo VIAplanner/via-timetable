@@ -170,7 +170,7 @@ export default {
           weight += Number(assessment.weight.split('%')[0]);
         }
       }
-      return grade / weight;
+      return (grade / weight).toFixed(2);
     },
   },
 };
