@@ -44,9 +44,21 @@ export default {
       // eslint-disable-next-line no-unused-expressions
       this.timetable // force re-render the selected courses
       if (this.getSemesterStatus === 'F') {
-        return this.fallSelectedCourses
+        const courses = [];
+        for (const course in this.fallSelectedCourses) {
+          if (course.length === 9) {
+            courses.push(this.fallSelectedCourses[course]);
+          }
+        }
+        return courses;
       } else {
-        return this.winterSelectedCourses
+        const courses = [];
+        for (const course in this.winterSelectedCourses) {
+          if (course.length === 9) {
+            courses.push(this.winterSelectedCourses[course]);
+          }
+        }
+        return courses;
       }
     },
   },
