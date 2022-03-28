@@ -52,6 +52,10 @@
           </v-expansion-panels>
           <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
         </div>
+        <br>
+        <div>
+          <h2>Current Grade: {{courseGrade}}</h2>
+        </div>
       </v-sheet>
     </v-col>
   </v-row>
@@ -153,6 +157,20 @@ export default {
       } else {
         return this.winterSelectedCourses[this.$route.params.id].assessments
       }
+    },
+    courseGrade() {
+      let grade = 0;
+      let weight = 0;
+      if (this.courseAssessments.length === 0) {
+        return 0;
+      }
+      for (const assessment of this.courseAssessments) {
+        if (assessment.grade !== null) {
+          grade += (Number(assessment.grade.split('%')[0]) * Number(assessment.weight.split('%')[0]));
+          weight += Number(assessment.weight.split('%')[0]);
+        }
+      }
+      return grade / weight;
     },
   },
 };
