@@ -53,7 +53,7 @@
           <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
         </div>
         <br>
-        <div>
+        <div focusable v-if="this.courseAssessments">
           <h2>Current Grade: {{courseGrade}}</h2>
         </div>
       </v-sheet>
@@ -170,7 +170,8 @@ export default {
           weight += Number(assessment.weight.split('%')[0]);
         }
       }
-      return (grade / weight).toFixed(2);
+      
+      return (weight === 0) ? 0 : (grade / weight).toFixed(2);
     },
   },
 };
