@@ -2,13 +2,13 @@ import api from '../plugins/api';
 
 export default {
   mutations: {
-    // editAssessment(state, payload) {
-    //   if (state.semester === 'F') {
-    //     state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.todo;
-    //   } else {
-    //     state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.todo;
-    //   }
-    // },
+    editAssessment(state, payload) {
+      if (state.semester === 'F') {
+        state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+      } else {
+        state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+      }
+    },
     deleteAssessment(state, payload) {
       if (state.semesterStatus === 'F') {
         state.fallSelectedCourses[payload.courseCode].assessments.splice(payload.index, 1);

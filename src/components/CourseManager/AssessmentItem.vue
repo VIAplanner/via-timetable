@@ -7,7 +7,7 @@
             {{ assessment.grade ? assessment.grade : '--' }}
           </v-col>
           <v-col cols="7" class="assessment-item">
-            {{ assessment.type }}: {{ assessment.description }}
+            {{ assessment.type }}{{ assessment.description ? ': ' + assessment.description : ''}}
           </v-col>
           <v-col cols="1" class="text--secondary assessment-item">
             <v-fade-transition leave-absolute>
@@ -32,10 +32,10 @@
           <v-col cols="1">
             <v-fade-transition leave-absolute>
               <span>
-                <v-btn icon>
+                <v-btn icon @click="editAssessmentItem">
                   <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
                 </v-btn>
-                <v-btn icon @click="deleteAssessment">
+                <v-btn icon @click="deleteAssessmentItem">
                   <v-icon class="mr-1"> mdi-delete </v-icon>
                 </v-btn>
               </span>
@@ -108,12 +108,18 @@
         </template>
       </v-checkbox>
     </v-expansion-panel-content>
+    <assessment-modal v-bind.sync="assessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
   </v-expansion-panel>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+import AssessmentModal from '../AssessmentModal/AssessmentModal.vue';
 
 export default {
+  components: {
+    AssessmentModal
+  },
   props: {
     assessment: Object,
     index: Number,
@@ -124,12 +130,15 @@ export default {
   data() {
     return {
       height: window.innerHeight,
+      dialog: false,
+      mode: 'Edit',
       defaultTodo: false,
       todos: this.$props.assessment.subtasks,
       newTodo: '',
     };
   },
   methods: {
+    ...mapMutations(['deleteAssessment']),
     handleResize() {
       this.height = window.innerHeight;
     },
@@ -147,23 +156,25 @@ export default {
       this.todos.push({
         ...todo,
         dateMenu: false,
-        editMenu: false,
       });
       this.newTodo = '';
     },
     removeTodo(i) {
       this.todos.splice(i, 1);
     },
-    // editAssessment(e) {
-    //   e.stopPropagation();
-    //   this.$store.commit('editAssessment', this.index)
-    // },
-    deleteAssessment(e) {
+    editAssessmentItem(e) {
       e.stopPropagation();
-      this.$store.commit('deleteAssessment', {
+      this.dialog = true;
+    },
+    deleteAssessmentItem(e) {
+      e.stopPropagation();
+      this.deleteAssessment({
         index: this.index,
         courseCode: this.$route.params.id,
       })
+    },
+    closeDialog() {
+      this.dialog = false;
     }
   },
 };
