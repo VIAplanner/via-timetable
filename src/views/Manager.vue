@@ -11,7 +11,7 @@
             ></course-card>
           </div>
         </div>
-        <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
+        <p v-else>No course selected yet. Add your course from search bar to use Course Manager!</p>
       </v-sheet>
     </v-col>
   </v-row>

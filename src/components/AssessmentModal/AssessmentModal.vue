@@ -45,7 +45,7 @@
               <v-col cols="12">
                 <vc-date-picker
                   mode="dateTime"
-                  v-bind:value="new Date(deadline)"
+                  v-bind:value="deadline"
                   @input="$emit('update:deadline', $event)"
                 >
                   <template v-slot="{ inputValue, inputEvents }">
@@ -95,7 +95,7 @@ export default {
         description: this.$props.description,
         weight: this.$props.weight,
         grade: this.$props.grade,
-        deadline: `${this.$props.deadline.getFullYear()}-${this.$props.deadline.getMonth()}-${this.$props.deadline.getDate()}`,
+        deadline: this.$props.deadline,
       };
       if (this.$props.mode === 'New') {
         this.addAssessment({

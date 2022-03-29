@@ -14,6 +14,8 @@
 
 import AssessmentModal from '../AssessmentModal/AssessmentModal.vue'
 
+const today = new Date();
+
 const defaultState = {
   mode: 'New',
   dialog: false,
@@ -21,7 +23,7 @@ const defaultState = {
   description: null,
   weight: null,
   grade: null,
-  deadline: null,
+  deadline: `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
 }
 
 export default {
