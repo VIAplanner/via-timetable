@@ -65,7 +65,7 @@
           <v-btn color="blue darken-1" text v-on:click="$emit('closeDialog')">
             Close
           </v-btn>
-          <v-btn color="blue darken-1" text @click="saveAssessment()">
+          <v-btn color="blue darken-1" text @click="saveAssessment">
             Save
           </v-btn>
         </v-card-actions>
