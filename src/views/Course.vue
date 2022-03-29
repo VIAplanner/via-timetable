@@ -23,7 +23,7 @@
             accept="application/json"
             @change="onJsonPicked"
           />
-          <v-btn icon>
+          <v-btn icon @click="handleDeleteCourse">
             <v-icon class="mr-1"> mdi-delete </v-icon>
           </v-btn>
         </h1>
@@ -82,6 +82,12 @@ export default {
   },
   methods: {
     ...mapActions(['deleteCourse']),
+    handleDeleteCourse() {
+      if (window.confirm(`Do you want to delete this course: ${this.$route.params.id}?`)) {
+        this.deleteCourse({ code: this.$route.params.id });
+        window.location.replace('/manager');
+      }
+    },
     handleResize() {
       this.height = window.innerHeight;
     },
