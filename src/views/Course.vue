@@ -2,31 +2,36 @@
   <v-row class="main">
     <v-col>
       <v-sheet>
-        <h1>
-          {{ $route.params.id }}
-          <v-btn 
-            icon
-            @click="onPickExport"
-          >
-            <v-icon class="mr-1"> mdi-download </v-icon>
-          </v-btn>
-          <v-btn 
-            icon
-            @click="onPickJsonFile"
-          >
-            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
-          </v-btn>
-          <input
-            type="file"
-            style="display: none"
-            ref="jsonFileInput"
-            accept="application/json"
-            @change="onJsonPicked"
-          />
-          <v-btn icon @click="handleDeleteCourse">
-            <v-icon class="mr-1"> mdi-delete </v-icon>
-          </v-btn>
-        </h1>
+        <v-row align="center" justify="space-between" style="padding: 0 16px">  
+          <h1>
+            {{ $route.params.id }}
+            <v-btn 
+              icon
+              @click="onPickExport"
+            >
+              <v-icon class="mr-1"> mdi-download </v-icon>
+            </v-btn>
+            <v-btn 
+              icon
+              @click="onPickJsonFile"
+            >
+              <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
+            </v-btn>
+            <input
+              type="file"
+              style="display: none"
+              ref="jsonFileInput"
+              accept="application/json"
+              @change="onJsonPicked"
+            />
+            <v-btn icon @click="handleDeleteCourse">
+              <v-icon class="mr-1"> mdi-delete </v-icon>
+            </v-btn>
+          </h1>
+          <div focusable v-if="this.courseAssessments">
+            <h2>Current Grade: {{courseGrade}}</h2>
+          </div>
+        </v-row>
         <v-row style="margin: 24px 0">
           <router-link class="redirect" to="/manager">
             <v-btn elevation="2" class="mr-4">Return to Manager</v-btn>
@@ -53,9 +58,6 @@
           <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
         </div>
         <br>
-        <div focusable v-if="this.courseAssessments">
-          <h2>Current Grade: {{courseGrade}}</h2>
-        </div>
       </v-sheet>
     </v-col>
   </v-row>
