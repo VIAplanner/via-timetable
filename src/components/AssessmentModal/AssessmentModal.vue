@@ -46,7 +46,7 @@
                 <vc-date-picker
                   mode="dateTime"
                   v-bind:value="deadline"
-                  @input="$emit('update:deadline', $event)"
+                  @input="$emit('update:deadline', `${$event.getFullYear()}-${$event.getMonth()}-${$event.getDate()}`)"
                 >
                   <template v-slot="{ inputValue, inputEvents }">
                     <v-text-field
@@ -75,12 +75,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   props: {
     mode: String,
     dialog: Boolean,
+    index: Number,
     type: null || String,
     description: null || String,
     weight: null || String,
@@ -88,7 +89,8 @@ export default {
     deadline: null || String,
   },
   methods: {
-    ...mapActions(['addAssessment', 'editAssessment']),
+    ...mapActions(['addAssessment']),
+    ...mapMutations(['editAssessment']),
     saveAssessment() {
       const assessment = {
         type: this.$props.type,
@@ -104,7 +106,7 @@ export default {
         });
       } else {
         this.editAssessment({
-          index: this.index,
+          index: this.$props.index,
           courseCode: this.$route.params.id,
           assessment,
         });

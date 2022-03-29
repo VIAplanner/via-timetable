@@ -3,7 +3,7 @@ import api from '../plugins/api';
 export default {
   mutations: {
     editAssessment(state, payload) {
-      if (state.semester === 'F') {
+      if (state.semesterStatus === 'F') {
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
       } else {
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;

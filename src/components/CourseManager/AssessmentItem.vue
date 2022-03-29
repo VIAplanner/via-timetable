@@ -108,7 +108,7 @@
         </template>
       </v-checkbox>
     </v-expansion-panel-content>
-    <assessment-modal v-bind.sync="assessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
+    <assessment-modal :index="index" v-bind.sync="assessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
   </v-expansion-panel>
 </template>
 
@@ -148,7 +148,7 @@ export default {
       }
       const todo = {
         description: this.newTodo,
-        deadline: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        deadline: new Date()
           .toISOString()
           .substr(0, 10),
         done: false,
