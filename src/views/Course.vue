@@ -125,7 +125,12 @@ export default {
       this.$refs.jsonFileInput.click();
     },
     onPickExport() {
-      const data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)}}`
+      let data = []
+      if (this.$route.params.id.slice(-1) === "F") {
+        data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)}}`
+      } else {
+        data = `{"assessments":${JSON.stringify(this.$store.state.winterSelectedCourses[this.$route.params.id].assessments)}}`
+      }
       const blob = new Blob([data], {type: 'text/plain'})
       const e = document.createEvent('MouseEvents'),
       a = document.createElement('a');
@@ -144,7 +149,14 @@ export default {
           const { result } = evt.target
           try {
             const content = JSON.parse(result);
-            this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            if (this.$route.params.id.slice(-1) === "F") {
+              this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            } else if (this.$route.params.id.slice(-1) === "S") {
+              this.$store.state.winterSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            } else { // Must be Y
+              this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
+              this.$store.state.winterSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            }
             this.$router.go();
           } 
           catch (error) {

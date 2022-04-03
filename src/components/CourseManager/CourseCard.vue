@@ -63,7 +63,14 @@ export default {
           const { result } = evt.target
           try {
             const content = JSON.parse(result);
-            this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
+            if (this.couseCode.slice(-1) === "F") {
+              this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
+            } else if (this.courseCode.slice(-1) === "S") {
+              this.$store.state.winterSelectedCourses[this.courseCode].assessments = content.assessments;
+            } else { // Must be Y
+              this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
+              this.$store.state.winterSelectedCourses[this.courseCode].assessments = content.assessments;
+            }
           } 
           catch (error) {
             console.log(`Caught invalid JSON: ${this.file.name}`);
@@ -75,7 +82,12 @@ export default {
       }
     },
     onPickExport() {
-      const data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.courseCode].assessments)}}`
+      let data = []
+      if (this.courseCode.slice(-1) === "F") {
+        data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.courseCode].assessments)}}`
+      } else {
+        data = `{"assessments":${JSON.stringify(this.$store.state.winterSelectedCourses[this.courseCode].assessments)}}`
+      }
       const blob = new Blob([data], {type: 'text/plain'})
       const e = document.createEvent('MouseEvents'),
       a = document.createElement('a');
