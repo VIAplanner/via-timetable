@@ -13,6 +13,7 @@
         <v-icon v-else>mdi-hammer-screwdriver</v-icon>
       </v-btn>
     </template>
+    <export-events-btn></export-events-btn>
     <export-calendar-btn></export-calendar-btn>
     <export-btn></export-btn>
     <about-btn></about-btn>
@@ -25,6 +26,7 @@ import TutorialBtn from './TutorialBtn.vue';
 import AboutBtn from './AboutBtn.vue';
 import ExportBtn from './ExportBtn.vue';
 import ExportCalendarBtn from './ExportCalendarBtn.vue';
+import ExportEventsBtn from './ExportEventsBtn.vue';
 
 export default {
   components: {
@@ -32,6 +34,7 @@ export default {
     AboutBtn,
     ExportBtn,
     ExportCalendarBtn,
+    ExportEventsBtn,
   },
   data() {
     return {
