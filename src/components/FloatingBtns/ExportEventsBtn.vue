@@ -52,7 +52,7 @@ export default {
       this.setExportOverlay(true);  
       this.$ics.removeAllEvents(); // fresh slate in case user updated events since using prev.
       this.saveEvents();
-      this.$ics.download("ViaPlanner Events");
+      this.$ics.download("ViaPlanner Assessments");
       this.setExportOverlay(false);
     },
     saveEvents() {
