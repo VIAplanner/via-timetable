@@ -7,15 +7,9 @@
             {{ $route.params.id }}
             <v-btn 
               icon
-              @click="onPickExport"
-            >
-              <v-icon class="mr-1"> mdi-download </v-icon>
-            </v-btn>
-            <v-btn 
-              icon
               @click="onPickJsonFile"
             >
-              <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
+            <v-icon class="mr-1"> mdi-upload </v-icon>
             </v-btn>
             <input
               type="file"
@@ -24,6 +18,12 @@
               accept="application/json"
               @change="onJsonPicked"
             />
+            <v-btn 
+              icon
+              @click="onPickExport"
+            >
+              <v-icon class="mr-1"> mdi-download </v-icon>
+            </v-btn>
             <v-btn icon @click="handleDeleteCourse">
               <v-icon class="mr-1"> mdi-delete </v-icon>
             </v-btn>
