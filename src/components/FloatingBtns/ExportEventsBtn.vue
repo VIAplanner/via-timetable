@@ -59,9 +59,15 @@ export default {
       for (const [course, events] of Object.entries(this.events)){
         if (typeof events !== 'undefined') {
           for (let i = 0; i < events.length; i += 1){
-            const splitDate = events[i].deadline.split("-", 3)
-            const date = new Date(splitDate[0], parseInt(splitDate[1]) - 1, splitDate[2])
-            this.$ics.addEvent("en-us", `(${course}) ${events[i].type}`, `${events[i].description}`, "", date, date, "", null, null)
+            if (events[i].deadline != null){
+              const splitDate = events[i].deadline.split("-", 3);
+              const date = new Date(splitDate[0], parseInt(splitDate[1]) - 1, splitDate[2]);
+              this.$ics.addEvent(
+                "en-us", 
+                ((events[i].type == null) ? `(${course}) No Title` : `(${course}) ${events[i].type}`), 
+                ((events[i].description == null) ? "" : `${events[i].description}`), 
+                "", date, date, "", null, null);
+            }
           }
         }
       }
