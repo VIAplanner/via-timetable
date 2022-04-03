@@ -12,13 +12,13 @@
           v-bind="attrs"
           v-on="on"
         >
-          <v-icon>mdi-calendar</v-icon>
+          <v-icon>mdi-calendar-alert</v-icon>
         </v-btn>
       </template>
       <span>Export Timetable as ICS</span>
     </v-tooltip>
     <v-btn v-else fab dark small color="green">
-      <v-icon>mdi-calendar</v-icon>
+      <v-icon>mdi-calendar-alert</v-icon>
     </v-btn>
   </v-row>
 </template>
