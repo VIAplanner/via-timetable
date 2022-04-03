@@ -15,19 +15,6 @@
           </v-btn>
           <v-btn
             icon
-            @click="onPickJsonFile"
-          >
-            <v-icon class="mr-1"> mdi-square-edit-outline </v-icon>
-          </v-btn>
-          <input
-            type="file"
-            style="display: none"
-            ref="jsonFileInput"
-            accept="application/json"
-            @change="onJsonPicked"
-          />
-          <v-btn
-            icon
             @click="deleteCourse({ code: courseCode })"
           >
             <v-icon class="mr-1"> mdi-delete </v-icon>
@@ -53,33 +40,6 @@ export default {
     ...mapActions(['deleteCourse']),
     onPickJsonFile() {
       this.$refs.jsonFileInput.click();
-    },
-    onJsonPicked(event) {
-      this.file = event.target.files[0];
-      if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
-        const reader = new FileReader();
-        reader.readAsText(this.file);
-        reader.onload = ((evt) => {
-          const { result } = evt.target
-          try {
-            const content = JSON.parse(result);
-            if (this.couseCode.slice(-1) === "F") {
-              this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
-            } else if (this.courseCode.slice(-1) === "S") {
-              this.$store.state.winterSelectedCourses[this.courseCode].assessments = content.assessments;
-            } else { // Must be Y
-              this.$store.state.fallSelectedCourses[this.courseCode].assessments = content.assessments;
-              this.$store.state.winterSelectedCourses[this.courseCode].assessments = content.assessments;
-            }
-          } 
-          catch (error) {
-            console.log(`Caught invalid JSON: ${this.file.name}`);
-          }
-        })
-      } 
-      else {
-          this.file = null;
-      }
     },
     onPickExport() {
       let data = []
