@@ -46,7 +46,7 @@
                 <vc-date-picker
                   mode="dateTime"
                   v-bind:value="deadline"
-                  @input="$emit('update:deadline', `${$event.getFullYear()}-${$event.getMonth()}-${$event.getDate()}`)"
+                  @input="$emit('update:deadline', `${$event.getFullYear()}-${$event.getMonth() + 1}-${$event.getDate()}`)"
                 >
                   <template v-slot="{ inputValue, inputEvents }">
                     <v-text-field
