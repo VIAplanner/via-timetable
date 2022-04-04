@@ -45,8 +45,8 @@
               <v-col cols="12">
                 <vc-date-picker
                   mode="dateTime"
-                  v-bind:value="deadline"
-                  @input="$emit('update:deadline', `${$event.getFullYear()}-${$event.getMonth() + 1}-${$event.getDate()}`)"
+                  v-bind:value="deadline ? deadline.length === 10 ? new Date(deadline).getTime() + new Date(deadline).getTimezoneOffset() * 60 * 1000 : deadline : null"
+                  @input="$emit('update:deadline', $event ? $event.toISOString() : null)"
                 >
                   <template v-slot="{ inputValue, inputEvents }">
                     <v-text-field
@@ -99,6 +99,7 @@ export default {
         grade: this.$props.grade,
         deadline: this.$props.deadline,
       };
+      console.log(assessment);
       if (this.$props.mode === 'New') {
         this.addAssessment({
           courseCode: this.$route.params.id,

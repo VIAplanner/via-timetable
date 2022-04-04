@@ -21,7 +21,7 @@
               <span>
                 {{
                   assessment.deadline
-                    ? assessment.deadline
+                    ? assessment.deadline.slice(0, 10)
                     : assessment.on_going
                     ? 'On-going'
                     : 'TBD'

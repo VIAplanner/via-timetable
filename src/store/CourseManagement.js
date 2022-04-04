@@ -10,10 +10,10 @@ export default {
       if (!payload.assessment.grade) {
         payload.assessment.grade = null
       }
-
+      
       payload.assessment.subtasks = [];
 
-      payload.course.assessments.push(payload.assessment)
+      payload.course.assessments.push(payload.assessment);
     },
     editAssessment(state, payload) {
       if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
@@ -57,13 +57,15 @@ export default {
         })
       }
 
-      commit('createCalendarEvent', {
-        eventName: payload.assessment.type,
-        eventWeight: payload.assessment.weight,
-        eventCourse: payload.courseCode,
-        eventDetails: payload.assessment.description,
-        eventDate: new Date(payload.assessment.deadline)
-      });
+      if (payload.assessment.deadline) {
+        commit('createCalendarEvent', {
+          eventName: payload.assessment.type,
+          eventWeight: payload.assessment.weight,
+          eventCourse: payload.courseCode,
+          eventDetails: payload.assessment.description,
+          eventDate: new Date(payload.assessment.deadline)
+        });
+      }
     },
 
     async importAssessmentFromParser({ dispatch }, payload) {
