@@ -18,6 +18,11 @@ export default {
       });
         state.fallSelectedCourses[payload.courseCode].assessments.splice(payload.index, 1);
       } else {
+        this.commit('deleteCourseAssessmentEvent', {
+          name: state.winterSelectedCourses[payload.courseCode].assessments[payload.index].type,
+          course: payload.courseCode,
+          details: `${state.winterSelectedCourses[payload.courseCode].assessments[payload.index].description} \n\nWeight: ${state.winterSelectedCourses[payload.courseCode].assessments[payload.index].weight}`
+        });
         state.winterSelectedCourses[payload.courseCode].assessments.splice(payload.index, 1);
       }
     },
