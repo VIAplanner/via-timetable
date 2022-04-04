@@ -47,7 +47,7 @@
           @change="onFilePicked"
         />
         <div>
-          <v-expansion-panels focusable v-if="this.courseAssessments">
+          <v-expansion-panels focusable v-if="this.courseAssessments && this.courseAssessments.length > 0">
             <assessment-item
               v-for="(item, i) in this.courseAssessments" 
               :key="i"
