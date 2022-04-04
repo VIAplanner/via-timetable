@@ -5,8 +5,10 @@ export default {
     editAssessment(state, payload) {
       if (state.semesterStatus === 'F') {
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
       } else {
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
       }
     },
     deleteAssessment(state, payload) {
