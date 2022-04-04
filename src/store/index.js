@@ -130,7 +130,7 @@ export default new Vuex.Store({
       THURSDAY: false,
       FRIDAY: false,
     },
-    semesterStatus: 'F',
+    semesterStatus: !localStorage.semesterStatus ? 'F' : JSON.parse(localStorage.semesterStatus),
     noTimetablePopup: false,
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,

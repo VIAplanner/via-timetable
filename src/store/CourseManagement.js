@@ -2,24 +2,39 @@ import api from '../plugins/api';
 
 export default {
   mutations: {
+    addAssessmentToCourse(state, payload) {
+      if (!payload.course.assessments) {
+        payload.course.assessments = [];
+      }
+
+      if (!payload.assessment.grade) {
+        payload.assessment.grade = null
+      }
+      
+      payload.assessment.subtasks = [];
+
+      payload.course.assessments.push(payload.assessment);
+    },
     editAssessment(state, payload) {
-      if (state.semesterStatus === 'F') {
+      if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
         if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
-      } else {
+      }
+      if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
         if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
       }
     },
     deleteAssessment(state, payload) {
-      if (state.semesterStatus === 'F') {
+      if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
         this.commit('deleteCourseAssessmentEvent', {
           name: state.fallSelectedCourses[payload.courseCode].assessments[payload.index].type,
           course: payload.courseCode,
           details: `${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].description} \n\nWeight: ${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].weight}`
         });
         state.fallSelectedCourses[payload.courseCode].assessments.splice(payload.index, 1);
-      } else {
+      }
+      if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
         this.commit('deleteCourseAssessmentEvent', {
           name: state.winterSelectedCourses[payload.courseCode].assessments[payload.index].type,
           course: payload.courseCode,
@@ -31,32 +46,28 @@ export default {
   },
   actions: {
     addAssessment({commit, state}, payload) {
-      let course = {};
-      if (state.semesterStatus === 'F') {
-        course = state.fallSelectedCourses[payload.courseCode];
-      } else {
-        course = state.winterSelectedCourses[payload.courseCode];
+      if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
+        commit('addAssessmentToCourse', {
+          course: state.fallSelectedCourses[payload.courseCode],
+          assessment: payload.assessment
+        })
+      } 
+      if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
+        commit('addAssessmentToCourse', {
+          course: state.winterSelectedCourses[payload.courseCode],
+          assessment: payload.assessment
+        })
       }
 
-      if (!course.assessments) {
-        course.assessments = [];
+      if (payload.assessment.deadline) {
+        commit('createCalendarEvent', {
+          eventName: payload.assessment.type,
+          eventWeight: payload.assessment.weight,
+          eventCourse: payload.courseCode,
+          eventDetails: payload.assessment.description,
+          eventDate: new Date(payload.assessment.deadline)
+        });
       }
-
-      if (!payload.assessment.grade) {
-        payload.assessment.grade = null
-      }
-
-      payload.assessment.subtasks = [];
-
-      course.assessments.push(payload.assessment)
-
-      commit('createCalendarEvent', {
-        eventName: payload.assessment.type,
-        eventWeight: payload.assessment.weight,
-        eventCourse: payload.courseCode,
-        eventDetails: payload.assessment.description,
-        eventDate: new Date(payload.assessment.deadline)
-      });
     },
 
     async importAssessmentFromParser({ dispatch }, payload) {

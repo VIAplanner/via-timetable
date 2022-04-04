@@ -83,6 +83,7 @@ export default {
     ...mapActions(['clearStorage']),
     // save the timetable data in the browser
     saveData() {
+      localStorage.semesterStatus = JSON.stringify(this.getSemesterStatus)
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
       localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
       localStorage.fallSelectedCourses = JSON.stringify(this.fallSelectedCourses);
