@@ -12,10 +12,10 @@ export default {
     deleteAssessment(state, payload) {
       if (state.semesterStatus === 'F') {
         this.commit('deleteCourseAssessmentEvent', {
-        name: state.fallSelectedCourses[payload.courseCode].assessments[payload.index].type,
-        course: payload.courseCode,
-        details: `${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].description} \n\nWeight: ${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].weight}`
-      });
+          name: state.fallSelectedCourses[payload.courseCode].assessments[payload.index].type,
+          course: payload.courseCode,
+          details: `${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].description} \n\nWeight: ${state.fallSelectedCourses[payload.courseCode].assessments[payload.index].weight}`
+        });
         state.fallSelectedCourses[payload.courseCode].assessments.splice(payload.index, 1);
       } else {
         this.commit('deleteCourseAssessmentEvent', {
