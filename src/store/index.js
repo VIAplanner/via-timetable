@@ -389,6 +389,15 @@ export default new Vuex.Store({
       state.calendarEvents = state.calendarEvents.filter(event => event.id !== payload.id);
       state.selectedOpen = false;
     },
+    deleteCourseEvents(state, payload) {
+      state.calendarEvents = state.calendarEvents.filter(event => event.category !== payload.category);
+      state.selectedOpen = false;
+    },
+    deleteCourseAssessmentEvent(state, payload) {
+      state.calendarEvents = state.calendarEvents.filter(event => event.category !== payload.course || event.name !== payload.name || event.details !== payload.details);
+      // console.log(payload)
+      state.selectedOpen = false;
+    },
     createCalendarEvent(state, payload) {
       const { eventName, eventCourse, eventDetails, eventWeight, eventDate } = payload
       const eventId = state.calendarCurrId;
@@ -679,6 +688,9 @@ export default new Vuex.Store({
           }
         }
       }
+
+      // Delete all assessments in the calendar for this course
+      context.commit('deleteCourseEvents', {category: payload.code});
     },
     // Recalculate timetable when switching sections with conflict
     resetTimetable(context, payload) {
