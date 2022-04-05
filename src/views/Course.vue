@@ -2,15 +2,17 @@
   <v-row class="main">
     <v-col>
       <v-sheet>
-        <v-row align="center" justify="space-between" style="padding: 0 16px">  
+        <v-row align="center" justify="space-between" style="padding: 0 16px">
           <h1>
             {{ $route.params.id }}
-            <v-btn 
-              icon
-              @click="onPickJsonFile"
-            >
-            <v-icon class="mr-1"> mdi-upload </v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon @click="onPickJsonFile" v-bind="attrs" v-on="on">
+                  <v-icon class="mr-1"> mdi-upload </v-icon>
+                </v-btn>
+              </template>
+              <span>Import course assessment with JSON template</span>
+            </v-tooltip>
             <input
               type="file"
               style="display: none"
@@ -18,18 +20,30 @@
               accept="application/json"
               @change="onJsonPicked"
             />
-            <v-btn 
-              icon
-              @click="onPickExport"
-            >
-              <v-icon class="mr-1"> mdi-download </v-icon>
-            </v-btn>
-            <v-btn icon @click="handleDeleteCourse">
-              <v-icon class="mr-1"> mdi-delete </v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon @click="onPickExport" v-bind="attrs" v-on="on">
+                  <v-icon class="mr-1"> mdi-download </v-icon>
+                </v-btn>
+              </template>
+              <span>Export course assessment as JSON template</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  @click="handleDeleteCourse"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon class="mr-1"> mdi-delete </v-icon>
+                </v-btn>
+              </template>
+              <span>Delete this course</span>
+            </v-tooltip>
           </h1>
           <div focusable v-if="this.courseAssessments">
-            <h2>Current Grade: {{courseGrade}}</h2>
+            <h2>Current Grade: {{ courseGrade }}</h2>
           </div>
         </v-row>
         <v-row style="margin: 24px 0">
@@ -37,7 +51,17 @@
             <v-btn elevation="2" class="mr-4">Return to Manager</v-btn>
           </router-link>
           <add-assessment-menu />
-          <v-btn elevation="2" @click="onPickFile">Import Syllabus</v-btn>
+          <v-tooltip bottom color="warning">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn elevation="2" @click="onPickFile" v-bind="attrs" v-on="on"
+                >Import Syllabus</v-btn
+              >
+            </template>
+            <span
+              >Warning: Syllabus must follow MCS Standard to be parsed
+              properly</span
+            >
+          </v-tooltip>
         </v-row>
         <input
           type="file"
@@ -47,17 +71,23 @@
           @change="onFilePicked"
         />
         <div>
-          <v-expansion-panels focusable v-if="this.courseAssessments && this.courseAssessments.length > 0">
+          <v-expansion-panels
+            focusable
+            v-if="this.courseAssessments && this.courseAssessments.length > 0"
+          >
             <assessment-item
-              v-for="(item, i) in this.courseAssessments" 
+              v-for="(item, i) in this.courseAssessments"
               :key="i"
               :assessment="item"
               :index="i"
             />
           </v-expansion-panels>
-          <p v-else>No assessment available for this course. Add your assessment manually or import it from your syllabus/template!</p>
+          <p v-else>
+            No assessment available for this course. Add your assessment
+            manually or import it from your syllabus/template!
+          </p>
         </div>
-        <br>
+        <br />
       </v-sheet>
     </v-col>
   </v-row>
@@ -85,7 +115,11 @@ export default {
   methods: {
     ...mapActions(['deleteCourse']),
     handleDeleteCourse() {
-      if (window.confirm(`Do you want to delete this course: ${this.$route.params.id}?`)) {
+      if (
+        window.confirm(
+          `Do you want to delete this course: ${this.$route.params.id}?`,
+        )
+      ) {
         this.deleteCourse({ code: this.$route.params.id });
         window.location.replace('/manager');
       }
@@ -100,7 +134,7 @@ export default {
       // TODO: For improvement, we can display picked PDF file for user to confirm!
       const { files } = event.target;
       if (!files[0]) {
-        return
+        return;
       }
       const filename = files[0].name;
       const fileReader = new FileReader();
@@ -112,10 +146,10 @@ export default {
       if (window.confirm(`Do you want to use this syllabus: ${filename}?`)) {
         const formData = new FormData();
         formData.append('syllabus', this.file);
-        await this.$store.dispatch(
-          'importAssessmentFromParser',
-          { courseCode: this.$route.params.id, file: formData },
-        );
+        await this.$store.dispatch('importAssessmentFromParser', {
+          courseCode: this.$route.params.id,
+          file: formData,
+        });
         window.location.reload();
       } else {
         this.file = null;
@@ -125,19 +159,41 @@ export default {
       this.$refs.jsonFileInput.click();
     },
     onPickExport() {
-      let data = []
-      if (this.$route.params.id.slice(-1) === "F") {
-        data = `{"assessments":${JSON.stringify(this.$store.state.fallSelectedCourses[this.$route.params.id].assessments)}}`
+      let data = [];
+      if (this.$route.params.id.slice(-1) === 'F') {
+        data = `{"assessments":${JSON.stringify(
+          this.$store.state.fallSelectedCourses[this.$route.params.id]
+            .assessments,
+        )}}`;
       } else {
-        data = `{"assessments":${JSON.stringify(this.$store.state.winterSelectedCourses[this.$route.params.id].assessments)}}`
+        data = `{"assessments":${JSON.stringify(
+          this.$store.state.winterSelectedCourses[this.$route.params.id]
+            .assessments,
+        )}}`;
       }
-      const blob = new Blob([data], {type: 'text/plain'})
+      const blob = new Blob([data], { type: 'text/plain' });
       const e = document.createEvent('MouseEvents'),
-      a = document.createElement('a');
+        a = document.createElement('a');
       a.download = `${this.$route.params.id}.json`;
       a.href = window.URL.createObjectURL(blob);
       a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
-      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      e.initEvent(
+        'click',
+        true,
+        false,
+        window,
+        0,
+        0,
+        0,
+        0,
+        0,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null,
+      );
       a.dispatchEvent(e);
     },
     onJsonPicked(event) {
@@ -145,37 +201,48 @@ export default {
       if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
         const reader = new FileReader();
         reader.readAsText(this.file);
-        reader.onload = ((evt) => {
-          const { result } = evt.target
+        reader.onload = (evt) => {
+          const { result } = evt.target;
           try {
             const content = JSON.parse(result);
-            if (this.$route.params.id.slice(-1) === "F") {
-              this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
-            } else if (this.$route.params.id.slice(-1) === "S") {
-              this.$store.state.winterSelectedCourses[this.$route.params.id].assessments = content.assessments;
-            } else { // Must be Y
-              this.$store.state.fallSelectedCourses[this.$route.params.id].assessments = content.assessments;
-              this.$store.state.winterSelectedCourses[this.$route.params.id].assessments = content.assessments;
+            if (this.$route.params.id.slice(-1) === 'F') {
+              this.$store.state.fallSelectedCourses[
+                this.$route.params.id
+              ].assessments = content.assessments;
+            } else if (this.$route.params.id.slice(-1) === 'S') {
+              this.$store.state.winterSelectedCourses[
+                this.$route.params.id
+              ].assessments = content.assessments;
+            } else {
+              // Must be Y
+              this.$store.state.fallSelectedCourses[
+                this.$route.params.id
+              ].assessments = content.assessments;
+              this.$store.state.winterSelectedCourses[
+                this.$route.params.id
+              ].assessments = content.assessments;
             }
             this.$router.go();
-          } 
-          catch (error) {
+          } catch (error) {
             console.log(`Caught invalid JSON: ${this.file.name}`);
           }
-        })
-      } 
-      else {
-          this.file = null;
+        };
+      } else {
+        this.file = null;
       }
     },
   },
   computed: {
-    ...mapGetters(['fallSelectedCourses', 'winterSelectedCourses', 'getSemesterStatus']),
+    ...mapGetters([
+      'fallSelectedCourses',
+      'winterSelectedCourses',
+      'getSemesterStatus',
+    ]),
     courseAssessments() {
       if (this.getSemesterStatus === 'F') {
-        return this.fallSelectedCourses[this.$route.params.id].assessments
+        return this.fallSelectedCourses[this.$route.params.id].assessments;
       } else {
-        return this.winterSelectedCourses[this.$route.params.id].assessments
+        return this.winterSelectedCourses[this.$route.params.id].assessments;
       }
     },
     courseGrade() {
@@ -185,13 +252,18 @@ export default {
         return 0;
       }
       for (const assessment of this.courseAssessments) {
-        if (assessment.grade !== null && Number(assessment.grade.split('%')[0]) >= 0) {
-          grade += (Number(assessment.grade.split('%')[0]) * Number(assessment.weight.split('%')[0]));
+        if (
+          assessment.grade !== null &&
+          Number(assessment.grade.split('%')[0]) >= 0
+        ) {
+          grade +=
+            Number(assessment.grade.split('%')[0]) *
+            Number(assessment.weight.split('%')[0]);
           weight += Number(assessment.weight.split('%')[0]);
         }
       }
-      
-      return (weight === 0) ? 0 : (grade / weight).toFixed(2);
+
+      return weight === 0 ? 0 : (grade / weight).toFixed(2);
     },
   },
 };
