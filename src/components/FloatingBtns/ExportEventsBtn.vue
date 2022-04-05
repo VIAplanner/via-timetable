@@ -61,7 +61,7 @@ export default {
           for (let i = 0; i < events.length; i += 1){
             if (events[i].deadline != null){
               const splitDate = events[i].deadline.split("-", 3);
-              const date = new Date(splitDate[0], parseInt(splitDate[1]) - 1, splitDate[2]);
+              const date = new Date(splitDate[0], parseInt(splitDate[1]) - 1, splitDate[2].split("T", 1)[0]);
               this.$ics.addEvent(
                 "en-us", 
                 ((events[i].type == null) ? `(${course}) No Title` : `(${course}) ${events[i].type}`), 
