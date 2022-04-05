@@ -388,6 +388,7 @@ export default new Vuex.Store({
     deleteEvent(state, payload) {
       state.calendarEvents = state.calendarEvents.filter(event => event.id !== payload.id);
       state.selectedOpen = false;
+      // const courseCode = payload.category;
     },
     deleteCourseEvents(state, payload) {
       state.calendarEvents = state.calendarEvents.filter(event => event.category !== payload.category);
@@ -399,16 +400,16 @@ export default new Vuex.Store({
     },
     editCourseAssessmentEvent(state, payload) {
       this.commit('deleteCourseAssessmentEvent', {
-        course: payload.courseCode, 
-        name: payload.assessment.type, 
-        details: `${payload.assessment.description} \n\nWeight: ${payload.assessment.weight}`
+        course: payload.newPayload.courseCode, 
+        name: payload.oldPayload.type, 
+        details: `${payload.oldPayload.description} \n\nWeight: ${payload.oldPayload.weight}`
       });
       this.commit('createCalendarEvent', {
-        eventName: payload.assessment.type,
-        eventCourse: payload.courseCode,
-        eventDetails: payload.assessment.description,
-        eventWeight: payload.assessment.weight,
-        eventDate: payload.assessment.deadline
+        eventName: payload.newPayload.assessment.type,
+        eventCourse: payload.newPayload.courseCode,
+        eventDetails: payload.newPayload.assessment.description,
+        eventWeight: payload.newPayload.assessment.weight,
+        eventDate: payload.newPayload.assessment.deadline
       });
     },
     createCalendarEvent(state, payload) {

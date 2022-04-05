@@ -17,12 +17,18 @@ export default {
     },
     editAssessment(state, payload) {
       if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
+        const old = state.fallSelectedCourses[payload.courseCode].assessments[payload.index];
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
-        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
+        if (payload.assessment.deadline !== null) {
+          this.commit('editCourseAssessmentEvent', {oldPayload: old, newPayload: payload});
+        }
       }
       if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
+        const old = state.winterSelectedCourses[payload.courseCode].assessments[payload.index];
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
-        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
+        if (payload.assessment.deadline !== null) {
+          this.commit('editCourseAssessmentEvent', {oldPayload: old, newPayload: payload});
+        }
       }
     },
     deleteAssessment(state, payload) {
