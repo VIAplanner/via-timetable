@@ -18,9 +18,11 @@ export default {
     editAssessment(state, payload) {
       if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
       }
       if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
+        if (payload.assessment.deadline !== null) this.commit('editCourseAssessmentEvent', payload);
       }
     },
     deleteAssessment(state, payload) {
