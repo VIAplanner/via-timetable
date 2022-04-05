@@ -388,7 +388,17 @@ export default new Vuex.Store({
     deleteEvent(state, payload) {
       state.calendarEvents = state.calendarEvents.filter(event => event.id !== payload.id);
       state.selectedOpen = false;
-      // const courseCode = payload.category;
+
+      const courseCode = payload.category;
+      const type = payload.name.trim();
+      const description = payload.details.split('\n')[0].trim();
+      const weight = payload.details.split(':')[1].trim();
+      if (courseCode[8] === 'F' || courseCode[8] === 'Y') {
+        state.fallSelectedCourses[courseCode].assessments = state.fallSelectedCourses[courseCode].assessments.filter(assessment => assessment.type !== type || assessment.description !== description || assessment.weight !== weight);
+      }
+      if (courseCode[8] === 'S' || courseCode[8] === 'Y') {
+        state.winterSelectedCourses[courseCode].assessments = state.winterSelectedCourses[courseCode].assessments.filter(assessment => assessment.type !== type || assessment.description !== description || assessment.weight !== weight);
+      }
     },
     deleteCourseEvents(state, payload) {
       state.calendarEvents = state.calendarEvents.filter(event => event.category !== payload.category);
