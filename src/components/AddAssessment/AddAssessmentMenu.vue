@@ -22,6 +22,8 @@ const defaultState = {
   weight: null,
   grade: null,
   deadline: null,
+  on_going: false,
+  subtasks: [],
 }
 
 export default {

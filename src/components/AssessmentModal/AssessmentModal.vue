@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -87,6 +87,11 @@ export default {
     weight: null || String,
     grade: null || String,
     deadline: null || String,
+    on_going: Boolean,
+    subtasks: Array,
+  },
+  computed: {
+    ...mapGetters(['timetable']),
   },
   methods: {
     ...mapActions(['addAssessment']),
@@ -98,8 +103,9 @@ export default {
         weight: this.$props.weight,
         grade: this.$props.grade,
         deadline: this.$props.deadline,
+        on_going: this.$props.on_going,
+        subtasks: this.$props.subtasks,
       };
-      console.log(assessment);
       if (this.$props.mode === 'New') {
         this.addAssessment({
           courseCode: this.$route.params.id,
@@ -112,6 +118,7 @@ export default {
           assessment,
         });
       }
+      window.location.reload();
       this.$emit('closeDialog');
     },
   },

@@ -108,7 +108,7 @@
         </template>
       </v-checkbox>
     </v-expansion-panel-content>
-    <assessment-modal :index="index" v-bind.sync="assessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
+    <assessment-modal :index="index" v-bind.sync="copiedAssessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
   </v-expansion-panel>
 </template>
 
@@ -135,6 +135,7 @@ export default {
       defaultTodo: false,
       todos: this.$props.assessment.subtasks,
       newTodo: '',
+      copiedAssessment: {...this.$props.assessment},
     };
   },
   methods: {
@@ -175,6 +176,7 @@ export default {
     },
     closeDialog() {
       this.dialog = false;
+      this.copiedAssessment = {...this.assessment};
     }
   },
 };
