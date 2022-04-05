@@ -254,7 +254,8 @@ export default {
       for (const assessment of this.courseAssessments) {
         if (
           assessment.grade !== null &&
-          Number(assessment.grade.split('%')[0]) >= 0
+          Number(assessment.grade.split('%')[0]) >= 0 &&
+          Number(assessment.weight.split('%')[0]) >= 0
         ) {
           grade +=
             Number(assessment.grade.split('%')[0]) *

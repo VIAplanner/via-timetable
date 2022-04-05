@@ -28,6 +28,8 @@
               <v-col cols="12">
                 <v-text-field
                   v-bind:value="weight"
+                  :rules="rules"
+                  counter
                   @input="$emit('update:weight', $event)"
                   label="Weight"
                   hint="The weight of this assessment"
@@ -37,6 +39,8 @@
               <v-col cols="12">
                 <v-text-field
                   v-bind:value="grade"
+                  :rules="rules"
+                  counter
                   @input="$emit('update:grade', $event)"
                   label="Grade"
                   hint="Your grade for this assessment. Leave blank if you don't have a grade yet.'"
@@ -65,7 +69,7 @@
           <v-btn color="blue darken-1" text v-on:click="$emit('closeDialog')">
             Close
           </v-btn>
-          <v-btn color="blue darken-1" text @click="saveAssessment">
+          <v-btn color="blue darken-1" text @click="saveAssessment" :disabled="isInvalid">
             Save
           </v-btn>
         </v-card-actions>
@@ -89,6 +93,11 @@ export default {
     deadline: null || String,
     on_going: Boolean,
     subtasks: Array,
+  },
+  data() {
+    return {
+      rules: [g => g.length <= 5 && /^\d{1,3}%$/.test(g) || 'Must be in format X%'],
+    }
   },
   computed: {
     ...mapGetters(['timetable']),
