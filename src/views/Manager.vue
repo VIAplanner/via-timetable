@@ -3,7 +3,7 @@
     <v-col>
       <v-sheet>
         <h1 style="margin: 24px 0">Course Manager</h1>
-        <div v-if="this.filterCourses.length !== 0">
+        <div v-if="Object.keys(this.filterCourses).length > 0">
           <div v-for="course in this.filterCourses" :key="course.courseCode">
             <course-card
               :name="course.name"
@@ -11,7 +11,10 @@
             ></course-card>
           </div>
         </div>
-        <p v-else>No course selected yet. Add your course from search bar to use Course Manager!</p>
+        <p v-else>
+          No course selected yet. Add your course from search bar to use Course
+          Manager!
+        </p>
       </v-sheet>
     </v-col>
   </v-row>
@@ -25,40 +28,20 @@ export default {
   components: {
     CourseCard,
   },
-  created() {
-    window.addEventListener('resize', this.handleResize);
-  },
-  data() {
-    return {
-      height: window.innerHeight,
-    };
-  },
-  methods: {
-    handleResize() {
-      this.height = window.innerHeight;
-    },
-  },
   computed: {
-    ...mapGetters(['fallSelectedCourses', 'winterSelectedCourses', 'getSemesterStatus', 'timetable']),
+    ...mapGetters([
+      'fallSelectedCourses',
+      'winterSelectedCourses',
+      'getSemesterStatus',
+      'timetable',
+    ]),
     filterCourses() {
       // eslint-disable-next-line no-unused-expressions
-      this.timetable // force re-render the selected courses
+      this.timetable; // force re-render the selected courses
       if (this.getSemesterStatus === 'F') {
-        const courses = [];
-        for (const course in this.fallSelectedCourses) {
-          if (course.length === 9) {
-            courses.push(this.fallSelectedCourses[course]);
-          }
-        }
-        return courses;
+        return this.fallSelectedCourses;
       } else {
-        const courses = [];
-        for (const course in this.winterSelectedCourses) {
-          if (course.length === 9) {
-            courses.push(this.winterSelectedCourses[course]);
-          }
-        }
-        return courses;
+        return this.winterSelectedCourses;
       }
     },
   },

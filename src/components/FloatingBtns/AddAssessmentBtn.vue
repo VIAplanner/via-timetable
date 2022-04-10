@@ -12,7 +12,7 @@
 
 <script>
 
-import AssessmentModal from '../AssessmentModal/AssessmentModal.vue'
+import AssessmentModal from '../Popup/AssessmentModal.vue'
 
 const defaultState = {
   mode: 'New',

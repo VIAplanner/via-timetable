@@ -95,7 +95,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import AddAssessmentMenu from '../components/AddAssessment/AddAssessmentMenu.vue';
+import AddAssessmentMenu from '../components/FloatingBtns/AddAssessmentBtn.vue';
 import AssessmentItem from '../components/CourseManager/AssessmentItem.vue';
 
 export default {
@@ -103,17 +103,13 @@ export default {
     AddAssessmentMenu,
     AssessmentItem,
   },
-  created() {
-    window.addEventListener('resize', this.handleResize);
-  },
   data() {
     return {
-      height: window.innerHeight,
       file: null,
     };
   },
   methods: {
-    ...mapActions(['deleteCourse']),
+    ...mapActions(['deleteCourse', 'importAssessmentFromParser']),
     handleDeleteCourse() {
       if (
         window.confirm(
@@ -123,9 +119,6 @@ export default {
         this.deleteCourse({ code: this.$route.params.id });
         window.location.replace('/manager');
       }
-    },
-    handleResize() {
-      this.height = window.innerHeight;
     },
     onPickFile() {
       this.$refs.fileInput.click();
@@ -146,7 +139,7 @@ export default {
       if (window.confirm(`Do you want to use this syllabus: ${filename}?`)) {
         const formData = new FormData();
         formData.append('syllabus', this.file);
-        await this.$store.dispatch('importAssessmentFromParser', {
+        await this.importAssessmentFromParser({
           courseCode: this.$route.params.id,
           file: formData,
         });
@@ -162,12 +155,12 @@ export default {
       let data = [];
       if (this.$route.params.id.slice(-1) === 'F') {
         data = `{"assessments":${JSON.stringify(
-          this.$store.state.fallSelectedCourses[this.$route.params.id]
+          this.fallSelectedCourses[this.$route.params.id]
             .assessments,
         )}}`;
       } else {
         data = `{"assessments":${JSON.stringify(
-          this.$store.state.winterSelectedCourses[this.$route.params.id]
+          this.winterSelectedCourses[this.$route.params.id]
             .assessments,
         )}}`;
       }

@@ -7,7 +7,8 @@
             {{ assessment.grade ? assessment.grade : '--' }}
           </v-col>
           <v-col cols="7" class="assessment-item">
-            {{ assessment.type }}{{ assessment.description ? ': ' + assessment.description : ''}}
+            {{ assessment.type
+            }}{{ assessment.description ? ': ' + assessment.description : '' }}
           </v-col>
           <v-col cols="1" class="text--secondary assessment-item">
             <v-fade-transition leave-absolute>
@@ -95,7 +96,7 @@
                     readonly
                     v-bind="attrs"
                     v-on="on"
-                    :disabled=todo.done
+                    :disabled="todo.done"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -108,50 +109,47 @@
         </template>
       </v-checkbox>
     </v-expansion-panel-content>
-    <assessment-modal :index="index" v-bind.sync="copiedAssessment" v-bind:dialog="dialog" v-bind:mode="mode" v-on:closeDialog="closeDialog" />
+    <assessment-modal
+      :index="index"
+      v-bind.sync="copiedAssessment"
+      v-bind:mode="mode"
+      v-bind:dialog="dialog"
+      v-on:closeDialog="closeDialog"
+    />
   </v-expansion-panel>
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
-import AssessmentModal from '../AssessmentModal/AssessmentModal.vue';
+import AssessmentModal from '../Popup/AssessmentModal.vue';
 
 export default {
   components: {
-    AssessmentModal
+    AssessmentModal,
   },
   props: {
     assessment: Object,
     index: Number,
   },
-  created() {
-    window.addEventListener('resize', this.handleResize);
-  },
   data() {
     return {
-      height: window.innerHeight,
       dialog: false,
       mode: 'Edit',
       defaultTodo: false,
       todos: this.$props.assessment.subtasks,
       newTodo: '',
-      copiedAssessment: {...this.$props.assessment},
+      copiedAssessment: { ...this.$props.assessment },
     };
   },
   methods: {
     ...mapMutations(['deleteAssessment']),
-    handleResize() {
-      this.height = window.innerHeight;
-    },
     addTodo() {
       if (this.newTodo === '') {
         return;
       }
       const todo = {
         description: this.newTodo,
-        deadline: new Date()
-          .toISOString()
-          .substr(0, 10),
+        deadline: new Date().toISOString().substr(0, 10),
         done: false,
       };
       this.todos.push({
@@ -172,12 +170,12 @@ export default {
       this.deleteAssessment({
         index: this.index,
         courseCode: this.$route.params.id,
-      })
+      });
     },
     closeDialog() {
       this.dialog = false;
-      this.copiedAssessment = {...this.assessment};
-    }
+      this.copiedAssessment = { ...this.assessment };
+    },
   },
 };
 </script>
