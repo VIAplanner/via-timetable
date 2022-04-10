@@ -9,7 +9,7 @@
       />
       <v-tabs
           grow
-          style="max-width: 450px; min-width: 200px"
+          style="max-width: 650px; min-width: 200px"
           v-model="tabs"
         >
         <v-tab key='timetable' to='/timetable'>
@@ -20,6 +20,9 @@
         </v-tab>
         <v-tab key='manager' to='/manager'>
           MANAGER
+        </v-tab>
+        <v-tab key='heatmap' to='/heatmap'>
+          HEATMAP
         </v-tab>
       </v-tabs>
       <course-search-bar style="margin: auto" />

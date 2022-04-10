@@ -7,6 +7,7 @@ import calendar from '../views/Calendar.vue';
 import manager from '../views/Manager.vue';
 import course from '../views/Course.vue';
 import program from '../views/Program.vue';
+import heatmap from '../views/HeatMap.vue'
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
         name: 'program',
         path: 'program',
         component: program,
+      },
+      {
+        name: 'heatmap',
+        path: 'heatmap',
+        component: heatmap,
       },
     ],
   },

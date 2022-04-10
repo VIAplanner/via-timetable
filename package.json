@@ -23,6 +23,7 @@
     "v-calendar": "^2.4.1",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
+    "vue-calendar-heatmap": "^0.8.4",
     "vue-html2canvas": "0.0.4",
     "vue-ics": "^0.1.4",
     "vue-js-toggle-button": "^1.3.3",

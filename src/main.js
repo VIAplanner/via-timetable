@@ -16,6 +16,7 @@ import VueHtml2Canvas from 'vue-html2canvas';
 import ICS from 'vue-ics';
 import SmoothScrollbar from 'vue-smooth-scrollbar';
 import VCalendar from 'v-calendar';
+import VueCalendarHeatmap from 'vue-calendar-heatmap'
 
 Vue.config.productionTip = false;
 
@@ -31,6 +32,7 @@ Vue.use(VueAnalytics, {
 Vue.use(VCalendar, {
   componentPrefix: 'vc',
 })
+Vue.use(VueCalendarHeatmap)
 
 new Vue({
   router,
