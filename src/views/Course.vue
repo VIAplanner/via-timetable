@@ -225,7 +225,6 @@ export default {
             }
             window.location.reload();
           } catch (e) {
-            this.fileError = "ERROR";
             console.log(e);
             this.$toast.error(`${this.file.name} could not be uploaded.`);
             this.$refs.jsonFileInput.value = "";
