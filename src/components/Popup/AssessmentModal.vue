@@ -6,47 +6,36 @@
           <span class="text-h5">{{ mode }} Assessment</span>
         </v-card-title>
         <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
+              <v-form v-model="isValidInput">
                 <v-text-field
                   v-bind:value="type"
                   @input="$emit('update:type', $event)"
-                  label="Type"
+                  label="Type*"
                   hint="The type of this assessment"
                   required
+                  :rules="[t => !!t || 'Assessment type is required']"
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field
                   v-bind:value="description"
                   @input="$emit('update:description', $event)"
                   label="Description"
                   hint="The description of this assessment"
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field
                   v-bind:value="weight"
-                  :rules="rules"
-                  counter
                   @input="$emit('update:weight', $event)"
-                  label="Weight"
+                  label="Weight*"
                   hint="The weight of this assessment"
+                  :rules="weightRules"
                   required
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field
                   v-bind:value="grade"
-                  :rules="rules"
-                  counter
+                  :rules="[g => (!g || /^\d{1,3}%$/.test(g)) || 'Must be in format X%']"
                   @input="$emit('update:grade', $event)"
                   label="Grade"
                   hint="Your grade for this assessment. Leave blank if you don't have a grade yet.'"
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <vc-date-picker
                   mode="dateTime"
                   v-bind:value="deadline ? deadline.length <= 10 ? new Date(deadline).getTime() + new Date(deadline).getTimezoneOffset() * 60 * 1000 : deadline : null"
@@ -60,16 +49,14 @@
                     ></v-text-field>
                   </template>
                 </vc-date-picker>
-              </v-col>
-            </v-row>
-          </v-container>
+              </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text v-on:click="$emit('closeDialog')">
             Close
           </v-btn>
-          <v-btn color="blue darken-1" text @click="saveAssessment">
+          <v-btn color="blue darken-1" text @click="saveAssessment" :disabled="!isValidInput">
             Save
           </v-btn>
         </v-card-actions>
@@ -96,7 +83,11 @@ export default {
   },
   data() {
     return {
-      rules: [g => g.length <= 5 && /^\d{1,3}%$/.test(g) || 'Must be in format X%'],
+      isValidInput: true,
+      weightRules: [ 
+          w => !!w || 'Weight is required', 
+          w => /^\d{1,3}%$/.test(w) || 'Must be in format X%',
+      ],
     }
   },
   computed: {

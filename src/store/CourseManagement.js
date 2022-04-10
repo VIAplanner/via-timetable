@@ -20,7 +20,7 @@ export default {
       if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
         const old = state.fallSelectedCourses[payload.courseCode].assessments[payload.index];
         state.fallSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
-        if (!payload.assessment.deadline) {
+        if (payload.assessment.deadline) {
           this.commit('editCourseAssessmentEvent', {
             oldPayload: old,
             newPayload: payload
@@ -30,7 +30,7 @@ export default {
       if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
         const old = state.winterSelectedCourses[payload.courseCode].assessments[payload.index];
         state.winterSelectedCourses[payload.courseCode].assessments[payload.index] = payload.assessment;
-        if (!payload.assessment.deadline) {
+        if (payload.assessment.deadline) {
           this.commit('editCourseAssessmentEvent', {
             oldPayload: old,
             newPayload: payload
