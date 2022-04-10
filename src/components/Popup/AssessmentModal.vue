@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   props: {
@@ -91,9 +91,6 @@ export default {
       ],
       gradeRule: [g => (!g || /^\d{1,3}%$/.test(g)) || 'Must be in format X%'],
     }
-  },
-  computed: {
-    ...mapGetters(['timetable']),
   },
   methods: {
     ...mapActions(['addAssessment']),

@@ -63,12 +63,20 @@ export default {
       state
     }, payload) {
       if (payload.courseCode[8] === 'F' || payload.courseCode[8] === 'Y') {
+        const duplicatedAssessments = state.fallSelectedCourses[payload.courseCode].assessments.filter(a => a.type === payload.assessment.type && a.description === payload.assessment.description && a.weight === payload.assessment.weight && a.deadline === payload.assessment.deadline);
+        if (duplicatedAssessments.length > 0) {
+          return;
+        }
         commit('addAssessmentToCourse', {
           course: state.fallSelectedCourses[payload.courseCode],
           assessment: payload.assessment
         })
       }
       if (payload.courseCode[8] === 'S' || payload.courseCode[8] === 'Y') {
+        const duplicatedAssessments = state.winterSelectedCourses[payload.courseCode].assessments.filter(a => a.type === payload.assessment.type && a.description === payload.assessment.description && a.weight === payload.assessment.weight && a.deadline === payload.assessment.deadline);
+        if (duplicatedAssessments.length > 0) {
+          return;
+        }
         commit('addAssessmentToCourse', {
           course: state.winterSelectedCourses[payload.courseCode],
           assessment: payload.assessment
