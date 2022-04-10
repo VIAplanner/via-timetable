@@ -43,7 +43,7 @@
             </v-tooltip>
           </h1>
           <div focusable v-if="this.courseAssessments">
-            <h2>Current Grade: {{ courseGrade }}</h2>
+            <h2>Current Grade: {{ runningCourseGrade }} | Total Grade: {{ totalCourseGrade }}</h2>
           </div>
         </v-row>
         <v-row style="margin: 24px 0">
@@ -250,7 +250,7 @@ export default {
         return this.winterSelectedCourses[this.$route.params.id].assessments;
       }
     },
-    courseGrade() {
+    runningCourseGrade() {
       let grade = 0;
       let weight = 0;
       if (this.courseAssessments.length === 0) {
@@ -270,6 +270,28 @@ export default {
       }
 
       return weight === 0 ? 0 : (grade / weight).toFixed(2);
+    },
+    totalCourseGrade() {
+      let grade = 0;
+      let weight = 0;
+
+      if (this.courseAssessments.length === 0) {
+        return 0;
+      }
+
+      for (const assessment of this.courseAssessments) {
+        if (
+          assessment.grade !== null &&
+          Number(assessment.grade.split('%')[0]) >= 0 &&
+          Number(assessment.weight.split('%')[0]) >= 0
+        ) {
+          grade +=
+            Number(assessment.grade.split('%')[0]) *
+            Number(assessment.weight.split('%')[0]);
+          weight += Number(assessment.weight.split('%')[0]);
+        }
+      }
+      return weight === 0 ? 0 : (grade / 100).toFixed(2);
     },
   },
 };
