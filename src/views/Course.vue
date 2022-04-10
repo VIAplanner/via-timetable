@@ -139,12 +139,18 @@ export default {
       if (window.confirm(`Do you want to use this syllabus: ${filename}?`)) {
         const formData = new FormData();
         formData.append('syllabus', this.file);
-        await this.importAssessmentFromParser({
+        try {
+          await this.importAssessmentFromParser({
           courseCode: this.$route.params.id,
           file: formData,
-        });
-        window.location.reload();
-      } else {
+          });
+          window.location.reload();
+        } catch (e) {
+          console.log(e);
+          this.$toast.error(`${this.file.name} could not be uploaded.`);
+        }
+      }
+      else {
         this.file = null;
       }
     },
@@ -215,9 +221,11 @@ export default {
                 this.$route.params.id
               ].assessments = content.assessments;
             }
-            this.$router.go();
-          } catch (error) {
-            console.log(`Caught invalid JSON: ${this.file.name}`);
+            window.location.reload();
+          } catch (e) {
+            this.fileError = "ERROR";
+            console.log(e);
+            this.$toast.error(`${this.file.name} could not be uploaded.`);
           }
         };
       } else {

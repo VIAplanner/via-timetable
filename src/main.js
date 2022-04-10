@@ -16,6 +16,9 @@ import VueHtml2Canvas from 'vue-html2canvas';
 import ICS from 'vue-ics';
 import SmoothScrollbar from 'vue-smooth-scrollbar';
 import VCalendar from 'v-calendar';
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 
 Vue.config.productionTip = false;
 
@@ -31,6 +34,23 @@ Vue.use(VueAnalytics, {
 Vue.use(VCalendar, {
   componentPrefix: 'vc',
 })
+Vue.use(Toast, {
+  transition: "Vue-Toastification__fade",
+  maxToasts: 20,
+  newestOnTop: true,
+  position: "top-right",
+  timeout: 5000,
+  closeOnClick: false,
+  pauseOnFocusLoss: false,
+  pauseOnHover: false,
+  draggable: false,
+  draggablePercent: 1,
+  showCloseButtonOnHover: false,
+  hideProgressBar: true,
+  closeButton: "button",
+  icon: true,
+  rtl: false
+});
 
 new Vue({
   router,
