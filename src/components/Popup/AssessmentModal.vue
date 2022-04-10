@@ -13,7 +13,7 @@
                   label="Type*"
                   hint="The type of this assessment"
                   required
-                  :rules="[t => !!t || 'Assessment type is required']"
+                  :rules="typeRule"
                 ></v-text-field>
                 <v-text-field
                   v-bind:value="description"
@@ -31,7 +31,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-bind:value="grade"
-                  :rules="[g => (!g || /^\d{1,3}%$/.test(g)) || 'Must be in format X%']"
+                  :rules="gradeRule"
                   @input="$emit('update:grade', $event)"
                   label="Grade"
                   hint="Your grade for this assessment. Leave blank if you don't have a grade yet.'"
@@ -84,10 +84,12 @@ export default {
   data() {
     return {
       isValidInput: true,
+      typeRule: [t => !!t || 'Assessment type is required'],
       weightRules: [ 
           w => !!w || 'Weight is required', 
           w => /^\d{1,3}%$/.test(w) || 'Must be in format X%',
       ],
+      gradeRule: [g => (!g || /^\d{1,3}%$/.test(g)) || 'Must be in format X%'],
     }
   },
   computed: {

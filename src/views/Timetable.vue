@@ -2,7 +2,6 @@
   <v-row>
     <v-col class="pa-0">
       <div>
-        <!-- <help-dial /> -->
         <v-carousel
           v-model="whichTimetable"
           :height="carouselHeight"
@@ -42,13 +41,11 @@
 import { mapGetters } from 'vuex';
 import Timetable from '../components/Timetable/Timetable.vue';
 import SideBar from '../components/SidePanel/SideBar.vue';
-// import HelpDial from '../components/FloatingBtns/HelpDial.vue';
 
 export default {
   components: {
     Timetable,
     SideBar,
-    // HelpDial,
   },
   created() {
     window.addEventListener('resize', this.handleResize);

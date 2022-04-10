@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-container class="background" style="padding-top: 50px !important; padding-right: 50px !important;">
+    <v-container
+      class="background"
+      style="padding-top: 50px !important; padding-right: 50px !important"
+    >
       <v-row>
         <NoTimetablePopup></NoTimetablePopup>
         <v-col class="time-axis">
@@ -34,30 +37,23 @@
               ></weekday-switch>
             </v-col>
           </v-row>
-          <v-row name="timetable-content" style="padding-top: 20px !important;">
+          <v-row name="timetable-content" style="padding-top: 20px !important">
             <v-col v-for="(meetingSections, day) in timetable" :key="day">
               <div
                 v-for="event in getEventsForDay(meetingSections)"
                 :key="event.start"
                 class="test"
                 :style="`
-              display: ${event.start > 0 ? 'flex': ''};
+              display: ${event.start > 0 ? 'flex' : ''};
             `"
               >
-                <template
-                  :v-if="event.start > 0"
-                >
-                  <template
-                    v-for="course in event.courses"
-                  >
-                    <template
-                      :v-if="course.start > 0"
-                    >
+                <template :v-if="event.start > 0">
+                  <template v-for="course in event.courses">
+                    <template :v-if="course.start > 0">
                       <timetable-event
-                      :key="course.code"
-                      :event="course"
-                      :semester="semester"
-
+                        :key="course.code"
+                        :event="course"
+                        :semester="semester"
                       />
                     </template>
                     <timetable-event
@@ -99,7 +95,7 @@ import HourSwitch from './HourSwitch.vue';
 import WeekdaySwitch from './WeekdaySwitch.vue';
 import TimetableCourseCard from './TimetableCourseCard.vue';
 
-const convertSecondsToHours = seconds => seconds / 3600;
+const convertSecondsToHours = (seconds) => seconds / 3600;
 export default {
   name: 'Timetable',
   components: {
@@ -198,13 +194,13 @@ export default {
       const result = [];
       let currTime = this.timetableStart;
       let invalidStart = -1;
-      const flag = meetingSections.every(event => {
+      const flag = meetingSections.every((event) => {
         const eventStart = convertSecondsToHours(event.start);
         const eventEnd = convertSecondsToHours(event.end);
 
         return eventStart < this.timetableStart || eventEnd > this.timetableEnd;
       });
-      // If the timetable is empty, then start is < 0, so flag would be true. 
+      // If the timetable is empty, then start is < 0, so flag would be true.
       if (meetingSections.length === 0 || flag) {
         for (let j = 0; j < this.timetableEnd - this.timetableStart; j += 1) {
           result.push({
@@ -216,21 +212,19 @@ export default {
         }
         return result;
       }
-     
-      const meetingResults = meetingSections.map(m => {
+
+      const meetingResults = meetingSections.map((m) => {
         m.currStart = m.start;
         m.currEnd = m.end;
         return m;
-      })
+      });
       // Sort every event by start time
       meetingResults.sort((a, b) => a.currStart - b.currStart);
-      // Need to find the biggest overlapping section. 
+      // Need to find the biggest overlapping section.
       const sortedTimeEvents = [];
-      // current start and end times. 
-      let start, end;
       const HOUR_OFFSET = 3600;
 
-      for(let i = 0; i < meetingResults.length; i+=1){
+      for (let i = 0; i < meetingResults.length; i += 1) {
         if (meetingResults[i].code.includes('Lock')) {
           result.push({
             start: invalidStart,
@@ -241,76 +235,85 @@ export default {
           // eslint-disable-next-line no-continue
           continue;
         }
-        start = meetingResults[i].start;
-        end = meetingResults[i].end;
+        // current start and end times.
+        let { start } = meetingResults[i];
+        let { end } = meetingResults[i];
         // Contains all courses overlapping from a given range (s, e)
         const overlappingCourses = [meetingResults[i]];
         // Loop through next course onwards to find max overlap.
         let j;
-        for (j=i+1; j < meetingResults.length; j+=1) {
+        for (j = i + 1; j < meetingResults.length; j += 1) {
           // This course is not overlapping anymore, so get the out of this loop
-          if (meetingResults[j].currStart >= end || meetingResults[j].end <= start){
+          if (
+            meetingResults[j].currStart >= end ||
+            meetingResults[j].end <= start
+          ) {
             break;
           }
-          // The course is overlapping. 
+          // The course is overlapping.
           // Update the end value to be the greater of current end or new end
           end = meetingResults[j].end > end ? meetingResults[j].end : end;
-          start = meetingResults[j].currStart < start ? meetingResults[j].currStart : start;
-          // Add this new overlapping course. 
-          overlappingCourses.push({...meetingResults[j]});
+          start =
+            meetingResults[j].currStart < start
+              ? meetingResults[j].currStart
+              : start;
+          // Add this new overlapping course.
+          overlappingCourses.push({ ...meetingResults[j] });
         }
         // Update all of the courses' ends (overlap period's end) and currEnd (each courses' end)
-        for (let k = 0; k < overlappingCourses.length; k+=1) {
+        for (let k = 0; k < overlappingCourses.length; k += 1) {
           overlappingCourses[k].olap_end = end;
           overlappingCourses[k].olap_start = start;
         }
 
-        // Push the new result. 
+        // Push the new result.
         sortedTimeEvents.push({
-        currStart: start,
-        currEnd: end,
-        start,
-        courses: overlappingCourses
+          currStart: start,
+          currEnd: end,
+          start,
+          courses: overlappingCourses,
         });
-        // Update the i value, since we already looked at the next courses. 
-        i = j-1;
+        // Update the i value, since we already looked at the next courses.
+        i = j - 1;
       }
-      // Add padding to sortedtimeEvents depending on currStart and currEnd 
+      // Add padding to sortedtimeEvents depending on currStart and currEnd
       const finalResult = [];
       let sortedIndex = 0;
       currTime *= HOUR_OFFSET;
       // Loop through the entire time zones
       while (currTime < this.timetableEnd * HOUR_OFFSET) {
-        if (sortedIndex < sortedTimeEvents.length && currTime === sortedTimeEvents[sortedIndex].currStart) {
-          // Add event 
+        if (
+          sortedIndex < sortedTimeEvents.length &&
+          currTime === sortedTimeEvents[sortedIndex].currStart
+        ) {
+          // Add event
           finalResult.push(sortedTimeEvents[sortedIndex]);
-          // Move currTime to end of this overlap section 
+          // Move currTime to end of this overlap section
           currTime = sortedTimeEvents[sortedIndex].currEnd;
-          sortedIndex+=1;
+          sortedIndex += 1;
         }
-        // If currTime is half an hour, extend it to full hour 
-        else if (currTime - (HOUR_OFFSET/2) % HOUR_OFFSET === 0){
+        // If currTime is half an hour, extend it to full hour
+        else if (currTime - ((HOUR_OFFSET / 2) % HOUR_OFFSET) === 0) {
           finalResult.push({
-              start: -invalidStart,
-              currStart: currTime,
-              currEnd: currTime + HOUR_OFFSET / 2,
-            });
-            invalidStart -= 1;
-            currTime += HOUR_OFFSET / 2;
+            start: -invalidStart,
+            currStart: currTime,
+            currEnd: currTime + HOUR_OFFSET / 2,
+          });
+          invalidStart -= 1;
+          currTime += HOUR_OFFSET / 2;
         }
         // Add hour padding
         else {
           finalResult.push({
-              start: invalidStart,
-              currStart: currTime,
-              currEnd: currTime + HOUR_OFFSET,
-            });
-            invalidStart -= 1;
-            currTime += HOUR_OFFSET;
+            start: invalidStart,
+            currStart: currTime,
+            currEnd: currTime + HOUR_OFFSET,
+          });
+          invalidStart -= 1;
+          currTime += HOUR_OFFSET;
         }
       }
       return finalResult;
-
     },
   },
 };

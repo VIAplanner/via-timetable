@@ -146,16 +146,15 @@ export default {
           });
           window.location.reload();
         } catch (e) {
-          console.log(e);
-          this.$toast.error(`${this.file.name} could not be uploaded.`);
+          this.$toast.error(`Error when import syllabus file ${this.file.name}: ${e.response.data.message}`);
+          this.file = null;
+          this.$refs.fileInput.value = "";
         }
       }
       else {
         this.file = null;
+        this.$refs.fileInput.value = "";
       }
-    },
-    onPickJsonFile() {
-      this.$refs.jsonFileInput.click();
     },
     onPickExport() {
       let data = [];
@@ -195,6 +194,9 @@ export default {
       );
       a.dispatchEvent(e);
     },
+    onPickJsonFile() {
+      this.$refs.jsonFileInput.click();
+    },
     onJsonPicked(event) {
       this.file = event.target.files[0];
       if (window.confirm(`Do you want to use this JSON: ${this.file.name}?`)) {
@@ -226,10 +228,12 @@ export default {
             this.fileError = "ERROR";
             console.log(e);
             this.$toast.error(`${this.file.name} could not be uploaded.`);
+            this.$refs.jsonFileInput.value = "";
           }
         };
       } else {
         this.file = null;
+        this.$refs.jsonFileInput.value = "";
       }
     },
   },
