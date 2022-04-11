@@ -12,6 +12,10 @@ export default {
         payload.assessment.grade = null;
       }
 
+      if (payload.assessment.deadline && payload.assessment.deadline.length <= 10) {
+        payload.assessment.deadline = new Date(new Date(payload.assessment.deadline).getTime() + new Date(payload.assessment.deadline).getTimezoneOffset() * 60 * 1000).toISOString();
+      }
+
       payload.assessment.subtasks = [];
 
       payload.course.assessments.push(payload.assessment);

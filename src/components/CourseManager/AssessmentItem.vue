@@ -22,7 +22,7 @@
               <span>
                 {{
                   assessment.deadline
-                    ? assessment.deadline.slice(0, 10)
+                    ? new Date(assessment.deadline).toLocaleString()
                     : assessment.on_going
                     ? 'On-going'
                     : 'TBD'

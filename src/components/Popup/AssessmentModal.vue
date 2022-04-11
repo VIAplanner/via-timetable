@@ -38,7 +38,7 @@
                 ></v-text-field>
                 <vc-date-picker
                   mode="dateTime"
-                  v-bind:value="deadline ? deadline.length <= 10 ? new Date(deadline).getTime() + new Date(deadline).getTimezoneOffset() * 60 * 1000 : deadline : null"
+                  v-bind:value="deadline ? deadline : null"
                   @input="$emit('update:deadline', $event ? $event.toISOString() : null)"
                 >
                   <template v-slot="{ inputValue, inputEvents }">
