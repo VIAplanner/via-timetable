@@ -19,6 +19,7 @@ import VCalendar from 'v-calendar';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
+import VueCalendarHeatmap from 'vue-calendar-heatmap'
 
 Vue.config.productionTip = false;
 
@@ -51,6 +52,7 @@ Vue.use(Toast, {
   icon: true,
   rtl: false
 });
+Vue.use(VueCalendarHeatmap)
 
 new Vue({
   router,

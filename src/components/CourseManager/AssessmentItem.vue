@@ -171,6 +171,7 @@ export default {
         index: this.index,
         courseCode: this.$route.params.id,
       });
+      window.location.reload();
     },
     closeDialog() {
       this.dialog = false;

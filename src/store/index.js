@@ -409,12 +409,12 @@ export default new Vuex.Store({
       state.selectedOpen = false;
     },
     editCourseAssessmentEvent(state, payload) {
-      this.deleteCourseAssessmentEvent({
+      this.commit('deleteCourseAssessmentEvent', {
         course: payload.newPayload.courseCode, 
         name: payload.oldPayload.type, 
         details: `${payload.oldPayload.description} \n\nWeight: ${payload.oldPayload.weight}`
       });
-      this.createCalendarEvent({
+      this.commit('createCalendarEvent', {
         eventName: payload.newPayload.assessment.type,
         eventCourse: payload.newPayload.courseCode,
         eventDetails: payload.newPayload.assessment.description,
