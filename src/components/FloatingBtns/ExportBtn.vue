@@ -1,5 +1,5 @@
 <template>
-  <v-row @mouseover="hovered = true" @mouseleave="hovered = false">
+  <div @mouseover="hovered = true" @mouseleave="hovered = false">
     <v-tooltip left v-if="hovered">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -20,7 +20,7 @@
     <v-btn v-else fab dark small color="green">
       <v-icon>mdi-download</v-icon>
     </v-btn>
-  </v-row>
+  </div>
 </template>
 
 <script>
