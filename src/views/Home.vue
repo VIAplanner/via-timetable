@@ -17,19 +17,13 @@
         </v-row>
       </v-overlay>
 
-      <v-toolbar dark color="#012B5C" height="65px" class="pa-1" elevation="0">
+      <v-toolbar dark color="#012B5C" height="75px" class="pa-1" elevation="0">
         <v-img
           src="../assets/VIA-Planner-White.png"
           max-width="130"
           contain
           class="ma-2 ml-1"
         />
-        <v-tabs
-          grow
-          style="max-width: 250px; min-width: 250px"
-        >
-          <v-tab>TIMETABLE</v-tab>
-        </v-tabs>
         <course-search-bar style="margin: auto" />
         <switch-sem style="margin: auto" />
         <delivery-method-setting />
