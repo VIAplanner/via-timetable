@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // change this number to clear storage
-    clearStorage: '1',
+    clearStorage: '2',
     allowedConflictCourses: !localStorage.allowedConflictCourses
       ? []
       : JSON.parse(localStorage.allowedConflictCourses),
@@ -706,7 +706,7 @@ export default new Vuex.Store({
         return state.winterSelectedCourses;
       }
     },
-    isConflictedCourse: state => courseCode => 
+    isConflictedCourse: state => courseCode =>
         state.allowedConflictCourses.findIndex(
           curCourse => curCourse.code === courseCode,
         ) !== -1,
