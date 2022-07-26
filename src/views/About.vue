@@ -222,7 +222,7 @@
                           Brand new UI!
                         </li>
                         <li>
-                          Course data updated for 2020 - 2021 school year (UTM)
+                          Course data updated for 2022 - 2023 school year (UTM)
                         </li>
                         <li>
                           Courses now show their delivery methods
@@ -476,7 +476,7 @@
     <v-footer absolute :dark="darkMode" :color="darkMode ? 'black' : '#F5F5F6'">
       <v-row justify="center">
         <h1 class="text-subtitle-1 text-center">
-          Copyright © 2021 VIAplanner - Data updated for the 2021 - 2022 school
+          Copyright © 2022 VIAplanner - Data updated for the 2022 - 2023 school
           year
         </h1>
       </v-row>
