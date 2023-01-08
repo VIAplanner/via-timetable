@@ -8,9 +8,6 @@
    <a href="https://app.netlify.com/sites/viatimetable/deploys">
     <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/3b870967-d243-450c-8672-3add3187a16f/deploy-status">
   </a>
-  <a href="https://viaplanner.ca">
-    <img alt="Website Status" src="https://img.shields.io/endpoint?url=https://api.viaplanner.ca/status/timetable&style=flat">
-  </a>
   <a href="https://github.com/UTM-Hacklab/VIAplanner/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/license-GPL-green?style=flat">
   </a>
