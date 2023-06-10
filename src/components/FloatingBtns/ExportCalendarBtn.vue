@@ -66,7 +66,7 @@ export default {
     createDate(semester, weekday, time) {
       let year = 2023;
       let month = 8;
-      let startingDay = 8;
+      let startingDay = 6;
       let weekdayToDayIndex = {
         MONDAY: 5,
         TUESDAY: 6,
@@ -78,7 +78,7 @@ export default {
       if (semester === 'W') {
         year = 2024;
         month = 0;
-        startingDay = 10;
+        startingDay = 8;
         weekdayToDayIndex = {
           MONDAY: 0,
           TUESDAY: 1,
@@ -96,7 +96,7 @@ export default {
     },
     saveTimetable(timetable, semester) {
       const until =
-        semester === 'F' ? new Date(2023, 11, 8) : new Date(2024, 3, 9);
+        semester === 'F' ? new Date(2023, 12, 5) : new Date(2024, 4, 5);
       Object.entries(timetable).forEach((day) => {
         const weekday = day[0],
           sections = day[1];
