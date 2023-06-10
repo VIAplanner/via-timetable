@@ -35,7 +35,7 @@
             <v-row>
               <v-col class="pa-0">
                 <h1 style="text-align:center" class="text-subtitle-1">
-                  Copyright © 2022 VIAplanner - Data updated for the 2022 - 2023
+                  Copyright © 2023 VIAplanner - Data updated for the 2023 - 2024
                   school year
                 </h1>
               </v-col>
