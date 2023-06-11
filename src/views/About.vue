@@ -44,7 +44,7 @@
         </v-btn>
         <v-btn
           text
-          href="https://github.com/UTM-Hacklab/VIAplanner"
+          href="https://github.com/VIAplanner/via-timetable"
           target="blank"
         >
           <v-icon left>mdi-github</v-icon>
