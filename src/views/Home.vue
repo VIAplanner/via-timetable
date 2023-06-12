@@ -24,6 +24,12 @@
           contain
           class="ma-2 ml-1"
         />
+        <v-btn icon @click='undo()'>
+          <v-icon>mdi-undo</v-icon>
+        </v-btn>
+        <v-btn icon @click='redo()'>
+          <v-icon>mdi-redo</v-icon>
+        </v-btn>
         <course-search-bar style="margin: auto" />
         <switch-sem style="margin: auto" />
         <delivery-method-setting />
@@ -105,9 +111,10 @@ export default {
     } else {
       window.addEventListener('beforeunload', this.saveData);
     }
+    this.saveState()
   },
   methods: {
-    ...mapActions(['clearStorage']),
+    ...mapActions(['clearStorage', 'undo', 'redo', 'saveState']),
     // save the timetable data in the browser
     saveData() {
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);

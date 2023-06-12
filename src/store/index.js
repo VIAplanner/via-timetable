@@ -5,7 +5,25 @@ import { generateTimetables } from '../timetable-planner/index2';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
-
+const addHistory = (state, history) => {
+    if (state.historyIndex !== 0) {
+      state.history = state.history.slice(0, state.history.length + state.historyIndex);
+      state.historyIndex = 0;
+    }
+    state.history.push(history);
+}
+const saveState = (state) => {
+  addHistory(state, JSON.stringify({
+      fallSelectedCourses: state.fallSelectedCourses,
+      winterSelectedCourses: state.winterSelectedCourses,
+      fallTimetable: state.fallTimetable,
+      winterTimetable: state.winterTimetable,
+      fallLockedSections: state.fallLockedSections,
+      winterLockedSections: state.winterLockedSections,
+      deliveryMethod: state.deliveryMethod,
+      allowedConflictCourses: state.allowedConflictCourses,
+    }))
+}
 export default new Vuex.Store({
   state: {
     // change this number to clear storage
@@ -135,6 +153,9 @@ export default new Vuex.Store({
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
     globalAllowConflicts: false,
+    history: !localStorage.history ? [] : JSON.parse(localStorage.history),
+    // index is reversed, 0 is the latest, 1 is the second latest etc...
+    historyIndex: 0,
   },
   mutations: {
     setExportOverlay(state, payload) {
@@ -299,6 +320,7 @@ export default new Vuex.Store({
           state.winterLockedSections.push(payload);
         }
       }
+      saveState(state)
     },
     unlockSection(state, payload) {
       let index;
@@ -340,8 +362,33 @@ export default new Vuex.Store({
     setPreferredDeliveryMethod(state, payload) {
       state.deliveryMethod = payload;
     },
-    setGlobalAllowConflicts(state, payload) {
-      state.globalAllowConflicts = payload;
+    setGlobalAllowConflicts(state, payload)
+{
+  state.globalAllowConflicts = payload;
+},
+    addHistory(state, payload) {
+      addHistory(state, payload);
+    },
+    saveState(state){
+      saveState(state)
+    },
+    loadState(state, payload) {
+      const newState = JSON.parse(payload);
+      state.fallSelectedCourses = newState.fallSelectedCourses;
+      state.winterSelectedCourses = newState.winterSelectedCourses;
+      state.fallTimetable = newState.fallTimetable;
+      state.winterTimetable = newState.winterTimetable;
+      state.fallLockedSections = newState.fallLockedSections;
+      state.winterLockedSections = newState.winterLockedSections;
+      state.deliveryMethod = newState.deliveryMethod;
+      state.allowedConflictCourses = newState.allowedConflictCourses;
+      state.searchBarValue = '';
+    },
+    undo(state) {
+      state.historyIndex -= 1;
+    },
+    redo(state) {
+      state.historyIndex += 1;
     },
   },
   actions: {
@@ -540,6 +587,7 @@ export default new Vuex.Store({
       );
 
       context.dispatch('validateTimetable', timetables);
+      context.dispatch('saveState');
     },
     deleteCourse(context, payload) {
       // resets search bar value if the deleted course is the last searched course
@@ -615,6 +663,7 @@ export default new Vuex.Store({
           }
         }
       }
+      context.dispatch('saveState');
     },
     // Recalculate timetable when switching sections with conflict
     resetTimetable(context, payload) {
@@ -681,6 +730,22 @@ export default new Vuex.Store({
           });
           semester[time.day].sort((a, b) => a.start - b.start);
         }
+      }
+    },
+    saveState({commit}) {
+      commit('saveState');
+    },
+    undo(context) {
+      if (context.state.history.length - 1 + context.state.historyIndex > 0) {
+        context.commit('undo');
+        context.commit('loadState', context.state.history[context.state.history.length - 1 + context.state.historyIndex])
+      }
+    },
+    redo(context) {
+      if (context.state.historyIndex < 0) {
+        const state=  context.state.history[context.state.history.length + context.state.historyIndex]
+        context.commit('redo');
+        context.commit('loadState',state )
       }
     },
   },
