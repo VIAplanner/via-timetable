@@ -373,6 +373,7 @@ export default new Vuex.Store({
       saveState(state)
     },
     loadState(state, payload) {
+      console.log('Loading new state')
       const newState = JSON.parse(payload);
       state.fallSelectedCourses = newState.fallSelectedCourses;
       state.winterSelectedCourses = newState.winterSelectedCourses;
@@ -751,6 +752,7 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
+    getSerializedState: state => state.history[state.history.length - 1 + state.historyIndex],
     getExportOverlay: state => state.exportOverlay,
     getNoTimetablePopup: state => state.noTimetablePopup,
     getOverwriteLockedSectionPopup: state => state.overwriteLockedSectionPopup,
