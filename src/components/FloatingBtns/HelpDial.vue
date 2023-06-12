@@ -13,8 +13,8 @@
         <v-icon v-else>mdi-hammer-screwdriver</v-icon>
       </v-btn>
     </template>
-    <export-calendar-btn></export-calendar-btn>
-    <export-btn></export-btn>
+    <export-calendar-btn class='ma-0'></export-calendar-btn>
+    <export-btn class='mb-0'></export-btn>
     <about-btn></about-btn>
     <tutorial-btn></tutorial-btn>
   </v-speed-dial>
