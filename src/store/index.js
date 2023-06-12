@@ -373,7 +373,6 @@ export default new Vuex.Store({
       saveState(state)
     },
     loadState(state, payload) {
-      console.log('Loading new state')
       const newState = JSON.parse(payload);
       state.fallSelectedCourses = newState.fallSelectedCourses;
       state.winterSelectedCourses = newState.winterSelectedCourses;

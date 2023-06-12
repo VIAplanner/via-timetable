@@ -60,7 +60,6 @@ export default {
       reader.readAsText(file);
       const { loadState } = this;
       reader.onload = () => {
-        console.log(reader.result);
         loadState(reader.result);
       };
       document.body.removeChild(document.getElementById('file-upload'));
