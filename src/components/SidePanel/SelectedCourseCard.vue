@@ -18,13 +18,22 @@
       <div style="color: #474747">
         <h3>{{ course.courseCode }}</h3>
       </div>
-       <v-btn icon @click.native.stop @click="addOrRemoveConflictCourse({code: course.courseCode } )" color="#474747" max-width="40" max-height="40">
-            <v-icon v-if="isConflict">mdi-book-multiple</v-icon>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn v-bind='attrs' v-on='on' icon @click.native.stop
+                 @click='addOrRemoveConflictCourse({code: course.courseCode } )'
+                 color='#474747' max-width='40' max-height='40'>
+            <v-icon v-if='isConflict'>mdi-book-multiple</v-icon>
             <v-icon v-else>mdi-book-variant</v-icon>
-      </v-btn>
-      <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on" color="#474747" max-width="40" max-height="40">
+          </v-btn>
+        </template>
+        <span>
+        Allow conflicts with this course
+      </span>
+      </v-tooltip>
+      <v-dialog v-model='dialog' scrollable width='825px' @input='atInput'>
+        <template v-slot:activator='{ on }'>
+          <v-btn icon v-on='on' color='#474747' max-width='40' max-height='40'>
             <v-icon>mdi-pencil-box-outline</v-icon>
           </v-btn>
         </template>

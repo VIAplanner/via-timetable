@@ -20,9 +20,10 @@
         ></v-checkbox>
         <v-checkbox
           v-model="deliveryMethod"
-          value="InPerson"
-          label="prefer in-person"
-          append-icon="mdi-teach"
+          v-model='deliveryMethod'
+          value='InPerson'
+          label='prefer in-person'
+          append-icon='mdi-teach'
           @change="setDeliveryMethod('InPerson')"
         ></v-checkbox>
         <v-checkbox
@@ -33,8 +34,21 @@
           @change="setDeliveryMethod('Mixed')"
         ></v-checkbox>
       </v-container>
-      <v-card-actions style="justify-content: center">
-        <v-btn text dark style="background-color: #2196F3" @click="regen">
+      <v-card-subtitle style='text-align: center; font-size: 18px'>
+        Conflicts
+      </v-card-subtitle>
+      <v-divider />
+      <v-container>
+        <v-checkbox
+          v-model='globalAllowConflicts'
+          :value=true
+          label='allow conflicts by default'
+          append-icon='mdi-book-multiple'
+          @change="toggleAllowConflicts()"
+        ></v-checkbox>
+      </v-container>
+      <v-card-actions style='justify-content: center'>
+        <v-btn text dark style='background-color: #2196F3' @click='regen'>
           Re-generate Timetables
         </v-btn>
       </v-card-actions>
@@ -49,14 +63,20 @@ export default {
     return {
       deliveryMethod: 'Mixed',
       menu: false,
+      globalAllowConflicts: false,
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['getGlobalAllowConflicts']),
+  },
   methods: {
-    ...mapMutations(['setPreferredDeliveryMethod']),
+    ...mapMutations(['setPreferredDeliveryMethod', 'setGlobalAllowConflicts']),
     ...mapActions(['resetTimetable']),
     setDeliveryMethod(method) {
       this.setPreferredDeliveryMethod(method);
+    },
+    toggleAllowConflicts() {
+      this.setGlobalAllowConflicts(!!this.globalAllowConflicts);
     },
     regen() {
       this.menu = false;
