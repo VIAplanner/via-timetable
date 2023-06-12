@@ -20,7 +20,6 @@
         ></v-checkbox>
         <v-checkbox
           v-model="deliveryMethod"
-          v-model='deliveryMethod'
           value='InPerson'
           label='prefer in-person'
           append-icon='mdi-teach'
@@ -56,7 +55,7 @@
   </v-menu>
 </template>
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
