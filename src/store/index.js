@@ -134,6 +134,7 @@ export default new Vuex.Store({
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
+    globalAllowConflicts: false,
   },
   mutations: {
     setExportOverlay(state, payload) {
@@ -180,6 +181,9 @@ export default new Vuex.Store({
       state.overwriteLockedSectionPopup = payload;
     },
     addCourse(state, payload) {
+      if(state.globalAllowConflicts){
+        state.allowedConflictCourses.push({code:payload.course.courseCode});
+      }
       if (payload.course.courseCode.slice(0, 4) === 'Lock') {
         const whichDay = payload.course.meeting_sections[0].times[0].day;
 
@@ -335,6 +339,9 @@ export default new Vuex.Store({
     },
     setPreferredDeliveryMethod(state, payload) {
       state.deliveryMethod = payload;
+    },
+    setGlobalAllowConflicts(state, payload) {
+      state.globalAllowConflicts = payload;
     },
   },
   actions: {
@@ -529,7 +536,7 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
-        context.state.allowedConflictCourses
+        context.state.allowedConflictCourses,
       );
 
       context.dispatch('validateTimetable', timetables);
@@ -628,7 +635,7 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
-        context.state.allowedConflictCourses
+        context.state.allowedConflictCourses,
       );
 
       context.dispatch('validateTimetable', bothTimetables);
@@ -707,9 +714,9 @@ export default new Vuex.Store({
       }
     },
     isConflictedCourse: state => courseCode =>
-        state.allowedConflictCourses.findIndex(
-          curCourse => curCourse.code === courseCode,
-        ) !== -1,
+      state.allowedConflictCourses.findIndex(
+        curCourse => curCourse.code === courseCode,
+      ) !== -1,
     fallSelectedCourses: state => state.fallSelectedCourses,
     winterSelectedCourses: state => state.winterSelectedCourses,
     getLockedSections: state => {
@@ -750,5 +757,6 @@ export default new Vuex.Store({
     getFallLockedDayStatus: state => state.fallLockedDayStatus,
     getWinterLockedDayStatus: state => state.winterLockedDayStatus,
     getClearStorage: state => state.clearStorage,
+    getGlobalAllowConflicts: state => state.globalAllowConflicts,
   },
 });
