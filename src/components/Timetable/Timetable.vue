@@ -325,10 +325,6 @@ export default {
   padding: 0px !important;
 }
 
-/*.background {*/
-/*  background-color: white;*/
-/*}*/
-
 .container {
   padding-left: 24px !important;
   padding-right: 70px !important;
