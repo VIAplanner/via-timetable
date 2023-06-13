@@ -19,6 +19,7 @@
     <tutorial-btn></tutorial-btn>
     <export-btn></export-btn>
     <import-btn></import-btn>
+    <url-btn/>
   </v-speed-dial>
 </template>
 
@@ -29,6 +30,7 @@ import ExportBtn from './ExportBtn.vue';
 import ImportBtn from './ImportBtn.vue';
 import ImageBtn from './ImageBtn.vue';
 import ExportCalendarBtn from './ExportCalendarBtn.vue';
+import UrlBtn from './UrlBtn.vue';
 
 export default {
   components: {
@@ -37,7 +39,8 @@ export default {
     ExportBtn,
     ExportCalendarBtn,
     ImportBtn,
-    ImageBtn
+    ImageBtn,
+    UrlBtn
   },
   data() {
     return {

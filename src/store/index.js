@@ -149,11 +149,13 @@ export default new Vuex.Store({
     },
     semesterStatus: 'F',
     noTimetablePopup: false,
+    shareLinkPopup: false,
+    shareLink:'',
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
     globalAllowConflicts: false,
-    history: !localStorage.history ? [] : JSON.parse(localStorage.history),
+    history:  [],
     // index is reversed, 0 is the latest, 1 is the second latest etc...
     historyIndex: 0,
   },
@@ -197,6 +199,12 @@ export default new Vuex.Store({
     },
     setNoTimetablePopup(state, payload) {
       state.noTimetablePopup = payload;
+    },
+    setShareLinkPopup(state, payload) {
+      state.shareLinkPopup = payload;
+    },
+    setShareLink(state, payload) {
+      state.shareLink = payload;
     },
     setOverwriteLockedSectionPopup(state, payload) {
       state.overwriteLockedSectionPopup = payload;
@@ -754,6 +762,8 @@ export default new Vuex.Store({
     getSerializedState: state => state.history[state.history.length - 1 + state.historyIndex],
     getExportOverlay: state => state.exportOverlay,
     getNoTimetablePopup: state => state.noTimetablePopup,
+    getShareLinkPopup: state => state.shareLinkPopup,
+    getShareLink: state => state.shareLink,
     getOverwriteLockedSectionPopup: state => state.overwriteLockedSectionPopup,
     getTutorialPopup(state) {
       return state.tutorialPopup;
@@ -824,5 +834,6 @@ export default new Vuex.Store({
     getWinterLockedDayStatus: state => state.winterLockedDayStatus,
     getClearStorage: state => state.clearStorage,
     getGlobalAllowConflicts: state => state.globalAllowConflicts,
+    getHistoryLength: state => state.history.length,
   },
 });
