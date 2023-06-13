@@ -370,8 +370,7 @@ export default new Vuex.Store({
     setPreferredDeliveryMethod(state, payload) {
       state.deliveryMethod = payload;
     },
-    setGlobalAllowConflicts(state, payload)
-    {
+    setGlobalAllowConflicts(state, payload) {
       state.globalAllowConflicts = payload;
     },
     addHistory(state, payload) {
