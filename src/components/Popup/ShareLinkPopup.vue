@@ -12,7 +12,7 @@
       </v-card-title>
       <v-card-text class='text--primary'>
         <div class='textStyle'>
-          Here is your sharable link. You can share this link with your friends
+          You can share this link with your friends
           and it will be saved for the next 90 days.<br>
           <v-tooltip :value='showTooltip' top>
             <template v-slot:activator='{ on, attrs }'>
