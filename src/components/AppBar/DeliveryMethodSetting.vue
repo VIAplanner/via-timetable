@@ -42,7 +42,7 @@
           v-model='globalAllowConflicts'
           :value=true
           label='allow conflicts by default'
-          append-icon='mdi-book-multiple'
+          append-icon='mdi-calendar-alert'
           @change="toggleAllowConflicts()"
         ></v-checkbox>
       </v-container>
