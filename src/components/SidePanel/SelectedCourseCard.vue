@@ -28,7 +28,7 @@
           </v-btn>
         </template>
         <span>
-        Allow conflicts with this course
+        {{isConflict ? 'Conflicts are allowed with this course' : "Conflicts are not allowed with this course"}}
       </span>
       </v-tooltip>
       <v-dialog v-model='dialog' scrollable width='825px' @input='atInput'>
