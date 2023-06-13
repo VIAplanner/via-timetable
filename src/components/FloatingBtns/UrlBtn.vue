@@ -18,7 +18,7 @@
       <span>Share timetable as a url</span>
     </v-tooltip>
     <v-btn v-else fab dark small color="green">
-      <v-icon>share-variant</v-icon>
+      <v-icon>mdi-share-variant</v-icon>
     </v-btn>
   </div>
 </template>
