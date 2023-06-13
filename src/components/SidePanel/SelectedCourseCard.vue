@@ -23,35 +23,52 @@
           <v-btn v-bind='attrs' v-on='on' icon @click.native.stop
                  @click='addOrRemoveConflictCourse({code: course.courseCode } )'
                  color='#474747' max-width='40' max-height='40'>
-            <v-icon v-if='isConflict'>mdi-book-multiple</v-icon>
-            <v-icon v-else>mdi-book-variant</v-icon>
+            <v-icon v-if='isConflict'>mdi-calendar-alert</v-icon>
+            <v-icon v-else>mdi-calendar-check</v-icon>
           </v-btn>
         </template>
         <span>
-        Allow conflicts with this course
+        {{isConflict ? 'Conflicts are allowed with this course' : "Conflicts are not allowed with this course"}}
       </span>
       </v-tooltip>
-      <v-dialog v-model='dialog' scrollable width='825px' @input='atInput'>
-        <template v-slot:activator='{ on }'>
-          <v-btn icon v-on='on' color='#474747' max-width='40' max-height='40'>
-            <v-icon>mdi-pencil-box-outline</v-icon>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn icon v-bind='attrs'
+                 v-on='on' color='#474747' max-width='40'
+                 max-height='40'>
+            <v-dialog v-model='dialog' scrollable width='825px'
+                      @input='atInput'>
+              <template v-slot:activator='{ on }'>
+
+                <v-icon v-on='on'>mdi-pencil-box-outline</v-icon>
+
+              </template>
+              <course-section-picker
+                v-on:done='dialog = false'
+                :code='course.courseCode'
+                ref='popUp'
+              />
+            </v-dialog>
           </v-btn>
         </template>
-        <course-section-picker
-          v-on:done="dialog = false"
-          :code="course.courseCode"
-          ref="popUp"
-        />
-      </v-dialog>
-      <v-btn
-        color="#474747"
-        @click="deleteCourse({ code: course.courseCode })"
-        max-width="40"
-        max-height="40"
-        icon
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+        <span>Edit timeslots</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn
+            color='#474747'
+            @click='deleteCourse({ code: course.courseCode })'
+            max-width='40'
+            max-height='40'
+            icon
+            v-bind='attrs'
+            v-on='on'
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove course</span>
+      </v-tooltip>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <hr class="mb-1" />
