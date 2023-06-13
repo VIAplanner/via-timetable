@@ -11,9 +11,12 @@
   max-width: 100%;
   overflow: hidden;
 }
- .theme--dark>* {
+
+.theme--dark.v-application {
+  * {
     color: #fffffaaa !important;
   }
+}
 
 
 

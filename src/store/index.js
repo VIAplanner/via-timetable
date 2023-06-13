@@ -28,6 +28,14 @@ const saveState = (state) => {
       allowedConflictCourses: state.allowedConflictCourses,
     }))
 }
+const regenerateColors = (state) => {
+  Object.values(state.fallSelectedCourses).forEach((course) => {
+    course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+  });
+  Object.values(state.winterSelectedCourses).forEach((course) => {
+    course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+  });
+};
 export default new Vuex.Store({
   state: {
     darkMode: false,
@@ -168,12 +176,7 @@ export default new Vuex.Store({
     setDarkMode(state, payload) {
       state.darkMode = payload;
       localStorage.darkMode = payload;
-      Object.values(state.fallSelectedCourses).forEach((course) => {
-        course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
-      });
-      Object.values(state.winterSelectedCourses).forEach((course) => {
-        course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
-      });
+      regenerateColors(state);
     },
     setExportOverlay(state, payload) {
       state.exportOverlay = payload;
@@ -405,6 +408,7 @@ export default new Vuex.Store({
       state.deliveryMethod = newState.deliveryMethod;
       state.allowedConflictCourses = newState.allowedConflictCourses;
       state.searchBarValue = '';
+      regenerateColors(state);
     },
     undo(state) {
       state.historyIndex -= 1;

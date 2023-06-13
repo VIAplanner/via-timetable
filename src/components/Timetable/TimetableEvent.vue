@@ -12,7 +12,8 @@
               background: getCourseColor(event.code),
               marginTop: getMarginTop,
               marginBot: getMarginBot,
-              height: getHeight
+              height: getHeight,
+              color: $vuetify.theme.dark ? 'inherit' : 'white'
             }"
           >
             <h4 class="pb-2">{{ event.code }}</h4>
@@ -294,7 +295,6 @@ export default {
 }
 .event {
   border: 1px solid gray;
-  color: #ffffffaa;
   padding: 8px;
   padding-top: 3px;
   position: relative;
