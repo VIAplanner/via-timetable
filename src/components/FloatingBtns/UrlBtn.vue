@@ -12,7 +12,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          <v-icon>share-variant</v-icon>
+          <v-icon>mdi-share-variant</v-icon>
         </v-btn>
       </template>
       <span>Share timetable as a url</span>
