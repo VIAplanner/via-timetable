@@ -33,22 +33,23 @@
       </v-tooltip>
       <v-tooltip top>
         <template v-slot:activator='{ on, attrs }'>
-                  <span style='max-width: 40px;max-height: 40px' v-bind='attrs'
-                        v-on='on'>
-                  <v-dialog v-model='dialog' scrollable width='825px'
-                            @input='atInput'>
-                    <template v-slot:activator='{ on }'>
-                      <v-btn icon v-on='on' color='#474747' max-width='40'
-                             max-height='40'>
-                        <v-icon>mdi-pencil-box-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <course-section-picker
-                      v-on:done='dialog = false'
-                      :code='course.courseCode'
-                      ref='popUp'
-                    />
-                  </v-dialog></span>
+          <v-btn icon v-bind='attrs'
+                 v-on='on' color='#474747' max-width='40'
+                 max-height='40'>
+            <v-dialog v-model='dialog' scrollable width='825px'
+                      @input='atInput'>
+              <template v-slot:activator='{ on }'>
+
+                <v-icon v-on='on'>mdi-pencil-box-outline</v-icon>
+
+              </template>
+              <course-section-picker
+                v-on:done='dialog = false'
+                :code='course.courseCode'
+                ref='popUp'
+              />
+            </v-dialog>
+          </v-btn>
         </template>
         <span>Edit timeslots</span>
       </v-tooltip>
