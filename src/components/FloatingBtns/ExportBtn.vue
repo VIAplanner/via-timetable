@@ -12,13 +12,13 @@
           v-bind="attrs"
           v-on="on"
         >
-          <v-icon>mdi-image</v-icon>
+          <v-icon>mdi-download</v-icon>
         </v-btn>
       </template>
-      <span>Export Timetable as a PNG</span>
+      <span>Export Timetable as Image</span>
     </v-tooltip>
     <v-btn v-else fab dark small color="green">
-      <v-icon>mdi-image</v-icon>
+      <v-icon>mdi-download</v-icon>
     </v-btn>
   </div>
 </template>

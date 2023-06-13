@@ -49,7 +49,6 @@ export default {
       'saveTimetable',
       'resetTimetable',
       'saveLockedHourStatus',
-      'saveState'
     ]),
     ...mapMutations(['lockSection', 'setLockedHourStatus', 'addCourse']),
     currSecData(weekday) {
@@ -159,7 +158,6 @@ export default {
           }
         }
       }
-      this.saveState()
     },
     validLockSection(weekday) {
       for (const course of this.courseAtTheHour()) {
