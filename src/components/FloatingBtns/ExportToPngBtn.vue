@@ -15,7 +15,7 @@
           <v-icon>mdi-image</v-icon>
         </v-btn>
       </template>
-      <span>Export Timetable as Image</span>
+      <span>Export Timetable as a PNG</span>
     </v-tooltip>
     <v-btn v-else fab dark small color="green">
       <v-icon>mdi-image</v-icon>
