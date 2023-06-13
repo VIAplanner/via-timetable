@@ -78,18 +78,6 @@
             </v-btn>
           </template>
         </v-snackbar>
-<!--        <v-btn-->
-<!--          fab-->
-<!--          dark-->
-<!--          bottom-->
-<!--          right-->
-<!--          fixed-->
-<!--          color="primary"-->
-<!--          @click="darkMode = !darkMode"-->
-<!--        >-->
-<!--          <v-icon v-if="darkMode" dark>mdi-brightness-4</v-icon>-->
-<!--          <v-icon v-else dark>mdi-brightness-6</v-icon>-->
-<!--        </v-btn>-->
         <v-row>
           <v-col class="pa-0">
             <v-img
