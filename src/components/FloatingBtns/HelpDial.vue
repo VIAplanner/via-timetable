@@ -14,10 +14,10 @@
       </v-btn>
     </template>
     <export-calendar-btn></export-calendar-btn>
-    <image-btn></image-btn>
+    <export-to-png-btn></export-to-png-btn>
     <about-btn></about-btn>
     <tutorial-btn></tutorial-btn>
-    <export-btn></export-btn>
+    <export-to-json-btn></export-to-json-btn>
     <import-btn></import-btn>
     <url-btn/>
   </v-speed-dial>
@@ -26,9 +26,9 @@
 <script>
 import TutorialBtn from './TutorialBtn.vue';
 import AboutBtn from './AboutBtn.vue';
-import ExportBtn from './ExportBtn.vue';
+import ExportToJsonBtn from './ExportToJsonBtn.vue';
 import ImportBtn from './ImportBtn.vue';
-import ImageBtn from './ImageBtn.vue';
+import ExportToPngBtn from './ExportToPngBtn.vue';
 import ExportCalendarBtn from './ExportCalendarBtn.vue';
 import UrlBtn from './UrlBtn.vue';
 
@@ -36,10 +36,10 @@ export default {
   components: {
     TutorialBtn,
     AboutBtn,
-    ExportBtn,
+    ExportToJsonBtn,
     ExportCalendarBtn,
     ImportBtn,
-    ImageBtn,
+    ExportToPngBtn,
     UrlBtn
   },
   data() {
