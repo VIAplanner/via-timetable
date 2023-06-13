@@ -6,11 +6,25 @@
   </v-app>
 </template>
 
-<style>
+<style lang='scss'>
 #app {
   max-width: 100%;
   overflow: hidden;
 }
+ .theme--dark>* {
+    color: #fffffaaa !important;
+
+   //&::after, &::before {
+   //  content: " ";
+   //  width: 1em;
+   //  height: 1em;
+   //  display: block;
+   //  background-image: url("");
+   //}
+  }
+
+
+
 .v-toolbar__content,
 .v-toolbar__extension {
   padding-left: 10px !important;

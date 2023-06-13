@@ -43,7 +43,8 @@
             </v-row>
           </v-footer>
         </v-col>
-        <v-col cols="3" class="grey lighten-4 mr-2">
+        <v-col cols='3' :class='$vuetify.theme.dark ? "darken-4": "lighten-4"'
+               class='grey mr-2'>
           <side-bar />
         </v-col>
       </v-row>
