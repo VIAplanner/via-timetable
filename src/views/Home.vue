@@ -7,7 +7,6 @@
       <v-overlay :value="getExportOverlay">
         <v-row>
           <h1 class="ma-3">Exporting</h1>
-          <h1 class='ma-3'>Exporting</h1>
         </v-row>
         <v-row justify="center">
           <v-progress-circular
@@ -25,12 +24,6 @@
           contain
           class="ma-2 ml-1"
         />
-        <v-btn icon @click='undo()'>
-          <v-icon>mdi-undo</v-icon>
-        </v-btn>
-        <v-btn icon @click='redo()'>
-          <v-icon>mdi-redo</v-icon>
-        </v-btn>
         <course-search-bar style="margin: auto" />
         <switch-sem style="margin: auto" />
         <delivery-method-setting />
@@ -58,13 +51,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import CourseSearchBar from '../components/AppBar/CourseSearchBar.vue';
 import Tutorial from '../components/Popup/Tutorial.vue';
 import SwitchSem from '../components/AppBar/SwitchSem.vue';
 import SideBar from '../components/SidePanel/SideBar.vue';
-import DeliveryMethodSetting
-  from '../components/AppBar/DeliveryMethodSetting.vue';
+import DeliveryMethodSetting from '../components/AppBar/DeliveryMethodSetting.vue';
 
 export default {
   components: {
@@ -73,19 +65,6 @@ export default {
     Tutorial,
     SideBar,
     DeliveryMethodSetting,
-  },
-  async beforeCreate() {
-    if (this.$route.query.timetable) {
-      try {
-        const res = await fetch(`https://api.mclo.gs/1/raw/${this.$route.query.timetable}`);
-        const data = await res.text();
-        ;
-        this.loadState(data);
-      } catch (err) {
-        console.log(err);
-        console.log('Error loading timetable');
-      }
-    }
   },
   data() {
     return {
@@ -113,7 +92,6 @@ export default {
       'getFallLockedHourStatus',
       'getWinterLockedHourStatus',
       'getClearStorage',
-      'getHistoryLength',
     ]),
   },
   created() {
@@ -127,17 +105,11 @@ export default {
     } else {
       window.addEventListener('beforeunload', this.saveData);
     }
-    this.saveState();
   },
   methods: {
-    ...mapActions(['clearStorage', 'undo', 'redo', 'saveState']),
-    ...mapMutations(['loadState']),
+    ...mapActions(['clearStorage']),
     // save the timetable data in the browser
     saveData() {
-      window.open(`https://api.mclo.gs/1/raw/${this.$route.query.timetable}`);
-      if (this.getHistoryLength <= 1) {
-        return;
-      }
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
       localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
       localStorage.fallSelectedCourses = JSON.stringify(
