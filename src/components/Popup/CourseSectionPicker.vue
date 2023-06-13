@@ -251,7 +251,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['switchSection', 'resetTimetable', 'deleteCourse']),
+    ...mapActions(['switchSection', 'resetTimetable', 'deleteCourse', 'saveState']),
     ...mapMutations([
       'lockSection',
       'unlockSection',
@@ -382,6 +382,7 @@ export default {
     },
     onClickDone() {
       this.updateTimetable();
+      this.saveState()
       this.$emit('done');
     },
     updateTimetable() {

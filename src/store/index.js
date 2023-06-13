@@ -9,6 +9,25 @@ const darkSaturation = 0.4;
 const darkLightness = 0.3;
 const lightSaturation = 0.8;
 const lightLightness = 0.85;
+const addHistory = (state, history) => {
+    if (state.historyIndex !== 0) {
+      state.history = state.history.slice(0, state.history.length + state.historyIndex);
+      state.historyIndex = 0;
+    }
+    state.history.push(history);
+}
+const saveState = (state) => {
+  addHistory(state, JSON.stringify({
+      fallSelectedCourses: state.fallSelectedCourses,
+      winterSelectedCourses: state.winterSelectedCourses,
+      fallTimetable: state.fallTimetable,
+      winterTimetable: state.winterTimetable,
+      fallLockedSections: state.fallLockedSections,
+      winterLockedSections: state.winterLockedSections,
+      deliveryMethod: state.deliveryMethod,
+      allowedConflictCourses: state.allowedConflictCourses,
+    }))
+}
 export default new Vuex.Store({
   state: {
     darkMode: false,
@@ -135,10 +154,15 @@ export default new Vuex.Store({
     },
     semesterStatus: 'F',
     noTimetablePopup: false,
+    shareLinkPopup: false,
+    shareLink:'',
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
     globalAllowConflicts: false,
+    history:  [],
+    // index is reversed, 0 is the latest, 1 is the second latest etc...
+    historyIndex: 0,
   },
   mutations: {
     setDarkMode(state, payload) {
@@ -189,6 +213,12 @@ export default new Vuex.Store({
     },
     setNoTimetablePopup(state, payload) {
       state.noTimetablePopup = payload;
+    },
+    setShareLinkPopup(state, payload) {
+      state.shareLinkPopup = payload;
+    },
+    setShareLink(state, payload) {
+      state.shareLink = payload;
     },
     setOverwriteLockedSectionPopup(state, payload) {
       state.overwriteLockedSectionPopup = payload;
@@ -312,6 +342,7 @@ export default new Vuex.Store({
           state.winterLockedSections.push(payload);
         }
       }
+      saveState(state)
     },
     unlockSection(state, payload) {
       let index;
@@ -355,6 +386,30 @@ export default new Vuex.Store({
     },
     setGlobalAllowConflicts(state, payload) {
       state.globalAllowConflicts = payload;
+    },
+    addHistory(state, payload) {
+      addHistory(state, payload);
+    },
+    saveState(state){
+      saveState(state)
+    },
+    loadState(state, payload) {
+      const newState = JSON.parse(payload);
+      state.fallSelectedCourses = newState.fallSelectedCourses;
+      state.winterSelectedCourses = newState.winterSelectedCourses;
+      state.fallTimetable = newState.fallTimetable;
+      state.winterTimetable = newState.winterTimetable;
+      state.fallLockedSections = newState.fallLockedSections;
+      state.winterLockedSections = newState.winterLockedSections;
+      state.deliveryMethod = newState.deliveryMethod;
+      state.allowedConflictCourses = newState.allowedConflictCourses;
+      state.searchBarValue = '';
+    },
+    undo(state) {
+      state.historyIndex -= 1;
+    },
+    redo(state) {
+      state.historyIndex += 1;
     },
   },
   actions: {
@@ -553,6 +608,7 @@ export default new Vuex.Store({
       );
 
       context.dispatch('validateTimetable', timetables);
+      context.dispatch('saveState');
     },
     deleteCourse(context, payload) {
       // resets search bar value if the deleted course is the last searched course
@@ -628,6 +684,7 @@ export default new Vuex.Store({
           }
         }
       }
+      context.dispatch('saveState');
     },
     // Recalculate timetable when switching sections with conflict
     resetTimetable(context, payload) {
@@ -696,11 +753,30 @@ export default new Vuex.Store({
         }
       }
     },
+    saveState({commit}) {
+      commit('saveState');
+    },
+    undo(context) {
+      if (context.state.history.length - 1 + context.state.historyIndex > 0) {
+        context.commit('undo');
+        context.commit('loadState', context.state.history[context.state.history.length - 1 + context.state.historyIndex])
+      }
+    },
+    redo(context) {
+      if (context.state.historyIndex < 0) {
+        const state=  context.state.history[context.state.history.length + context.state.historyIndex]
+        context.commit('redo');
+        context.commit('loadState',state )
+      }
+    },
   },
   modules: {},
   getters: {
+    getSerializedState: state => state.history[state.history.length - 1 + state.historyIndex],
     getExportOverlay: state => state.exportOverlay,
     getNoTimetablePopup: state => state.noTimetablePopup,
+    getShareLinkPopup: state => state.shareLinkPopup,
+    getShareLink: state => state.shareLink,
     getOverwriteLockedSectionPopup: state => state.overwriteLockedSectionPopup,
     getTutorialPopup(state) {
       return state.tutorialPopup;
@@ -771,5 +847,6 @@ export default new Vuex.Store({
     getWinterLockedDayStatus: state => state.winterLockedDayStatus,
     getClearStorage: state => state.clearStorage,
     getGlobalAllowConflicts: state => state.globalAllowConflicts,
+    getHistoryLength: state => state.history.length,
   },
 });
