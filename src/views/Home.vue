@@ -26,12 +26,13 @@
         />
         <course-search-bar style="margin: auto" />
         <switch-sem style="margin: auto" />
+        <change-theme style="margin: auto"/>
         <delivery-method-setting />
       </v-toolbar>
       <v-row>
         <v-col class="pa-0">
           <router-view />
-          <v-footer class="white">
+          <v-footer style='background:none'>
             <v-row>
               <v-col class="pa-0">
                 <h1 style="text-align:center" class="text-subtitle-1">
@@ -57,9 +58,11 @@ import Tutorial from '../components/Popup/Tutorial.vue';
 import SwitchSem from '../components/AppBar/SwitchSem.vue';
 import SideBar from '../components/SidePanel/SideBar.vue';
 import DeliveryMethodSetting from '../components/AppBar/DeliveryMethodSetting.vue';
+import ChangeTheme from '../components/AppBar/ChangeTheme.vue';
 
 export default {
   components: {
+    ChangeTheme,
     SwitchSem,
     CourseSearchBar,
     Tutorial,
