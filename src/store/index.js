@@ -5,6 +5,10 @@ import { generateTimetables } from '../timetable-planner/index2';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
+const darkSaturation = 0.4;
+const darkLightness = 0.3;
+const lightSaturation = 0.8;
+const lightLightness = 0.85;
 const addHistory = (state, history) => {
     if (state.historyIndex !== 0) {
       state.history = state.history.slice(0, state.history.length + state.historyIndex);
@@ -26,6 +30,7 @@ const saveState = (state) => {
 }
 export default new Vuex.Store({
   state: {
+    darkMode: false,
     // change this number to clear storage
     clearStorage: '2',
     allowedConflictCourses: !localStorage.allowedConflictCourses
@@ -160,6 +165,15 @@ export default new Vuex.Store({
     historyIndex: 0,
   },
   mutations: {
+    setDarkMode(state, payload) {
+      state.darkMode = payload;
+      Object.values(state.fallSelectedCourses).forEach((course) => {
+        course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+      });
+      Object.values(state.winterSelectedCourses).forEach((course) => {
+        course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+      });
+    },
     setExportOverlay(state, payload) {
       state.exportOverlay = payload;
     },
@@ -548,7 +562,7 @@ export default new Vuex.Store({
       }
 
       // generate a color
-      const color = genColor(0.7, 0.85).hexString();
+      const color = genColor(context.state.darkMode ? darkSaturation : lightSaturation, context.state.darkMode ? darkLightness : lightLightness).hexString();
       // let currSemCourses
 
       // if (context.state.semesterStatus === "F") {

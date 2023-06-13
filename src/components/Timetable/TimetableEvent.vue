@@ -80,7 +80,7 @@
       <div v-if="hovered">
         <v-row>
           <v-col>
-            <p class="center unselectable">{{ dynamicText }}</p>
+            <p class="center unselectable" :style='`color:${this.$vuetify.theme.dark? "#ffffffaa" : "black"}`'>{{ dynamicText }}</p>
           </v-col>
         </v-row>
       </div>
@@ -169,10 +169,12 @@ export default {
     },
     // change the color in the event so it correct based on hovering or locked
     dynamicColor() {
+      const lockedColor = this.$vuetify.theme.dark ? '#212121' : '#d9d9d9';
+      const background = this.$vuetify.theme.dark ? '#2C2C2C' : 'white';
       if (this.locked) {
-        return '#d9d9d9';
+        return lockedColor;
       } else {
-        return this.hovered ? '#d9d9d9' : 'white';
+        return this.hovered ? lockedColor : background;
       }
     },
     // stores the info of the current section
@@ -287,13 +289,12 @@ export default {
   user-select: none;
 }
 .center {
-  color: black;
   text-align: center;
   padding-top: 8px !important;
 }
 .event {
   border: 1px solid gray;
-  color: white;
+  color: #ffffffaa;
   padding: 8px;
   padding-top: 3px;
   position: relative;

@@ -15,14 +15,14 @@
       >
         <p></p>
       </div>
-      <div style="color: #474747">
+      <div :style='`color: ${$vuetify.theme.dark ? "" :"#474747"}}`'>
         <h3>{{ course.courseCode }}</h3>
       </div>
       <v-tooltip top>
         <template v-slot:activator='{ on, attrs }'>
           <v-btn v-bind='attrs' v-on='on' icon @click.native.stop
                  @click='addOrRemoveConflictCourse({code: course.courseCode } )'
-                 color='#474747' max-width='40' max-height='40'>
+                 :color='$vuetify.theme.dark ? "" :"#474747"' max-width='40' max-height='40'>
             <v-icon v-if='isConflict'>mdi-calendar-alert</v-icon>
             <v-icon v-else>mdi-calendar-check</v-icon>
           </v-btn>
