@@ -13,14 +13,6 @@
 }
  .theme--dark>* {
     color: #fffffaaa !important;
-
-   //&::after, &::before {
-   //  content: " ";
-   //  width: 1em;
-   //  height: 1em;
-   //  display: block;
-   //  background-image: url("");
-   //}
   }
 
 
