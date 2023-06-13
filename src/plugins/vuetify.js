@@ -16,11 +16,5 @@ export default new Vuetify({
         warning: '#FFC107',
       },
     },
-    options: {
-      themeCache: {
-        get: key => localStorage.getItem(key),
-        set: (key, value) => localStorage.setItem(key, value),
-      },
-    },
   },
 });
