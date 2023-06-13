@@ -121,6 +121,9 @@ export default {
     ]),
   },
   created() {
+    if (localStorage.darkMode) {
+      this.$vuetify.theme.dark = true;
+    }
     if (localStorage.clearStorage !== this.getClearStorage) {
       localStorage.clear();
       this.clearStorage();

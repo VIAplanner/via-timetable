@@ -167,6 +167,7 @@ export default new Vuex.Store({
   mutations: {
     setDarkMode(state, payload) {
       state.darkMode = payload;
+      localStorage.darkMode = payload;
       Object.values(state.fallSelectedCourses).forEach((course) => {
         course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
       });
