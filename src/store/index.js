@@ -371,9 +371,9 @@ export default new Vuex.Store({
       state.deliveryMethod = payload;
     },
     setGlobalAllowConflicts(state, payload)
-{
-  state.globalAllowConflicts = payload;
-},
+    {
+      state.globalAllowConflicts = payload;
+    },
     addHistory(state, payload) {
       addHistory(state, payload);
     },
