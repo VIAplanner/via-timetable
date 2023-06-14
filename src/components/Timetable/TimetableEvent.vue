@@ -71,14 +71,13 @@
     />
     <div
       v-else
-      v-ripple
       class="event empty-event"
       :style="{ height: getHeight, background: dynamicColor }"
       @mouseover="hovered = true"
       @mouseleave="hovered = false"
-      @click.stop="lockedSectionToggle"
     >
-      <div v-if="hovered">
+      <div v-if='hovered' style='margin: 0;padding: 0;height: 100%;display:flex'
+           @click='lockedSectionToggle' v-ripple>
         <v-row>
           <v-col>
             <p class="center unselectable" :style='`color:${this.$vuetify.theme.dark? "#ffffffaa" : "black"}`'>{{ dynamicText }}</p>
@@ -291,12 +290,10 @@ export default {
 }
 .center {
   text-align: center;
-  padding-top: 8px !important;
 }
 .event {
   border: 1px solid gray;
-  padding: 8px;
-  padding-top: 3px;
+  color: white;
   position: relative;
   cursor: pointer;
   font-size: small;
