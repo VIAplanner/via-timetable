@@ -18,6 +18,7 @@
   }
 }
 
+// Make sure text input boxes is visible on dark theme
 .theme--dark.v-text-field--solo-inverted.v-input--is-focused > .v-input__control > .v-input__slot input {
     color: rgba(0, 0, 0, 0.87)!important;
 }
