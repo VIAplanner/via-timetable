@@ -38,7 +38,7 @@ const regenerateColors = (state) => {
 };
 export default new Vuex.Store({
   state: {
-    darkMode: false,
+    darkMode: localStorage.darkMode === 'true',
     // change this number to clear storage
     clearStorage: '2',
     allowedConflictCourses: !localStorage.allowedConflictCourses
@@ -416,6 +416,9 @@ export default new Vuex.Store({
     redo(state) {
       state.historyIndex += 1;
     },
+    regenerateColors(state) {
+      regenerateColors(state);
+    }
   },
   actions: {
     clearStorage(context) {

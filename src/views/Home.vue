@@ -121,7 +121,7 @@ export default {
     ]),
   },
   created() {
-    if (localStorage.darkMode) {
+    if (localStorage.darkMode === 'true') {
       this.$vuetify.theme.dark = true;
     }
     if (localStorage.clearStorage !== this.getClearStorage) {
@@ -134,11 +134,12 @@ export default {
     } else {
       window.addEventListener('beforeunload', this.saveData);
     }
+    this.regenerateColors();
     this.saveState();
   },
   methods: {
     ...mapActions(['clearStorage', 'undo', 'redo', 'saveState']),
-    ...mapMutations(['loadState']),
+    ...mapMutations(['loadState', 'regenerateColors']),
     // save the timetable data in the browser
     saveData() {
       window.open(`https://api.mclo.gs/1/raw/${this.$route.query.timetable}`);
