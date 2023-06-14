@@ -18,7 +18,9 @@
   }
 }
 
-
+.theme--dark.v-text-field--solo-inverted.v-input--is-focused > .v-input__control > .v-input__slot input {
+    color: rgba(0, 0, 0, 0.87)!important;
+}
 
 .v-toolbar__content,
 .v-toolbar__extension {

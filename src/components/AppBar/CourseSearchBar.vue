@@ -12,6 +12,7 @@
     :loading="loading"
     :autofocus="false"
     solo-inverted
+    style='color:#5F5F5F'
   ></v-autocomplete>
 </template>
 
