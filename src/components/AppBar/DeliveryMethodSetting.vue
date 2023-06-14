@@ -5,7 +5,7 @@
         <v-icon>mdi-cog</v-icon>
       </v-btn>
     </template>
-    <v-card style="background-color: #f0f0f0" min-width="260px">
+    <v-card :style="{backgroundColor: $vuetify.theme.dark ? '#1E1E1E' : '#f0f0f0'}" min-width="260px">
       <v-card-subtitle style="text-align: center; font-size: 18px">
         Delivery Methods
       </v-card-subtitle>
