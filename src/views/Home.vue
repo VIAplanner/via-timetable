@@ -134,7 +134,6 @@ export default {
     } else {
       window.addEventListener('beforeunload', this.saveData);
     }
-    this.regenerateColors();
     this.saveState();
   },
   methods: {
@@ -142,10 +141,10 @@ export default {
     ...mapMutations(['loadState', 'regenerateColors']),
     // save the timetable data in the browser
     saveData() {
-      window.open(`https://api.mclo.gs/1/raw/${this.$route.query.timetable}`);
       if (this.getHistoryLength <= 1) {
         return;
       }
+      localStorage.darkMode = this.$vuetify.theme.dark;
       localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
       localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
       localStorage.fallSelectedCourses = JSON.stringify(

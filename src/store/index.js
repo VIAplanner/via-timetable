@@ -15,7 +15,7 @@ const addHistory = (state, history) => {
       state.historyIndex = 0;
     }
     state.history.push(history);
-}
+};
 const saveState = (state) => {
   addHistory(state, JSON.stringify({
       fallSelectedCourses: state.fallSelectedCourses,
@@ -26,8 +26,9 @@ const saveState = (state) => {
       winterLockedSections: state.winterLockedSections,
       deliveryMethod: state.deliveryMethod,
       allowedConflictCourses: state.allowedConflictCourses,
-    }))
-}
+      darkMode: state.darkMode,
+    }));
+};
 const regenerateColors = (state) => {
   Object.values(state.fallSelectedCourses).forEach((course) => {
     course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
@@ -175,8 +176,8 @@ export default new Vuex.Store({
   mutations: {
     setDarkMode(state, payload) {
       state.darkMode = payload;
-      localStorage.darkMode = payload;
       regenerateColors(state);
+      saveState(state);
     },
     setExportOverlay(state, payload) {
       state.exportOverlay = payload;
@@ -346,7 +347,7 @@ export default new Vuex.Store({
           state.winterLockedSections.push(payload);
         }
       }
-      saveState(state)
+      saveState(state);
     },
     unlockSection(state, payload) {
       let index;
@@ -395,7 +396,7 @@ export default new Vuex.Store({
       addHistory(state, payload);
     },
     saveState(state){
-      saveState(state)
+      saveState(state);
     },
     loadState(state, payload) {
       const newState = JSON.parse(payload);
@@ -408,7 +409,9 @@ export default new Vuex.Store({
       state.deliveryMethod = newState.deliveryMethod;
       state.allowedConflictCourses = newState.allowedConflictCourses;
       state.searchBarValue = '';
-      regenerateColors(state);
+      if(state.darkMode !== newState.darkMode) {
+        regenerateColors(state);
+      }
     },
     undo(state) {
       state.historyIndex -= 1;
@@ -418,7 +421,7 @@ export default new Vuex.Store({
     },
     regenerateColors(state) {
       regenerateColors(state);
-    }
+    },
   },
   actions: {
     clearStorage(context) {
@@ -767,14 +770,14 @@ export default new Vuex.Store({
     undo(context) {
       if (context.state.history.length - 1 + context.state.historyIndex > 0) {
         context.commit('undo');
-        context.commit('loadState', context.state.history[context.state.history.length - 1 + context.state.historyIndex])
+        context.commit('loadState', context.state.history[context.state.history.length - 1 + context.state.historyIndex]);
       }
     },
     redo(context) {
       if (context.state.historyIndex < 0) {
-        const state=  context.state.history[context.state.history.length + context.state.historyIndex]
+        const state=  context.state.history[context.state.history.length + context.state.historyIndex];
         context.commit('redo');
-        context.commit('loadState',state )
+        context.commit('loadState',state );
       }
     },
   },
