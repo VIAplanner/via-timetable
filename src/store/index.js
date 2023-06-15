@@ -859,5 +859,27 @@ export default new Vuex.Store({
     getClearStorage: state => state.clearStorage,
     getGlobalAllowConflicts: state => state.globalAllowConflicts,
     getHistoryLength: state => state.history.length,
+    getWarningSections: state => {
+      const timetable = state.semesterStatus === 'F' ? state.fallTimetable : state.winterTimetable;
+      const selected = state.semesterStatus === 'F' ? state.fallSelectedCourses : state.winterSelectedCourses;
+      const sections = new Set();
+      Object.values(timetable).forEach(arr =>{
+        arr.forEach(section => sections.add(`${section.code} ${section.sectionCode}`));
+      })
+      const warningSections = [];
+      console.log(sections)
+      sections.forEach(x=>{
+        console.log(x)
+        const splitted = x.split(' ');
+        console.log(selected[splitted[0]].meeting_sections.find(section => section.sectionCode === splitted[1]))
+        if (selected[splitted[0]].meeting_sections.find(section => section.sectionCode === splitted[1]).openLimitInd === 'C') {
+          warningSections.push(x);
+        }
+      })
+      return warningSections.map(x => {
+        const splitted = x.split(' ');
+        return { code: splitted[0], sectionCode: splitted[1] };
+      });
+    }
   },
 });
