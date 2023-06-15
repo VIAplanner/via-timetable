@@ -867,11 +867,8 @@ export default new Vuex.Store({
         arr.forEach(section => sections.add(`${section.code} ${section.sectionCode}`));
       })
       const warningSections = [];
-      console.log(sections)
       sections.forEach(x=>{
-        console.log(x)
         const splitted = x.split(' ');
-        console.log(selected[splitted[0]].meeting_sections.find(section => section.sectionCode === splitted[1]))
         if (selected[splitted[0]].meeting_sections.find(section => section.sectionCode === splitted[1]).openLimitInd === 'C') {
           warningSections.push(x);
         }
