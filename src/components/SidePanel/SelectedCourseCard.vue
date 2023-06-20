@@ -18,6 +18,7 @@
       <div :style='`color: ${$vuetify.theme.dark ? "" :"#474747"}}`'>
         <h3>{{ course.courseCode }}</h3>
       </div>
+      <warning v-if='warning.length > 0' warning-text='One of the selected section is not be open for enrollment at the moment, but might open in the future.'/>
       <v-tooltip top>
         <template v-slot:activator='{ on, attrs }'>
           <v-btn v-bind='attrs' v-on='on' icon @click.native.stop
@@ -77,6 +78,7 @@
           <v-row>
             <div style="font-size: 15px">
               {{ code }}
+              <warning v-if='warning.includes(code)' :warning-text='`Section ${code} is not currently open for enrollment.`'/>
             </div>
           </v-row>
           <v-row
@@ -110,11 +112,13 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
+import Warning from './Warning.vue';
 
 export default {
   name: 'selected-course-card',
   components: {
     CourseSectionPicker,
+    Warning,
   },
   props: {
     course: {
@@ -123,9 +127,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['timetable', 'selectedCourses', 'isConflictedCourse']),
+    ...mapGetters(['timetable', 'selectedCourses', 'isConflictedCourse', 'getWarningSections']),
     isConflict(){
       return this.isConflictedCourse(this.course.courseCode);
+    },
+    warning(){
+      return Object.keys(this.meetingSections).filter(x=>this.getWarningSections.some(y=>y.code===this.course.courseCode && y.sectionCode === x));
     },
     meetingSections() {
       const sections = {};
@@ -149,6 +156,7 @@ export default {
               end: event.end,
               instructorName: instructor,
               location: loc,
+              openLimitInd: event.openLimitInd,
             };
             if (event.sectionCode in sections) {
               sections[event.sectionCode].push(info);

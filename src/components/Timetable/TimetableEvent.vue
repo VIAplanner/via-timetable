@@ -16,7 +16,10 @@
               color: $vuetify.theme.dark ? 'inherit' : 'white'
             }"
           >
-            <h4 class="pb-2">{{ event.code }}</h4>
+            <h4 class='pb-2'>{{ event.code }}
+              <warning
+                v-if='getWarningSections.some(x=>event.code==x.code&&event.sectionCode === x.sectionCode)' />
+            </h4>
 
             <div class="lock-button">
               <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
@@ -91,6 +94,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
+import Warning from '../SidePanel/Warning.vue';
 
 const convertSecondsToHours = seconds => seconds / 3600;
 
@@ -108,6 +112,7 @@ export default {
     semester: String,
   },
   components: {
+    Warning,
     CourseSectionPicker,
   },
   data() {
@@ -125,6 +130,7 @@ export default {
       'getCourseColor',
       'fallLockedSections',
       'winterLockedSections',
+      'getWarningSections',
     ]),
     // Duration of the event in hours
     duration() {
