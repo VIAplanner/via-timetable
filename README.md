@@ -34,7 +34,7 @@ The fundamental problem we are trying to solve :
 
 ```sh
 git clone https://github.com/VIAplanner/VIAplanner.git
-cd VIAplanner/packages/app
+cd VIAplanner
 yarn
 yarn serve
 ```
