@@ -8,7 +8,7 @@
    <a href="https://app.netlify.com/sites/viatimetable/deploys">
     <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/3b870967-d243-450c-8672-3add3187a16f/deploy-status">
   </a>
-  <a href="https://github.com/UTM-Hacklab/VIAplanner/blob/master/LICENSE">
+  <a href="https://github.com/VIAplanner/VIAplanner/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/license-GPL-green?style=flat">
   </a>
 </p>
@@ -33,8 +33,8 @@ The fundamental problem we are trying to solve :
 ## Installation Using NPM
 
 ```sh
-git clone https://github.com/UTM-Hacklab/VIAplanner.git
-cd VIAplanner/packages/app
+git clone https://github.com/VIAplanner/VIAplanner.git
+cd VIAplanner
 yarn
 yarn serve
 ```
