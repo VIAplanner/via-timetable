@@ -33,7 +33,7 @@ The fundamental problem we are trying to solve :
 ## Installation Using NPM
 
 ```sh
-git clone https://github.com/VIAplanner/via-timetable.git 
+git clone https://github.com/VIAplanner/VIAplanner.git
 cd via-timetable
 yarn
 yarn serve
