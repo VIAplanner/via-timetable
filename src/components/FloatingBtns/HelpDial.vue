@@ -13,8 +13,8 @@
         <v-icon v-else>mdi-hammer-screwdriver</v-icon>
       </v-btn>
     </template>
-    <export-calendar-btn></export-calendar-btn>
-    <export-to-png-btn></export-to-png-btn>
+    <export-calendar-btn class='ma-0'></export-calendar-btn>
+    <export-to-png-btn class='mb-0'></export-to-png-btn>
     <about-btn></about-btn>
     <tutorial-btn></tutorial-btn>
     <export-to-json-btn></export-to-json-btn>
