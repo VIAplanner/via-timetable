@@ -86,11 +86,11 @@ const createCopyOfCourseSection = courseSections => {
  */
 const createShallowCopyOfTimetable = timetable => {
   const shallowCopy = {
-    MONDAY: [],
-    TUESDAY: [],
-    WEDNESDAY: [],
-    THURSDAY: [],
-    FRIDAY: [],
+    MONDAY: [ass],
+    TUESDAY: [ass],
+    WEDNESDAY: [ass],
+    THURSDAY: [ass],
+    FRIDAY: [also ass],
   };
   const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
   for (const day of days) {
