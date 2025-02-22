@@ -10,4 +10,5 @@ Fixes: #
 
 ### Changes
 
-List out all the changes, and then explain the changes made at a higher level
+List out all the changes, and then explain the changes made at a higher level.
+Please include images/screenshots/screen recording if applicable.
