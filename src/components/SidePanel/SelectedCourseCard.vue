@@ -15,34 +15,61 @@
       >
         <p></p>
       </div>
-      <div style="color: #474747">
+      <div :style='`color: ${$vuetify.theme.dark ? "" :"#474747"}}`'>
         <h3>{{ course.courseCode }}</h3>
       </div>
-       <v-btn icon @click.native.stop @click="addOrRemoveConflictCourse({code: course.courseCode } )" color="#474747" max-width="40" max-height="40">
-            <v-icon v-if="isConflict">mdi-book-multiple</v-icon>
-            <v-icon v-else>mdi-book-variant</v-icon>
-      </v-btn>
-      <v-dialog v-model="dialog" scrollable width="825px" @input="atInput">
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on" color="#474747" max-width="40" max-height="40">
-            <v-icon>mdi-pencil-box-outline</v-icon>
+      <warning v-if='warning.length > 0' warning-text='One of the selected section is not be open for enrollment at the moment, but might open in the future.'/>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn v-bind='attrs' v-on='on' icon @click.native.stop
+                 @click='addOrRemoveConflictCourse({code: course.courseCode } )'
+                 :color='$vuetify.theme.dark ? "" :"#474747"' max-width='40' max-height='40'>
+            <v-icon v-if='isConflict'>mdi-calendar-alert</v-icon>
+            <v-icon v-else>mdi-calendar-check</v-icon>
           </v-btn>
         </template>
-        <course-section-picker
-          v-on:done="dialog = false"
-          :code="course.courseCode"
-          ref="popUp"
-        />
-      </v-dialog>
-      <v-btn
-        color="#474747"
-        @click="deleteCourse({ code: course.courseCode })"
-        max-width="40"
-        max-height="40"
-        icon
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+        <span>
+        {{isConflict ? 'Conflicts are allowed with this course' : "Conflicts are not allowed with this course"}}
+      </span>
+      </v-tooltip>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn icon v-bind='attrs'
+                 v-on='on' color='#474747' max-width='40'
+                 max-height='40'>
+            <v-dialog v-model='dialog' scrollable width='825px'
+                      @input='atInput'>
+              <template v-slot:activator='{ on }'>
+
+                <v-icon v-on='on'>mdi-pencil-box-outline</v-icon>
+
+              </template>
+              <course-section-picker
+                v-on:done='dialog = false'
+                :code='course.courseCode'
+                ref='popUp'
+              />
+            </v-dialog>
+          </v-btn>
+        </template>
+        <span>Edit timeslots</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <template v-slot:activator='{ on, attrs }'>
+          <v-btn
+            color='#474747'
+            @click='deleteCourse({ code: course.courseCode })'
+            max-width='40'
+            max-height='40'
+            icon
+            v-bind='attrs'
+            v-on='on'
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove course</span>
+      </v-tooltip>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <hr class="mb-1" />
@@ -51,6 +78,7 @@
           <v-row>
             <div style="font-size: 15px">
               {{ code }}
+              <warning v-if='warning.includes(code)' :warning-text='`Section ${code} is not currently open for enrollment.`'/>
             </div>
           </v-row>
           <v-row
@@ -84,11 +112,13 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
+import Warning from './Warning.vue';
 
 export default {
   name: 'selected-course-card',
   components: {
     CourseSectionPicker,
+    Warning,
   },
   props: {
     course: {
@@ -97,9 +127,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['timetable', 'selectedCourses', 'isConflictedCourse']),
+    ...mapGetters(['timetable', 'selectedCourses', 'isConflictedCourse', 'getWarningSections']),
     isConflict(){
       return this.isConflictedCourse(this.course.courseCode);
+    },
+    warning(){
+      return Object.keys(this.meetingSections).filter(x=>this.getWarningSections.some(y=>y.code===this.course.courseCode && y.sectionCode === x));
     },
     meetingSections() {
       const sections = {};
@@ -123,6 +156,7 @@ export default {
               end: event.end,
               instructorName: instructor,
               location: loc,
+              openLimitInd: event.openLimitInd,
             };
             if (event.sectionCode in sections) {
               sections[event.sectionCode].push(info);

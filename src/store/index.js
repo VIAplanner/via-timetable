@@ -5,11 +5,43 @@ import { generateTimetables } from '../timetable-planner/index2';
 // import colorDiff from "color-difference"
 
 Vue.use(Vuex);
-
+const darkSaturation = 0.4;
+const darkLightness = 0.3;
+const lightSaturation = 0.8;
+const lightLightness = 0.85;
+const addHistory = (state, history) => {
+    if (state.historyIndex !== 0) {
+      state.history = state.history.slice(0, state.history.length + state.historyIndex);
+      state.historyIndex = 0;
+    }
+    state.history.push(history);
+};
+const saveState = (state) => {
+  addHistory(state, JSON.stringify({
+      fallSelectedCourses: state.fallSelectedCourses,
+      winterSelectedCourses: state.winterSelectedCourses,
+      fallTimetable: state.fallTimetable,
+      winterTimetable: state.winterTimetable,
+      fallLockedSections: state.fallLockedSections,
+      winterLockedSections: state.winterLockedSections,
+      deliveryMethod: state.deliveryMethod,
+      allowedConflictCourses: state.allowedConflictCourses,
+      darkMode: state.darkMode,
+    }));
+};
+const regenerateColors = (state) => {
+  Object.values(state.fallSelectedCourses).forEach((course) => {
+    course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+  });
+  Object.values(state.winterSelectedCourses).forEach((course) => {
+    course.color = genColor(state.darkMode ? darkSaturation : lightSaturation, state.darkMode ? darkLightness : lightLightness).hexString();
+  });
+};
 export default new Vuex.Store({
   state: {
+    darkMode: localStorage.darkMode === 'true',
     // change this number to clear storage
-    clearStorage: '1',
+    clearStorage: '2',
     allowedConflictCourses: !localStorage.allowedConflictCourses
       ? []
       : JSON.parse(localStorage.allowedConflictCourses),
@@ -131,11 +163,22 @@ export default new Vuex.Store({
     },
     semesterStatus: 'F',
     noTimetablePopup: false,
+    shareLinkPopup: false,
+    shareLink:'',
     overwriteLockedSectionPopup: false,
     tutorialPopup: !localStorage.visited,
     deliveryMethod: 'Mixed',
+    globalAllowConflicts: false,
+    history:  [],
+    // index is reversed, 0 is the latest, 1 is the second latest etc...
+    historyIndex: 0,
   },
   mutations: {
+    setDarkMode(state, payload) {
+      state.darkMode = payload;
+      regenerateColors(state);
+      saveState(state);
+    },
     setExportOverlay(state, payload) {
       state.exportOverlay = payload;
     },
@@ -176,10 +219,19 @@ export default new Vuex.Store({
     setNoTimetablePopup(state, payload) {
       state.noTimetablePopup = payload;
     },
+    setShareLinkPopup(state, payload) {
+      state.shareLinkPopup = payload;
+    },
+    setShareLink(state, payload) {
+      state.shareLink = payload;
+    },
     setOverwriteLockedSectionPopup(state, payload) {
       state.overwriteLockedSectionPopup = payload;
     },
     addCourse(state, payload) {
+      if(state.globalAllowConflicts){
+        state.allowedConflictCourses.push({code:payload.course.courseCode});
+      }
       if (payload.course.courseCode.slice(0, 4) === 'Lock') {
         const whichDay = payload.course.meeting_sections[0].times[0].day;
 
@@ -295,6 +347,7 @@ export default new Vuex.Store({
           state.winterLockedSections.push(payload);
         }
       }
+      saveState(state);
     },
     unlockSection(state, payload) {
       let index;
@@ -335,6 +388,39 @@ export default new Vuex.Store({
     },
     setPreferredDeliveryMethod(state, payload) {
       state.deliveryMethod = payload;
+    },
+    setGlobalAllowConflicts(state, payload) {
+      state.globalAllowConflicts = payload;
+    },
+    addHistory(state, payload) {
+      addHistory(state, payload);
+    },
+    saveState(state){
+      saveState(state);
+    },
+    loadState(state, payload) {
+      const newState = JSON.parse(payload);
+      state.fallSelectedCourses = newState.fallSelectedCourses;
+      state.winterSelectedCourses = newState.winterSelectedCourses;
+      state.fallTimetable = newState.fallTimetable;
+      state.winterTimetable = newState.winterTimetable;
+      state.fallLockedSections = newState.fallLockedSections;
+      state.winterLockedSections = newState.winterLockedSections;
+      state.deliveryMethod = newState.deliveryMethod;
+      state.allowedConflictCourses = newState.allowedConflictCourses;
+      state.searchBarValue = '';
+      if(state.darkMode !== newState.darkMode) {
+        regenerateColors(state);
+      }
+    },
+    undo(state) {
+      state.historyIndex -= 1;
+    },
+    redo(state) {
+      state.historyIndex += 1;
+    },
+    regenerateColors(state) {
+      regenerateColors(state);
     },
   },
   actions: {
@@ -487,7 +573,7 @@ export default new Vuex.Store({
       }
 
       // generate a color
-      const color = genColor(0.7, 0.85).hexString();
+      const color = genColor(context.state.darkMode ? darkSaturation : lightSaturation, context.state.darkMode ? darkLightness : lightLightness).hexString();
       // let currSemCourses
 
       // if (context.state.semesterStatus === "F") {
@@ -529,10 +615,11 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
-        context.state.allowedConflictCourses
+        context.state.allowedConflictCourses,
       );
 
       context.dispatch('validateTimetable', timetables);
+      context.dispatch('saveState');
     },
     deleteCourse(context, payload) {
       // resets search bar value if the deleted course is the last searched course
@@ -608,6 +695,7 @@ export default new Vuex.Store({
           }
         }
       }
+      context.dispatch('saveState');
     },
     // Recalculate timetable when switching sections with conflict
     resetTimetable(context, payload) {
@@ -628,7 +716,7 @@ export default new Vuex.Store({
         winterCourses,
         context.state.winterLockedSections,
         context.state.deliveryMethod,
-        context.state.allowedConflictCourses
+        context.state.allowedConflictCourses,
       );
 
       context.dispatch('validateTimetable', bothTimetables);
@@ -676,11 +764,30 @@ export default new Vuex.Store({
         }
       }
     },
+    saveState({commit}) {
+      commit('saveState');
+    },
+    undo(context) {
+      if (context.state.history.length - 1 + context.state.historyIndex > 0) {
+        context.commit('undo');
+        context.commit('loadState', context.state.history[context.state.history.length - 1 + context.state.historyIndex]);
+      }
+    },
+    redo(context) {
+      if (context.state.historyIndex < 0) {
+        const state=  context.state.history[context.state.history.length + context.state.historyIndex];
+        context.commit('redo');
+        context.commit('loadState',state );
+      }
+    },
   },
   modules: {},
   getters: {
+    getSerializedState: state => state.history[state.history.length - 1 + state.historyIndex],
     getExportOverlay: state => state.exportOverlay,
     getNoTimetablePopup: state => state.noTimetablePopup,
+    getShareLinkPopup: state => state.shareLinkPopup,
+    getShareLink: state => state.shareLink,
     getOverwriteLockedSectionPopup: state => state.overwriteLockedSectionPopup,
     getTutorialPopup(state) {
       return state.tutorialPopup;
@@ -706,10 +813,10 @@ export default new Vuex.Store({
         return state.winterSelectedCourses;
       }
     },
-    isConflictedCourse: state => courseCode => 
-        state.allowedConflictCourses.findIndex(
-          curCourse => curCourse.code === courseCode,
-        ) !== -1,
+    isConflictedCourse: state => courseCode =>
+      state.allowedConflictCourses.findIndex(
+        curCourse => curCourse.code === courseCode,
+      ) !== -1,
     fallSelectedCourses: state => state.fallSelectedCourses,
     winterSelectedCourses: state => state.winterSelectedCourses,
     getLockedSections: state => {
@@ -750,5 +857,26 @@ export default new Vuex.Store({
     getFallLockedDayStatus: state => state.fallLockedDayStatus,
     getWinterLockedDayStatus: state => state.winterLockedDayStatus,
     getClearStorage: state => state.clearStorage,
+    getGlobalAllowConflicts: state => state.globalAllowConflicts,
+    getHistoryLength: state => state.history.length,
+    getWarningSections: state => {
+      const timetable = state.semesterStatus === 'F' ? state.fallTimetable : state.winterTimetable;
+      const selected = state.semesterStatus === 'F' ? state.fallSelectedCourses : state.winterSelectedCourses;
+      const sections = new Set();
+      Object.values(timetable).forEach(arr =>{
+        arr.forEach(section => sections.add(`${section.code} ${section.sectionCode}`));
+      })
+      const warningSections = [];
+      sections.forEach(x=>{
+        const splitted = x.split(' ');
+        if (selected[splitted[0]].meeting_sections.find(section => section.sectionCode === splitted[1]).openLimitInd === 'C') {
+          warningSections.push(x);
+        }
+      })
+      return warningSections.map(x => {
+        const splitted = x.split(' ');
+        return { code: splitted[0], sectionCode: splitted[1] };
+      });
+    }
   },
 });

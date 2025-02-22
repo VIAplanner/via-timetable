@@ -3,6 +3,8 @@
     <v-container class="background" style="padding-top: 50px !important; padding-right: 50px !important;">
       <v-row>
         <NoTimetablePopup></NoTimetablePopup>
+        <ShareLinkPopup></ShareLinkPopup>
+
         <v-col class="time-axis">
           <div class="top-margin"></div>
           <v-row
@@ -95,6 +97,7 @@
 import { mapMutations, mapGetters } from 'vuex';
 import TimetableEvent from './TimetableEvent.vue';
 import NoTimetablePopup from '../Popup/NoTimetablePopup.vue';
+import ShareLinkPopup from '../Popup/ShareLinkPopup.vue';
 import HourSwitch from './HourSwitch.vue';
 import WeekdaySwitch from './WeekdaySwitch.vue';
 import TimetableCourseCard from './TimetableCourseCard.vue';
@@ -103,6 +106,7 @@ const convertSecondsToHours = seconds => seconds / 3600;
 export default {
   name: 'Timetable',
   components: {
+    ShareLinkPopup,
     TimetableEvent,
     WeekdaySwitch,
     HourSwitch,
@@ -323,10 +327,6 @@ export default {
 }
 .col {
   padding: 0px !important;
-}
-
-.background {
-  background-color: white;
 }
 
 .container {

@@ -44,7 +44,7 @@
         </v-btn>
         <v-btn
           text
-          href="https://github.com/UTM-Hacklab/VIAplanner"
+          href="https://github.com/VIAplanner/via-timetable"
           target="blank"
         >
           <v-icon left>mdi-github</v-icon>
@@ -53,7 +53,7 @@
 
         <v-chip
           link
-          href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
+          href="https://github.com/VIAplanner/via-timetable/stargazers"
           label
           outlined
           color="white"
@@ -78,18 +78,6 @@
             </v-btn>
           </template>
         </v-snackbar>
-        <v-btn
-          fab
-          dark
-          bottom
-          right
-          fixed
-          color="primary"
-          @click="darkMode = !darkMode"
-        >
-          <v-icon v-if="darkMode" dark>mdi-brightness-4</v-icon>
-          <v-icon v-else dark>mdi-brightness-6</v-icon>
-        </v-btn>
         <v-row>
           <v-col class="pa-0">
             <v-img
@@ -222,7 +210,7 @@
                           Brand new UI!
                         </li>
                         <li>
-                          Course data updated for 2020 - 2021 school year (UTM)
+                          Course data updated for 2023 - 2024 school year (Tri-campus)
                         </li>
                         <li>
                           Courses now show their delivery methods
@@ -272,7 +260,6 @@
                           Course suggestion based on programs (only for selected
                           programs)
                         </li>
-                        <li>Added courses from all 3 campuses</li>
                         <li>Bird course recommendations</li>
                         <li>
                           Save timetable in the browser for when you visit again
@@ -444,7 +431,7 @@
                   API Docs
                 </v-btn>
                 <v-btn
-                  href="https://github.com/UTM-Hacklab/VIAplanner"
+                  href="https://github.com/VIAplanner/via-timetable/"
                   target="blank"
                   color="#7C007C"
                   dark
@@ -456,7 +443,7 @@
                   GitHub
                 </v-btn>
                 <v-btn
-                  href="https://github.com/UTM-Hacklab/VIAplanner/stargazers"
+                  href="https://github.com/VIAplanner/via-timetable/stargazers"
                   target="blank"
                   color="#670067"
                   dark
@@ -476,7 +463,7 @@
     <v-footer absolute :dark="darkMode" :color="darkMode ? 'black' : '#F5F5F6'">
       <v-row justify="center">
         <h1 class="text-subtitle-1 text-center">
-          Copyright © 2021 VIAplanner - Data updated for the 2021 - 2022 school
+          Copyright © 2023 VIAplanner - Data updated for the 2023 - 2024 school
           year
         </h1>
       </v-row>
@@ -510,7 +497,7 @@ export default {
   },
   mounted() {
     axios
-      .get('https://api.github.com/repos/UTM-Hacklab/VIAplanner')
+      .get('https://api.github.com/repos/VIAplanner/via-timetable')
       .then(response => {
         this.starCount = response.data.stargazers_count;
       })

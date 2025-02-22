@@ -50,10 +50,10 @@ export default {
     return {
       allTut: [
         {
-          step: 'We have an exciting annoccument:',
+          step: 'We have an exciting announcement:',
           title: 'Our data has been updated!',
           path: require('../../assets/updated-courses.png'),
-          description: 'Courses for 2021F-2022W is here!',
+          description: 'Courses for 2023F-2024W is here!',
           backgroundColor: genColor(0.7, 0.85).hexString(),
         },
         {

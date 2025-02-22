@@ -12,10 +12,14 @@
               background: getCourseColor(event.code),
               marginTop: getMarginTop,
               marginBot: getMarginBot,
-              height: getHeight
+              height: getHeight,
+              color: $vuetify.theme.dark ? 'inherit' : 'white'
             }"
           >
-            <h4 class="pb-2">{{ event.code }}</h4>
+            <h4 class='pb-2'>{{ event.code }}
+              <warning
+                v-if='getWarningSections.some(x=>event.code==x.code&&event.sectionCode === x.sectionCode)' />
+            </h4>
 
             <div class="lock-button">
               <v-btn small dark @click.stop="lockToggle" v-if="locked" icon>
@@ -70,17 +74,16 @@
     />
     <div
       v-else
-      v-ripple
       class="event empty-event"
       :style="{ height: getHeight, background: dynamicColor }"
       @mouseover="hovered = true"
       @mouseleave="hovered = false"
-      @click.stop="lockedSectionToggle"
     >
-      <div v-if="hovered">
+      <div v-if='hovered' style='margin: 0;padding: 0;height: 100%;display:flex'
+           @click='lockedSectionToggle' v-ripple>
         <v-row>
           <v-col>
-            <p class="center unselectable">{{ dynamicText }}</p>
+            <p class="center unselectable" :style='`color:${this.$vuetify.theme.dark? "#ffffffaa" : "black"}`'>{{ dynamicText }}</p>
           </v-col>
         </v-row>
       </div>
@@ -91,6 +94,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import CourseSectionPicker from '../Popup/CourseSectionPicker.vue';
+import Warning from '../SidePanel/Warning.vue';
 
 const convertSecondsToHours = seconds => seconds / 3600;
 
@@ -108,6 +112,7 @@ export default {
     semester: String,
   },
   components: {
+    Warning,
     CourseSectionPicker,
   },
   data() {
@@ -125,6 +130,7 @@ export default {
       'getCourseColor',
       'fallLockedSections',
       'winterLockedSections',
+      'getWarningSections',
     ]),
     // Duration of the event in hours
     duration() {
@@ -169,10 +175,12 @@ export default {
     },
     // change the color in the event so it correct based on hovering or locked
     dynamicColor() {
+      const lockedColor = this.$vuetify.theme.dark ? '#212121' : '#d9d9d9';
+      const background = this.$vuetify.theme.dark ? '#2C2C2C' : 'white';
       if (this.locked) {
-        return '#d9d9d9';
+        return lockedColor;
       } else {
-        return this.hovered ? '#d9d9d9' : 'white';
+        return this.hovered ? lockedColor : background;
       }
     },
     // stores the info of the current section
@@ -287,15 +295,11 @@ export default {
   user-select: none;
 }
 .center {
-  color: black;
   text-align: center;
-  padding-top: 8px !important;
 }
 .event {
   border: 1px solid gray;
   color: white;
-  padding: 8px;
-  padding-top: 3px;
   position: relative;
   cursor: pointer;
   font-size: small;

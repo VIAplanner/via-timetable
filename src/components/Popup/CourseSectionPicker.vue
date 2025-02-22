@@ -66,7 +66,7 @@
                           <v-row class="center-vertical">
                             <v-col>
                               <v-list-item-title>
-                                {{ meetingSection.sectionCode }}
+                                <warning v-if='getWarningSections.some(x=>x.code === course.courseCode && x.sectionCode === meetingSection.sectionCode)'/>{{ meetingSection.sectionCode }}
                               </v-list-item-title>
                             </v-col>
                           </v-row>
@@ -205,10 +205,12 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import OverwriteLockedSectionPopup from './OverwriteLockedSectionPopup.vue';
+import Warning from '../SidePanel/Warning.vue';
 
 export default {
   components: {
     OverwriteLockedSectionPopup,
+    Warning
   },
   props: {
     code: {
@@ -228,6 +230,7 @@ export default {
       'fallLockedSections',
       'winterLockedSections',
       'getSemesterStatus',
+      'getWarningSections'
     ]),
     course() {
       return this.selectedCourses(this.code[8])[this.code];
@@ -251,7 +254,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['switchSection', 'resetTimetable', 'deleteCourse']),
+    ...mapActions(['switchSection', 'resetTimetable', 'deleteCourse', 'saveState']),
     ...mapMutations([
       'lockSection',
       'unlockSection',
@@ -382,6 +385,7 @@ export default {
     },
     onClickDone() {
       this.updateTimetable();
+      this.saveState()
       this.$emit('done');
     },
     updateTimetable() {

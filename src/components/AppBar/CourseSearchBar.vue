@@ -5,13 +5,14 @@
     v-model="selectedCourse"
     :items="allCourses"
     flat
-    class="ma-2 ml-2 mr-2"
+    class="ml-2 mr-2"
     hide-no-data
     hide-details
     :placeholder="!loading ? 'Search for a Course' : 'Loading . . .'"
     :loading="loading"
     :autofocus="false"
     solo-inverted
+    style='color:#5F5F5F'
   ></v-autocomplete>
 </template>
 
@@ -65,11 +66,11 @@ export default {
         }
 
         if (course.courseCode[8] === 'F') {
-          return `🍂   ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
+          return `🍂   ${course.courseCode}: ${course.name} (${campus}) (2023-2024)`;
         } else if (course.courseCode[8] === 'S') {
-          return `❄️   ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
+          return `❄️   ${course.courseCode}: ${course.name} (${campus}) (2023-2024)`;
         } else {
-          return `🍂❄️ ${course.courseCode}: ${course.name} (${campus}) (2021-2022)`;
+          return `🍂❄️ ${course.courseCode}: ${course.name} (${campus}) (2023-2024)`;
         }
       });
     }
