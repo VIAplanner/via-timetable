@@ -37,5 +37,17 @@ yarn
 yarn dev
 ```
 
+## Local Deployment Using Docker
+*Prerequisites:*
+1. You have cloned and placed the following repos at the same directory as this repo, with folder names matching repo names
+- via-api: https://github.com/VIAplanner/via-api
+- UofT-Scraper: https://github.com/Kelexer1/UofT-Scraper
+
+```sh
+docker compose up --build
+```
+
+This will automatically start the frontend, backend, and set up scheduled scraping and database population
+
 ## .env Setup
 **VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000"
