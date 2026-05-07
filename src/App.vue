@@ -35,8 +35,6 @@ async function initializeSessionGroup() {
 		store.selectedSessionGroup = newSessionGroup.group;
 
 		store.selectedSubsessions = newSessionGroup.subsessions.map(subsession => subsession.value);
-
-		console.log(`Initialized session group to ${newSessionGroup.group} -> ${store.selectedSubsessions}`);
 	}
 }
 

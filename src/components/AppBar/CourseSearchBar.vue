@@ -101,7 +101,7 @@ async function populateRecommendations() {
 		loading.value = false;
 	} catch (error: any) {
 		loading.value = false;
-		console.log(`Error fetching data for ${query}: ${error.message}`);
+		console.error(`Error fetching data for ${query}: ${error.message}`);
 	}
 }
 

@@ -68,7 +68,7 @@ async function fetchStarCount() {
 			starCount.value = res.data.stargazers_count;
 		})
 		.catch(err => {
-			console.log('Error fetching stargazers count:', err)
+			console.error('Error fetching stargazers count:', err)
 		});
 }
 </script>

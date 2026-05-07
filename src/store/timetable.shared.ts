@@ -34,6 +34,7 @@ export const TIMES = [
 /** All the possible valid semester codes, corresponding to First and Second */
 export const FIRST_SEM = 'F' as const;
 export const SECOND_SEM = 'S' as const;
+export const BOTH_SEM = 'Y' as const;
 export const SEMESTER_CODES = [FIRST_SEM, SECOND_SEM] as const;
 
 /** We can simulate blocked times using a placeholder course with activities on all blocked times */

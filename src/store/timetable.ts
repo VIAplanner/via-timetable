@@ -22,7 +22,8 @@ import {
     SessionData,
     Weekday,
     FIRST_SEM,
-    SECOND_SEM
+    SECOND_SEM,
+    BOTH_SEM
 } from './timetable.shared';
 
 const createTimetableState = () => ({
@@ -402,18 +403,20 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         shouldGenerate = true
     ) {
         // Add the course to F or S (or both)
+        const color = genColor(
+            this.darkMode ? DARK_SATURATION : LIGHT_SATURATION,
+            this.darkMode ? DARK_LIGHTNESS : LIGHT_LIGHTNESS
+        ).hexString();
+
         for (const sessionCode of courseData.sessions) {
-            const session = this.subsessionCodeToSession(sessionCode) as SemesterCode | undefined;
-            if (!session) continue;
-            this.selectedCourses[session][course] = {
-                lec,
-                tut,
-                pra,
-                color: genColor(
-                    this.darkMode ? DARK_SATURATION : LIGHT_SATURATION,
-                    this.darkMode ? DARK_LIGHTNESS : LIGHT_LIGHTNESS
-                ).hexString(),
-                courseData
+            for (const session of this.resolveSubsessionSemesters(sessionCode) as Array<SemesterCode>) {
+                this.selectedCourses[session][course] = {
+                    lec,
+                    tut,
+                    pra,
+                    color,
+                    courseData
+                };
             }
         }
 
@@ -481,15 +484,22 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 Object.values(sectionData["meetingTimes"] || {});
             for (const meetingTimeData of meetingTimes) {
                 const buildingCode = meetingTimeData["building"]["buildingCode"];
-                const meetingTimeJSON: Record<string, any> = {};
-                meetingTimeJSON["start"] = meetingTimeData["start"];
-                meetingTimeJSON["end"] = meetingTimeData["end"];
-                meetingTimeJSON["day"] = meetingTimeData["day"] - 1;
-                meetingTimeJSON["online"] = (buildingCode === "");
-                meetingTimeJSON["zz"] = (buildingCode === "ZZ");
-                meetingTimeJSON["semester"] = sessionsToSemester[meetingTimeData["sessionCode"]];
-                sectionJSON["meetingTimes"].push(meetingTimeJSON);
-                hasMeetingTime = true;
+                const fallbackSemesters = this.resolveSubsessionSemesters(meetingTimeData["sessionCode"])
+                    .map((semester: SemesterCode) => this.getSemesterIndex(semester));
+                const mappedSemester = sessionsToSemester[meetingTimeData["sessionCode"]];
+                const semesterIndexes = typeof mappedSemester === 'number' ? [mappedSemester] : fallbackSemesters;
+
+                for (const semesterIndex of semesterIndexes) {
+                    const meetingTimeJSON: Record<string, any> = {};
+                    meetingTimeJSON["start"] = meetingTimeData["start"];
+                    meetingTimeJSON["end"] = meetingTimeData["end"];
+                    meetingTimeJSON["day"] = meetingTimeData["day"] - 1;
+                    meetingTimeJSON["online"] = (buildingCode === "");
+                    meetingTimeJSON["zz"] = (buildingCode === "ZZ");
+                    meetingTimeJSON["semester"] = semesterIndex;
+                    sectionJSON["meetingTimes"].push(meetingTimeJSON);
+                    hasMeetingTime = true;
+                }
             }
 
             if (!hasMeetingTime) continue;
@@ -655,7 +665,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                         : Object.values(sectionData.meetingTimes || {});
 
                     return meetingTimes.some(
-                        (meetingTime: any) => this.subsessionCodeToSession(meetingTime.sessionCode) === session
+                        (meetingTime: any) => this.resolveSubsessionSemesters(meetingTime.sessionCode).includes(session)
                     );
                 });
 
@@ -802,7 +812,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
     setDetailCardVisibility(course, visible) {
         const card = this.cards.find(card => card.course === course);
         if (card) card.visible = visible;
-        else console.log(`No card for ${course} was found`);
+        else console.error(`No card for ${course} was found`);
     },
 
     /**
@@ -898,32 +908,37 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @param activityName The name of the activity
      */
     timetableRegisterActivity(courseData, activityName) {
-        let session: SemesterCode = FIRST_SEM;
+        let selectedSessionFromActivity: SemesterCode | null = null;
 
         const activity = courseData.sections.find((section: any) => section.name === activityName);
         if (activity) {
             for (const meetingTime of activity.meetingTimes) {
                 const day = DAYS[meetingTime.day - 1];
-                session = this.subsessionCodeToSession(meetingTime.sessionCode) as SemesterCode;
+                if (!day) continue;
 
-                // Add events that are not already present
-                if (!this.timetables[session][day!].some((timeslot) => (
-                    timeslot.course === courseData.code &&
-                    timeslot.activity === activityName &&
-                    timeslot.start === meetingTime.start &&
-                    timeslot.end === meetingTime.end
-                ))) {
-                    this.timetables[session][day!].push({
-                        course: courseData.code,
-                        activity: activityName,
-                        day: meetingTime.day,
-                        start: meetingTime.start,
-                        end: meetingTime.end
-                    });
+                const sessions = this.resolveSubsessionSemesters(meetingTime.sessionCode);
+                if (!selectedSessionFromActivity && sessions.length > 0) selectedSessionFromActivity = sessions[0] as SemesterCode;
+
+                for (const session of sessions as Array<SemesterCode>) {
+                    // Add events that are not already present
+                    if (!this.timetables[session][day].some((timeslot) => (
+                        timeslot.course === courseData.code &&
+                        timeslot.activity === activityName &&
+                        timeslot.start === meetingTime.start &&
+                        timeslot.end === meetingTime.end
+                    ))) {
+                        this.timetables[session][day].push({
+                            course: courseData.code,
+                            activity: activityName,
+                            day: meetingTime.day,
+                            start: meetingTime.start,
+                            end: meetingTime.end
+                        });
+                    }
                 }
             }
 
-            this.selectedSession = session;
+            if (selectedSessionFromActivity) this.selectedSession = selectedSessionFromActivity;
         }
     },
 
@@ -987,7 +1002,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @param subsessionCode The subsession code
      * @returns The semester code
      */
-    subsessionCodeToSession(subsessionCode): SemesterCode | undefined {
+    subsessionCodeToSession(subsessionCode): SemesterCode | typeof BOTH_SEM | undefined {
         if (!this.sessions || !this.sessions.data) return undefined;
 
         for (const sessionGroup of this.sessions.data) {
@@ -1009,6 +1024,18 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      */
     getSemesterIndex(semester): 0 | 1 {
         return semester === FIRST_SEM ? 0 : 1;
+    },
+
+    /**
+     * @brief Resolves which semesters a subsession code belongs to; Y spans both F and S
+     * @param subsessionCode The subsession code
+     * @returns One or two semester codes
+     */
+    resolveSubsessionSemesters(subsessionCode: string): Array<SemesterCode> {
+        const session = this.subsessionCodeToSession(subsessionCode);
+        if (session === BOTH_SEM) return [FIRST_SEM, SECOND_SEM];
+        if (session === FIRST_SEM || session === SECOND_SEM) return [session];
+        return [];
     },
 
     /**

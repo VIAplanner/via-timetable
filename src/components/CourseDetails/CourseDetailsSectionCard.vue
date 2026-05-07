@@ -146,32 +146,38 @@ function conflictsInSession(sessionCode: string): Array<string> {
     const currentMeetingTimes = Object.values(props.section.meetingTimes);
 
     const session = store.subsessionCodeToSession(sessionCode);
-    const selectedSessionTimetable = store.timetables[session];
-    if (!selectedSessionTimetable) return conflicts;
+    if (!session) return conflicts;
+
+    const sessionsToCheck = session === 'Y' ? ['F', 'S'] : [session];
 
     for (const meetingTime of currentMeetingTimes as Array<any>) {
         if (meetingTime.sessionCode !== sessionCode) continue;
 
-        const dayName = parseDayFull(meetingTime.day);
-        const dayEvents = selectedSessionTimetable[dayName];
-
-        if (!dayEvents || dayEvents.length === 0) continue;
-
         const currentStart = parseInt(meetingTime.start);
         const currentEnd = parseInt(meetingTime.end);
 
-        for (const event of dayEvents) {
-            if (event.course === props.courseData.code && event.activity.substring(0, 3) === props.sectionType.key)
-                continue;
+        for (const semester of sessionsToCheck) {
+            const selectedSessionTimetable = store.timetables[semester];
+            if (!selectedSessionTimetable) continue;
 
-            const eventStart = parseInt(event.start);
-            const eventEnd = parseInt(event.end);
+            const dayName = parseDayFull(meetingTime.day);
+            const dayEvents = selectedSessionTimetable[dayName];
 
-            if (
-                currentStart < eventEnd && currentEnd > eventStart &&
-                !conflicts.includes(`${event.course} ${event.activity}`)
-            ) {
-                conflicts.push(`${event.course} ${event.activity}`)
+            if (!dayEvents || dayEvents.length === 0) continue;
+
+            for (const event of dayEvents) {
+                if (event.course === props.courseData.code && event.activity.substring(0, 3) === props.sectionType.key)
+                    continue;
+
+                const eventStart = parseInt(event.start);
+                const eventEnd = parseInt(event.end);
+
+                if (
+                    currentStart < eventEnd && currentEnd > eventStart &&
+                    !conflicts.includes(`${event.course} ${event.activity}`)
+                ) {
+                    conflicts.push(`${event.course} ${event.activity}`)
+                }
             }
         }
     }
