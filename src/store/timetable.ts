@@ -167,13 +167,23 @@ const createTimetableState = () => ({
     history: [] as Array<Object>,
 
     /** The current index into the history snapshot array that is being used */
-    historyIndex: 0 as number
+    historyIndex: 0 as number,
+
+    /** Toast service instance for displaying notifications */
+    toast: null as any
 });
 
 type TimetableState = ReturnType<typeof createTimetableState>;
 type TimetableStore = TimetableState & Record<string, any>;
 
 const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[]) => any> = {
+    /**
+     * @brief Initialize the toast service from a component context
+     */
+    initializeToast(toastInstance: any) {
+        this.toast = toastInstance;
+    },
+
     /**
      * @brief Cycles between light mode and dark mode
      */
@@ -545,8 +555,9 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
     /**
      * @brief Remove a course from all internal states, including any required cleanup
      * @param course The course code
+     * @param shouldGenerate Whether to regenerate the timetable after removing the course
      */
-    async removeCourse(course) {
+    async removeCourse(course: string, shouldGenerate: boolean = true) {
         for (const session of SEMESTER_CODES) {
             // Remove course from selectedCourses
             delete this.selectedCourses[session][course];
@@ -568,7 +579,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         for (const type of ["LEC", "TUT", "PRA"]) manager.removeCourse(course, type);
 
         this.removeUnusedCards();
-        this.generateTimetable();
+        if (shouldGenerate) this.generateTimetable();
     },
 
     /**
@@ -576,7 +587,16 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * and either applies it or warns the user that a timetable was not found
      */
     async generateTimetable() {
-        if (this.currentlyBuildingTimetable) return;
+        console.log('generating')
+        if (this.currentlyBuildingTimetable) {
+            this.toast?.add({
+                severity: 'warn',
+                summary: 'Timetable already building',
+                detail: 'A timetable is already building, try building again shortly',
+                life: 2500
+            })
+            return;
+        };
         this.currentlyBuildingTimetable = true;
         const manager = await getViaBuilderManager();
         const timetable = manager.build();

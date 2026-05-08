@@ -6,7 +6,7 @@
             <!-- Header -->
             <template #header>
                 <div class="flex flex-col gap-3 w-full items-start lg:flex-row lg:justify-between lg:items-center">
-                    <h2 class="text-xl lg:text-2xl font-bold leading-tight break-words">
+                    <h2 class="text-xl lg:text-2xl font-bold leading-tight wrap-break-word">
                         {{ `${courseData.code} ${courseData.sectionCode} - ${courseData.name}` }}
                     </h2>
                     <Button @click="addCourse()" icon="pi pi-plus" label="Quick Add Course"
@@ -24,17 +24,17 @@
                     <!-- Campus -->
                     <span class="flex items-center gap-2">
                         <i class="pi pi-home"></i>
-                        <span class="break-words">{{ courseData.campus }}</span>
+                        <span class="wrap-break-word">{{ courseData.campus }}</span>
                     </span>
                     <!-- Session -->
                     <span class="flex items-center gap-2">
                         <i class="pi pi-clock"></i>
-                        <span class="break-words">{{ parseSession(courseData.sessions) }}</span>
+                        <span class="wrap-break-word">{{ parseSession(courseData.sessions) }}</span>
                     </span>
                     <!-- Distribution Requirement -->
                     <span class="flex items-center gap-2">
                         <i class="pi pi-graduation-cap"></i>
-                        <span class="break-words">{{ courseData.maxCredit }} Credits ({{
+                        <span class="wrap-break-word">{{ courseData.maxCredit }} Credits ({{
                             parseDistributionRequirements(courseData.breadths) }})</span>
                     </span>
                     <!-- View Legend Button -->
@@ -50,29 +50,29 @@
                     <div class="w-full lg:w-[60%] lg:pr-8">
                         <h3 class="text-md font-bold">Description</h3>
                         <!-- Description -->
-                        <p class="break-words">{{ courseData.cmCourseInfo.description }}</p>
+                        <p class="wrap-break-word">{{ courseData.cmCourseInfo.description }}</p>
                         <h3 class="text-md font-bold mt-3">Department Info</h3>
                         <!-- Department -->
-                        <p class="break-words"><span class="font-medium">Department: </span>{{
+                        <p class="wrap-break-words"><span class="font-medium">Department: </span>{{
                             courseData.department.name }}</p>
                         <!-- Faculty -->
-                        <p class="break-words"><span class="font-medium">Faculty: </span>{{ courseData.faculty.name }}
+                        <p class="wrap-break-word"><span class="font-medium">Faculty: </span>{{ courseData.faculty.name }}
                         </p>
                     </div>
                     <div class="flex flex-col w-full lg:w-[40%]">
                         <h3 class="text-md font-bold">Requisite Info</h3>
-                        <p v-if="courseData.cmCourseInfo.prerequisitesText" class="break-words"><span
+                        <p v-if="courseData.cmCourseInfo.prerequisitesText" class="wrap-break-word"><span
                                 class="font-medium">Prerequisites: </span>{{ courseData.cmCourseInfo.prerequisitesText
                             }}</p>
                         <!-- Prerequisites -->
-                        <p v-if="courseData.cmCourseInfo.exclusionsText" class="break-words"><span
+                        <p v-if="courseData.cmCourseInfo.exclusionsText" class="wrap-break-word"><span
                                 class="font-medium">Exclusions:
                             </span>{{ courseData.cmCourseInfo.exclusionsText }}</p> <!-- Exclusions -->
-                        <p v-if="courseData.cmCourseInfo.corequisitesText" class="break-words"><span
+                        <p v-if="courseData.cmCourseInfo.corequisitesText" class="wrap-break-word"><span
                                 class="font-medium">Corequisites: </span>{{ courseData.cmCourseInfo.corequisitesText }}
                         </p>
                         <!-- Corequisites -->
-                        <p v-if="courseData.cmCourseInfo.recommendedPreparation" class="break-words"><span
+                        <p v-if="courseData.cmCourseInfo.recommendedPreparation" class="wrap-break-word"><span
                                 class="font-medium">Recommended Preparation: </span>{{
                                     courseData.cmCourseInfo.recommendedPreparation }}</p> <!-- Recommended Prep -->
                     </div>
@@ -200,7 +200,7 @@ async function addCourse() {
     visible.value = false;
 
     // Remove any old references to prevent duplicates
-    await store.removeCourse(props.courseData.code);
+    await store.removeCourse(props.courseData.code, false);
 
     const lecs = props.courseData.sections.filter((section: any) => section.type === 'Lecture');
     const tuts = props.courseData.sections.filter((section: any) => section.type === 'Tutorial');

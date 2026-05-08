@@ -10,10 +10,13 @@
 import { onMounted, watch } from 'vue';
 import { useTimetableStore } from './store/timetable';
 import CourseDetailCardsLayer from './components/CourseDetails/CourseDetailCardsLayer.vue';
+import { useToast } from 'primevue/usetoast';
 
 const store = useTimetableStore();
+const toast = useToast();
 
 onMounted(() => {
+	store.initializeToast(toast);
 	store.initializeHistory();
 	store.updatePreferences();
 	initializeSessionGroup();
@@ -82,6 +85,22 @@ store.prefferedMaxEnd, store.onlinePreference, store.avoidRushHour],
 	() => store.updatePreferences()
 );
 
+watch(() => [store.currentlyBuildingTimetable], () => {
+	if (store.currentlyBuildingTimetable)
+		toast.add({
+			severity: 'info',
+			summary: 'Building started',
+			detail: '',
+			life: 2000
+		})
+	else
+		toast.add({
+			severity: 'success',
+			summary: 'Building completed',
+			detail: '',
+			life: 2000
+		})
+});
 </script>
 
 <style lang='scss'>

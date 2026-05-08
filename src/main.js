@@ -87,12 +87,10 @@ app.use(PrimeVue, {
   ripple: true,
   inputVariant: 'filled'
 });
+
 app.use(ToastService);
-
 app.use(pinia);
-
 app.use(vueHtml2canvas);
-app.use(VueMobileDetection);
 app.use(router);
 
 app.mount('#app');
