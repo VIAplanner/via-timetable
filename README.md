@@ -16,33 +16,38 @@
 
 # VIAplanner
 
-VIAplanner is a tool designed by students at the University of Toronto to help the community. We desire to enhance the course selection process.
+VIAplanner is a tool designed by students at the University of Toronto to help the community. Our goal is to improve the course selection and scheduling process by providing a suite of tools to browse courses and design personalized timetables on the go.
 
 ## Introduction
 
-The fundamental problem we are trying to solve :
-1. The current process is to choose your courses and manually create a schedule without any conflicts. This can take days to perfect.
-
-2. With the help of this tool, we are making this process faster and easier than before.
-
-3. Furthermore, this will improve UofT's reputation since this tool will modernize a crucial part of a student's life.
+The fundamental problem we are trying to solve:
+1. There is no automated process to create good timetables, instead requiring days of manual effort checking different combinations of courses and timeslots
+2. The official University of Toronto timetable builder is unintuitive and not good for generating optimal timetables, often leaving large gaps and scattering classes across a very large time range
+3. The official University of Toronto timetable builder only provides a single way to customize your timetable, through broad scheduling preferences such as 'Early' or 'Late'
 
 # Documentation
 [VIATimetable Documentation](https://docs.viaplanner.ca)
 
-## Installation Using NPM
+## Installation Using Yarn
 
 ```sh
 git clone https://github.com/VIAplanner/via-timetable.git
 cd via-timetable
 yarn
-yarn serve
+yarn dev
 ```
 
-## Testing
-
-Tests are found in `tests/`
+## Local Deployment Using Docker
+*Prerequisites:*
+1. You have cloned and placed the following repos at the same directory as this repo, with folder names matching repo names
+- via-api: https://github.com/VIAplanner/via-api
+- UofT-Scraper: https://github.com/Kelexer1/UofT-Scraper
 
 ```sh
-yarn run test:unit
+docker compose up --build
 ```
+
+This will automatically start the frontend, backend, and set up scheduled scraping and database population
+
+## .env Setup
+**VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000"

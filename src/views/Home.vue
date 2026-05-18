@@ -1,182 +1,93 @@
 <template>
-  <v-row>
-    <v-col class="ma-0 pt-0 pb-0">
-      <!-- Popup tutorial -->
-      <tutorial />
-      <!--Exporting Progress Overlay-->
-      <v-overlay :value="getExportOverlay">
-        <v-row>
-          <h1 class="ma-3">Exporting</h1>
-          <h1 class='ma-3'>Exporting</h1>
-        </v-row>
-        <v-row justify="center">
-          <v-progress-circular
-            indeterminate
-            size="64"
-            style="margin-left: auto; margin-right: auto;"
-          ></v-progress-circular>
-        </v-row>
-      </v-overlay>
-
-      <v-toolbar dark color="#012B5C" height="75px" class="pa-1" elevation="0">
-        <v-img
-          src="../assets/VIA-Planner-White.png"
-          max-width="130"
-          contain
-          class="ma-2 ml-1"
-        />
-        <v-btn icon @click='undo()'>
-          <v-icon>mdi-undo</v-icon>
-        </v-btn>
-        <v-btn icon @click='redo()'>
-          <v-icon>mdi-redo</v-icon>
-        </v-btn>
-        <course-search-bar style="margin: auto" />
-        <switch-sem style="margin: auto" />
-        <change-theme style="margin: auto"/>
-        <delivery-method-setting />
-      </v-toolbar>
-      <v-row>
-        <v-col class="pa-0">
-          <router-view />
-          <v-footer style='background:none'>
-            <v-row>
-              <v-col class="pa-0">
-                <h1 style="text-align:center" class="text-subtitle-1">
-                  Copyright © 2023 VIAplanner - Data updated for the 2023 - 2024
-                  school year
-                </h1>
-              </v-col>
-            </v-row>
-          </v-footer>
-        </v-col>
-        <v-col cols='3' :class='$vuetify.theme.dark ? "darken-4": "lighten-4"'
-               class='grey mr-2'>
-          <side-bar />
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+	<div class="relative">
+		<TutorialPopup />
+		<div v-show="isSmallDevice" :class="[
+			'fixed right-2 z-[130] md:hidden flex flex-col gap-2',
+			sidebarOpen ? 'top-2' : 'top-[82px]'
+		]">
+			<Button :icon="sidebarOpen ? 'pi pi-times' : 'pi pi-bars'" rounded
+				:aria-label="sidebarOpen ? 'Close sidebar' : 'Open sidebar'" :aria-expanded="sidebarOpen"
+				@click="toggleSidebar" :pt:icon:class="'text-white'" />
+			<TimetableSettingsMenu v-show="!sidebarOpen" />
+		</div>
+		<div
+			class="fixed top-0 left-0 z-30 flex flex-row h-[75px] w-full items-center justify-center md:justify-start bg-main-accent">
+			<img src="../assets/VIA-Logo-White.png" class="max-w-[35px] md:max-w-[50px] my-2 ml-2">
+			<Button icon="pi pi-replay" rounded @click="store.undo()" class="m-2 md:ml-3"
+				v-tooltip.bottom="tooltip('Undo')" :pt:root:class="'!w-[2rem] !h-[2rem] md:!w-[2.5rem] md:!h-[2.5rem]'"
+				:pt:icon:class="'text-white text-sm md:text-lg'" />
+			<Button icon="pi pi-refresh" rounded @click="store.redo()" class="m-2 ml-0 md:mr-3"
+				v-tooltip.bottom="tooltip('Redo')" :pt:root:class="'!w-[2rem] !h-[2rem] md:!w-[2.5rem] md:!h-[2.5rem]'"
+				:pt:icon:class="'text-white text-sm md:text-lg'" />
+			<CourseSearchBar class="mr-2" />
+			<div class="flex flex-row items-center gap-2">
+				<ChangeTheme />
+				<SearchSettings />
+				<TimetableSettingsMenu v-if="!isSmallDevice" />
+				<SessionSelect />
+				<BuildTimetableButton v-if="!isSmallDevice" />
+			</div>
+		</div>
+		<div v-if="isSmallDevice && sidebarOpen" class="fixed inset-0 z-[120] md:hidden" role="dialog" aria-modal="true"
+			aria-label="Selected courses sidebar">
+			<div class="absolute inset-0 bg-black/40" @click="sidebarOpen = false" />
+			<div class="relative h-full w-full">
+				<SideBar :fullscreen="true" />
+			</div>
+		</div>
+		<div class="pt-[75px] flex flex-row w-full">
+			<div class="w-full">
+				<router-view />
+				<div class="w-full flex flex-row items-center justify-center footer">
+					<p class="my-3 font-medium">Copyright © 2026 VIAplanner</p>
+				</div>
+			</div>
+			<div class="hidden md:block md:w-[25%]">
+				<SideBar />
+			</div>
+		</div>
+		<HelpDial class="fixed bottom-2 right-2 z-50" />
+	</div>
 </template>
 
-<script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+<script setup>
+import { onBeforeUnmount, ref, watch } from 'vue';
+import { useTimetableStore } from '../store/timetable';
+import TutorialPopup from '../components/Popup/TutorialPopup.vue';
 import CourseSearchBar from '../components/AppBar/CourseSearchBar.vue';
-import Tutorial from '../components/Popup/Tutorial.vue';
-import SwitchSem from '../components/AppBar/SwitchSem.vue';
-import SideBar from '../components/SidePanel/SideBar.vue';
-import DeliveryMethodSetting
-  from '../components/AppBar/DeliveryMethodSetting.vue';
+import SessionSelect from '../components/AppBar/SessionSelect.vue';
 import ChangeTheme from '../components/AppBar/ChangeTheme.vue';
+import TimetableSettingsMenu from '../components/AppBar/TimetableSettings/TimetableSettingsMenu.vue';
+import SideBar from '../components/SidePanel/SideBar.vue';
+import SearchSettings from '../components/AppBar/SearchSettings/SearchSettings.vue';
+import BuildTimetableButton from '../components/AppBar/BuildTimetableButton.vue';
+import HelpDial from '../components/FloatingButtons/HelpDial.vue';
+import { useWindowSize } from '../composables/useWindowSize';
+import { useResponsiveTooltip } from '../composables/useResponsiveTooltip';
 
-export default {
-  components: {
-    ChangeTheme,
-    SwitchSem,
-    CourseSearchBar,
-    Tutorial,
-    SideBar,
-    DeliveryMethodSetting,
-  },
-  async beforeCreate() {
-    if (this.$route.query.timetable) {
-      try {
-        const res = await fetch(`https://api.mclo.gs/1/raw/${this.$route.query.timetable}`);
-        const data = await res.text();
-        ;
-        this.loadState(data);
-      } catch (err) {
-        console.log(err);
-        console.log('Error loading timetable');
-      }
-    }
-  },
-  data() {
-    return {
-      scrollBarSettings: {
-        wheelPropagation: false,
-        maxScrollbarLength: 240,
-        swipeEasing: true,
-        wheelSpeed: 0.1,
-      },
-    };
-  },
-  computed: {
-    ...mapGetters([
-      'getSemesterStatus',
-      'getExportOverlay',
-      'fallTimetable',
-      'winterTimetable',
-      'fallSelectedCourses',
-      'winterSelectedCourses',
-      'fallLockedSections',
-      'allowedConflictCourses',
-      'winterLockedSections',
-      'getFallLockedDayStatus',
-      'getWinterLockedDayStatus',
-      'getFallLockedHourStatus',
-      'getWinterLockedHourStatus',
-      'getClearStorage',
-      'getHistoryLength',
-    ]),
-  },
-  created() {
-    if (localStorage.darkMode === 'true') {
-      this.$vuetify.theme.dark = true;
-    }
-    if (localStorage.clearStorage !== this.getClearStorage) {
-      localStorage.clear();
-      this.clearStorage();
-      localStorage.clearStorage = this.getClearStorage;
-    }
-    if (this.$isMobile()) {
-      this.$router.push({ name: 'about' });
-    } else {
-      window.addEventListener('beforeunload', this.saveData);
-    }
-    this.saveState();
-  },
-  methods: {
-    ...mapActions(['clearStorage', 'undo', 'redo', 'saveState']),
-    ...mapMutations(['loadState', 'regenerateColors']),
-    // save the timetable data in the browser
-    saveData() {
-      if (this.getHistoryLength <= 1) {
-        return;
-      }
-      localStorage.darkMode = this.$vuetify.theme.dark;
-      localStorage.fallLockedSections = JSON.stringify(this.fallLockedSections);
-      localStorage.allowedConflictCourses = JSON.stringify(this.allowedConflictCourses);
-      localStorage.fallSelectedCourses = JSON.stringify(
-        this.fallSelectedCourses,
-      );
-      localStorage.fallTimetable = JSON.stringify(this.fallTimetable);
-      localStorage.fallLockedDayStatus = JSON.stringify(
-        this.getFallLockedDayStatus,
-      );
-      localStorage.fallLockedHourStatus = JSON.stringify(
-        this.getFallLockedHourStatus,
-      );
-      localStorage.winterLockedSections = JSON.stringify(
-        this.winterLockedSections,
-      );
-      localStorage.winterSelectedCourses = JSON.stringify(
-        this.winterSelectedCourses,
-      );
-      localStorage.winterTimetable = JSON.stringify(this.winterTimetable);
-      localStorage.winterLockedDayStatus = JSON.stringify(
-        this.getWinterLockedDayStatus,
-      );
-      localStorage.winterLockedHourStatus = JSON.stringify(
-        this.getWinterLockedHourStatus,
-      );
-    },
-  },
-};
-</script>
-<style scoped>
-.timetableColumn {
-  padding-top: 0px;
-  height: 100%;
+const { isSmallDevice } = useWindowSize();
+const { tooltip } = useResponsiveTooltip();
+const store = useTimetableStore();
+
+const sidebarOpen = ref(false);
+
+/**
+ * @brief Toggles visibility of the sidebar
+ */
+function toggleSidebar() {
+	sidebarOpen.value = !sidebarOpen.value;
 }
-</style>
+
+watch(sidebarOpen, (isOpen) => {
+	if (typeof document === 'undefined') return;
+	document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+watch(isSmallDevice, (smallDevice) => {
+	if (!smallDevice) sidebarOpen.value = false;
+});
+
+onBeforeUnmount(() => {
+	if (typeof document !== 'undefined') document.body.style.overflow = '';
+});
+</script>

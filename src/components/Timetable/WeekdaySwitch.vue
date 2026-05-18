@@ -1,162 +1,72 @@
 <template>
-  <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <v-row
-        @mouseover="hovered = true"
-        @mouseleave="hovered = false"
-        justify="center"
-      >
-        <h3 class="day-label">
-          {{ weekday }}
-        </h3>
-        <div v-if="hovered || locked" v-on="on">
-          <v-btn @click="unlockDay" v-if="locked" icon>
-            <v-icon>mdi-lock</v-icon>
-          </v-btn>
-          <v-btn @click="lockDay" v-else icon>
-            <v-icon>mdi-lock-open</v-icon>
-          </v-btn>
-        </div>
-      </v-row>
-    </template>
-    <span>{{ toolTipText }}</span>
-  </v-tooltip>
+	<div class="flex flex-row items-center justify-center">
+		<div class="flex flex-row justify-center items-center mt-4 mx-0 relative w-full cursor-pointer select-none"
+			@click="toggleDayLock()">
+			<h3 class="day-label mb-0 mx-0 font-bold text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}</h3>
+			<div v-if="locked && !isExport" class="absolute -bottom-6" v-tooltip.bottom="tooltip(toolTipText)">
+				<Button @click.stop="toggleDayLock()" icon="pi pi-lock" rounded text iconClass="text-text-primary" />
+			</div>
+		</div>
+	</div>
 </template>
 
-<script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useTimetableStore } from '../../store/timetable';
+import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip';
 
-export default {
-  data() {
-    return {
-      hovered: false,
-      currStart: 28800,
-    };
-  },
-  props: {
-    weekday: String,
-    semester: String,
-  },
-  computed: {
-    ...mapGetters([
-      'getLockedSections',
-      'timetable',
-      'getNoTimetablePopup',
-      'getLockedDayStatus',
-    ]),
-    locked() {
-      return this.getLockedDayStatus[this.weekday];
-    },
-    toolTipText() {
-      return !this.locked ? 'Block All Times' : 'Unblock All Times';
-    },
-    currSecData() {
-      return {
-        name: `Locked Section`,
-        courseCode: `Lock${this.semester}${this.weekday.toUpperCase()}${
-          this.currStart
-        }`,
-        meeting_sections: [
-          {
-            sectionCode: 'L0001',
-            instructors: ['NA'],
-            times: [
-              {
-                day: this.weekday.toUpperCase(),
-                start: this.currStart,
-                end: this.currStart + 3600,
-                location: 'NA',
-              },
-            ],
-          },
-        ],
-      };
-    },
-  },
-  methods: {
-    ...mapActions([
-      'selectCourse',
-      'deleteCourse',
-      'saveTimetable',
-      'resetTimetable',
-      'saveLockedDayStatus',
-    ]),
-    ...mapMutations(['lockSection', 'setLockedDayStatus', 'addCourse']),
-    lockDay() {
-      let i = 0;
+const store = useTimetableStore() as any;
+const { tooltip } = useResponsiveTooltip();
 
-      // save lock status
-      this.saveLockedDayStatus();
+const props = defineProps({
+	weekday: {
+		type: String,
+		required: true
+	},
+	weekdayLabel: {
+		type: String,
+		default: null
+	},
+	semester: {
+		type: String,
+		required: true
+	},
+	isExport: {
+		type: Boolean,
+		required: false,
+		default: false
+	}
+});
 
-      this.setLockedDayStatus(this.weekday);
+const locked = computed(() => {
+	const blockedTimesForSemester = store.blockedTimes[props.semester] || [];
+	const dayBlocks = blockedTimesForSemester.filter((blocker: any) => blocker.day === props.weekday);
 
-      // save a copy of the timetable before the change
-      this.saveTimetable();
+	for (let hour = 8; hour <= 22; hour++) {
+		const start = hour * 3600;
+		const end = start + 3600;
 
-      // Flag is true if there is at least one course on the day that's unlocked
-      const flag = this.timetable[this.weekday.toUpperCase()].some(
-        element =>
-          !this.getLockedSections.includes(
-            `${element.code}${element.sectionCode}`,
-          ),
-      );
-      while (i < 13) {
-        this.currStart = 28800 + i * 3600;
-        if (this.validLockSection()) {
-          this.lockSection(
-            `${this.currSecData.courseCode}${this.currSecData.meeting_sections[0].sectionCode}`,
-          );
-          this.addCourse({ course: this.currSecData });
-        }
-        i += 1;
-      }
+		if (!dayBlocks.some((blocker: any) => blocker.start === start && blocker.end === end)) return false;
+	}
 
-      if (flag) {
-        this.resetTimetable(true);
-      }
-    },
-    unlockDay() {
-      this.setLockedDayStatus(this.weekday);
-      for (let i = 0; i < 13; i += 1) {
-        this.currStart = 28800 + i * 3600;
-        for (const lockedCourse of this.getLockedSections) {
-          if (lockedCourse.includes(this.weekday.toUpperCase())) {
-            this.deleteCourse({
-              code: lockedCourse.slice(0, lockedCourse.length - 5),
-            });
-          }
-        }
-      }
-    },
-    validLockSection() {
-      const currDayTimetable = this.timetable[this.weekday.toUpperCase()];
-      for (const section of currDayTimetable) {
-        // if the course on the timetable is locked, don't add one here
-        if (
-          this.getLockedSections.includes(
-            `${section.code}${section.sectionCode}`,
-          )
-        ) {
-          // if the locked course is in between another course, then skip it
-          if (
-            (section.start <= this.currStart && this.currStart < section.end) ||
-            (section.start < this.currStart + 3600 &&
-              this.currStart + 3600 < section.end)
-          ) {
-            return false;
-          }
-        }
-      }
+	return true;
+});
 
-      return true;
-    },
-  },
-};
+const toolTipText = computed(() => {
+	return locked.value ? 'Unblock All Times' : 'Block All Times';
+});
+
+/**
+ * @brief Toggles a lock for all hours of the day specific by props
+ */
+async function toggleDayLock() {
+	await store.setLockedDayStatus(props.weekday, !locked.value);
+	store.saveStateHistory();
+}
 </script>
 
 <style scoped>
 .day-label {
-  margin-bottom: 10px;
-  text-align: center;
+	text-align: center;
 }
 </style>

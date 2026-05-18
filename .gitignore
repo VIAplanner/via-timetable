@@ -22,3 +22,5 @@ yarn-error.log*
 *.sw?
 .env
 coverage
+.vercel
+dist/

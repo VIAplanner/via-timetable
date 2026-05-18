@@ -1,11 +1,7 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import home from '../views/Home.vue';
 import about from '../views/About.vue';
 import timetable from '../views/Timetable.vue';
-import program from '../views/Program.vue';
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -18,12 +14,7 @@ const routes = [
         name: 'timetable',
         path: 'timetable',
         component: timetable,
-      },
-      {
-        name: 'program',
-        path: 'program',
-        component: program,
-      },
+      }
     ],
   },
   {
@@ -32,16 +23,16 @@ const routes = [
     component: about,
   },
   {
-    path: '*',
+    path: '/:catchAll(.*)',
     redirect: {
       name: 'home',
     },
   },
 ];
 
-const router = new VueRouter({
-  mode: 'history',
-  routes,
+const router = createRouter({
+  history: createWebHistory(),
+  routes
 });
 
 export default router;

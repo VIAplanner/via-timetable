@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: #f0f9ff;
+  --color-main-accent: #00204e;
+  --color-highlight: #1e3765;
+  --color-subtle-highlight: #b3b3b3;
+  --color-text-primary: #222222;
+  --color-text-secondary: #00204e;
+  --color-active: #25477a;
+  --color-subtle-background: #eeeeee;
+  --color-shadow: #c9c9c9;
+
+  --color-primary-50: #e5f0ff;
+  --color-primary-100: #cce1ff;
+  --color-primary-200: #99c4ff;
+  --color-primary-300: #61a3ff;
+  --color-primary-400: #2e86ff;
+  --color-primary-500: #0069fa;
+  --color-primary-600: #0054c7;
+  --color-primary-700: #003e94;
+  --color-primary-800: #002b66;
+  --color-primary-900: #001533;
+  --color-primary-950: #000b1a;
+
+  --color-primary: var(--color-primary-600);
+  --color-primary-inverse: #ffffff;
+  --color-primary-hover: var(--color-primary-700);
+  --color-primary-active: var(--color-primary-800);
+  --color-highlight-background: var(--color-primary-100);
+  --color-highlight-focus-background: var(--color-primary-200);
+  --color-highlight: var(--color-main-accent);
+  --color-highlight-focus: var(--color-highlight);
+
+  /* Styles for PrimeVue */
+  --color-primary-dark: var(--color-primary-500);
+  --color-primary-inverse-dark: #001533;
+  --color-primary-hover-dark: var(--color-primary-400);
+  --color-primary-active-dark: var(--color-primary-300);
+  --color-highlight-background-dark: var(--color-primary-900);
+  --color-highlight-focus-background-dark: var(--color-primary-800);
+  --color-highlight-dark: var(--color-primary-100);
+  --color-highlight-focus-dark: var(--color-primary-50);
+
+  --color-timetablecell: white;
+  --color-timetablecell-hover: #d9d9d9;
+  --color-timetablesettings-background: #ffffff;
+  --color-coursecard-background: #eeeeee;
+  --color-divisional-highlight: yellow;
+}
+
+.dark {
+  --color-background: var(--color-primary-900);
+  --color-text-primary: white;
+  --color-text-secondary: var(--color-primary-400);
+  --color-subtle-background: #18181b;
+  --color-shadow: #373737;
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-inverse: #001533;
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-300);
+  --color-highlight-background: var(--color-primary-900);
+  --color-highlight-focus-background: var(--color-primary-800);
+  --color-highlight: var(--color-primary-100);
+  --color-highlight-focus: var(--color-primary-50);
+
+  --color-timetablecell: #00040c;
+  --color-timetablecell-hover: #222222;
+  --color-timetablesettings-background: #18181b;
+  --color-coursecard-background: #202024;
+  --color-divisional-highlight: rgb(100, 100, 0);
+}
+
+.dark body {
+  @apply bg-primary-950 text-white;
+}
+
+* {
+  font-family: 'Montserrat', sans-serif;
+}
