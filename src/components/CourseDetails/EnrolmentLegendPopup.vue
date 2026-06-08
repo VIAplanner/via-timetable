@@ -1,7 +1,7 @@
 <template>
     <Button @click="open = true" label="View Legend" size="small" :pt:icon:class="'text-white'"
         :pt:label:class="'text-white'" />
-    <Dialog v-model:visible="open" modal :showHeader="true" class="p-0 md:p-[1rem] w-[100vw] lg:w-75vw max-w-50rem"
+    <Dialog v-model:visible="open" modal :showHeader="true" class="p-0 md:p-4 w-screen lg:w-75vw max-w-50rem"
         :draggable="false" :header="`${division} Enrolment Legend`">
         <div class="flex flex-col items-end">
             <div class="mt-3">

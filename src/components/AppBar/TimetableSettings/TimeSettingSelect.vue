@@ -3,7 +3,7 @@
         <label class="block mb-0 text-sm font-bold">
             {{ label }}
             <Select v-model="internalValue" :options="times" optionLabel="display" optionValue="numerical" filter
-                :pt:root:class="'border-transparent hover:border-active w-30 font-normal !shadow-md'"
+                :pt:root:class="'border-transparent hover:border-active w-30 font-normal shadow-md!'"
                 :pt:overlay:class="'border-none'" :pt:option:class="'TimeSettingOption'"
                 :pt:pcFilter:root:class="'text-text-primary rounded-sm focus-within:outline-none caret-text-primary pl-3 py-2 bg-content-hover-background'" />
         </label>

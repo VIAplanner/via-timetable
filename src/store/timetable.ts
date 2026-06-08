@@ -49,7 +49,7 @@ const createTimetableState = () => ({
     selectedSubsessions: [] as Array<string>,
 
     /**
-     * The currently selected session/semester, either FIRST_SEM or SECOND_SEM corresponsing to first and second
+     * The currently selected session/semester, either FIRST_SEM or SECOND_SEM corresponding to first and second
      * respectively
      */
     selectedSession: FIRST_SEM as SemesterCode,
@@ -59,10 +59,10 @@ const createTimetableState = () => ({
     divisionalEnrolmentIndicators: null as any,
 
     /** The preferred minimum start hour */
-    prefferedStart: 9 as number,
+    preferredStart: 9 as number,
 
     /** The preferred maximum end hour */
-    prefferedMaxEnd: 15 as number,
+    preferredMaxEnd: 15 as number,
 
     /** The maximum hours any day should be */
     maxDayLength: 6 as number,
@@ -401,7 +401,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @param lec The lecture code, null if none
      * @param tut The tutorial code, null if none
      * @param pra The practical code, null if none
-     * @param courseData The course data. Check SelectedCourseData inferface for more info
+     * @param courseData The course data. Check SelectedCourseData interface for more info
      * @param shouldGenerate Whether to regenerate the timetable after adding the course
      */
     async addCourse(
@@ -531,7 +531,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             }
         }
 
-        // Update subcourses for each activity type
+        // Update sub-courses for each activity type
         manager.removeCourse(lecturesJSON["code"], "LEC");
         if (lecturesJSON["sections"].length > 0) {
             lecturesJSON["type"] = "LEC";
@@ -587,7 +587,6 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * and either applies it or warns the user that a timetable was not found
      */
     async generateTimetable() {
-        console.log('generating')
         if (this.currentlyBuildingTimetable) {
             this.toast?.add({
                 severity: 'warn',
@@ -609,7 +608,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @param timetable The timetable encoded as JSON returned by the builder (ex. used in generateTimetable())
      */
     applyBuiltTimetable(timetable) {
-        // Failiures to place are indicated by an empty string in the section
+        // Failures to place are indicated by an empty string in the section
         const hasBuildFailure = timetable.some((entry: any) => {
             return entry["code"] !== blockedTimesCourseCodePlaceholder && entry["section"] === '';
         });
@@ -810,7 +809,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             if (!card) continue;
             const cardCode = card.course.split(' ');
 
-            // Delete if the card isnt being used by the search bar or any of the selected course menus
+            // Delete if the card isn't being used by the search bar or any of the selected course menus
             if (!(this.searchBarSuggestions.includes(card.course) ||
                 Object.keys(this.selectedCourses[FIRST_SEM]).some(
                     course => this.selectedCourses?.[FIRST_SEM]?.[course]?.courseData?.code === cardCode[0]
@@ -924,7 +923,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
     /**
      * @brief Fills in all events for a particular course activity into the timetable. Also changes the current session
      * being viewed for a more intuitive visual confirmation that there is a new course added
-     * @param courseData The course data. See SelectedCourseData inferface for more information
+     * @param courseData The course data. See SelectedCourseData interface for more information
      * @param activityName The name of the activity
      */
     timetableRegisterActivity(courseData, activityName) {
@@ -1121,8 +1120,8 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             "MAX_DAY_LENGTH": this.maxDayLength,
             "MIN_DAY_LENGTH": this.minDayLength,
             "MAX_CONTINUOUS_CLASSES": this.maxHours,
-            "PREFFERED_MIN_START": this.prefferedStart * 3600,
-            "PREFFERED_MAX_END": this.prefferedMaxEnd * 3600,
+            "PREFERRED_MIN_START": this.preferredStart * 3600,
+            "PREFERRED_MAX_END": this.preferredMaxEnd * 3600,
             "GUARANTEE_CROSS_CAMPUS_GAP": true,
             "AVOID_RUSH_HOURS": this.avoidRushHour,
             "ONLINE_PREFERENCE": this.onlinePreference === "Avoid" ? 0 : this.onlinePreference === "Prefer" ? 1 : 2

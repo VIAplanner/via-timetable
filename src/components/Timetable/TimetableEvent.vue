@@ -23,7 +23,7 @@
 		<div v-else-if="eventData.start % 3600 === 0 && eventData.end % 3600 === 0"
 			:class="['event', 'h-full', dynamicColor]" :style="{ 'height': getHeight }" @mouseover="setHovered(true)"
 			@mouseleave="setHovered(false)">
-			<div v-show="hovered" class="m-0 p-0 h-[100%] flex items-center" @click="blockTimeToggle()" v-ripple>
+			<div v-show="hovered" class="m-0 p-0 h-full flex items-center" @click="blockTimeToggle()" v-ripple>
 				<p v-show="hovered" class="text-center unselectable text-text-primary w-full">
 					{{ dynamicText }}
 				</p>

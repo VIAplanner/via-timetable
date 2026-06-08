@@ -2,7 +2,7 @@
 	<div id="app">
 		<router-view />
 		<CourseDetailCardsLayer />
-		<Toast />
+		<Toast :breakpoints="toastBreakpoints" />
 	</div>
 </template>
 
@@ -14,6 +14,11 @@ import { useToast } from 'primevue/usetoast';
 
 const store = useTimetableStore();
 const toast = useToast();
+const toastBreakpoints = {
+	'640px': {
+		width: 'calc(100vw - 2rem)'
+	}
+};
 
 onMounted(() => {
 	store.initializeToast(toast);
@@ -80,8 +85,8 @@ async function loadCoursesToBuilder() {
 	}
 }
 
-watch(() => [store.maxGap, store.maxDayLength, store.minDayLength, store.maxHours, store.prefferedStart,
-store.prefferedMaxEnd, store.onlinePreference, store.avoidRushHour],
+watch(() => [store.maxGap, store.maxDayLength, store.minDayLength, store.maxHours, store.preferredStart,
+store.preferredMaxEnd, store.onlinePreference, store.avoidRushHour],
 	() => store.updatePreferences()
 );
 
@@ -107,5 +112,47 @@ watch(() => [store.currentlyBuildingTimetable], () => {
 #app {
 	max-width: 100%;
 	overflow: hidden;
+}
+
+@media (max-width: 640px) {
+	.p-toast .p-toast-message.p-toast-message-info {
+		background: rgba(229, 240, 255, 0.95) !important;
+		border-color: #99c4ff !important;
+	}
+
+	.p-toast .p-toast-message.p-toast-message-success {
+		background: rgba(240, 253, 244, 0.95) !important;
+		border-color: #86efac !important;
+	}
+
+	.p-toast .p-toast-message.p-toast-message-warn {
+		background: rgba(254, 252, 232, 0.95) !important;
+		border-color: #fde047 !important;
+	}
+
+	.p-toast .p-toast-message.p-toast-message-error {
+		background: rgba(254, 242, 242, 0.95) !important;
+		border-color: #fca5a5 !important;
+	}
+
+	.dark .p-toast .p-toast-message.p-toast-message-info {
+		background: rgba(0, 105, 250, 0.16) !important;
+		border-color: rgba(0, 62, 148, 0.36) !important;
+	}
+
+	.dark .p-toast .p-toast-message.p-toast-message-success {
+		background: rgba(34, 197, 94, 0.16) !important;
+		border-color: rgba(21, 128, 61, 0.36) !important;
+	}
+
+	.dark .p-toast .p-toast-message.p-toast-message-warn {
+		background: rgba(234, 179, 8, 0.16) !important;
+		border-color: rgba(161, 98, 7, 0.36) !important;
+	}
+
+	.dark .p-toast .p-toast-message.p-toast-message-error {
+		background: rgba(239, 68, 68, 0.16) !important;
+		border-color: rgba(185, 28, 28, 0.36) !important;
+	}
 }
 </style>

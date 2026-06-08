@@ -3,7 +3,7 @@
 		<AutoComplete ref="searchBarComponent" @complete="populateRecommendations()" @focus="onFocus()"
 			@blur="isActive = false" @option-select="courseSearched()" optionLabel="formattedName"
 			v-model="currentQuery" :suggestions="allCourses" loader="pi pi-spinner" :loading="loading"
-			:placeholder="!loading ? (isSmallDevice ? 'Search...' : 'Search courses...') : ('Loading...')" :inputStyle="{
+			:placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : ('Loading...')" :inputStyle="{
 				'background-color': dynamicColor,
 				'border': 'none',
 				'border-radius': '16px',

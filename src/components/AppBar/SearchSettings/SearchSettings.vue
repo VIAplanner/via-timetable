@@ -2,7 +2,7 @@
     <div class="flex items-center">
         <Button icon="pi pi-search" @click="toggleSearchPanel" rounded
             v-tooltip.bottom="tooltip('Change Search Settings')"
-            :pt:root:class="'!w-[2rem] !h-[2rem] md:!w-[2.5rem] md:!h-[2.5rem]'"
+            :pt:root:class="'w-8! h-8! md:w-10! md:h-10!'"
             :pt:icon:class="'text-white text-sm md:text-lg'" />
         <Popover ref="popover">
             <SearchDivisionSelect />

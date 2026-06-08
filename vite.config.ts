@@ -26,7 +26,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://api.viaplanner.ca/',
+                target: 'https://api.viaplanner.net/',
                 changeOrigin: true,
                 rewrite: path => path.replace(/^\/api/, '')
             }

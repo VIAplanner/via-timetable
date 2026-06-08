@@ -4,9 +4,9 @@
 			<h1 class="font-bold md:text-8xl lg:text-8xl pt-8 pb-6 text-6xl">VIAplanner</h1>
 			<h2 class="font-medium text-3xl pb-3 px-4 md:px-8">University of Toronto course planning made easier</h2>
 			<Button label="Start Building" @click="$router.push('/timetable')" rounded size="large"
-				class="py-3 m-4 mb-4" :pt:root:class="'bg-green-400 border-green-400'" />
+				class="py-3 m-4 mb-4 text-white" :pt:root:class="'bg-green-400 border-green-400'" />
 			<div class="flex flex-col md:flex-row w-3/4 mb-2 justify-center items-center gap-x-8 gap-y-8 sm:w-1/2">
-				<Button label="GitHub" rounded class="w-5 max-w-40" @click="openGitHub" />
+				<Button label="GitHub" rounded class="w-5 max-w-40 text-white" @click="openGitHub" />
 			</div>
 			<div>
 				<h3 class="text-2xl flex flex-row items-center pt-4">

@@ -1,10 +1,10 @@
 <template>
-	<div class="flex flex-row items-center justify-center">
-		<div class="flex flex-row justify-center items-center mt-4 mx-0 relative w-full cursor-pointer select-none"
-			@click="toggleDayLock()">
-			<h3 class="day-label mb-0 mx-0 font-bold text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}</h3>
+	<div class="flex flex-row items-center justify-center" >
+		<div class="flex flex-row justify-center items-center mx-0 w-full cursor-pointer select-none"
+			@click="toggleDayLock()" :style="{ 'height': height }" >
+			<h3 class="day-label m-0 font-bold leading-none text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}</h3>
 			<div v-if="locked && !isExport" class="absolute -bottom-6" v-tooltip.bottom="tooltip(toolTipText)">
-				<Button @click.stop="toggleDayLock()" icon="pi pi-lock" rounded text iconClass="text-text-primary" />
+				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" />
 			</div>
 		</div>
 	</div>
@@ -35,6 +35,10 @@ const props = defineProps({
 		type: Boolean,
 		required: false,
 		default: false
+	},
+	height: {
+		type: String,
+		required: true
 	}
 });
 

@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<SelectButton v-model="selectedSession" :options="sessions" :allowEmpty="false" :pt:root:class="'shadow-md'"
-			:size="isSmallDevice ? 'small' : 'large'" />
+			:size="isSmallDevice ? 'small' : 'large'"
+			:pt:pcToggleButton:root:class="isSmallDevice ? '!px-0.5 !py-0.5 !text-xs' : ''" :class="isSmallDevice ? 'mr-1' : ''" />
 	</div>
 </template>
 
