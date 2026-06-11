@@ -38,7 +38,7 @@
                             parseDistributionRequirements(courseData.breadths) }})</span>
                     </span>
                     <!-- View Legend Button -->
-                    <div v-if="divisionalData && divisionalLegend.content"
+                    <div v-if="divisionalData && divisionalLegend && divisionalLegend.content"
                         class="flex w-full justify-center sm:w-auto sm:justify-start">
                         <DivisionalLegend :division="`${courseData.faculty.name} (${courseData.faculty.code})`"
                             :content="divisionalLegend.content" />

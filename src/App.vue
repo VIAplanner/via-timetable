@@ -2,7 +2,7 @@
 	<div id="app">
 		<router-view />
 		<CourseDetailCardsLayer />
-		<Toast :breakpoints="toastBreakpoints" />
+		<Toast :breakpoints="toastBreakpoints" position="bottom-right" />
 	</div>
 </template>
 
