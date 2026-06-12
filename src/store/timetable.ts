@@ -31,7 +31,7 @@ const createTimetableState = () => ({
     clearStorage: '3' as string,
 
     /** Whether the user is using dark mode or not */
-    darkMode: false as boolean,
+    darkMode: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) as boolean,
 
     /** The divisions that are available to filter by when searching courses */
     divisions: null as { data: Array<DivisionData>, expiry: number } | null,
