@@ -40,11 +40,18 @@ yarn dev
 - via-api: https://github.com/VIAplanner/via-api
 - UofT-Scraper: https://github.com/Kelexer1/UofT-Scraper
 
+### With Automated Scraping
 ```sh
 docker compose up --build
 ```
+This will start the frontend and backend on `http://localhost/`, and automatically update the database once.
 
-This will automatically start the frontend, backend, and set up scheduled scraping and database population
+### Without Automated Scraping
+```sh
+docker compose up frontend backend nginx --build
+```
+This will start the frontend and backend on `http://localhost/`, assuming that backend has it's environment variables. The database will
+not be modified. It is recommended to use a local MongoDB database and populate it once before testing without automated scraping.
 
 ## .env Setup
 **VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000"

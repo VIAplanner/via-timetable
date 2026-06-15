@@ -170,7 +170,13 @@ const createTimetableState = () => ({
     historyIndex: 0 as number,
 
     /** Toast service instance for displaying notifications */
-    toast: null as any
+    toast: null as any,
+
+    /** 
+     * Whether to switch the session being displayed when a timetable event is registered (used as alternative to 
+     * passing down the value over many function calls)
+    */
+    switchSession: true as boolean
 });
 
 type TimetableState = ReturnType<typeof createTimetableState>;
@@ -514,8 +520,19 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
 
             if (!hasMeetingTime) continue;
 
-            // Sort the section by activity type
+            // Sort the section by activity type and filter if the section is locked / unavailable
             const sectionName = String(sectionData["name"] || '').toUpperCase();
+
+            const isLocked = 
+                (sectionName.startsWith('LEC') && lockedSectionsByType.LEC && sectionName
+                    === String(lockedSectionsByType.LEC).toUpperCase()) ||
+                (sectionName.startsWith('TUT') && lockedSectionsByType.TUT && sectionName
+                    === String(lockedSectionsByType.TUT).toUpperCase()) ||
+                (sectionName.startsWith('PRA') && lockedSectionsByType.PRA && sectionName
+                    === String(lockedSectionsByType.PRA).toUpperCase());
+
+            if (!isLocked && !this.includeUnavailable && sectionData.enrolmentInd !== 'C') continue;
+
             if (sectionName.startsWith('LEC')) {
                 if (lockedSectionsByType.LEC && sectionName !== String(lockedSectionsByType.LEC).toUpperCase())
                     continue;
@@ -957,7 +974,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 }
             }
 
-            if (selectedSessionFromActivity) this.selectedSession = selectedSessionFromActivity;
+            if (this.switchSession && selectedSessionFromActivity) this.selectedSession = selectedSessionFromActivity;
         }
     },
 
@@ -1008,7 +1025,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         }
 
         // Add new activity
-        this.timetableRegisterActivity(courseData, newActivityName);
+        this.timetableRegisterActivity(courseData, newActivityName, lockAndGenerate);
 
         if (lockAndGenerate) {
             await this.setLockedSectionStatus(courseData.code, newActivityName, true);
