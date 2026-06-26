@@ -523,7 +523,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             // Sort the section by activity type and filter if the section is locked / unavailable
             const sectionName = String(sectionData["name"] || '').toUpperCase();
 
-            const isLocked = 
+            const isLocked =
                 (sectionName.startsWith('LEC') && lockedSectionsByType.LEC && sectionName
                     === String(lockedSectionsByType.LEC).toUpperCase()) ||
                 (sectionName.startsWith('TUT') && lockedSectionsByType.TUT && sectionName
@@ -531,7 +531,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 (sectionName.startsWith('PRA') && lockedSectionsByType.PRA && sectionName
                     === String(lockedSectionsByType.PRA).toUpperCase());
 
-            if (!isLocked && !this.includeUnavailable && sectionData.enrolmentInd !== 'C') continue;
+            if (!isLocked && !this.includeUnavailable && sectionData.enrolmentInd === 'C') continue;
 
             if (sectionName.startsWith('LEC')) {
                 if (lockedSectionsByType.LEC && sectionName !== String(lockedSectionsByType.LEC).toUpperCase())

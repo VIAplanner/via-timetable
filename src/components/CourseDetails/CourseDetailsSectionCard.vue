@@ -11,7 +11,7 @@
                         v-tooltip.bottom="tooltip(`Conflicts with ${sectionConflicts.join(', ')}`)">
                         {{ section.name }}
                     </span>
-                    <span> ({{ getSectionDeliveryType(section.meetingTimes) }}) </span>
+                    <span> ({{ getSectionDeliveryType(section.deliveryModes) }}) </span>
                     <span v-if="section.openLimitInd === 'C'"
                         v-tooltip.bottom="tooltip('You may not be able to enrol in this section on Acorn at this time')"
                         class="text-yellow-500">
@@ -192,24 +192,19 @@ const divisionalEnrolmentIndicator = computed(() => {
 });
 
 /**
- * @brief Returns whether a course is online, in person, or hybrid based on its timeslots
- * @param timeslots The timeslots of the course
- * @return Either 'Online', 'Hybrid', or 'In Person'
+ * @brief Returns whether a course is online sync, online async, in person, or hybrid
+ * @param mode An array containing the delivery modes for each session, as gotten from section.deliveryModes in
+ * typical course JSON format
+ * @return Either 'Online Sync', 'Online Async', 'In Person', 'Hybrid'
  */
-function getSectionDeliveryType(timeslots: Array<any>): string {
-    const regularSlots = timeslots.filter(timeslot => timeslot.building.buildingCode !== 'ZZ');
-
-    var online = 0;
-    var inPer = 0;
-
-    for (const timeslot of regularSlots) {
-        if (timeslot.building.buildingCode.length) inPer++;
-        else online++;
+function getSectionDeliveryType(deliveryModes: any): string {
+    switch (deliveryModes[0].mode) {
+        case 'INPER': return 'In Person';
+        case 'SYNC': return 'Online Sync';
+        case 'ASYNC': return 'Online Async';
+        case 'HYBR': return 'Hybrid';
+        default: return '';
     }
-
-    if (online === regularSlots.length) return 'Online';
-    else if (online) return 'Hybrid';
-    else return 'In Person';
 }
 
 /**
@@ -253,7 +248,7 @@ function parseMeetingTimes(meetingTimes: any) {
 
         const formattedMeetingTime = {
             time: `${parseDay(meetingTime.day)} ${store.parseTime(meetingTime.start)} - ${store.parseTime(meetingTime.end)}`,
-            location: meetingTime.building.buildingCode ? meetingTime.building.buildingCode : 'Online',
+            location: meetingTime.building.buildingCode ? meetingTime.building.buildingCode : 'TBA',
             locationURL: meetingTime.building.buildingUrl
         };
 
