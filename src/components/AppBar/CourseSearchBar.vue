@@ -69,11 +69,16 @@ function parseSessionEmoji(sessions: Array<string>) {
 	}).join('');
 }
 
+let abortController: AbortController | null = null;
+
 async function populateRecommendations() {
 	if (!currentQuery.value) return;
 	const query = typeof currentQuery.value === 'string' ? currentQuery.value : currentQuery.value.code;
 	const queryTrimmed = query.trim();
 	if (!queryTrimmed || queryTrimmed.length < 3) return;
+
+	abortController?.abort();
+	abortController = new AbortController();
 
 	try {
 		loading.value = true;
@@ -96,16 +101,18 @@ async function populateRecommendations() {
 
 		store.searchBarSuggestions = courses.map((course: Course) => `${course.code} ${course.sectionCode}`);
 
-		store.removeUnusedCards();
-
 		loading.value = false;
 	} catch (error: any) {
+		if (axios.isCancel(error)) return;
 		loading.value = false;
 		console.error(`Error fetching data for ${query}: ${error.message}`);
 	}
 }
 
 async function courseSearched() {
+	abortController?.abort();
+	abortController = null;
+
 	const searchValue = currentQuery.value;
 	if (!searchValue || typeof searchValue === 'string') return;
 
@@ -124,14 +131,14 @@ async function courseSearched() {
 				divisionalEnrolmentIndicators
 			}
 		});
-		store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 	} else {
 		// Show detail card without any divisional data (the property is optional)
 		store.registerDetailCard(searchValue.code, searchValue.sectionCode, {
 			courseData: searchValue
 		});
-		store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 	}
+
+	store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 }
 
 function onFocus() {

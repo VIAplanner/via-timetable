@@ -724,7 +724,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 course.color = genColor(
                     this.darkMode ? DARK_SATURATION : LIGHT_SATURATION,
                     this.darkMode ? DARK_LIGHTNESS : LIGHT_LIGHTNESS
-                );
+                ).hexString();
             });
         }
     },
@@ -821,23 +821,21 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @brief Scans all registered detail cards and deletes them if they are not in use
      */
     removeUnusedCards() {
-        for (let i = 0; i < this.cards.length; i++) {
-            const card = this.cards[i];
-            if (!card) continue;
-            const cardCode = card.course.split(' ');
+        this.cards = this.cards.filter(card => {
+            const parts = card.course.split(' ');
+            const courseCode = parts[0];
+            const sectionCode = parts[1];
 
-            // Delete if the card isn't being used by the search bar or any of the selected course menus
-            if (!(this.searchBarSuggestions.includes(card.course) ||
-                Object.keys(this.selectedCourses[FIRST_SEM]).some(
-                    course => this.selectedCourses?.[FIRST_SEM]?.[course]?.courseData?.code === cardCode[0]
-                ) ||
-                Object.keys(this.selectedCourses[SECOND_SEM]).some(
-                    course => this.selectedCourses[SECOND_SEM]?.[course]?.courseData?.sectionCode === cardCode[1]
-                ))
-            ) {
-                this.cards.splice(i, 1); // Delete the card from the list
+            if (this.searchBarSuggestions.includes(card.course)) return true;
+
+            for (const session of SEMESTER_CODES) {
+                const entry = this.selectedCourses[session][courseCode!];
+                if (entry?.courseData?.code === courseCode &&
+                    entry?.courseData?.sectionCode === sectionCode) return true;
             }
-        }
+
+            return false;
+        });
     },
 
     /**

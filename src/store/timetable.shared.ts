@@ -5,7 +5,7 @@ export const LIGHT_SATURATION: number = 0.8;
 export const LIGHT_LIGHTNESS: number = 0.85;
 
 /** How long certain data is considered valid before refetching (ex. divisional data) */
-export const FETCH_CACHE_EXPIRY: number = 3 * 60 * 1000; // Expire in 3 mins (in ms)
+export const FETCH_CACHE_EXPIRY: number = 6 * 60 * 60 * 1000; // Expire in 6 hours (in ms)
 
 /** All the possible valid weekdays */
 export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
