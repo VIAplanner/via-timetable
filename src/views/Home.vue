@@ -12,6 +12,7 @@
 		</div>
 		<div
 			class="fixed top-0 left-0 z-30 flex flex-row h-18.75 w-full items-center justify-center md:justify-start bg-main-accent">
+			<h1 class="sr-only">VIAplanner — University of Toronto Timetable Builder</h1>
 			<img src="../assets/VIA-Logo-White.png" class="max-w-8.75 md:max-w-12.5 my-2 ml-2">
 			<Button icon="pi pi-replay" rounded @click="store.undo()" class="m-2 md:ml-3"
 				v-tooltip.bottom="tooltip('Undo')" :pt:root:class="'w-8! h-8! shrink-0 md:w-10! md:h-10!'"
