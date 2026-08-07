@@ -2,7 +2,7 @@
 	<div :id="`exportTemplate-${semester}`" class="export-template">
 		<link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css">
 		<div class="export-template__header">
-			<img :src="logo" class="max-w-32.5 h-15 m-2 mr-0">
+			<img alt="VIAplanner logo" :src="logo" class="max-w-32.5 h-15 m-2 mr-0">
 			<p class="export-template__subtitle ml-2">{{ title }} Timetable</p>
 		</div>
 

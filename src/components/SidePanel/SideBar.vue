@@ -5,7 +5,7 @@
 			credits
 		</p>
 		<hr class="mb-3" />
-		<img :src="imgSrc" class="absolute z-0" width="100%"
+		<img alt="Session icon" :src="imgSrc" class="absolute z-0" width="100%"
 			style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
 		<div class="flex flex-row justify-center items-start"
 			:style="{ 'height': `${coursePanelHeight}px`, 'z-index': -1 }">
