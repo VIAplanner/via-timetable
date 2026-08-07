@@ -1,13 +1,10 @@
 <p align="center">
   <a href="https://viaplanner.net/" target="_blank">
-    <img alt="VIAplanner" width="300" src="./VIA-Planner-Blue.png">
+    <img alt="VIAplanner" width="300" src="./src/assets/VIA-Planner-Blue.png">
   </a>
 </p>
 
-<p align="center"> 
-   <a href="https://app.netlify.com/sites/viatimetable/deploys">
-    <img alt="Build Status" src="https://api.netlify.com/api/v1/badges/3b870967-d243-450c-8672-3add3187a16f/deploy-status">
-  </a>
+<p align="center">
   <a href="https://github.com/VIAplanner/VIAplanner/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/license-GPL-green?style=flat">
   </a>
