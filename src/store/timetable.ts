@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 // @ts-ignore
 import genColor from 'color-generator';
-import { getViaBuilderManager } from '../builder/builder';
+import { ViaBuilderManager } from '@kelexer/via-builder';
 import {
     FETCH_CACHE_EXPIRY,
     COURSE_DATA_CACHE_EXPIRY,
@@ -26,6 +26,13 @@ import {
     SECOND_SEM,
     BOTH_SEM
 } from './timetable.shared';
+
+let managerInstance: ViaBuilderManager | null = null;
+
+async function getBuilderManager(): Promise<ViaBuilderManager> {
+    if (!managerInstance) managerInstance = await ViaBuilderManager.create();
+    return managerInstance;
+}
 
 const createTimetableState = () => ({
     /** Debug to clear site storage for users in the event of a formatting change etc. */
@@ -215,7 +222,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         }
 
         // Regenerate the timetable
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.removeCourse(blockedTimesCourseCodePlaceholder, "");
         manager.addCourse(this.blockedTimesPlaceholderCourse);
         this.generateTimetable();
@@ -234,7 +241,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         }
 
         // Regenerate the timetable
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.removeCourse(blockedTimesCourseCodePlaceholder, "");
         manager.addCourse(this.blockedTimesPlaceholderCourse);
         this.generateTimetable();
@@ -250,7 +257,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      */
     async setLockedTimeStatus(semester: SemesterCode, day: Weekday, start: number, end: number, lock: boolean) {
         this.setBlockedTime(semester, day, start, end, lock);
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.removeCourse(blockedTimesCourseCodePlaceholder, "");
         manager.addCourse(this.blockedTimesPlaceholderCourse);
     },
@@ -349,7 +356,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
     async loadBlockedTimesToBuilder() {
         this.syncBlockedTimesPlaceholderCourse();
 
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.removeCourse(blockedTimesCourseCodePlaceholder, "");
         manager.addCourse(this.blockedTimesPlaceholderCourse);
     },
@@ -358,7 +365,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @brief Reloads all selected courses into the builder from the current store state
      */
     async reloadCoursesToBuilder() {
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.reset();
         await this.loadBlockedTimesToBuilder();
 
@@ -423,7 +430,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
 
         const courseData = this.selectedCourses[this.selectedSession][course];
         if (!courseData) return;
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         manager.removeCourse(course, activityType);
         await this.addCourseToBuilder(courseData.courseData);
     },
@@ -481,7 +488,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @param courseData The course data
      */
     async addCourseToBuilder(courseData: any) {
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
 
         // Check if any activity type is locked, if so then we know to filter out any other activity of the same type
         const lockedSectionsByType: Record<ActivityType, string | null> = {
@@ -699,7 +706,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             }
         }
 
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
 
         for (const type of ["LEC", "TUT", "PRA"]) manager.removeCourse(course, type);
 
@@ -726,7 +733,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         this.switchSession = false;
         this.currentlyBuildingTimetable = true;
         try {
-            const manager = await getViaBuilderManager();
+            const manager = await getBuilderManager();
             const timetable = manager.build();
             this.applyBuiltTimetable(timetable);
         } finally {
@@ -1243,7 +1250,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
      * @brief Updates the preferences the builder should try to satisfy based on the stored preferences
      */
     async updatePreferences() {
-        const manager = await getViaBuilderManager();
+        const manager = await getBuilderManager();
         // More info on formatting available at https://github.com/Kelexer1/via-builder
         manager.setPreferences({
             "MAX_GAP": this.maxGap,
