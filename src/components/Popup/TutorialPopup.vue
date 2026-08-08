@@ -6,10 +6,13 @@
 				<Carousel :value="tutorialSteps" :numVisible="1" :numScroll="1" :pt:indicatorList:class="'py-0'">
 					<template #item="slotProps">
 						<div class="tutorial-popup-slide">
-							<h2 class="text-sm md:text-xl font-bold">{{ slotProps.data.step }}: {{ slotProps.data.title }}</h2>
-							<p class="tutorial-popup-description text-xs md:text-lg mb-1">{{ slotProps.data.description }}</p>
+							<h2 class="text-sm md:text-xl font-bold">{{ slotProps.data.step }}: {{ slotProps.data.title
+							}}</h2>
+							<p class="tutorial-popup-description text-xs md:text-lg mb-1">{{ slotProps.data.description
+							}}</p>
 							<div class="mb-4" style="width:100%;display:flex;justify-content:center;">
-								<div :style="getImageStyle(slotProps.data.path)"></div>
+								<img :src="slotProps.data.path" :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
+									:style="getImageStyle(/*slotProps.data.path*/)" />
 							</div>
 						</div>
 					</template>
@@ -109,14 +112,11 @@ const dialogStyle = computed(() => {
 
 const imageHeight = computed(() => (isSmallDevice.value ? '55vh' : '60vh'));
 
-function getImageStyle(path: string) {
+function getImageStyle(/*path: string*/) {
 	return {
 		width: '100%',
 		height: imageHeight.value,
-		backgroundImage: `url(${path})`,
-		backgroundSize: isSmallDevice.value ? 'auto 102%' : '100% auto',
-		backgroundPosition: 'center',
-		backgroundRepeat: 'no-repeat',
+		objectFit: 'contain',
 	} as Record<string, string>;
 }
 

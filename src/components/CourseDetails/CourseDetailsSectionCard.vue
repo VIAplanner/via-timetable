@@ -2,8 +2,9 @@
     <div class="bg-coursecard-background rounded-md p-3">
         <div class="flex flex-col gap-3 lg:flex-row lg:justify-between">
             <div class="flex flex-row gap-x-5 items-start">
-                <RadioButton v-model="sectionType.field" :inputId="section.name" :value="section.name" />
-                <h2 class="text-md font-bold">
+                    <label :for="section.name" class="flex flex-row gap-x-5 items-start cursor-pointer">
+                        <RadioButton v-model="sectionType.field" :inputId="section.name" :value="section.name" />
+                        <h2 class="text-md font-bold">
                     <span v-if="sectionConflicts.length === 0">
                         {{ section.name }}
                     </span>
@@ -17,7 +18,8 @@
                         class="text-yellow-500">
                         (Unavailable)
                     </span>
-                </h2>
+                        </h2>
+                    </label>
             </div>
             <a v-if="courseData.campus === 'University of Toronto at Mississauga' && section.deliveryModes && section.deliveryModes.length"
                 :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"

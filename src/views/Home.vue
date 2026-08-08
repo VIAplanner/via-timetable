@@ -31,7 +31,9 @@
 		</div>
 		<div v-if="isSmallDevice && sidebarOpen" class="fixed inset-0 z-120 md:hidden" role="dialog" aria-modal="true"
 			aria-label="Selected courses sidebar">
-			<div class="absolute inset-0 bg-black/40" @click="sidebarOpen = false" />
+			<div class="absolute inset-0 bg-black/40" role="button" tabindex="0" aria-label="Close sidebar overlay"
+				@click="sidebarOpen = false" @keydown.enter.prevent="sidebarOpen = false"
+				@keydown.space.prevent="sidebarOpen = false" />
 			<div class="relative h-full w-full">
 				<SideBar :fullscreen="true" />
 			</div>

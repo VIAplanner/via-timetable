@@ -1,7 +1,8 @@
 <template>
 	<div class="flex flex-row items-center justify-center">
 		<div class="flex flex-row justify-center items-center mx-0 w-full cursor-pointer select-none"
-			@click="toggleDayLock()" :style="{ 'height': height }">
+			role="button" tabindex="0" aria-label="Toggle day lock" @click="toggleDayLock()"
+			@keydown.enter.prevent="toggleDayLock()" @keydown.space.prevent="toggleDayLock()" :style="{ 'height': height }">
 			<h3 class="day-label m-0 font-bold leading-none text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}
 			</h3>
 			<div v-if="locked && !isExport" class="absolute -bottom-6" v-tooltip.bottom="tooltip(toolTipText)">
