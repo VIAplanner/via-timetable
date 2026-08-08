@@ -15,7 +15,7 @@ const store = useTimetableStore() as any;
 const includeUnavailable: Ref<boolean> = ref(store.includeUnavailable ?? false);
 
 watch(includeUnavailable, (val: boolean) => {
-    if (val !== store.includeUnavailable) store.includeUnavailable = val;
+    if (val !== store.includeUnavailable) store.setIncludeUnavailable(val);
 });
 
 watch(() => store.includeUnavailable, (val: boolean) => {

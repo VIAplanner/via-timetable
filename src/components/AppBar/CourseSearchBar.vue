@@ -72,12 +72,17 @@ function parseSessionEmoji(sessions: Array<string>) {
 let abortController: AbortController | null = null;
 
 async function populateRecommendations() {
+	abortController?.abort();
+	abortController = null;
+
 	if (!currentQuery.value) return;
 	const query = typeof currentQuery.value === 'string' ? currentQuery.value : currentQuery.value.code;
 	const queryTrimmed = query.trim();
-	if (!queryTrimmed || queryTrimmed.length < 3) return;
+	if (!queryTrimmed || queryTrimmed.length < 3) {
+		loading.value = false;
+		return;
+	}
 
-	abortController?.abort();
 	abortController = new AbortController();
 
 	try {
@@ -89,7 +94,8 @@ async function populateRecommendations() {
 				limit: 5,
 				sessions: [...store.selectedSubsessions].join(','),
 				divisions: [...store.selectedDivisions].join(',')
-			}
+			},
+			signal: abortController.signal
 		});
 
 		const courses: Array<Course> = Array.from(coursesDataResult.data.courses as Array<Course>);

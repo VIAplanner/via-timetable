@@ -13,14 +13,19 @@
 
 # VIAplanner
 
-VIAplanner is a tool designed by students at the University of Toronto to help the community. Our goal is to improve the course selection and scheduling process by providing a suite of tools to browse courses and design personalized timetables on the go.
+VIAplanner is a tool designed by students at the University of Toronto to help the community. Our goal is to improve the
+course selection and scheduling process by providing a suite of tools to browse courses and design personalized
+timetables on the go.
 
 ## Introduction
 
 The fundamental problem we are trying to solve:
-1. There is no automated process to create good timetables, instead requiring days of manual effort checking different combinations of courses and timeslots
-2. The official University of Toronto timetable builder is unintuitive and not good for generating optimal timetables, often leaving large gaps and scattering classes across a very large time range
-3. The official University of Toronto timetable builder only provides a single way to customize your timetable, through broad scheduling preferences such as 'Early' or 'Late'
+1. There is no automated process to create good timetables, instead requiring days of manual effort checking different
+combinations of courses and timeslots
+2. The official University of Toronto timetable builder is unintuitive and not good for generating optimal timetables,
+often leaving large gaps and scattering classes across a very large time range
+3. The official University of Toronto timetable builder only provides a single way to customize your timetable, through
+broad scheduling preferences such as 'Early' or 'Late'
 
 ## Installation Using Yarn
 
@@ -47,8 +52,9 @@ This will start the frontend and backend on `http://localhost/`, and automatical
 ```sh
 docker compose up frontend backend nginx --build
 ```
-This will start the frontend and backend on `http://localhost/`, assuming that backend has it's environment variables. The database will
-not be modified. It is recommended to use a local MongoDB database and populate it once before testing without automated scraping.
+This will start the frontend and backend on `http://localhost/`, assuming that backend has it's environment variables.
+The database will not be modified. It is recommended to use a local MongoDB database and populate it once before testing
+without automated scraping.
 
 ## .env Setup
 **VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000"

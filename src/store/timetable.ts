@@ -5,6 +5,7 @@ import genColor from 'color-generator';
 import { getViaBuilderManager } from '../builder/builder';
 import {
     FETCH_CACHE_EXPIRY,
+    COURSE_DATA_CACHE_EXPIRY,
     MAX_HISTORY,
     blockedTimesCourseCodePlaceholder,
     DARK_LIGHTNESS,
@@ -354,6 +355,32 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
     },
 
     /**
+     * @brief Reloads all selected courses into the builder from the current store state
+     */
+    async reloadCoursesToBuilder() {
+        const manager = await getViaBuilderManager();
+        manager.reset();
+        await this.loadBlockedTimesToBuilder();
+
+        for (const session of Object.values(this.selectedCourses)) {
+            for (const course of Object.values(session)) {
+                await this.addCourseToBuilder(course.courseData);
+            }
+        }
+    },
+
+    /**
+     * @brief Updates whether unavailable sections should be included and rebuilds the builder cache
+     * @param includeUnavailable Whether unavailable sections should be included
+     */
+    async setIncludeUnavailable(includeUnavailable: boolean) {
+        if (this.includeUnavailable === includeUnavailable) return;
+
+        this.includeUnavailable = includeUnavailable;
+        await this.reloadCoursesToBuilder();
+    },
+
+    /**
      * Locks a specific activity section for a course
      * @param course The course code
      * @param activity The activity code
@@ -383,7 +410,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         } else {
             // Remove the locked activity
             const updatedActivities = lockedActivities.filter((lockedActivity) => lockedActivity !== activity);
-            const nextLockedSections = {...sessionData};
+            const nextLockedSections = { ...sessionData };
 
             // Delete the locked sections entry if empty otherwise update the entry
             if (updatedActivities.length === 0) delete nextLockedSections[course];
@@ -419,6 +446,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         shouldGenerate = true
     ) {
         // Add the course to F or S (or both)
+        const selectedSessionFromCourse = this.resolveSubsessionSemesters(courseData.sessions?.[0])?.[0] || null;
         const color = genColor(
             this.darkMode ? DARK_SATURATION : LIGHT_SATURATION,
             this.darkMode ? DARK_LIGHTNESS : LIGHT_LIGHTNESS
@@ -431,13 +459,21 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                     tut,
                     pra,
                     color,
+                    expiry: Date.now() + COURSE_DATA_CACHE_EXPIRY,
                     courseData
                 };
             }
         }
 
+        const previousSwitchSession = this.switchSession;
+        this.switchSession = false;
         await this.addCourseToBuilder(courseData);
-        if (shouldGenerate) this.generateTimetable();
+        if (shouldGenerate) await this.generateTimetable();
+        this.switchSession = previousSwitchSession;
+
+        if (shouldGenerate && previousSwitchSession && selectedSessionFromCourse) {
+            this.selectedSession = selectedSessionFromCourse;
+        }
     },
 
     /**
@@ -510,7 +546,8 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                     meetingTimeJSON["start"] = meetingTimeData["start"];
                     meetingTimeJSON["end"] = meetingTimeData["end"];
                     meetingTimeJSON["day"] = meetingTimeData["day"] - 1;
-                    meetingTimeJSON["online"] = (buildingCode === "");
+                    const mode = this.getCourseSectionDeliveryModeForSession(sectionData.deliveryModes, meetingTimeData["sessionCode"])
+                    meetingTimeJSON["online"] = (mode === "SYNC" || mode === "ASYNC");
                     meetingTimeJSON["zz"] = (buildingCode === "ZZ");
                     meetingTimeJSON["semester"] = semesterIndex;
                     sectionJSON["meetingTimes"].push(meetingTimeJSON);
@@ -531,7 +568,7 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 (sectionName.startsWith('PRA') && lockedSectionsByType.PRA && sectionName
                     === String(lockedSectionsByType.PRA).toUpperCase());
 
-            if (!isLocked && !this.includeUnavailable && sectionData.enrolmentInd === 'C') continue;
+            if (!isLocked && !this.includeUnavailable && sectionData.openLimitInd === 'C') continue;
 
             if (sectionName.startsWith('LEC')) {
                 if (lockedSectionsByType.LEC && sectionName !== String(lockedSectionsByType.LEC).toUpperCase())
@@ -566,6 +603,77 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
         if (practicalsJSON["sections"].length > 0) {
             practicalsJSON["type"] = "PRA";
             manager.addCourse(practicalsJSON);
+        }
+    },
+
+    /**
+     * @brief Returns whether a cached course entry has expired
+     * @param courseData The selected course data entry
+     * @returns Whether the course data should be refetched
+     */
+    isCourseDataExpired(courseData: SelectedCourseData): boolean {
+        return !courseData.expiry || courseData.expiry < Date.now();
+    },
+
+    /**
+     * @brief Refetches a single course from the backend using its exact course, section, and session ids
+     * @param courseData The cached selected course data
+     * @returns The fresh course data, or null if it could not be fetched
+     */
+    async fetchFreshCourseData(courseData: SelectedCourseData): Promise<any | null> {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/courses/${courseData.courseData.code}`, {
+                params: {
+                    page: 1,
+                    limit: 5,
+                    sessions: courseData.courseData.sessionId ? [courseData.courseData.sessionId].join(',') : undefined
+                }
+            });
+
+            return (response.data.courses || []).find((course: any) => (
+                course.code === courseData.courseData.code &&
+                course.sectionCode === courseData.courseData.sectionCode &&
+                (!courseData.courseData.sessionId || course.sessionId === courseData.courseData.sessionId)
+            )) || null;
+        } catch (error: any) {
+            console.error(
+                `Failed to refresh course ${courseData.courseData.code} ${courseData.courseData.sectionCode}:`,
+                error.message
+            );
+            return null;
+        }
+    },
+
+    /**
+     * @brief Refetches any selected course data that has expired
+     */
+    async refreshExpiredCourseData() {
+        const refreshTargets: Array<{ session: SemesterCode, course: string, entry: SelectedCourseData }> = [];
+        const fetchCache = new Map<string, Promise<any | null>>();
+
+        for (const session of SEMESTER_CODES) {
+            for (const [course, entry] of Object.entries(this.selectedCourses[session])) {
+                if (this.isCourseDataExpired(entry)) {
+                    refreshTargets.push({ session, course, entry });
+                }
+            }
+        }
+
+        for (const target of refreshTargets) {
+            const cacheKey = `${target.entry.courseData.code}::${target.entry.courseData.sectionCode}::${target.entry.courseData.sessionId || ''}`;
+
+            if (!fetchCache.has(cacheKey)) {
+                fetchCache.set(cacheKey, this.fetchFreshCourseData(target.entry));
+            }
+
+            const freshCourseData = await fetchCache.get(cacheKey)!;
+            if (!freshCourseData) continue;
+
+            this.selectedCourses[target.session][target.course] = {
+                ...target.entry,
+                expiry: Date.now() + COURSE_DATA_CACHE_EXPIRY,
+                courseData: freshCourseData
+            };
         }
     },
 
@@ -613,11 +721,18 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             })
             return;
         };
+
+        const previousSwitchSession = this.switchSession;
+        this.switchSession = false;
         this.currentlyBuildingTimetable = true;
-        const manager = await getViaBuilderManager();
-        const timetable = manager.build();
-        this.applyBuiltTimetable(timetable);
-        this.currentlyBuildingTimetable = false;
+        try {
+            const manager = await getViaBuilderManager();
+            const timetable = manager.build();
+            this.applyBuiltTimetable(timetable);
+        } finally {
+            this.currentlyBuildingTimetable = false;
+            this.switchSession = previousSwitchSession;
+        }
     },
 
     /**
@@ -646,17 +761,17 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
                 const courseData = this.selectedCourses[session][course["code"]];
                 if (!courseData) continue;
                 switch (course["type"]) {
-                case "LEC":
-                    courseData["lec"] = course["section"];
-                    break;
-                case "TUT":
-                    courseData["tut"] = course["section"];
-                    break;
-                case "PRA":
-                    courseData["pra"] = course["section"];
-                    break;
-                default:
-                    continue;
+                    case "LEC":
+                        courseData["lec"] = course["section"];
+                        break;
+                    case "TUT":
+                        courseData["tut"] = course["section"];
+                        break;
+                    case "PRA":
+                        courseData["pra"] = course["section"];
+                        break;
+                    default:
+                        continue;
                 }
 
                 this.timetableModifyActivity(courseData["courseData"], course["section"]);
@@ -1141,6 +1256,24 @@ const timetableActions: ThisType<TimetableStore> & Record<string, (...args: any[
             "AVOID_RUSH_HOURS": this.avoidRushHour,
             "ONLINE_PREFERENCE": this.onlinePreference === "Avoid" ? 0 : this.onlinePreference === "Prefer" ? 1 : 2
         })
+    },
+
+    /**
+     * @brief Returns the delivery mode of a course for a given session
+     *
+     * @param deliveryModes The delivery modes array
+     * @param session The session (ex. "20261")
+     * @returns "INPER" for in-person, "SYNC" for online synchronous, "ASYNC" for online asynchronous, "HYBR" for
+     * hybrid, and the empty string if the session does not have a mapping
+     */
+    getCourseSectionDeliveryModeForSession(deliveryModes: any, session: string) {
+        for (const sessionDelivery of deliveryModes as Array<any>) {
+            if (sessionDelivery?.session == session) {
+                return sessionDelivery.mode;
+            }
+        }
+
+        return "";
     }
 };
 

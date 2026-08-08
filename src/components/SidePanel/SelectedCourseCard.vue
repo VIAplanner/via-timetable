@@ -36,7 +36,6 @@ function editSection() {
  * @brief Deletes the course given by props from the timetable
  */
 function deleteCourse() {
-	store.switchSession = true;
 	store.removeCourse(props.course.courseData.code);
 	store.saveStateHistory();
 }

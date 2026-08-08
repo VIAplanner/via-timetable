@@ -19,7 +19,7 @@
                     </span>
                 </h2>
             </div>
-            <a v-if="courseData.campus === 'University of Toronto at Mississauga'"
+            <a v-if="courseData.campus === 'University of Toronto at Mississauga' && section.deliveryModes && section.deliveryModes.length"
                 :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"
                 target="_blank" rel="noopener noreferrer" class="text-text-secondary self-start lg:self-auto">
                 <u>View Syllabus</u>
@@ -35,7 +35,7 @@
                     <span class="font-medium">Instructors: </span>
                     <span v-if="section.instructors && section.instructors.length">
                         {{section.instructors.map((instructor: any) => `${instructor.firstName}
-                        ${instructor.lastName}`).join(', ') }}
+                        ${instructor.lastName}`).join(', ')}}
                     </span>
                     <span v-else>To be assigned</span>
                 </p>
@@ -193,12 +193,16 @@ const divisionalEnrolmentIndicator = computed(() => {
 
 /**
  * @brief Returns whether a course is online sync, online async, in person, or hybrid
- * @param mode An array containing the delivery modes for each session, as gotten from section.deliveryModes in
+ * @param deliveryModes An array containing the delivery modes for each session, as gotten from section.deliveryModes in
  * typical course JSON format
  * @return Either 'Online Sync', 'Online Async', 'In Person', 'Hybrid'
  */
 function getSectionDeliveryType(deliveryModes: any): string {
-    switch (deliveryModes[0].mode) {
+    const session = deliveryModes?.[0]?.session;
+    if (!session) return '';
+
+    const mode = store.getCourseSectionDeliveryModeForSession(deliveryModes, session);
+    switch (mode) {
         case 'INPER': return 'In Person';
         case 'SYNC': return 'Online Sync';
         case 'ASYNC': return 'Online Async';

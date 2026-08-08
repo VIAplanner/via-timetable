@@ -7,6 +7,9 @@ export const LIGHT_LIGHTNESS: number = 0.85;
 /** How long certain data is considered valid before refetching (ex. divisional data) */
 export const FETCH_CACHE_EXPIRY: number = 6 * 60 * 60 * 1000; // Expire in 6 hours (in ms)
 
+/** How long selected course data is considered valid before being refetched */
+export const COURSE_DATA_CACHE_EXPIRY: number = 12 * 60 * 60 * 1000; // Expire in 12 hours (in ms)
+
 /** All the possible valid weekdays */
 export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 
@@ -15,20 +18,20 @@ export const DAYS_SHORT = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
 
 /** All the possible valid times, in display and numerical format */
 export const TIMES = [
-    { display: '9 AM', numerical: 9 },
-    { display: '10 AM', numerical: 10 },
-    { display: '11 AM', numerical: 11 },
-    { display: '12 PM', numerical: 12 },
-    { display: '1 PM', numerical: 13 },
-    { display: '2 PM', numerical: 14 },
-    { display: '3 PM', numerical: 15 },
-    { display: '4 PM', numerical: 16 },
-    { display: '5 PM', numerical: 17 },
-    { display: '6 PM', numerical: 18 },
-    { display: '7 PM', numerical: 19 },
-    { display: '8 PM', numerical: 20 },
-    { display: '9 PM', numerical: 21 },
-    { display: '10 PM', numerical: 22 }
+	{ display: '9 AM', numerical: 9 },
+	{ display: '10 AM', numerical: 10 },
+	{ display: '11 AM', numerical: 11 },
+	{ display: '12 PM', numerical: 12 },
+	{ display: '1 PM', numerical: 13 },
+	{ display: '2 PM', numerical: 14 },
+	{ display: '3 PM', numerical: 15 },
+	{ display: '4 PM', numerical: 16 },
+	{ display: '5 PM', numerical: 17 },
+	{ display: '6 PM', numerical: 18 },
+	{ display: '7 PM', numerical: 19 },
+	{ display: '8 PM', numerical: 20 },
+	{ display: '9 PM', numerical: 21 },
+	{ display: '10 PM', numerical: 22 }
 ] as const;
 
 /** All the possible valid semester codes, corresponding to First and Second */
@@ -81,6 +84,7 @@ export interface SelectedCourseData {
 	tut: string | null, // The TUT number (null if none)
 	pra: string | null, // The PRA number (null if none)
 	color: string, // The color associated with the course (hex format)
+	expiry: number, // When the cached course data expires (in ms since epoch)
 	courseData: any // The JSON object containing all data for the course (ex. meeting times, instructors, etc.)
 	// ^ Exact formatting may change from time to time, (for now) formatted by https://github.com/Kelexer1/UofT-Scraper
 }

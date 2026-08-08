@@ -20,14 +20,15 @@ const toastBreakpoints = {
 	}
 };
 
-onMounted(() => {
+onMounted(async () => {
 	store.initializeToast(toast);
 	store.initializeHistory();
 	store.updatePreferences();
-	initializeSessionGroup();
+	await initializeSessionGroup();
+	await store.refreshExpiredCourseData();
 	applyDarkMode();
-	generateCourseCards();
-	loadCoursesToBuilder();
+	await generateCourseCards();
+	await loadCoursesToBuilder();
 	store.loadBlockedTimesToBuilder();
 });
 
@@ -78,11 +79,7 @@ async function generateCourseCards() {
  * @brief Loads all selected courses to the builder API so that timetables can be built using them
  */
 async function loadCoursesToBuilder() {
-	for (const session of Object.values(store.selectedCourses)) {
-		for (const course of Object.values(session)) {
-			store.addCourseToBuilder(course["courseData"]);
-		}
-	}
+	await store.reloadCoursesToBuilder();
 }
 
 watch(() => [store.maxGap, store.maxDayLength, store.minDayLength, store.maxHours, store.preferredStart,
