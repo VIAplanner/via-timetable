@@ -10,8 +10,8 @@
 		<div class="flex flex-row justify-center items-start"
 			:style="{ 'height': `${coursePanelHeight}px`, 'z-index': -1 }">
 			<div class="flex flex-col w-full">
-				<SelectedCourseCard v-for="(course, code) in store.selectedCourses[store.selectedSession]" :key="code"
-					:course="course" class="z-1" />
+				<SelectedCourseCard v-for="([code, course]) in orderedCourses" :key="code" :course="course"
+					class="z-1" />
 			</div>
 		</div>
 	</div>
@@ -37,6 +37,11 @@ const props = defineProps({
 });
 
 const sideBarTitle: Ref<string> = ref('Loading Sessions...');
+
+const orderedCourses = computed<Array<[string, SelectedCourseData]>>(() => {
+	return (Object.entries(store.selectedCourses[store.selectedSession] ?? {}) as Array<[string, SelectedCourseData]>)
+		.sort(([codeA], [codeB]) => codeA.localeCompare(codeB));
+});
 
 /**
  * @brief Updates the sidebar title based on the current session group and semester code
