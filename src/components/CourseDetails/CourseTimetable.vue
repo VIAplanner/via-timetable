@@ -7,9 +7,9 @@
                 <Column field="location" header="Location" style="width: 25%">
                     <template #body="slotProps">
                         <a v-if="slotProps.data.locationURL" :href="`${slotProps.data.locationURL}`" target="_blank"
-                            rel="noopener noreferrer" class="text-text-secondary break-words"><u>{{
+                            rel="noopener noreferrer" class="text-text-secondary wrap-break-word"><u>{{
                                 slotProps.data.location }}</u></a>
-                        <span v-else class="break-words">{{ slotProps.data.location }}</span>
+                        <span v-else class="wrap-break-word">{{ slotProps.data.location }}</span>
                     </template>
                 </Column>
             </DataTable>
@@ -21,9 +21,9 @@
                 <Column field="location" header="Location" style="width: 25%">
                     <template #body="slotProps">
                         <a v-if="slotProps.data.locationURL" :href="`${slotProps.data.locationURL}`" target="_blank"
-                            rel="noopener noreferrer" class="text-text-secondary break-words"><u>{{
+                            rel="noopener noreferrer" class="text-text-secondary wrap-break-word"><u>{{
                                 slotProps.data.location }}</u></a>
-                        <span v-else class="break-words">{{ slotProps.data.location }}</span>
+                        <span v-else class="wrap-break-word">{{ slotProps.data.location }}</span>
                     </template>
                 </Column>
             </DataTable>

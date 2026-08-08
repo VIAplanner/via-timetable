@@ -21,11 +21,11 @@ import MinDayLengthInput from './MinDayLengthInput.vue';
 
 const store = useTimetableStore() as any;
 
-const start: Ref<number> = ref(store.prefferedStart || 9);
-const maxEnd: Ref<number> = ref(store.prefferedMaxEnd || 15);
+const start: Ref<number> = ref(store.preferredStart || 9);
+const maxEnd: Ref<number> = ref(store.preferredMaxEnd || 15);
 
 watch(start, (val: number) => {
-    if (val !== store.start) store.prefferedStart = val;
+    if (val !== store.start) store.preferredStart = val;
 });
 
 watch(() => store.start, (val: number) => {
@@ -33,7 +33,7 @@ watch(() => store.start, (val: number) => {
 });
 
 watch(maxEnd, (val: number) => {
-    if (val !== store.maxEnd) store.prefferedMaxEnd = val;
+    if (val !== store.maxEnd) store.preferredMaxEnd = val;
 });
 
 watch(() => store.maxEnd, (val: number) => {

@@ -38,7 +38,7 @@
                             parseDistributionRequirements(courseData.breadths) }})</span>
                     </span>
                     <!-- View Legend Button -->
-                    <div v-if="divisionalData && divisionalLegend.content"
+                    <div v-if="divisionalData && divisionalLegend && divisionalLegend.content"
                         class="flex w-full justify-center sm:w-auto sm:justify-start">
                         <DivisionalLegend :division="`${courseData.faculty.name} (${courseData.faculty.code})`"
                             :content="divisionalLegend.content" />
@@ -146,18 +146,21 @@ async function syncSelectedSectionsFromStore() {
 
 watch(selectedLec, (val: string | null) => {
     if (suppressSelectionWatchers.value || !val) return;
+    store.switchSession = false;
     store.timetableModifyActivity(props.courseData, val, true);
     store.saveStateHistory();
 });
 
 watch(selectedTut, (val: string | null) => {
     if (suppressSelectionWatchers.value || !val) return;
+    store.switchSession = false;
     store.timetableModifyActivity(props.courseData, val, true);
     store.saveStateHistory();
 });
 
 watch(selectedPra, (val: string | null) => {
     if (suppressSelectionWatchers.value || !val) return;
+    store.switchSession = false;
     store.timetableModifyActivity(props.courseData, val, true);
     store.saveStateHistory();
 });
@@ -167,7 +170,7 @@ const sectionTypes = [
     { key: 'TUT', label: 'Tutorial', field: selectedTut },
     { key: 'PRA', label: 'Practical', field: selectedPra }
 ];
-
+ 
 const props = defineProps({
     courseData: {
         type: Object,
@@ -216,6 +219,7 @@ async function addCourse() {
     await nextTick();
     suppressSelectionWatchers.value = false;
 
+    store.switchSession = true;
     await store.addCourse(props.courseData.code, lec, tut, pra, props.courseData);
     store.saveStateHistory();
 }

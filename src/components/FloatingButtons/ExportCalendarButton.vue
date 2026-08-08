@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<Button @click="exportTimetables()" rounded icon="pi pi-download"
-			v-tooltip.left="tooltip('Export Timetables')" :pt:root:class="'text-white'" />
+		<Button @click="exportTimetables()" rounded icon="pi pi-download" v-tooltip.left="tooltip('Export Timetables')"
+			:pt:root:class="'text-white'" aria-label="Export Timetables" />
 
 		<div v-if="exportSemester" aria-hidden="true" class="export-template-stage">
 			<ExportTimetableTemplate :semester="exportSemester" :timetable="store.timetables[exportSemester]"
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { nextTick, ref, Ref } from 'vue';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useTimetableStore } from '../../store/timetable';
 import ExportTimetableTemplate from './ExportTimetableTemplate.vue';
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip';
@@ -41,18 +41,6 @@ function getSemesterTitle(sessions: Array<any>, semester: string): string {
 }
 
 /**
- * @brief Downloads the given canvas into a PNG
- * @param canvas The canvas to download
- * @param filename The filename of the PNG
- */
-function downloadCanvas(canvas: any, filename: string) {
-	const link = document.createElement('a');
-	link.href = canvas.toDataURL('image/png');
-	link.download = filename;
-	link.click();
-}
-
-/**
  * @brief Downloads the timetable for a given semester
  * @param semester The semester code
  * @param title The title that should be displayed on the downloaded timetable
@@ -71,13 +59,16 @@ async function captureSemester(semester: string, title: string) {
 
 	if (!timetableElement) return;
 
-	const canvas = await html2canvas(timetableElement, {
+	const dataURL = await toPng(timetableElement, {
 		backgroundColor: '#ffffff',
-		useCORS: true,
-		scale: 2
+		pixelRatio: 2,
+		skipFonts: true
 	});
 
-	downloadCanvas(canvas, `ViaPlanner-${semester}.png`);
+	const link = document.createElement('a');
+	link.href = dataURL;
+	link.download = `VIAplanner-${semester}.png`;
+	link.click();
 }
 
 /**

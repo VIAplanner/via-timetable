@@ -2,8 +2,9 @@
     <div class="bg-coursecard-background rounded-md p-3">
         <div class="flex flex-col gap-3 lg:flex-row lg:justify-between">
             <div class="flex flex-row gap-x-5 items-start">
-                <RadioButton v-model="sectionType.field" :inputId="section.name" :value="section.name" />
-                <h2 class="text-md font-bold">
+                    <label :for="section.name" class="flex flex-row gap-x-5 items-start cursor-pointer">
+                        <RadioButton v-model="sectionType.field" :inputId="section.name" :value="section.name" />
+                        <h2 class="text-md font-bold">
                     <span v-if="sectionConflicts.length === 0">
                         {{ section.name }}
                     </span>
@@ -11,15 +12,16 @@
                         v-tooltip.bottom="tooltip(`Conflicts with ${sectionConflicts.join(', ')}`)">
                         {{ section.name }}
                     </span>
-                    <span> ({{ getSectionDeliveryType(section.meetingTimes) }}) </span>
+                    <span> ({{ getSectionDeliveryType(section.deliveryModes) }}) </span>
                     <span v-if="section.openLimitInd === 'C'"
                         v-tooltip.bottom="tooltip('You may not be able to enrol in this section on Acorn at this time')"
                         class="text-yellow-500">
                         (Unavailable)
                     </span>
-                </h2>
+                        </h2>
+                    </label>
             </div>
-            <a v-if="courseData.campus === 'University of Toronto at Mississauga'"
+            <a v-if="courseData.campus === 'University of Toronto at Mississauga' && section.deliveryModes && section.deliveryModes.length"
                 :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"
                 target="_blank" rel="noopener noreferrer" class="text-text-secondary self-start lg:self-auto">
                 <u>View Syllabus</u>
@@ -35,7 +37,7 @@
                     <span class="font-medium">Instructors: </span>
                     <span v-if="section.instructors && section.instructors.length">
                         {{section.instructors.map((instructor: any) => `${instructor.firstName}
-                        ${instructor.lastName}`).join(', ') }}
+                        ${instructor.lastName}`).join(', ')}}
                     </span>
                     <span v-else>To be assigned</span>
                 </p>
@@ -67,7 +69,8 @@
                     </div>
                     <button v-if="section.enrolmentControls && section.enrolmentControls.length" type="button"
                         class="self-start text-text-secondary no-underline underline-offset-2 hover:underline"
-                        @click="showEnrolmentControls = !showEnrolmentControls" :aria-expanded="showEnrolmentControls">
+                        @click="showEnrolmentControls = !showEnrolmentControls" :aria-expanded="showEnrolmentControls"
+                        aria-label="Toggle enrolment controls">
                         {{ showEnrolmentControls ? 'Hide enrolment controls' : 'Show enrolment controls' }}
                     </button>
                     <div v-if="showEnrolmentControls">
@@ -192,24 +195,23 @@ const divisionalEnrolmentIndicator = computed(() => {
 });
 
 /**
- * @brief Returns whether a course is online, in person, or hybrid based on its timeslots
- * @param timeslots The timeslots of the course
- * @return Either 'Online', 'Hybrid', or 'In Person'
+ * @brief Returns whether a course is online sync, online async, in person, or hybrid
+ * @param deliveryModes An array containing the delivery modes for each session, as gotten from section.deliveryModes in
+ * typical course JSON format
+ * @return Either 'Online Sync', 'Online Async', 'In Person', 'Hybrid'
  */
-function getSectionDeliveryType(timeslots: Array<any>): string {
-    const regularSlots = timeslots.filter(timeslot => timeslot.building.buildingCode !== 'ZZ');
+function getSectionDeliveryType(deliveryModes: any): string {
+    const session = deliveryModes?.[0]?.session;
+    if (!session) return '';
 
-    var online = 0;
-    var inPer = 0;
-
-    for (const timeslot of regularSlots) {
-        if (timeslot.building.buildingCode.length) inPer++;
-        else online++;
+    const mode = store.getCourseSectionDeliveryModeForSession(deliveryModes, session);
+    switch (mode) {
+        case 'INPER': return 'In Person';
+        case 'SYNC': return 'Online Sync';
+        case 'ASYNC': return 'Online Async';
+        case 'HYBR': return 'Hybrid';
+        default: return '';
     }
-
-    if (online === regularSlots.length) return 'Online';
-    else if (online) return 'Hybrid';
-    else return 'In Person';
 }
 
 /**
@@ -253,7 +255,7 @@ function parseMeetingTimes(meetingTimes: any) {
 
         const formattedMeetingTime = {
             time: `${parseDay(meetingTime.day)} ${store.parseTime(meetingTime.start)} - ${store.parseTime(meetingTime.end)}`,
-            location: meetingTime.building.buildingCode ? meetingTime.building.buildingCode : 'Online',
+            location: meetingTime.building.buildingCode ? meetingTime.building.buildingCode : 'TBA',
             locationURL: meetingTime.building.buildingUrl
         };
 

@@ -3,7 +3,7 @@
 		<AutoComplete ref="searchBarComponent" @complete="populateRecommendations()" @focus="onFocus()"
 			@blur="isActive = false" @option-select="courseSearched()" optionLabel="formattedName"
 			v-model="currentQuery" :suggestions="allCourses" loader="pi pi-spinner" :loading="loading"
-			:placeholder="!loading ? (isSmallDevice ? 'Search...' : 'Search courses...') : ('Loading...')" :inputStyle="{
+			:placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : ('Loading...')" :inputStyle="{
 				'background-color': dynamicColor,
 				'border': 'none',
 				'border-radius': '16px',
@@ -69,11 +69,21 @@ function parseSessionEmoji(sessions: Array<string>) {
 	}).join('');
 }
 
+let abortController: AbortController | null = null;
+
 async function populateRecommendations() {
+	abortController?.abort();
+	abortController = null;
+
 	if (!currentQuery.value) return;
 	const query = typeof currentQuery.value === 'string' ? currentQuery.value : currentQuery.value.code;
 	const queryTrimmed = query.trim();
-	if (!queryTrimmed || queryTrimmed.length < 3) return;
+	if (!queryTrimmed || queryTrimmed.length < 3) {
+		loading.value = false;
+		return;
+	}
+
+	abortController = new AbortController();
 
 	try {
 		loading.value = true;
@@ -84,7 +94,8 @@ async function populateRecommendations() {
 				limit: 5,
 				sessions: [...store.selectedSubsessions].join(','),
 				divisions: [...store.selectedDivisions].join(',')
-			}
+			},
+			signal: abortController.signal
 		});
 
 		const courses: Array<Course> = Array.from(coursesDataResult.data.courses as Array<Course>);
@@ -96,16 +107,18 @@ async function populateRecommendations() {
 
 		store.searchBarSuggestions = courses.map((course: Course) => `${course.code} ${course.sectionCode}`);
 
-		store.removeUnusedCards();
-
 		loading.value = false;
 	} catch (error: any) {
+		if (axios.isCancel(error)) return;
 		loading.value = false;
 		console.error(`Error fetching data for ${query}: ${error.message}`);
 	}
 }
 
 async function courseSearched() {
+	abortController?.abort();
+	abortController = null;
+
 	const searchValue = currentQuery.value;
 	if (!searchValue || typeof searchValue === 'string') return;
 
@@ -124,14 +137,14 @@ async function courseSearched() {
 				divisionalEnrolmentIndicators
 			}
 		});
-		store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 	} else {
 		// Show detail card without any divisional data (the property is optional)
 		store.registerDetailCard(searchValue.code, searchValue.sectionCode, {
 			courseData: searchValue
 		});
-		store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 	}
+
+	store.setDetailCardVisibility(`${searchValue.code} ${searchValue.sectionCode}`, true);
 }
 
 function onFocus() {

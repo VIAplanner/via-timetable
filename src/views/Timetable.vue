@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="overflow-y-auto max-h-[85vh] overflow-x-hidden">
+		<div class="overflow-y-auto max-h-[85vh] overflow-x-hidden" tabindex="0" role="region" aria-label="Timetable">
 			<Timetable :timetable="store.timetables[store.selectedSession]" :semester="store.selectedSession"
 				:id="store.selectedSession === FIRST_SEM ? 'exportFirstMe' : 'exportSecondMe'" />
 		</div>

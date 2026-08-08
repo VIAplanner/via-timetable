@@ -11,7 +11,6 @@ import 'primeflex/primeflex.css';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
-import vueHtml2canvas from 'vue-html2canvas';
 import VueMobileDetection from "vue-mobile-detection";
 
 import 'regenerator-runtime/runtime';
@@ -90,7 +89,6 @@ app.use(PrimeVue, {
 
 app.use(ToastService);
 app.use(pinia);
-app.use(vueHtml2canvas);
 app.use(router);
 
 app.mount('#app');

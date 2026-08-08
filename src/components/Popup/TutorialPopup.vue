@@ -2,14 +2,17 @@
 	<div>
 		<Dialog @close="dialogClosed" v-model:visible="visible" modal header="Welcome to VIAplanner!"
 			:style="dialogStyle">
-			<div style="max-height:90vh; overflow:auto; padding:0.5rem;">
-				<Carousel :value="tutorialSteps" :numVisible="1" :numScroll="1">
+			<div class="p-0">
+				<Carousel :value="tutorialSteps" :numVisible="1" :numScroll="1" :pt:indicatorList:class="'py-0'">
 					<template #item="slotProps">
-						<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
-							<h2 class="text-lg font-bold">{{ slotProps.data.step }}: {{ slotProps.data.title }}</h2>
-							<p>{{ slotProps.data.description }}</p>
+						<div class="tutorial-popup-slide">
+							<h2 class="text-sm md:text-xl font-bold">{{ slotProps.data.step }}: {{ slotProps.data.title
+							}}</h2>
+							<p class="tutorial-popup-description text-xs md:text-lg mb-1">{{ slotProps.data.description
+							}}</p>
 							<div class="mb-4" style="width:100%;display:flex;justify-content:center;">
-								<div :style="getImageStyle(slotProps.data.path)"></div>
+								<img :src="slotProps.data.path" :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
+									:style="getImageStyle(/*slotProps.data.path*/)" />
 							</div>
 						</div>
 					</template>
@@ -97,26 +100,23 @@ const dialogStyle = computed(() => {
 	if (isSmallDevice.value) {
 		return {
 			width: '100vw',
-			height: '100vh',
+			height: '100dvh',
 			'max-width': '100vw',
-			'max-height': '100vh',
+			'max-height': '100dvh',
 			margin: '0',
-			padding: '0',
+			padding: '0'
 		};
 	}
 	return { 'width': 'auto', 'max-width': 'min(1200px, 100vw)' };
 });
 
-const imageHeight = computed(() => (isSmallDevice.value ? '66vh' : '60vh'));
+const imageHeight = computed(() => (isSmallDevice.value ? '55vh' : '60vh'));
 
-function getImageStyle(path: string) {
+function getImageStyle(/*path: string*/) {
 	return {
 		width: '100%',
 		height: imageHeight.value,
-		backgroundImage: `url(${path})`,
-		backgroundSize: isSmallDevice.value ? 'auto 102%' : '100% auto',
-		backgroundPosition: 'center',
-		backgroundRepeat: 'no-repeat',
+		objectFit: 'contain',
 	} as Record<string, string>;
 }
 
@@ -124,3 +124,28 @@ function dialogClosed() {
 	store.tutorialPopup = false;
 }
 </script>
+
+<style scoped>
+.tutorial-popup-content {
+	box-sizing: border-box;
+	max-height: 100%;
+	overflow: hidden;
+	padding: 0.75rem 1rem 1rem;
+}
+
+.tutorial-popup-slide {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-top: 0.75rem;
+	padding-bottom: 0.5rem;
+	text-align: center;
+}
+
+@media (max-width: 640px) {
+	.tutorial-popup-slide {
+		padding-top: 0.25rem;
+	}
+}
+</style>

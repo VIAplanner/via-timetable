@@ -1,9 +1,12 @@
 <template>
-	<div class="h-full cursor-pointer select-none" @click="toggleHourLock()">
-		<h2 class="mr-[10px] text-[12px] md:text-[16px] font-semibold">{{ time }}</h2>
-		<div v-if="last && locked && !isExport" class="mt-2 flex flex-row items-center justify-center"
-			v-tooltip.right="tooltip(lockTooltipText)">
-			<Button @click.stop="toggleHourLock()" icon="pi pi-lock" rounded text iconClass="text-text-primary" />
+	<div class="h-full cursor-pointer select-none" role="button" tabindex="0" aria-label="Toggle hour lock"
+		@click="toggleHourLock()" @keydown.enter.prevent="toggleHourLock()" @keydown.space.prevent="toggleHourLock()">
+		<div class="relative h-full w-full">
+			<h2 class="relative bottom-2 md:bottom-3 mr-2.5 text-[12px] md:text-[16px] font-semibold">{{ time }}</h2>
+			<div v-if="last && locked && !isExport" class="absolute inset-0 flex items-center justify-center"
+				v-tooltip.right="tooltip(lockTooltipText)">
+				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" aria-label="Toggle Hour Lock" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -37,7 +40,7 @@ const props = defineProps({
 		required: false,
 		default: false
 	}
-})
+});
 
 const intTime = computed(() => {
 	const timeSplit = props.time.split(' ');

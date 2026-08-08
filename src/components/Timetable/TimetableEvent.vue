@@ -3,15 +3,16 @@
 		'height': duration * oneHourHeight
 	}">
 		<!-- Non-empty event -->
-		<div v-if="!isEmpty" class="h-full text-white p-1 text-sm cursor-pointer" @mouseenter="setHovered(true)"
-			@mouseleave="setHovered(false)" @click="handleEventClick()">
+		<div v-if="!isEmpty" class="h-full text-white p-1 text-sm cursor-pointer" role="button" tabindex="0"
+			aria-label="Open course details" @mouseenter="setHovered(true)" @mouseleave="setHovered(false)"
+			@click="handleEventClick()" @keydown.enter.prevent="handleEventClick()" @keydown.space.prevent="handleEventClick()">
 			<div class="flex flex-row justify-between">
 				<h3 class="font-bold relative">{{ eventData.course }}</h3>
 				<div v-if="!isSmallDevice && !isExport" class="absolute right-0">
 					<Button v-if="sectionLocked" rounded text icon="pi pi-lock" @click.stop="blockSectionToggle()"
-						iconClass="text-white" />
+						iconClass="text-white" aria-label="Unblock Section" />
 					<Button v-else-if="hovered || isSmallDevice" rounded text icon="pi pi-lock-open"
-						@click.stop="blockSectionToggle()" iconClass="text-white" />
+						@click.stop="blockSectionToggle()" iconClass="text-white" aria-label="Block Section" />
 				</div>
 			</div>
 			<p :class="{ 'text-red-300': sectionLocked && !isExport }">{{ eventData.activity }} ({{
@@ -21,9 +22,11 @@
 		</div>
 		<!-- Empty event -->
 		<div v-else-if="eventData.start % 3600 === 0 && eventData.end % 3600 === 0"
-			:class="['event', 'h-full', dynamicColor]" :style="{ 'height': getHeight }" @mouseover="setHovered(true)"
-			@mouseleave="setHovered(false)">
-			<div v-show="hovered" class="m-0 p-0 h-[100%] flex items-center" @click="blockTimeToggle()" v-ripple>
+			:class="['event', 'h-full', dynamicColor]" :style="{ 'height': getHeight }" role="button" tabindex="0"
+			aria-label="Toggle blocked time" @mouseover="setHovered(true)" @focusin="setHovered(true)"
+			@mouseleave="setHovered(false)" @focusout="setHovered(false)" @click="blockTimeToggle()"
+			@keydown.enter.prevent="blockTimeToggle()" @keydown.space.prevent="blockTimeToggle()">
+			<div v-show="hovered" class="m-0 p-0 h-full flex items-center" @click="blockTimeToggle()" v-ripple>
 				<p v-show="hovered" class="text-center unselectable text-text-primary w-full">
 					{{ dynamicText }}
 				</p>

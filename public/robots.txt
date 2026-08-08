@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viaplanner.net/sitemap.xml

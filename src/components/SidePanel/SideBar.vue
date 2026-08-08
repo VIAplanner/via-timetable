@@ -1,17 +1,17 @@
 <template>
 	<div :class="sideBarRootClasses">
 		<h1 class="text-xl font-bold mr-4">{{ sideBarTitle }}</h1>
-		<p class="text-lg font-medium">{{ Object.keys(store.selectedCourses[store.selectedSession]).length * 0.5 }}
+		<p class="text-lg font-medium">{{ creditCount }}
 			credits
 		</p>
 		<hr class="mb-3" />
-		<img :src="imgSrc" class="absolute z-0" width="100%"
+		<img alt="Session icon" :src="imgSrc" class="absolute z-0" width="100%"
 			style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
 		<div class="flex flex-row justify-center items-start"
 			:style="{ 'height': `${coursePanelHeight}px`, 'z-index': -1 }">
 			<div class="flex flex-col w-full">
-				<SelectedCourseCard v-for="(course, code) in store.selectedCourses[store.selectedSession]" :key="code"
-					:course="course" class="z-1" />
+				<SelectedCourseCard v-for="([code, course]) in orderedCourses" :key="code" :course="course"
+					class="z-1" />
 			</div>
 		</div>
 	</div>
@@ -24,7 +24,7 @@ import fallBackground from '../../assets/fall-background.png';
 import winterBackground from '../../assets/winter-background.png';
 import SelectedCourseCard from './SelectedCourseCard.vue';
 import { useWindowSize } from '../../composables/useWindowSize';
-import { FIRST_SEM } from '../../store/timetable.shared';
+import { FIRST_SEM, SelectedCourseData } from '../../store/timetable.shared';
 
 const store = useTimetableStore() as any;
 const { height } = useWindowSize();
@@ -37,6 +37,11 @@ const props = defineProps({
 });
 
 const sideBarTitle: Ref<string> = ref('Loading Sessions...');
+
+const orderedCourses = computed<Array<[string, SelectedCourseData]>>(() => {
+	return (Object.entries(store.selectedCourses[store.selectedSession] ?? {}) as Array<[string, SelectedCourseData]>)
+		.sort(([codeA], [codeB]) => codeA.localeCompare(codeB));
+});
 
 /**
  * @brief Updates the sidebar title based on the current session group and semester code
@@ -71,7 +76,17 @@ const sideBarRootClasses = computed(() => {
 const imgSrc = computed(() => {
 	if (store.selectedSession === FIRST_SEM) return fallBackground;
 	else return winterBackground;
-})
+});
+
+const creditCount = computed(() => {
+	let sum: Number = 0.0;
+
+	for (let courseData of Object.values(store.selectedCourses[store.selectedSession]) as Array<SelectedCourseData>) {
+		sum += courseData.courseData.maxCredit;
+	}
+
+	return sum;
+});
 </script>
 
 <style scoped>

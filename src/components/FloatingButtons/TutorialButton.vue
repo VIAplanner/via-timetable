@@ -1,7 +1,8 @@
 <template>
 	<div>
-		<Button @click="setTutorial" icon="pi pi-question" rounded v-tooltip.left="tooltip('View the tutorial')"
-			:pt:root:class="'bg-green-400 border-green-400 text-white'" class="shadow-md" />
+		<Button @click="setTutorial" icon="pi pi-question" rounded v-tooltip.left="tooltip('View the Tutorial')"
+			:pt:root:class="'bg-green-400 border-green-400 text-white'" class="shadow-md"
+			aria-label="View the Tutorial" />
 	</div>
 </template>
 

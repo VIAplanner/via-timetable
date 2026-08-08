@@ -1,6 +1,7 @@
 <template>
     <div>
-        <Dialog v-model:visible="visible" modal :style="{ 'max-width': '290px' }" :showHeader="false">
+        <Dialog v-model:visible="visible" modal :style="{ 'max-width': '290px' }" :showHeader="false"
+            aria-label="Change session group warning">
             <h2 class="text-lg font-bold my-2">Warning</h2>
             <p>
                 Changing session groups will delete your current timetable and selected courses. Do you want to

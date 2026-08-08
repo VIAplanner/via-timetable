@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<Button @click="toggleHelpDial" rounded icon="pi pi-bars" :pt:icon:class="'text-white'" />
+		<Button @click="toggleHelpDial" rounded icon="pi pi-bars" :pt:icon:class="'text-white'"
+			aria-label="Toggle Help Dial" />
 		<Popover ref="popover"
 			:pt:root:style="{ 'background-color': 'transparent', 'box-shadow': 'none', 'border': 'none', 'margin-bottom': '0' }"
 			:pt:root:class="'helpDialRoot'" :pt:content:class="'p-0'">

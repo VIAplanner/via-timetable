@@ -1,39 +1,37 @@
 <template>
 	<div class="flex flex-row h-full">
 		<NoTimetablePopup />
-		<div class="time-axis flex flex-col mt-4 ml-0 md:ml-1 mr-0">
-			<div class="top-margin" />
-			<div v-for="(time, index) in timeRange" :key="index" class="time-axis-number w-[3.25rem] md:w-[4rem]"
+		<div class="flex flex-col ml-0 md:ml-1 mr-0" :style="{ 'margin-top': `${(oneHourHeightPixels * 0.6)}px` }">
+			<div v-for="(time, index) in timeRange" :key="index" class="time-axis-number w-13 md:w-16"
 				:style="{ height: oneHourHeight }">
-				<HourSwitch :time="time" :last="index !== timeRange.length - 1" :semester="semester" :isExport="isExport" />
+				<HourSwitch :time="time" :last="index !== timeRange.length - 1" :semester="semester" :isExport="isExport"
+					:height="oneHourHeight" />
 			</div>
 		</div>
-		<div class="col-11 w-full pr-8">
+		<div class="col-11 w-full p-0 pr-8">
 			<!-- Weekday Axis -->
-			<div class="grid" name="weekDaysAxis">
+			<div class="grid grid-nogutter" name="weekDaysAxis">
 				<div v-for="(weekday, index) in weekdays" :key="weekday" class="col">
 					<WeekdaySwitch :weekday="weekday"
 						:weekdayLabel="useShortWeekdays ? weekdaysShort[index] as string : weekday" :semester="semester"
-						class="pb-[20px]" :isExport="isExport" />
+						:isExport="isExport" :height="`${oneHourHeightPixels * 0.6}px`" />
 				</div>
 			</div>
 			<!-- Timetable Content -->
-			<div class="grid timetableContent" name="timetableContent">
+			<div class="grid grid-nogutter timetableContent" name="timetableContent">
 				<div v-for="(meetingSections, day) in timetable" class="col relative" :key="day">
-					<div v-for="hour in timeRange.length" :key="hour" :style="{
+					<div v-for="hour in timeSlotCount" :key="hour" :style="{
 						height: oneHourHeight,
 						'box-sizing': 'border-box',
-						...(hour !== timeRange.length ? {
-							'border-right': '1px solid gray',
-							'border-bottom': '1px solid gray',
-							...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {})
-						} : {}),
-					}" :class="(hour !== timeRange.length) ? (isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell') : 'timetablecell'" />
+						'border-right': '1px solid gray',
+						'border-bottom': '1px solid gray',
+						...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {})
+					}" :class="isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell'" />
 					<div v-for="event in getEventsForDay(meetingSections) as Array<any>"
 						:key="event.start + '-' + event.currEnd + (event.overlapIndex || 0)"
-						class="absolute left-0 right-0 flex pb-[1px]" :style="{
-							top: `${((event.currStart / 3600) - timetableStart) * parseFloat(oneHourHeight)}px`,
-							height: `${((event.currEnd - event.currStart) / 3600) * parseFloat(oneHourHeight)}px`,
+						class="absolute left-0 right-0 flex pb-px" :style="{
+							top: `${((event.currStart / 3600) - timetableStart) * oneHourHeightPixels}px`,
+							height: `${((event.currEnd - event.currStart) / 3600) * oneHourHeightPixels}px`,
 							width: event.totalOverlapping ? `${100 / event.totalOverlapping}%` : '100%',
 							marginLeft: event.totalOverlapping > 1 ? `${(event.overlapIndex * 100) / event.totalOverlapping}%` : '0%',
 							...(day === 'Monday' && (event.overlapIndex === 0 || event.isEmpty) ? { 'padding-left': '1px' } : {}),
@@ -139,10 +137,20 @@ const timeRange = computed(() => {
 	return result;
 });
 
-/** The height in pixels that any timetable event cell should be */
+/** The number of rows of cells to render */
+const timeSlotCount = computed(() => {
+	return Math.max(timeRange.value.length - 1, 0);
+});
+
+/** The height in pixels as an integer that any timetable event cell should be */
+const oneHourHeightPixels = computed(() => {
+	if ((height.value - 168) / 9 > 65) return Math.round((height.value - 168) / 9);
+	return 65;
+})
+
+/** The height in pixels as a style string that any timetable event cell should be */
 const oneHourHeight = computed(() => {
-	if ((height.value - 168) / 9 > 65) return `${Math.round((height.value - 168) / 9)}px`;
-	return `65px`;
+	return `${oneHourHeightPixels.value}px`;
 });
 
 /**
@@ -293,14 +301,6 @@ function getEventsForDay(meetingSections: Array<any>) {
 
 .time-axis-number {
 	text-align: right;
-}
-
-.top-margin {
-	margin-bottom: 25px;
-}
-
-.time-axis {
-	margin-right: 20px;
 }
 
 .time-label {

@@ -5,10 +5,10 @@ RUN pip3 install requests --break-system-packages
 
 WORKDIR /app
 
-COPY crontab /etc/crontabs/root
-
-COPY start.sh /app/start.sh
+COPY ./scraper /app/scraper
+COPY ./backend/ /app/backend/
 COPY pipeline.sh /app/pipeline.sh
-RUN chmod +x /app/pipeline.sh /app/start.sh
+RUN chmod +x /app/pipeline.sh
+RUN mkdir -p /app/backend/scripts/input
 
-CMD ["/app/start.sh"]
+CMD ["/app/pipeline.sh"]
