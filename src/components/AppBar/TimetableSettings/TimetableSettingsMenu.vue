@@ -13,7 +13,7 @@
 			<MiscSettingsGroup />
 		</Drawer>
 		<Button icon="pi pi-cog" rounded v-tooltip.bottom="tooltip('Timetable Settings')" @click="visible = true"
-			:pt:icon:class="'text-white'" />
+			aria-label="Timetable settings" :pt:icon:class="'text-white'" />
 	</div>
 </template>
 

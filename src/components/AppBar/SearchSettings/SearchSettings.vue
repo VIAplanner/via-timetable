@@ -1,9 +1,8 @@
 <template>
     <div class="flex items-center">
         <Button icon="pi pi-search" @click="toggleSearchPanel" rounded
-            v-tooltip.bottom="tooltip('Change Search Settings')"
-            :pt:root:class="'w-8! h-8! md:w-10! md:h-10!'"
-            :pt:icon:class="'text-white text-sm md:text-lg'" />
+            v-tooltip.bottom="tooltip('Change Search Settings')" aria-label="Change Search Settings"
+            :pt:root:class="'w-8! h-8! md:w-10! md:h-10!'" :pt:icon:class="'text-white text-sm md:text-lg'" />
         <Popover ref="popover">
             <SearchDivisionSelect />
             <Divider />

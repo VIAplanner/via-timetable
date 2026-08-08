@@ -1,7 +1,7 @@
 <template>
 	<div class="flex items-center">
 		<Button @click="store.toggleDarkMode()" :icon="themeIcon" rounded v-tooltip.bottom="tooltip('Toggle Theme')"
-			:pt:root:class="'w-8! h-8! md:w-10! md:h-10!'"
+			aria-label="Toggle Theme" :pt:root:class="'w-8! h-8! md:w-10! md:h-10!'"
 			:pt:icon:class="'text-white text-sm md:text-lg'" />
 	</div>
 </template>

@@ -62,7 +62,6 @@ declare module 'vue' {
     Select: typeof import('primevue/select')['default']
     SelectButton: typeof import('primevue/selectbutton')['default']
     SelectedCourseCard: typeof import('./src/components/SidePanel/SelectedCourseCard.vue')['default']
-    SelectedCoursesPanel: typeof import('./src/components/SidePanel/SelectedCoursesPanel.vue')['default']
     SessionSelect: typeof import('./src/components/AppBar/SessionSelect.vue')['default']
     SideBar: typeof import('./src/components/SidePanel/SideBar.vue')['default']
     TextDivider: typeof import('./src/components/Misc/TextDivider.vue')['default']

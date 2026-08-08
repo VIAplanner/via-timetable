@@ -67,7 +67,8 @@
                     </div>
                     <button v-if="section.enrolmentControls && section.enrolmentControls.length" type="button"
                         class="self-start text-text-secondary no-underline underline-offset-2 hover:underline"
-                        @click="showEnrolmentControls = !showEnrolmentControls" :aria-expanded="showEnrolmentControls">
+                        @click="showEnrolmentControls = !showEnrolmentControls" :aria-expanded="showEnrolmentControls"
+                        aria-label="Toggle enrolment controls">
                         {{ showEnrolmentControls ? 'Hide enrolment controls' : 'Show enrolment controls' }}
                     </button>
                     <div v-if="showEnrolmentControls">

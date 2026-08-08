@@ -16,10 +16,10 @@
 			<img alt="VIAplanner logo" src="../assets/VIA-Logo-White.png" class="max-w-8.75 md:max-w-12.5 my-2 ml-2">
 			<Button icon="pi pi-replay" rounded @click="store.undo()" class="m-2 md:ml-3"
 				v-tooltip.bottom="tooltip('Undo')" :pt:root:class="'w-8! h-8! shrink-0 md:w-10! md:h-10!'"
-				:pt:icon:class="'text-white text-sm md:text-lg'" />
+				:pt:icon:class="'text-white text-sm md:text-lg'" aria-label="Undo" />
 			<Button icon="pi pi-refresh" rounded @click="store.redo()" class="m-2 ml-0 md:mr-3"
 				v-tooltip.bottom="tooltip('Redo')" :pt:root:class="'w-8! h-8! shrink-0 md:w-10! md:h-10!'"
-				:pt:icon:class="'text-white text-sm md:text-lg'" />
+				:pt:icon:class="'text-white text-sm md:text-lg'" aria-label="Redo" />
 			<CourseSearchBar class="mr-2" />
 			<div class="flex flex-row items-center gap-2">
 				<ChangeTheme />

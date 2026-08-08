@@ -1,10 +1,10 @@
 <template>
-	<div class="h-full cursor-pointer select-none" @click="toggleHourLock()" >
+	<div class="h-full cursor-pointer select-none" @click="toggleHourLock()">
 		<div class="relative h-full w-full">
 			<h2 class="relative bottom-2 md:bottom-3 mr-2.5 text-[12px] md:text-[16px] font-semibold">{{ time }}</h2>
 			<div v-if="last && locked && !isExport" class="absolute inset-0 flex items-center justify-center"
 				v-tooltip.right="tooltip(lockTooltipText)">
-				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" />
+				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" aria-label="Toggle Hour Lock" />
 			</div>
 		</div>
 	</div>

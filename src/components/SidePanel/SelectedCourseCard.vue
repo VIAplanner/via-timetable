@@ -6,8 +6,10 @@
 		<div class="flex flex-row items-center justify-between w-full">
 			<h2>{{ course.courseData.code }}</h2>
 			<div class="flex flex-row">
-				<Button @click="editSection()" icon="pi pi-pen-to-square" text rounded iconClass="text-text-primary" />
-				<Button @click="deleteCourse()" iconClass="text-text-primary" icon="pi pi-trash" text rounded />
+				<Button @click="editCourse()" icon="pi pi-pen-to-square" text rounded iconClass="text-text-primary"
+					aria-label="Edit Course" />
+				<Button @click="deleteCourse()" iconClass="text-text-primary" icon="pi pi-trash" text rounded
+					aria-label="Delete Course" />
 			</div>
 		</div>
 	</div>
@@ -28,7 +30,7 @@ const props = defineProps({
 /**
  * @brief Opens the details card of the course given by props
  */
-function editSection() {
+function editCourse() {
 	store.setDetailCardVisibility(`${props.course.courseData.code} ${props.course.courseData.sectionCode}`, true);
 }
 

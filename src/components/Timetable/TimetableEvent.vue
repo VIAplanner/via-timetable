@@ -9,9 +9,9 @@
 				<h3 class="font-bold relative">{{ eventData.course }}</h3>
 				<div v-if="!isSmallDevice && !isExport" class="absolute right-0">
 					<Button v-if="sectionLocked" rounded text icon="pi pi-lock" @click.stop="blockSectionToggle()"
-						iconClass="text-white" />
+						iconClass="text-white" aria-label="Unblock Section" />
 					<Button v-else-if="hovered || isSmallDevice" rounded text icon="pi pi-lock-open"
-						@click.stop="blockSectionToggle()" iconClass="text-white" />
+						@click.stop="blockSectionToggle()" iconClass="text-white" aria-label="Block Section" />
 				</div>
 			</div>
 			<p :class="{ 'text-red-300': sectionLocked && !isExport }">{{ eventData.activity }} ({{

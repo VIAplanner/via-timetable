@@ -1,10 +1,11 @@
 <template>
-	<div class="flex flex-row items-center justify-center" >
+	<div class="flex flex-row items-center justify-center">
 		<div class="flex flex-row justify-center items-center mx-0 w-full cursor-pointer select-none"
-			@click="toggleDayLock()" :style="{ 'height': height }" >
-			<h3 class="day-label m-0 font-bold leading-none text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}</h3>
+			@click="toggleDayLock()" :style="{ 'height': height }">
+			<h3 class="day-label m-0 font-bold leading-none text-sm md:text-md lg:text-lg">{{ weekdayLabel || weekday }}
+			</h3>
 			<div v-if="locked && !isExport" class="absolute -bottom-6" v-tooltip.bottom="tooltip(toolTipText)">
-				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" />
+				<Button icon="pi pi-lock" rounded text iconClass="text-text-primary" aria-label="Toggle Day Lock" />
 			</div>
 		</div>
 	</div>
