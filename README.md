@@ -48,5 +48,6 @@ yarn dev
 Consult the [via-app](https://github.com/VIAplanner/via-app) repository to locally deploy with a functional backend
 
 ## .env Setup
+
 **VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000" or
 "https://api.viaplanner.net"
