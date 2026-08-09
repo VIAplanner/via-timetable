@@ -1,22 +1,22 @@
-import './index.css';
+import './index.css'
 
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 
-import PrimeVue from 'primevue/config';
-import { definePreset } from '@primeuix/themes';
-import Aura from '@primeuix/themes/aura';
-import ToastService from 'primevue/toastservice';
-import 'primeflex/primeflex.css';
+import PrimeVue from 'primevue/config'
+import { definePreset } from '@primeuix/themes'
+import Aura from '@primeuix/themes/aura'
+import ToastService from 'primevue/toastservice'
+import 'primeflex/primeflex.css'
 
-import { createPinia } from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-import VueMobileDetection from "vue-mobile-detection";
+import VueMobileDetection from 'vue-mobile-detection'
 
-import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime'
 
 import App from './App.vue'
-import router from './router';
+import router from './router'
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -31,7 +31,7 @@ const Noir = definePreset(Aura, {
       700: 'var(--primary-700)',
       800: 'var(--primary-800)',
       900: 'var(--primary-900)',
-      950: 'var(--primary-950)'
+      950: 'var(--primary-950)',
     },
     colorScheme: {
       light: {
@@ -39,56 +39,56 @@ const Noir = definePreset(Aura, {
           color: 'var(--color-primary)',
           inverseColor: 'var(--color-primary-inverse)',
           hoverColor: 'var(--color-primary-hover)',
-          activeColor: 'var(--color-primary-active)'
+          activeColor: 'var(--color-primary-active)',
         },
         highlight: {
           background: 'var(--color-highlight-background)',
           focusBackground: 'var(--color-highlight-focus-background)',
           color: 'var(--color-highlight)',
-          focusColor: 'var(--color-highlight-focus)'
-        }
+          focusColor: 'var(--color-highlight-focus)',
+        },
       },
       dark: {
         primary: {
           color: 'var(--color-primary-dark)',
           inverseColor: 'var(--color-primary-inverse-dark)',
           hoverColor: 'var(--color-primary-hover-dark)',
-          activeColor: 'var(--color-primary-active-dark)'
+          activeColor: 'var(--color-primary-active-dark)',
         },
         highlight: {
           background: 'var(--color-highlight-background-dark)',
           focusBackground: 'var(--color-highlight-focus-background-dark)',
           color: 'var(--color-highlight-dark)',
-          focusColor: 'var(--color-highlight-focus-dark)'
-        }
-      }
-    }
-  }
-});
+          focusColor: 'var(--color-highlight-focus-dark)',
+        },
+      },
+    },
+  },
+})
 
-const app = createApp(App);
-const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
+const app = createApp(App)
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 
 app.use(PrimeVue, {
   unstyled: false,
   ptOptions: {
     mergeSections: true,
-    mergeProps: true
+    mergeProps: true,
   },
   theme: {
     preset: Noir,
     options: {
       prefix: 'p',
-      darkModeSelector: '.dark'
-    }
+      darkModeSelector: '.dark',
+    },
   },
   ripple: true,
-  inputVariant: 'filled'
-});
+  inputVariant: 'filled',
+})
 
-app.use(ToastService);
-app.use(pinia);
-app.use(router);
+app.use(ToastService)
+app.use(pinia)
+app.use(router)
 
-app.mount('#app');
+app.mount('#app')

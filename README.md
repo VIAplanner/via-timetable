@@ -10,7 +10,6 @@
   </a>
 </p>
 
-
 # VIAplanner
 
 VIAplanner is a tool designed by students at the University of Toronto to help the community. Our goal is to improve the
@@ -20,12 +19,13 @@ timetables on the go.
 ## Introduction
 
 The fundamental problem we are trying to solve:
+
 1. There is no automated process to create good timetables, instead requiring days of manual effort checking different
-combinations of courses and timeslots
+   combinations of courses and timeslots
 2. The official University of Toronto timetable builder is unintuitive and not good for generating optimal timetables,
-often leaving large gaps and scattering classes across a very large time range
+   often leaving large gaps and scattering classes across a very large time range
 3. The official University of Toronto timetable builder only provides a single way to customize your timetable, through
-broad scheduling preferences such as 'Early' or 'Late'
+   broad scheduling preferences such as 'Early' or 'Late'
 
 ## Installation Using Yarn
 
