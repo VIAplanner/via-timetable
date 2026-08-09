@@ -57,4 +57,5 @@ The database will not be modified. It is recommended to use a local MongoDB data
 without automated scraping.
 
 ## .env Setup
-**VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000"
+**VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000" or
+"https://api.viaplanner.net"
