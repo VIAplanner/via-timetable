@@ -32,29 +32,20 @@ broad scheduling preferences such as 'Early' or 'Late'
 ```sh
 git clone https://github.com/VIAplanner/via-timetable.git
 cd via-timetable
-yarn
-yarn dev
+yarn install
 ```
 
 ## Local Deployment Using Docker
-*Prerequisites:*
-1. You have cloned and placed the following repos at the same directory as this repo, with folder names matching repo names
-- via-api: https://github.com/VIAplanner/via-api
-- UofT-Scraper: https://github.com/Kelexer1/UofT-Scraper
 
-### With Automated Scraping
-```sh
-docker compose up --build
-```
-This will start the frontend and backend on `http://localhost/`, and automatically update the database once.
+### Frontend only
 
-### Without Automated Scraping
 ```sh
-docker compose up frontend backend nginx --build
+yarn dev
 ```
-This will start the frontend and backend on `http://localhost/`, assuming that backend has it's environment variables.
-The database will not be modified. It is recommended to use a local MongoDB database and populate it once before testing
-without automated scraping.
+
+### Composed deployment with backend
+
+Consult the [via-app](https://github.com/VIAplanner/via-app) repository to locally deploy with a functional backend
 
 ## .env Setup
 **VITE_API_BASE_URL**: A string representation of the API endpoint, for example "http://127.0.0.1:3000" or
