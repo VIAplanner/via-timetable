@@ -20,11 +20,12 @@
 <script setup lang="ts">
 import { ref, watchEffect, watch, Ref } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
+import { DivisionData } from '../../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const selectedDivisions: Ref<Array<string>> = ref([...(store.selectedDivisions || [])])
-const divisions: Ref<Array<any>> = ref([])
+const divisions: Ref<Array<DivisionData>> = ref([])
 
 watch(
   selectedDivisions,

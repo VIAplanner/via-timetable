@@ -16,7 +16,7 @@
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 
 function setTutorial() {

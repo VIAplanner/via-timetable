@@ -17,7 +17,7 @@ import { useTimetableStore } from '../../store/timetable'
 import { computed } from 'vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 
 const themeIcon = computed(() => {

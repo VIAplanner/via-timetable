@@ -19,7 +19,7 @@
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const minDayLength: Ref<number> = ref(store.minDayLength ?? 3)
 

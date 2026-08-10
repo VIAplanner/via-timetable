@@ -79,12 +79,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref } from 'vue'
+import { computed, ref, Ref, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, FIRST_SEM, SECOND_SEM } from '../../store/timetable.shared'
+import { DAYS, FIRST_SEM, SECOND_SEM, SemesterCode, Weekday } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { isSmallDevice, height } = useWindowSize()
 
 const hovered: Ref<boolean> = ref(false)
@@ -95,10 +95,12 @@ const props = defineProps({
     required: true,
   },
   day: {
-    type: String,
+    type: String as PropType<Weekday>,
+    required: true,
   },
   semester: {
-    type: String,
+    type: String as PropType<SemesterCode>,
+    required: true,
   },
   isEmpty: {
     type: Boolean,
@@ -115,7 +117,7 @@ const days: Array<string> = [...DAYS]
 
 const activityData = computed(() => {
   return !props.isEmpty
-    ? store.selectedCourses[store.selectedSession][props.eventData.course].courseData.sections
+    ? store.selectedCourses[store.selectedSession][props.eventData.course]?.courseData.sections
         .find((section: any) => section.name === props.eventData.activity)
         .meetingTimes.find((meetingTime: any) => {
           return (
@@ -156,12 +158,12 @@ const dynamicColor = computed(() => {
 
 const sectionLocked = computed(() => {
   const lockedActivitiesForCourse =
-    store.lockedSections[props.semester as string][props.eventData.course] || []
+    store.lockedSections[props.semester][props.eventData.course] || []
   return lockedActivitiesForCourse.includes(props.eventData.activity)
 })
 
 const timeBlocked = computed(() => {
-  const blockedTimesForSemester = store.blockedTimes[props.semester as string] || []
+  const blockedTimesForSemester = store.blockedTimes[props.semester] || []
 
   return blockedTimesForSemester.some((blocker: any) => {
     return (

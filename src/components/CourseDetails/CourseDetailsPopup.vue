@@ -152,7 +152,7 @@ import DivisionalLegend from './DivisionalLegend.vue'
 import CourseDetailsSectionCard from './CourseDetailsSectionCard.vue'
 import { FIRST_SEM, SECOND_SEM } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const visible: Ref<boolean> = ref(true)
 

@@ -3169,13 +3169,6 @@ vue-eslint-parser@^10.4.0:
     esquery "^1.6.0"
     semver "^7.6.3"
 
-vue-mobile-detection@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/vue-mobile-detection/-/vue-mobile-detection-2.0.1.tgz#c9c17a26c7944a20b5afaa5f1617149db45fadd1"
-  integrity sha512-ziB0Rp8Snp08+p7E+WCRzeYYYp0ddPaqHlFxWN0kpLAddB5D/PRwgIv18P08hkhwNFRgBQ71T19jNIbttR7P0g==
-  dependencies:
-    vue "^3.2.20"
-
 vue-router@^5.0.6:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-5.2.0.tgz#34f03b1012729c33bb23184d96ad8e1b1b5c4546"
@@ -3208,7 +3201,7 @@ vue-tsc@^3.2.8:
     "@volar/typescript" "2.4.28"
     "@vue/language-core" "3.3.9"
 
-vue@^3.2.20, vue@^3.5.34:
+vue@^3.5.34:
   version "3.5.41"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.41.tgz#8864bddfe59ce128a28c9bad219cd9248916af73"
   integrity sha512-2laE0p+aK+/AOPG/XL/WepOs/GlK755LJ1XECi9kDUrz1FKNw8rb2Xzlw9JS1rqEV55nb0ttsKxVlTCcd+R5cg==

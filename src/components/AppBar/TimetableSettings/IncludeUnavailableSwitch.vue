@@ -15,7 +15,7 @@
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const includeUnavailable: Ref<boolean> = ref(store.includeUnavailable ?? false)
 

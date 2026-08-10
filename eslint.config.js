@@ -8,35 +8,25 @@ export default tseslint.config(
   { ignores: ['dist', 'node_modules', '*.d.ts'] },
 
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  ...pluginVue.configs['flat/recommended'],
 
   {
+    files: ['src/**/*.ts', 'src/**/*.vue', 'env.d.ts'],
+    extends: [...tseslint.configs.recommendedTypeChecked, ...pluginVue.configs['flat/recommended']],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: { ...globals.browser, ...globals.node },
       parserOptions: {
         parser: tseslint.parser,
         project: './tsconfig.json',
         extraFileExtensions: ['.vue'],
         tsconfigRootDir: import.meta.dirname,
       },
+      globals: { ...globals.browser },
     },
   },
 
   {
-    files: ['**/*.vue'],
-    rules: {
-      'vue/multi-word-component-names': 'off',
-    },
-  },
-
-  {
-    rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
-    },
+    files: ['*.config.{js,ts}', 'src/**/*.js'],
+    extends: [...tseslint.configs.recommended],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 
   eslintConfigPrettier,

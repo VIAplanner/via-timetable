@@ -18,7 +18,7 @@ import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 import { FIRST_SEM, SEMESTER_CODES } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()
 
 const sessions: Ref<Array<string>> = ref([...SEMESTER_CODES])

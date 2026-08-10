@@ -55,7 +55,7 @@
               section.instructors
                 .map(
                   (instructor: any) => `${instructor.firstName}
-                        ${instructor.lastName}`,
+            ${instructor.lastName}`,
                 )
                 .join(', ')
             }}
@@ -141,9 +141,9 @@ import { useTimetableStore } from '../../store/timetable'
 import EnrolmentLegendPopup from './EnrolmentLegendPopup.vue'
 import CourseTimetable from './CourseTimetable.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { DAYS } from '../../store/timetable.shared'
+import { DAYS, SemesterCode, Weekday } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 const showEnrolmentControls: Ref<boolean> = ref(false)
 
@@ -192,7 +192,7 @@ function conflictsInSession(sessionCode: string): Array<string> {
   const session = store.subsessionCodeToSession(sessionCode)
   if (!session) return conflicts
 
-  const sessionsToCheck = session === 'Y' ? ['F', 'S'] : [session]
+  const sessionsToCheck = session === 'Y' ? ['F', 'S'] : ([session] as Array<SemesterCode>)
 
   for (const meetingTime of currentMeetingTimes as Array<any>) {
     if (meetingTime.sessionCode !== sessionCode) continue
@@ -200,11 +200,12 @@ function conflictsInSession(sessionCode: string): Array<string> {
     const currentStart = parseInt(meetingTime.start)
     const currentEnd = parseInt(meetingTime.end)
 
-    for (const semester of sessionsToCheck) {
+    for (const semester of sessionsToCheck as Array<SemesterCode>) {
       const selectedSessionTimetable = store.timetables[semester]
       if (!selectedSessionTimetable) continue
 
       const dayName = parseDayFull(meetingTime.day)
+      if (!dayName) return []
       const dayEvents = selectedSessionTimetable[dayName]
 
       if (!dayEvents || dayEvents.length === 0) continue
@@ -298,7 +299,7 @@ function getWaitlistHighlight(ratio: number): string {
  * sorted array of meeting times containing a time, location, and URL to a map showing the location
  */
 function parseMeetingTimes(meetingTimes: any) {
-  let result: Record<string, Array<any>> = {}
+  const result: Record<string, Array<any>> = {}
 
   for (const meetingTime of Object.values(meetingTimes)) {
     if (!Object.keys(result).includes(meetingTime.sessionCode)) result[meetingTime.sessionCode] = []
@@ -313,7 +314,7 @@ function parseMeetingTimes(meetingTimes: any) {
     if (sessionCode) result[sessionCode]!.push(formattedMeetingTime)
   }
 
-  let formattedResult: Record<string, any> = {
+  const formattedResult: Record<string, any> = {
     first: null,
     second: null,
   }
@@ -336,9 +337,9 @@ function parseMeetingTimes(meetingTimes: any) {
  * @param dayInt The day number
  * @returns The day name
  */
-function parseDayFull(dayInt: number): string {
-  if (dayInt < 1 || dayInt > 7) return ''
-  return DAYS[dayInt - 1] as string
+function parseDayFull(dayInt: number): Weekday | null {
+  if (dayInt < 1 || dayInt > 7) return null
+  return DAYS[dayInt - 1] as Weekday
 }
 
 /**
@@ -347,7 +348,7 @@ function parseDayFull(dayInt: number): string {
  * @returns The shortened day name
  */
 function parseDay(dayInt: number): string {
-  return parseDayFull(dayInt).substring(0, 3)
+  return parseDayFull(dayInt)?.substring(0, 3) || ''
 }
 </script>
 

@@ -15,7 +15,7 @@ import { useTimetableStore } from '../../store/timetable'
 
 import CourseDetailsPopup from './CourseDetailsPopup.vue'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const visibleCards = computed(() => {
   return store.cards.filter(

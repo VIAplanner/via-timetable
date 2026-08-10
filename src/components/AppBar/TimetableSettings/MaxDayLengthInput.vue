@@ -19,7 +19,7 @@
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const maxDayLength: Ref<number> = ref(store.maxDayLength ?? 3)
 

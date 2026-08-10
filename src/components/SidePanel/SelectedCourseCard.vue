@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { useTimetableStore } from '../../store/timetable'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const props = defineProps({
   course: {

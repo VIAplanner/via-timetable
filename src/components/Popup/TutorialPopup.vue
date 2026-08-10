@@ -61,7 +61,7 @@ import mobile5 from '../../assets/tutorial/tutorial_mobile_5.gif'
 import mobile6 from '../../assets/tutorial/tutorial_mobile_6.gif'
 import mobile7 from '../../assets/tutorial/tutorial_mobile_7.gif'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const visible: Ref<boolean> = ref(store.tutorialPopup)
 

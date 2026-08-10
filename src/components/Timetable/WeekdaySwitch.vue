@@ -31,16 +31,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
+import { SemesterCode, Weekday } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 
 const props = defineProps({
   weekday: {
-    type: String,
+    type: String as PropType<Weekday>,
     required: true,
   },
   weekdayLabel: {
@@ -48,7 +49,7 @@ const props = defineProps({
     default: null,
   },
   semester: {
-    type: String,
+    type: String as PropType<SemesterCode>,
     required: true,
   },
   isExport: {

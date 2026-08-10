@@ -42,21 +42,22 @@ export const TIMES = [
   { display: '10 PM', numerical: 22 },
 ] as const
 
-/** All the possible valid semester codes, corresponding to First and Second */
+/** The maximum number of state snapshots to store in history before clearing old ones */
+export const MAX_HISTORY = 25
+
+/** All the possible valid semester codes, corresponding to First, Second, and Both */
 export const FIRST_SEM = 'F' as const
 export const SECOND_SEM = 'S' as const
 export const BOTH_SEM = 'Y' as const
 export const SEMESTER_CODES = [FIRST_SEM, SECOND_SEM] as const
+export const SEMESTER_CODES_RANGE = [FIRST_SEM, SECOND_SEM, BOTH_SEM] as const
+
+export type Weekday = (typeof DAYS)[number]
+export type SemesterCode = (typeof SEMESTER_CODES)[number]
+export type SemesterCodeRange = (typeof SEMESTER_CODES_RANGE)[number]
 
 /** We can simulate blocked times using a placeholder course with activities on all blocked times */
 export const blockedTimesCourseCodePlaceholder: string = 'BLOCKERS'
-
-/** The maximum number of state snapshots to store in history before clearing old ones */
-export const MAX_HISTORY = 25
-
-/** Derived types based on the constant arrays above */
-export type Weekday = (typeof DAYS)[number]
-export type SemesterCode = (typeof SEMESTER_CODES)[number]
 
 export type ActivityType = 'LEC' | 'TUT' | 'PRA'
 
@@ -105,6 +106,16 @@ export interface ActivityTimeData {
   end: number // The end time in seconds after midnight
 }
 
+export interface DivisionalLegend {
+  division: string,
+  content: string
+}
+
+export interface DivisionalLegends {
+  expiry: number
+  data: Array<DivisionalLegend>
+}
+
 export interface SemesterEventsData {
   Monday: Array<ActivityTimeData>
   Tuesday: Array<ActivityTimeData>
@@ -113,4 +124,19 @@ export interface SemesterEventsData {
   Friday: Array<ActivityTimeData>
   Saturday: Array<ActivityTimeData>
   Sunday: Array<ActivityTimeData>
+}
+
+export interface EnrolmentIndicator {
+  code: string,
+  name: string
+}
+
+export interface DivisionalEnrolmentIndicator {
+  division: string,
+  codes: Array<EnrolmentIndicator>
+}
+
+export interface DivisionalEnrolmentIndicators {
+  expiry: number,
+  data: Array<DivisionalEnrolmentIndicator>
 }

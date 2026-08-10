@@ -23,7 +23,7 @@
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const visible: Ref<boolean> = ref(store.noTimetablePopup ?? false)
 

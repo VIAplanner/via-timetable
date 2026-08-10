@@ -30,12 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { BlockedTimeData, DAYS } from '../../store/timetable.shared'
+import { BlockedTimeData, DAYS, type SemesterCode } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 
 const days: Array<string> = [...DAYS]
@@ -50,7 +50,7 @@ const props = defineProps({
     required: true,
   },
   semester: {
-    type: String,
+    type: String as PropType<SemesterCode>,
     required: true,
   },
   isExport: {

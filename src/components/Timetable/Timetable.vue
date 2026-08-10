@@ -79,7 +79,7 @@
                 :is-export="isExport"
                 :style="{
                   'background-color':
-                    store.selectedCourses[store.selectedSession][courseActivityData.course].color,
+                    store.selectedCourses[store.selectedSession][courseActivityData.course]?.color,
                 }"
               />
             </template>
@@ -103,16 +103,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref } from 'vue'
+import { computed, type PropType, ref, Ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import TimetableEvent from './TimetableEvent.vue'
 import NoTimetablePopup from '../Popup/NoTimetablePopup.vue'
 import HourSwitch from './HourSwitch.vue'
 import WeekdaySwitch from './WeekdaySwitch.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, DAYS_SHORT } from '../../store/timetable.shared'
+import { DAYS, DAYS_SHORT, SemesterCode, Weekday } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { height, isSmallDevice } = useWindowSize()
 
 const props = defineProps({
@@ -121,7 +121,7 @@ const props = defineProps({
     required: true,
   },
   semester: {
-    type: String,
+    type: String as PropType<SemesterCode>,
     required: true,
   },
   isExport: {
@@ -131,8 +131,8 @@ const props = defineProps({
   },
 })
 
-const weekdays: Ref<Array<string>> = ref([...DAYS])
-const weekdaysShort: Ref<Array<string>> = ref([...DAYS_SHORT])
+const weekdays: Ref<Array<Weekday>> = ref([...DAYS])
+const weekdaysShort: Ref<Array<String>> = ref([...DAYS_SHORT])
 const useShortWeekdays = computed(() => isSmallDevice.value)
 
 /** The hour that the earliest class starts on for any day in the given semester */
@@ -255,7 +255,7 @@ function getEventsForDay(meetingSections: Array<any>) {
 
     // Find all events that overlap with current
     const overlappingEvents = [current]
-    let groupStart = current.start
+    const groupStart = current.start
     let groupEnd = current.end
 
     for (let j = i + 1; j < allEvents.length; j++) {

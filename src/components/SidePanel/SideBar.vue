@@ -38,7 +38,7 @@ import SelectedCourseCard from './SelectedCourseCard.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
 import { FIRST_SEM, SelectedCourseData } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { height } = useWindowSize()
 
 const props = defineProps({
@@ -101,7 +101,7 @@ const imgSrc = computed(() => {
 const creditCount = computed(() => {
   let sum: number = 0.0
 
-  for (let courseData of Object.values(store.selectedCourses[store.selectedSession])) {
+  for (const courseData of Object.values(store.selectedCourses[store.selectedSession])) {
     sum += courseData.courseData.maxCredit
   }
 

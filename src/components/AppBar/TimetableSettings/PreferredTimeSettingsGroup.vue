@@ -18,28 +18,28 @@ import TimeSettingSelect from './TimeSettingSelect.vue'
 import MaxDayLengthInput from './MaxDayLengthInput.vue'
 import MinDayLengthInput from './MinDayLengthInput.vue'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const start: Ref<number> = ref(store.preferredStart || 9)
 const maxEnd: Ref<number> = ref(store.preferredMaxEnd || 15)
 
 watch(start, (val: number) => {
-  if (val !== store.start) store.preferredStart = val
+  if (val !== store.preferredStart) store.preferredStart = val
 })
 
 watch(
-  () => store.start,
+  () => store.preferredStart,
   (val: number) => {
     if (val !== start.value) start.value = val
   },
 )
 
 watch(maxEnd, (val: number) => {
-  if (val !== store.maxEnd) store.preferredMaxEnd = val
+  if (val !== store.preferredMaxEnd) store.preferredMaxEnd = val
 })
 
 watch(
-  () => store.maxEnd,
+  () => store.preferredMaxEnd,
   (val: number) => {
     if (val !== maxEnd.value) maxEnd.value = val
   },

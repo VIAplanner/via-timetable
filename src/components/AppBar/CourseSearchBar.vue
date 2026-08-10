@@ -14,7 +14,6 @@
         'border-radius': '16px',
         color: dynamicTextColor,
       }"
-      @complete="populateRecommendations()"
       :pt="{
         panel: {
           style: isSmallDevice
@@ -29,8 +28,9 @@
           },
         },
       }"
-      @focus="onFocus()"
       fluid
+      @complete="populateRecommendations()"
+      @focus="onFocus()"
       @blur="isActive = false"
       @option-select="courseSearched()"
       @min-length="5"
@@ -53,7 +53,7 @@ interface Course {
   formattedName?: string
 }
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()
 
 const searchBarComponent = ref<{ overlayVisible: boolean } | null>(null)

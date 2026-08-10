@@ -41,7 +41,7 @@ import { useTimetableStore } from '../../../store/timetable'
 import ChangeSessionGroup from '../../Popup/ChangeSessionGroup.vue'
 import { FIRST_SEM, SECOND_SEM, SessionData } from '../../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 
 const selectedSessionGroup = ref(store.selectedSessionGroup)
 const selectedSubsessions = ref(

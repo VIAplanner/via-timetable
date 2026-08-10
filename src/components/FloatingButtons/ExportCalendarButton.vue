@@ -25,11 +25,11 @@ import { toPng } from 'html-to-image'
 import { useTimetableStore } from '../../store/timetable'
 import ExportTimetableTemplate from './ExportTimetableTemplate.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { FIRST_SEM, SECOND_SEM } from '../../store/timetable.shared'
+import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../store/timetable.shared'
 
-const store = useTimetableStore() as any
+const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
-const exportSemester: Ref<string | null> = ref(null)
+const exportSemester: Ref<SemesterCode | null> = ref(null)
 const exportTitle: Ref<string> = ref('')
 
 /**
@@ -54,7 +54,7 @@ function getSemesterTitle(sessions: Array<any>, semester: string): string {
  * @param semester The semester code
  * @param title The title that should be displayed on the downloaded timetable
  */
-async function captureSemester(semester: string, title: string) {
+async function captureSemester(semester: SemesterCode, title: string) {
   store.selectedSession = semester
   exportSemester.value = semester
   exportTitle.value = title
