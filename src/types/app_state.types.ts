@@ -16,19 +16,19 @@ export interface SelectedCourseData {
   pra: string | null // The PRA number (null if none)
   color: string // The color associated with the course (hex format)
   expiry: number // When the cached course data expires (in ms since epoch)
-  /** Full scraped course record; see courses.ts. Formatted per github.com/Kelexer1/UofT-Scraper. */
-  courseData: Course
+  courseData: Course // The courses metadata
 }
 
+/** Represents a single meeting time for a given course section */
 export interface ActivityTimeData {
   course: string // The course code (ex. 'CSC108H5')
-  /** The activity code (ex. 'LEC0101') — a teach-method + section-number pair, not a bare ActivityType. */
-  activity: string
+  activity: string // The activity code (ex. 'LEC0101')
   day: WeekdayNumber // 1 = Monday ... 7 = Sunday
   start: number // The start time in seconds after midnight
   end: number // The end time in seconds after midnight
 }
 
+/** Represents all the events for a semester, sorted by day */
 export interface SemesterEventsData {
   Monday: ActivityTimeData[]
   Tuesday: ActivityTimeData[]
