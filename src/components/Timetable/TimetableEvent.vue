@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref, type PropType } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 import { DAYS, FIRST_SEM, SECOND_SEM, SemesterCode, Weekday } from '../../types/constants.types'
