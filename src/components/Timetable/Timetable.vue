@@ -103,33 +103,27 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, ref, Ref } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import TimetableEvent from './TimetableEvent.vue'
 import NoTimetablePopup from '../Popup/NoTimetablePopup.vue'
 import HourSwitch from './HourSwitch.vue'
 import WeekdaySwitch from './WeekdaySwitch.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, DAYS_SHORT, SemesterCode, Weekday } from '../../store/timetable.shared'
+import { DAYS, DAYS_SHORT, SemesterCode, Weekday } from '../../types/constants.types'
+import { SemesterEventsData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 const { height, isSmallDevice } = useWindowSize()
 
-const props = defineProps({
-  timetable: {
-    type: Object,
-    required: true,
-  },
-  semester: {
-    type: String as PropType<SemesterCode>,
-    required: true,
-  },
-  isExport: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+const props = withDefaults(
+  defineProps<{
+    timetable: SemesterEventsData
+    semester: SemesterCode
+    isExport?: boolean
+  }>(),
+  { isExport: false },
+)
 
 const weekdays: Ref<Array<Weekday>> = ref([...DAYS])
 const weekdaysShort: Ref<Array<String>> = ref([...DAYS_SHORT])
@@ -139,9 +133,7 @@ const useShortWeekdays = computed(() => isSmallDevice.value)
 const timetableStart = computed(() => {
   let earliest = 9
 
-  for (const day in props.timetable) {
-    const dayEvents = props.timetable[day]
-
+  for (const dayEvents of Object.values(props.timetable)) {
     for (const event of dayEvents) {
       const start = Math.floor(event.start / 3600)
       if (start < earliest) earliest = start
@@ -155,9 +147,7 @@ const timetableStart = computed(() => {
 const timetableEnd = computed(() => {
   let latest = 18
 
-  for (const day in props.timetable) {
-    const dayEvents = props.timetable[day]
-
+  for (const dayEvents of Object.values(props.timetable)) {
     for (const event of dayEvents) {
       const end = Math.ceil(event.end / 3600)
       if (end > latest) latest = end

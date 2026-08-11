@@ -76,7 +76,7 @@
           <div class="w-full lg:w-[60%] lg:pr-8">
             <h3 class="text-md font-bold">Description</h3>
             <!-- Description -->
-            <p class="wrap-break-word">{{ courseData.cmCourseInfo.description }}</p>
+            <p class="wrap-break-word">{{ courseData.cmCourseInfo?.description || '' }}</p>
             <h3 class="text-md font-bold mt-3">Department Info</h3>
             <!-- Department -->
             <p class="wrap-break-words">
@@ -89,22 +89,22 @@
           </div>
           <div class="flex flex-col w-full lg:w-[40%]">
             <h3 class="text-md font-bold">Requisite Info</h3>
-            <p v-if="courseData.cmCourseInfo.prerequisitesText" class="wrap-break-word">
+            <p v-if="courseData.cmCourseInfo?.prerequisitesText" class="wrap-break-word">
               <span class="font-medium">Prerequisites: </span
               >{{ courseData.cmCourseInfo.prerequisitesText }}
             </p>
             <!-- Prerequisites -->
-            <p v-if="courseData.cmCourseInfo.exclusionsText" class="wrap-break-word">
+            <p v-if="courseData.cmCourseInfo?.exclusionsText" class="wrap-break-word">
               <span class="font-medium">Exclusions: </span
               >{{ courseData.cmCourseInfo.exclusionsText }}
             </p>
             <!-- Exclusions -->
-            <p v-if="courseData.cmCourseInfo.corequisitesText" class="wrap-break-word">
+            <p v-if="courseData.cmCourseInfo?.corequisitesText" class="wrap-break-word">
               <span class="font-medium">Corequisites: </span
               >{{ courseData.cmCourseInfo.corequisitesText }}
             </p>
             <!-- Corequisites -->
-            <p v-if="courseData.cmCourseInfo.recommendedPreparation" class="wrap-break-word">
+            <p v-if="courseData.cmCourseInfo?.recommendedPreparation" class="wrap-break-word">
               <span class="font-medium">Recommended Preparation: </span
               >{{ courseData.cmCourseInfo.recommendedPreparation }}
             </p>
@@ -150,7 +150,8 @@ import { ref, Ref, computed, watch, nextTick, onMounted } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import DivisionalLegend from './DivisionalLegend.vue'
 import CourseDetailsSectionCard from './CourseDetailsSectionCard.vue'
-import { FIRST_SEM, SECOND_SEM } from '../../store/timetable.shared'
+import { FIRST_SEM, SECOND_SEM } from '../../types/constants.types'
+import type { Breadth, Course, Section } from '../../types/courses.types'
 
 const store = useTimetableStore()
 
@@ -218,16 +219,10 @@ const sectionTypes = [
   { key: 'PRA', label: 'Practical', field: selectedPra },
 ]
 
-const props = defineProps({
-  courseData: {
-    type: Object,
-    required: true,
-  },
-  divisionalData: {
-    type: Object,
-    required: false,
-  },
-})
+const props = defineProps<{
+  courseData: Course
+  divisionalData?: any
+}>()
 
 const divisionalLegend = computed(() => {
   return props?.divisionalData?.divisionalLegends.data.data.find(
@@ -256,12 +251,12 @@ async function addCourse() {
   // Remove any old references to prevent duplicates
   await store.removeCourse(props.courseData.code, false)
 
-  const lecs = props.courseData.sections.filter((section: any) => section.type === 'Lecture')
-  const tuts = props.courseData.sections.filter((section: any) => section.type === 'Tutorial')
-  const pras = props.courseData.sections.filter((section: any) => section.type === 'Practical')
-  const lec = lecs.length > 0 ? lecs[0].name : null
-  const tut = tuts.length > 0 ? tuts[0].name : null
-  const pra = pras.length > 0 ? pras[0].name : null
+  const lecs = props.courseData.sections.filter((section: Section) => section.type === 'Lecture')
+  const tuts = props.courseData.sections.filter((section: Section) => section.type === 'Tutorial')
+  const pras = props.courseData.sections.filter((section: Section) => section.type === 'Practical')
+  const lec = lecs.length > 0 ? lecs[0]!.name : null
+  const tut = tuts.length > 0 ? tuts[0]!.name : null
+  const pra = pras.length > 0 ? pras[0]!.name : null
 
   suppressSelectionWatchers.value = true
   selectedLec.value = lec
@@ -305,7 +300,7 @@ function parseSession(sessions: Array<string>): string {
  * @brief Converts an array of distribution requirements into a single readable string
  * @param distributionRequirements The distribution requirements
  */
-function parseDistributionRequirements(distributionRequirements: Array<string>) {
+function parseDistributionRequirements(distributionRequirements: Array<Breadth>) {
   return distributionRequirements
     .map((distribution: any) => {
       return distribution.breadthTypes && distribution.breadthTypes.length

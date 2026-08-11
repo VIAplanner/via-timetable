@@ -33,7 +33,8 @@
 import { computed, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { BlockedTimeData, DAYS, type SemesterCode } from '../../store/timetable.shared'
+import { DAYS, SemesterCode } from '../../types/constants.types'
+import { BlockedTimeData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()

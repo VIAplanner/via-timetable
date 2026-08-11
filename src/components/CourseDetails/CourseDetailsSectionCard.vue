@@ -32,7 +32,7 @@
         v-if="
           courseData.campus === 'University of Toronto at Mississauga' &&
           section.deliveryModes &&
-          section.deliveryModes.length
+          section.deliveryModes[0]
         "
         :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"
         target="_blank"
@@ -136,35 +136,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref, PropType } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import EnrolmentLegendPopup from './EnrolmentLegendPopup.vue'
 import CourseTimetable from './CourseTimetable.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { DAYS, SemesterCode, Weekday } from '../../store/timetable.shared'
+import { DAYS, SemesterCode, Weekday } from '../../types/constants.types'
+import { Course, MeetingTime, Section } from '../../types/courses.types'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 const showEnrolmentControls: Ref<boolean> = ref(false)
 
-const props = defineProps({
-  sectionType: {
-    type: Object,
-    required: true,
-  },
-  section: {
-    type: Object,
-    required: true,
-  },
-  courseData: {
-    type: Object,
-    required: true,
-  },
-  divisionalData: {
-    type: Object as PropType<Record<string, any> | undefined>,
-    required: false,
-  },
-})
+const props = defineProps<{
+  sectionType: any
+  section: Section
+  courseData: Course
+  divisionalData: any
+}>()
 
 const notes = computed(() => {
   return props.section.notes.filter((note: any) => note.content)
@@ -217,12 +206,9 @@ function conflictsInSession(sessionCode: string): Array<string> {
         )
           continue
 
-        const eventStart = parseInt(event.start)
-        const eventEnd = parseInt(event.end)
-
         if (
-          currentStart < eventEnd &&
-          currentEnd > eventStart &&
+          currentStart < event.end &&
+          currentEnd > event.start &&
           !conflicts.includes(`${event.course} ${event.activity}`)
         ) {
           conflicts.push(`${event.course} ${event.activity}`)
@@ -298,7 +284,7 @@ function getWaitlistHighlight(ratio: number): string {
  * @returns The formatted and ordered meeting time data keyed by 'first' and 'second' for the semester, mapping to a
  * sorted array of meeting times containing a time, location, and URL to a map showing the location
  */
-function parseMeetingTimes(meetingTimes: any) {
+function parseMeetingTimes(meetingTimes: Array<MeetingTime>) {
   const result: Record<string, Array<any>> = {}
 
   for (const meetingTime of Object.values(meetingTimes)) {

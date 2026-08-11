@@ -21,21 +21,13 @@
 <script setup lang="ts">
 import Timetable from '../Timetable/Timetable.vue'
 import logo from '../../assets/VIA-Planner-Blue.png?inline'
+import { SemesterCode } from '../../types/constants.types.js'
 
-defineProps({
-  semester: {
-    type: String,
-    required: true,
-  },
-  timetable: {
-    type: Object,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  semester: SemesterCode
+  timetable: any
+  title: string
+}>()
 </script>
 
 <style scoped>

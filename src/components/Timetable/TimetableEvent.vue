@@ -43,7 +43,7 @@
       </div>
       <p :class="{ 'text-red-300': sectionLocked && !isExport }">
         {{ eventData.activity }} ({{
-          activityData.building.buildingCode ? activityData.building.buildingCode : 'Online'
+          activityData?.building.buildingCode ? activityData.building.buildingCode : 'Online'
         }})
       </p>
       <p>{{ parseTime(eventData.start) }} - {{ parseTime(eventData.end) }}</p>
@@ -82,35 +82,23 @@
 import { computed, ref, Ref, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, FIRST_SEM, SECOND_SEM, SemesterCode, Weekday } from '../../store/timetable.shared'
+import { DAYS, FIRST_SEM, SECOND_SEM, SemesterCode, Weekday } from '../../types/constants.types'
 
 const store = useTimetableStore()
 const { isSmallDevice, height } = useWindowSize()
 
 const hovered: Ref<boolean> = ref(false)
 
-const props = defineProps({
-  eventData: {
-    type: Object,
-    required: true,
-  },
-  day: {
-    type: String as PropType<Weekday>,
-    required: true,
-  },
-  semester: {
-    type: String as PropType<SemesterCode>,
-    required: true,
-  },
-  isEmpty: {
-    type: Boolean,
-  },
-  isExport: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+const props = withDefaults(
+  defineProps<{
+    eventData: any
+    day: Weekday
+    semester: SemesterCode
+    isEmpty: boolean
+    isExport?: boolean
+  }>(),
+  { isExport: false },
+)
 
 const secondsToHours = (seconds: number) => seconds / 3600
 const days: Array<string> = [...DAYS]
@@ -119,7 +107,7 @@ const activityData = computed(() => {
   return !props.isEmpty
     ? store.selectedCourses[store.selectedSession][props.eventData.course]?.courseData.sections
         .find((section: any) => section.name === props.eventData.activity)
-        .meetingTimes.find((meetingTime: any) => {
+        ?.meetingTimes.find((meetingTime: any) => {
           return (
             meetingTime.day === days.indexOf(props.day as string) + 1 &&
             meetingTime.start === props.eventData.start &&

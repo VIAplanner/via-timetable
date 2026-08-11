@@ -20,12 +20,12 @@
 <script setup lang="ts">
 import { ref, watchEffect, watch, Ref } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
-import { DivisionData } from '../../../store/timetable.shared'
+import { Division } from '../../../types/reference_data.types'
 
 const store = useTimetableStore()
 
 const selectedDivisions: Ref<Array<string>> = ref([...(store.selectedDivisions || [])])
-const divisions: Ref<Array<DivisionData>> = ref([])
+const divisions: Ref<Array<Division>> = ref([])
 
 watch(
   selectedDivisions,
@@ -46,6 +46,6 @@ watch(
 )
 
 watchEffect(async () => {
-  divisions.value = await store.getDivisions()
+  divisions.value = (await store.getDivisions()) || []
 })
 </script>

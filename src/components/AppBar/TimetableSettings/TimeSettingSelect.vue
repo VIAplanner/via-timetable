@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref, Ref, watch } from 'vue'
-import { TIMES } from '../../../store/timetable.shared'
+import { TIMES } from '../../../types/constants.types'
 
 const times: Ref<Array<{ display: string; numerical: number }>> = ref([...TIMES])
 

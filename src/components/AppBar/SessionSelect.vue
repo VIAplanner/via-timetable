@@ -16,7 +16,7 @@
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { FIRST_SEM, SEMESTER_CODES } from '../../store/timetable.shared'
+import { FIRST_SEM, SEMESTER_CODES } from '../../types/constants.types'
 
 const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()

@@ -34,7 +34,7 @@
 import { computed, type PropType } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { SemesterCode, Weekday } from '../../store/timetable.shared'
+import { SemesterCode, Weekday } from '../../types/constants.types'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()

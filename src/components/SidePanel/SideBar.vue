@@ -36,7 +36,8 @@ import fallBackground from '../../assets/fall-background.png'
 import winterBackground from '../../assets/winter-background.png'
 import SelectedCourseCard from './SelectedCourseCard.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { FIRST_SEM, SelectedCourseData } from '../../store/timetable.shared'
+import { FIRST_SEM } from '../../types/constants.types'
+import { SelectedCourseData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 const { height } = useWindowSize()
@@ -61,6 +62,7 @@ const orderedCourses = computed<Array<[string, SelectedCourseData]>>(() => {
  */
 async function updateSideBarTitle() {
   const sessions = await store.getSessions()
+  if (!sessions) return
   const sessionGroup = sessions.find(
     (sessionGroup: any) => sessionGroup.group === store.selectedSessionGroup,
   )

@@ -16,20 +16,21 @@
 <script setup lang="ts">
 import { ref, Ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
+import { ONLINE_HI, ONLINE_LO, ONLINE_MI, OnlinePreference } from '../../../types/constants.types'
 
 const store = useTimetableStore()
 
-const onlinePreference: Ref<string> = ref(store.onlinePreference ?? 'Neutral')
+const onlinePreference: Ref<OnlinePreference> = ref(store.onlinePreference ?? ONLINE_MI)
 
-const options: Ref<Array<string>> = ref(['Avoid', 'Neutral', 'Prefer'])
+const options: Ref<Array<string>> = ref([ONLINE_LO, ONLINE_MI, ONLINE_HI])
 
-watch(onlinePreference, (val: string) => {
+watch(onlinePreference, (val: OnlinePreference) => {
   if (val !== store.onlinePreference) store.onlinePreference = val
 })
 
 watch(
   () => store.onlinePreference,
-  (val: string) => {
+  (val: OnlinePreference) => {
     if (val !== onlinePreference.value) onlinePreference.value = val
   },
 )

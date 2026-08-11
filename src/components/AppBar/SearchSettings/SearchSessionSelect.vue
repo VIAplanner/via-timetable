@@ -39,7 +39,8 @@
 import { ref, watchEffect, watch, Ref } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 import ChangeSessionGroup from '../../Popup/ChangeSessionGroup.vue'
-import { FIRST_SEM, SECOND_SEM, SessionData } from '../../../store/timetable.shared'
+import { FIRST_SEM, SECOND_SEM } from '../../../types/constants.types'
+import { SessionGroup } from '../../../types/reference_data.types'
 
 const store = useTimetableStore()
 
@@ -48,15 +49,15 @@ const selectedSubsessions = ref(
   Array.isArray(store.selectedSubsessions) ? [...store.selectedSubsessions] : [],
 )
 
-const sessionGroups: Ref<Array<SessionData>> = ref([])
+const sessionGroups: Ref<Array<SessionGroup>> = ref([])
 const confirmDialogVisible: Ref<boolean> = ref(false)
-const pendingSessionGroup: Ref<SessionData | null> = ref(null)
+const pendingSessionGroup: Ref<SessionGroup | null> = ref(null)
 
 /**
  * @brief Switches the session group, prompting the user to confirm if there is courses that will be deleted as a result
  * @param sessionGroup The session group being changed to
  */
-function handleSessionGroupChangeRequest(sessionGroup: SessionData) {
+function handleSessionGroupChangeRequest(sessionGroup: SessionGroup) {
   pendingSessionGroup.value = sessionGroup
 
   if (
@@ -96,7 +97,7 @@ function confirmChange() {
 
 watch(
   () => store.selectedSessionGroup,
-  (val: string) => {
+  (val: string | null) => {
     if (val !== selectedSessionGroup.value) selectedSessionGroup.value = val
   },
 )
@@ -115,6 +116,6 @@ watch(
 )
 
 watchEffect(async () => {
-  sessionGroups.value = await store.getSessions()
+  sessionGroups.value = (await store.getSessions()) || []
 })
 </script>

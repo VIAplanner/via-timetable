@@ -47,9 +47,9 @@ export const useTimetableStore = defineStore(
     const divisionalLegends = ref<VIAplanner.DivisionalLegends | null>(null)
     const divisionalEnrolmentIndicators = ref<VIAplanner.DivisionalEnrolmentIndicators | null>(null)
 
-    const preferredStart = ref<VIAplanner.HourNumber>(9)
-    const preferredMaxEnd = ref<VIAplanner.HourNumber>(15)
-    const maxDayLength = ref<number>(6) // todo maybe type these numbers?
+    const preferredStart = ref<number>(9)
+    const preferredMaxEnd = ref<number>(15)
+    const maxDayLength = ref<number>(6)
     const minDayLength = ref<number>(2)
     const maxGap = ref<number>(2)
     const maxHours = ref<number>(3)
@@ -78,7 +78,9 @@ export const useTimetableStore = defineStore(
       ],
     })
 
-    const selectedCourses = ref<Record<VIAplanner.SemesterCode, Record<VIAplanner.CourseCode, VIAplanner.SelectedCourseData>>>({
+    const selectedCourses = ref<
+      Record<VIAplanner.SemesterCode, Record<string, VIAplanner.SelectedCourseData>>
+    >({
       [VIAplannerConstants.FIRST_SEM]: {},
       [VIAplannerConstants.SECOND_SEM]: {},
     })
@@ -88,7 +90,7 @@ export const useTimetableStore = defineStore(
       [VIAplannerConstants.SECOND_SEM]: emptySemesterEvents(),
     })
 
-    const lockedSections = ref<Record<VIAplanner.SemesterCode, Record<VIAplanner.CourseCode, Array<string>>>>({
+    const lockedSections = ref<Record<VIAplanner.SemesterCode, Record<string, Array<string>>>>({
       [VIAplannerConstants.FIRST_SEM]: {},
       [VIAplannerConstants.SECOND_SEM]: {},
     })
@@ -98,7 +100,7 @@ export const useTimetableStore = defineStore(
     const noTimetablePopup = ref<boolean>(false)
     const sessionChangeWarning = ref<boolean>(false)
     const tutorialPopup = ref<boolean>(true)
-    const searchBarSuggestions = ref<Array<VIAplanner.CourseCodeSession>>([])
+    const searchBarSuggestions = ref<Array<string>>([])
     const history = ref<Array<object>>([]) // todo type
     const historyIndex = ref<number>(0)
 
@@ -112,7 +114,8 @@ export const useTimetableStore = defineStore(
      * Actions
      */
 
-    function initializeToast(toastInstance: any) { // todo type
+    function initializeToast(toastInstance: any) {
+      // todo type
       toast.value = toastInstance
     }
 
@@ -184,7 +187,9 @@ export const useTimetableStore = defineStore(
           placeholderSection &&
           !placeholderSection.meetingTimes?.some(
             (blocker) =>
-              blocker.day === VIAplannerConstants.DAYS.indexOf(day) && blocker.start === start && blocker.end === end,
+              blocker.day === VIAplannerConstants.DAYS.indexOf(day) &&
+              blocker.start === start &&
+              blocker.end === end,
           )
         ) {
           placeholderSection.meetingTimes.push({
@@ -316,11 +321,13 @@ export const useTimetableStore = defineStore(
       lec: string | null,
       tut: string | null,
       pra: string | null,
-      courseData: any,
+      courseData: VIAplanner.Course,
       shouldGenerate = true,
     ) {
-      const selectedSessionFromCourse =
-        resolveSubsessionSemesters(courseData.sessions?.[0])?.[0] || null
+      const firstSessionCode = courseData.sessions[0]
+      const selectedSessionFromCourse = firstSessionCode
+        ? resolveSubsessionSemesters(firstSessionCode)[0] || null
+        : null
       const color = genColor(
         darkMode.value ? VIAplannerConstants.DARK_SATURATION : VIAplannerConstants.LIGHT_SATURATION,
         darkMode.value ? VIAplannerConstants.DARK_LIGHTNESS : VIAplannerConstants.LIGHT_LIGHTNESS,
@@ -350,7 +357,7 @@ export const useTimetableStore = defineStore(
       }
     }
 
-    async function addCourseToBuilder(courseData: any) {
+    async function addCourseToBuilder(courseData: VIAplanner.Course) {
       const manager = await getBuilderManager()
 
       const lockedSectionsByType: Record<VIAplanner.ActivityType, string | null> = {
@@ -384,7 +391,7 @@ export const useTimetableStore = defineStore(
         sessionsToSemester[match[1] as string] = 0
         sessionsToSemester[match[2] as string] = 1
       } else {
-        courseData.sessions.forEach((sessionCode: string, index: number) => {
+        courseData.sessions.forEach((sessionCode, index) => {
           sessionsToSemester[sessionCode] = index
         })
       }
@@ -396,9 +403,9 @@ export const useTimetableStore = defineStore(
         sectionJSON['meetingTimes'] = [] as Array<Record<string, any>>
 
         let hasMeetingTime = false
-        const meetingTimes = Array.isArray(sectionData['meetingTimes'])
+        const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData['meetingTimes'])
           ? sectionData['meetingTimes']
-          : Object.values(sectionData['meetingTimes'] || {})
+          : (Object.values(sectionData['meetingTimes'] || {}) as VIAplanner.MeetingTime[])
         for (const meetingTimeData of meetingTimes) {
           const buildingCode = meetingTimeData['building']['buildingCode']
           const fallbackSemesters = resolveSubsessionSemesters(meetingTimeData['sessionCode']).map(
@@ -489,28 +496,30 @@ export const useTimetableStore = defineStore(
       return !courseData.expiry || courseData.expiry < Date.now()
     }
 
-    async function fetchFreshCourseData(courseData: VIAplanner.SelectedCourseData): Promise<any | null> {
+    async function fetchFreshCourseData(
+      courseData: VIAplanner.SelectedCourseData,
+    ): Promise<VIAplanner.Course | null> {
       try {
-        const response = await axios.get(
+        const response = await axios.get<VIAplanner.CourseSearchResponse>(
           `${import.meta.env.VITE_API_BASE_URL}/courses/${courseData.courseData.code}`,
           {
             params: {
               page: 1,
               limit: 5,
-              sessions: courseData.courseData.sessionId
-                ? [courseData.courseData.sessionId].join(',')
+              sessions: courseData.courseData.sessionGroup
+                ? [courseData.courseData.sessionGroup].join(',')
                 : undefined,
             },
           },
         )
 
         return (
-          (response.data.courses || []).find(
-            (course: any) =>
+          response.data.courses.find(
+            (course) =>
               course.code === courseData.courseData.code &&
               course.sectionCode === courseData.courseData.sectionCode &&
-              (!courseData.courseData.sessionId ||
-                course.sessionId === courseData.courseData.sessionId),
+              (!courseData.courseData.sessionGroup ||
+                course.sessionGroup === courseData.courseData.sessionGroup),
           ) || null
         )
       } catch (error: any) {
@@ -528,7 +537,7 @@ export const useTimetableStore = defineStore(
         course: string
         entry: VIAplanner.SelectedCourseData
       }> = []
-      const fetchCache = new Map<string, Promise<any | null>>()
+      const fetchCache = new Map<string, Promise<VIAplanner.Course | null>>()
 
       for (const session of VIAplannerConstants.SEMESTER_CODES) {
         for (const [course, entry] of Object.entries(selectedCourses.value[session])) {
@@ -539,7 +548,7 @@ export const useTimetableStore = defineStore(
       }
 
       for (const target of refreshTargets) {
-        const cacheKey = `${target.entry.courseData.code}::${target.entry.courseData.sectionCode}::${target.entry.courseData.sessionId || ''}`
+        const cacheKey = `${target.entry.courseData.code}::${target.entry.courseData.sectionCode}::${target.entry.courseData.sessionGroup || ''}`
 
         if (!fetchCache.has(cacheKey)) {
           fetchCache.set(cacheKey, fetchFreshCourseData(target.entry))
@@ -602,7 +611,10 @@ export const useTimetableStore = defineStore(
 
     function applyBuiltTimetable(timetable: any) {
       const hasBuildFailure = timetable.some((entry: any) => {
-        return entry['code'] !== VIAplannerConstants.blockedTimesCourseCodePlaceholder && entry['section'] === ''
+        return (
+          entry['code'] !== VIAplannerConstants.blockedTimesCourseCodePlaceholder &&
+          entry['section'] === ''
+        )
       })
 
       if (hasBuildFailure) {
@@ -639,7 +651,10 @@ export const useTimetableStore = defineStore(
     }
 
     function normalizeBuiltTimetable(timetable: any) {
-      const normalized: Record<VIAplanner.SemesterCode, Array<any>> = { F: [], S: [] }
+      const normalized: Record<VIAplanner.SemesterCode, Array<any>> = {
+        [VIAplannerConstants.FIRST_SEM]: [],
+        [VIAplannerConstants.SECOND_SEM]: [],
+      }
 
       for (const entry of timetable) {
         if (!entry || entry['code'] === VIAplannerConstants.blockedTimesCourseCodePlaceholder) {
@@ -662,15 +677,15 @@ export const useTimetableStore = defineStore(
           const matchedSessions = matchingCandidateSessions.filter((session) => {
             const selectedCourse = selectedCourses.value[session][entry['code']]
             const sectionData = selectedCourse?.courseData?.sections?.find(
-              (section: any) => section.name === entry['section'],
+              (section) => section.name === entry['section'],
             )
             if (!sectionData) return false
 
-            const meetingTimes = Array.isArray(sectionData.meetingTimes)
+            const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData.meetingTimes)
               ? sectionData.meetingTimes
-              : Object.values(sectionData.meetingTimes || {})
+              : (Object.values(sectionData.meetingTimes || {}) as VIAplanner.MeetingTime[])
 
-            return meetingTimes.some((meetingTime: any) =>
+            return meetingTimes.some((meetingTime) =>
               resolveSubsessionSemesters(meetingTime.sessionCode).includes(session),
             )
           })
@@ -690,8 +705,12 @@ export const useTimetableStore = defineStore(
       for (const semester of VIAplannerConstants.SEMESTER_CODES) {
         Object.values(selectedCourses.value[semester]).forEach((course) => {
           course.color = genColor(
-            darkMode.value ? VIAplannerConstants.DARK_SATURATION : VIAplannerConstants.LIGHT_SATURATION,
-            darkMode.value ? VIAplannerConstants.DARK_LIGHTNESS : VIAplannerConstants.LIGHT_LIGHTNESS,
+            darkMode.value
+              ? VIAplannerConstants.DARK_SATURATION
+              : VIAplannerConstants.LIGHT_SATURATION,
+            darkMode.value
+              ? VIAplannerConstants.DARK_LIGHTNESS
+              : VIAplannerConstants.LIGHT_LIGHTNESS,
           ).hexString()
         })
       }
@@ -790,16 +809,13 @@ export const useTimetableStore = defineStore(
     async function getDivisionalLegends(): Promise<Array<VIAplanner.DivisionalLegend> | null> {
       if (!divisionalLegends.value || divisionalLegends.value.expiry < Date.now()) {
         try {
-          const newDivisionalLegends = await axios.get(
+          const response = await axios.get<VIAplanner.DivisionalLegendsResponse>(
             `${import.meta.env.VITE_API_BASE_URL}/divisionalLegends`,
           )
-          const data: Array<VIAplanner.DivisionalLegend> = []
-          for (const raw of newDivisionalLegends.data) {
-            data.push({
-              division: raw.division,
-              content: raw.content,
-            })
-          }
+          const data: Array<VIAplanner.DivisionalLegend> = response.data.data.map((raw) => ({
+            division: raw.division,
+            content: raw.content,
+          }))
           divisionalLegends.value = {
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: data,
@@ -819,25 +835,15 @@ export const useTimetableStore = defineStore(
         divisionalEnrolmentIndicators.value.expiry < Date.now()
       ) {
         try {
-          const newDivisionalEnrolmentIndicators = await axios.get(
+          const response = await axios.get<VIAplanner.DivisionalEnrolmentIndicatorsResponse>(
             `${import.meta.env.VITE_API_BASE_URL}/divisionalEnrolmentIndicators`,
           )
-          const data: Array<VIAplanner.DivisionalEnrolmentIndicator> = []
-          for (const raw of newDivisionalEnrolmentIndicators.data) {
-            const divisionalEnrolmentIndicator: VIAplanner.DivisionalEnrolmentIndicator = {
+          const data: Array<VIAplanner.DivisionalEnrolmentIndicator> = response.data.data.map(
+            (raw) => ({
               division: raw.division,
-              codes: [],
-            }
-
-            for (const rawEnrolmentIndicator of raw.codes) {
-              divisionalEnrolmentIndicator.codes.push({
-                code: rawEnrolmentIndicator.code,
-                name: rawEnrolmentIndicator.name,
-              })
-            }
-
-            data.push(divisionalEnrolmentIndicator)
-          }
+              codes: raw.codes.map((code) => ({ code: code.code, name: code.name })),
+            }),
+          )
           divisionalEnrolmentIndicators.value = {
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: data,
@@ -851,10 +857,12 @@ export const useTimetableStore = defineStore(
       return divisionalEnrolmentIndicators.value.data
     }
 
-    async function getDivisions(): Promise<any> {
+    async function getDivisions(): Promise<Array<VIAplanner.Division> | null> {
       if (!divisions.value || divisions.value.expiry < Date.now()) {
         try {
-          const newDivisions = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/referenceData`)
+          const newDivisions = await axios.get<VIAplanner.ReferenceData>(
+            `${import.meta.env.VITE_API_BASE_URL}/referenceData`,
+          )
           divisions.value = {
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: newDivisions.data.divisions,
@@ -868,10 +876,12 @@ export const useTimetableStore = defineStore(
       return divisions.value.data
     }
 
-    async function getSessions(): Promise<any> {
+    async function getSessions(): Promise<Array<VIAplanner.SessionGroup> | null> {
       if (!sessions.value || sessions.value.expiry < Date.now()) {
         try {
-          const newSessions = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/referenceData`)
+          const newSessions = await axios.get<VIAplanner.ReferenceData>(
+            `${import.meta.env.VITE_API_BASE_URL}/referenceData`,
+          )
           sessions.value = {
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: newSessions.data.sessions,
@@ -885,10 +895,10 @@ export const useTimetableStore = defineStore(
       return sessions.value.data
     }
 
-    function timetableRegisterActivity(courseData: any, activityName: string) {
+    function timetableRegisterActivity(courseData: VIAplanner.Course, activityName: string) {
       let selectedSessionFromActivity: VIAplanner.SemesterCode | null = null
 
-      const activity = courseData.sections.find((section: any) => section.name === activityName)
+      const activity = courseData.sections.find((section) => section.name === activityName)
       if (activity) {
         for (const meetingTime of activity.meetingTimes) {
           const day = VIAplannerConstants.DAYS[meetingTime.day - 1]
@@ -925,7 +935,7 @@ export const useTimetableStore = defineStore(
     }
 
     async function timetableModifyActivity(
-      courseData: any,
+      courseData: VIAplanner.Course,
       newActivityName: string,
       lockAndGenerate = false,
     ) {
@@ -977,7 +987,7 @@ export const useTimetableStore = defineStore(
     ): VIAplanner.SemesterCode | typeof VIAplannerConstants.BOTH_SEM | undefined {
       if (!sessions.value || !sessions.value.data) return undefined
 
-      for (const sessionGroup of sessions.value.data as Array<any>) {
+      for (const sessionGroup of sessions.value.data) {
         for (const subsession of sessionGroup.subsessions) {
           if (subsession.value === subsessionCode) {
             const match = subsession.label.match(/\((.)\)/)
@@ -995,8 +1005,10 @@ export const useTimetableStore = defineStore(
 
     function resolveSubsessionSemesters(subsessionCode: string): Array<VIAplanner.SemesterCode> {
       const session = subsessionCodeToSession(subsessionCode)
-      if (session === VIAplannerConstants.BOTH_SEM) return [VIAplannerConstants.FIRST_SEM, VIAplannerConstants.SECOND_SEM]
-      if (session === VIAplannerConstants.FIRST_SEM || session === VIAplannerConstants.SECOND_SEM) return [session]
+      if (session === VIAplannerConstants.BOTH_SEM)
+        return [VIAplannerConstants.FIRST_SEM, VIAplannerConstants.SECOND_SEM]
+      if (session === VIAplannerConstants.FIRST_SEM || session === VIAplannerConstants.SECOND_SEM)
+        return [session]
       return []
     }
 
@@ -1011,12 +1023,18 @@ export const useTimetableStore = defineStore(
     }
 
     function resetTimetable() {
-      selectedCourses.value = { [VIAplannerConstants.FIRST_SEM]: {}, [VIAplannerConstants.SECOND_SEM]: {} }
+      selectedCourses.value = {
+        [VIAplannerConstants.FIRST_SEM]: {},
+        [VIAplannerConstants.SECOND_SEM]: {},
+      }
       timetables.value = {
         [VIAplannerConstants.FIRST_SEM]: emptySemesterEvents(),
         [VIAplannerConstants.SECOND_SEM]: emptySemesterEvents(),
       }
-      lockedSections.value = { [VIAplannerConstants.FIRST_SEM]: {}, [VIAplannerConstants.SECOND_SEM]: {} }
+      lockedSections.value = {
+        [VIAplannerConstants.FIRST_SEM]: {},
+        [VIAplannerConstants.SECOND_SEM]: {},
+      }
     }
 
     async function updatePreferences() {
@@ -1036,8 +1054,11 @@ export const useTimetableStore = defineStore(
       })
     }
 
-    function getCourseSectionDeliveryModeForSession(deliveryModes: any, session: string) {
-      for (const sessionDelivery of deliveryModes as Array<any>) {
+    function getCourseSectionDeliveryModeForSession(
+      deliveryModes: VIAplanner.DeliveryMode[],
+      session: string,
+    ): VIAplanner.DeliveryModeCode | '' {
+      for (const sessionDelivery of deliveryModes) {
         if (sessionDelivery?.session == session) {
           return sessionDelivery.mode
         }

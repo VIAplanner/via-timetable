@@ -25,7 +25,9 @@ import { toPng } from 'html-to-image'
 import { useTimetableStore } from '../../store/timetable'
 import ExportTimetableTemplate from './ExportTimetableTemplate.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
-import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../store/timetable.shared'
+import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../types/constants.types'
+import { SessionGroup } from '../../types/reference_data.types'
+// import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../store/timetable.shared'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
@@ -38,7 +40,7 @@ const exportTitle: Ref<string> = ref('')
  * @param sessions The list of session groups
  * @param semester The semester code
  */
-function getSemesterTitle(sessions: Array<any>, semester: string): string {
+function getSemesterTitle(sessions: Array<SessionGroup>, semester: string): string {
   const sessionGroup = sessions.find((group: any) => group.group === store.selectedSessionGroup)
 
   if (!sessionGroup) return ''
@@ -94,7 +96,7 @@ async function exportTimetables() {
 
   try {
     const sessions = await store.getSessions()
-
+    if (!sessions) return
     for (const semester of semestersToExport) {
       const semesterTitle = getSemesterTitle(sessions, semester)
       await captureSemester(semester, semesterTitle)
