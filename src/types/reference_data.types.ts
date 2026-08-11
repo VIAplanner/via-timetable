@@ -1,41 +1,36 @@
-import type { Campus, DivisionCode } from './common.types.ts'
+import type { DivisionCode, DivisionName } from './common.types.ts'
 
-/** A single subsession within a session group (ex. "Fall 2026 (F)"). */
+/** A single subsession within a session group (ex. "Fall 2026 (F)") */
 export interface Subsession {
-  label: string
-  value: string
+  label: string // The human-readable name of the subsession (ex. "Fall 2026 (F)")
+  value: string // The code for the subsession (ex. "20269")
 }
 
 /**
  * A session group spanning one or more subsessions (ex. "Summer 2026", made up
- * of F/S/Y subsessions). In the API response this is keyed by a group key such
- * as "Summer-20265" or "FallWinter-20269-20271" — that key isn't repeated
- * inside the object itself, so it's not a field here; see `CurrentSessions`.
+ * of F/S/Y subsessions). `group` is this group's own key (ex. "Summer-20265",
+ * "FallWinter-20269-20271") — the same value used elsewhere to identify it
  */
 export interface SessionGroup {
-  label: string
-  value: string
-  subsessions: Subsession[]
+  group: string // The code for the session group (ex. "FallWinter-20269-20271")
+  label: string // The human-readable name for the session group (ex. "Fall-Winter 2026-2027")
+  value: string // The title of the session group independent of year (ex. "Fall-Winter")
+  subsessions: Subsession[] // The subsessions contained in this session group
 }
 
-/** `currentSessions` from the reference-data endpoint, keyed by session group key. */
-export type CurrentSessions = Record<string, SessionGroup>
-
-/** A division/faculty option, as returned by the reference-data endpoint. */
+/** A division/faculty option, as returned by the reference-data endpoint */
 export interface Division {
-  label: string
-  value: DivisionCode
+  label: DivisionName // The name of the division
+  value: DivisionCode // The code of the division
 }
 
-/** A campus option, as returned by the reference-data endpoint. */
-export interface CampusOption {
-  label: string
-  value: Campus
-}
+//
+// API Responses
+//
 
-/** Root shape of the reference-data endpoint (current sessions, divisions, campuses). */
+/** Root shape of the reference-data endpoint (sessions and divisions) */
 export interface ReferenceData {
-  currentSessions: CurrentSessions
-  divisions: Division[]
-  campuses: CampusOption[]
+  success: boolean // Whether the query was successful
+  sessions: SessionGroup[] // The session groups
+  divisions: Division[] // The divisions
 }
