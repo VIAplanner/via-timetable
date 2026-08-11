@@ -36,10 +36,21 @@ export type EnrolmentInd = LooseString<
   | 'AR1'
 >
 
-/** Represents a section indicator, e.g. "C" (closed) */ // todo
+/**
+ * Generic three-value Y/N/C-style indicator flag, reused across several
+ * section-level fields (cancelInd, waitlistInd, tbaInd, openLimitInd). What
+ * each value means is field-specific — see the doc comment on the field
+ * itself rather than this shared type.
+ */
 export type Ind = LooseString<'N' | 'C' | 'Y'>
 
-export type CancelInd = '' | 'N' // todo
+/**
+ * Whether a course has been cancelled. Only 'N' and '' (blank) have been
+ * observed in scraped data — the registrar appears to leave this blank
+ * rather than omit the field outright, and a 'Y'/cancelled state hasn't
+ * been seen.
+ */
+export type CancelInd = '' | 'N'
 
 /** Represents a course sections meeting time frequency */
 export type Repetition = LooseString<'WEEKLY' | 'BI_WEEKLY' | 'MANUAL'>
@@ -563,13 +574,13 @@ export interface Section {
   currentEnrolment: number // The current number of students enrolled
   maxEnrolment: number // The maximum number of students that can enrol in this section
   subTitle: string // The subtitle of this section
-  cancelInd: Ind // todo
-  waitlistInd: Ind // todo
+  cancelInd: Ind // Whether this section has been cancelled; 'N' in all sampled data
+  waitlistInd: Ind // Whether a waitlist is available once this section fills
   deliveryModes: DeliveryMode[] // The delivery modes of this section
   currentWaitlist: number // The number of students currently on the waitlist for this section
   enrolmentInd: EnrolmentInd // The enrolment indicator for this section
-  tbaInd: Ind // todo
-  openLimitInd: Ind // The open limit indicator for this section todo
+  tbaInd: Ind // Whether this section's meeting time/location is still to be announced
+  openLimitInd: Ind // N corresponds to open, C corresponds to closed, these are the only observed values
   notes: Note[] // The notes for this section
   enrolmentControls: string[] // The enrolment controls for this section
   linkedMeetingSections: LinkedMeetingSection[] | null // The linked meeting times for this section
@@ -577,8 +588,8 @@ export interface Section {
 
 /** Encodes a publication section */
 export interface PublicationSection {
-  section: string // todo
-  subSections: string[] | null // todo
+  section: string // The publication section's name, ex. "Computer Science" (matches an entry in CmCourseInfo.publicationSections)
+  subSections: string[] | null // Further subsection labels within this publication section, ex. "Foundational Data Science Courses"; null when there's no further breakdown
 }
 
 /** Rich course-calendar metadata */
@@ -595,7 +606,7 @@ export interface CmCourseInfo {
   breadthRequirements: BreadthRequirement[] | null // The breadth requirements of this course
   distributionRequirements: DistributionRequirement[] | null // The distribution requirements of this course
   publicationSections: string[] | null // The publication sections of the course
-  cmPublicationSections: PublicationSection[] | null // todo
+  cmPublicationSections: PublicationSection[] | null // Structured version of publicationSections, pairing each section name with its subsections (if any); null when not available
 }
 
 /** Represents a single breadth type for a course */
@@ -624,14 +635,15 @@ export interface Course {
   cmCourseInfo: CmCourseInfo | null // Course metadata
   primaryTeachMethod: ActivityType // The primary content delivery type of the course
   faculty: Organization // The faculty in charge of the course
-  coSec: Organization // todo
+  coSec: Organization // Co-sponsoring/cross-listing organization, if any; always empty ({code: '', name: null}) in
+  // sampled data, so its populated meaning is unconfirmed
   department: Organization // The department in charge of the course
   title: null // Always null in observed data
   maxCredit: number // The maximum number of credits obtainable from the course
   minCredit: number // The minimum number of credits obtainable from the course
   breadths: Breadth[] // The breadths of the course
   notes: Note[] // The notes for the course
-  cancelInd: CancelInd // todo
+  cancelInd: CancelInd // Whether the course has been cancelled
   fullyOnline: boolean // Whether the course is fully online
   primaryFull: boolean // Whether the primary teach method for the course is full
   primaryWaitlistable: boolean // Whether the primary teach method for the course is full
