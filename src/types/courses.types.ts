@@ -637,11 +637,15 @@ export interface Course {
   primaryWaitlistable: boolean // Whether the primary teach method for the course is full
 }
 
+//
+// API Responses
+//
+
 /** Pagination metadata on a course search response. */
 export interface CoursePageInfo {
-  hasNextPage: boolean
-  hasPreviousPage: boolean
-  itemsOnPage: number
+  hasNextPage: boolean // Whether the search query has another page of items
+  hasPreviousPage: boolean // Whether the search query has a previous page of items
+  itemsOnPage: number // How many items are on the current page
 }
 
 /**
@@ -650,10 +654,10 @@ export interface CoursePageInfo {
  * search result rather than a single course
  */
 export interface CourseSearchResponse {
-  courses: Course[]
-  totalPages: number
-  currentPage: number
-  total: number
-  searchTerm: string
-  pageInfo: CoursePageInfo
+  courses: Course[] // The courses on the page
+  totalPages: number // The total number of pages
+  currentPage: number // The current number of pages
+  total: number // The total number of courses across all pages
+  searchTerm: string // The search query
+  pageInfo: CoursePageInfo // The page info
 }
