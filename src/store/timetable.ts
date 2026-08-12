@@ -998,7 +998,7 @@ export const useTimetableStore = defineStore(
 
     function subsessionCodeToSession(
       subsessionCode: string,
-    ): VIAplanner.SemesterCode | typeof VIAplannerConstants.BOTH_SEM | undefined {
+    ): VIAplanner.SemesterCodeRange | undefined {
       if (!sessions.value || !sessions.value.data) return undefined
 
       for (const sessionGroup of sessions.value.data) {

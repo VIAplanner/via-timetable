@@ -200,21 +200,21 @@ async function syncSelectedSectionsFromStore() {
   suppressSelectionWatchers.value = false
 }
 
-watch(selectedLec, (val: string | null) => {
+watch(selectedLec, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
   store.timetableModifyActivity(props.courseData, val, true)
   store.saveStateHistory()
 })
 
-watch(selectedTut, (val: string | null) => {
+watch(selectedTut, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
   store.timetableModifyActivity(props.courseData, val, true)
   store.saveStateHistory()
 })
 
-watch(selectedPra, (val: string | null) => {
+watch(selectedPra, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
   store.timetableModifyActivity(props.courseData, val, true)
