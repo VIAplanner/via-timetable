@@ -1,8 +1,19 @@
 <template>
   <div>
-    <Dialog v-model:visible="visible" modal header="Welcome to VIAplanner!" :style="dialogStyle" @close="dialogClosed">
+    <Dialog
+      v-model:visible="visible"
+      modal
+      header="Welcome to VIAplanner!"
+      :style="dialogStyle"
+      @close="dialogClosed"
+    >
       <div class="p-0">
-        <Carousel :value="tutorialSteps" :num-visible="1" :num-scroll="1" :pt:indicatorList:class="'py-0'">
+        <Carousel
+          :value="tutorialSteps"
+          :num-visible="1"
+          :num-scroll="1"
+          :pt:indicatorList:class="'py-0'"
+        >
           <template #item="slotProps">
             <div class="tutorial-popup-slide">
               <h2 class="text-sm md:text-xl font-bold">
@@ -12,8 +23,11 @@
                 {{ slotProps.data.description }}
               </p>
               <div class="mb-4" style="width: 100%; display: flex; justify-content: center">
-                <img :src="slotProps.data.path" :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
-                  :style="getImageStyle()" />
+                <img
+                  :src="slotProps.data.path"
+                  :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
+                  :style="getImageStyle()"
+                />
               </div>
             </div>
           </template>

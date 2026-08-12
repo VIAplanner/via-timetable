@@ -1,13 +1,30 @@
 <template>
   <div class="flex flex-row items-center justify-center">
-    <div class="flex flex-row justify-center items-center mx-0 w-full cursor-pointer select-none" role="button"
-      tabindex="0" aria-label="Toggle day lock" :style="{ height: height }" @click="toggleDayLock()"
-      @keydown.enter.prevent="toggleDayLock()" @keydown.space.prevent="toggleDayLock()">
+    <div
+      class="flex flex-row justify-center items-center mx-0 w-full cursor-pointer select-none"
+      role="button"
+      tabindex="0"
+      aria-label="Toggle day lock"
+      :style="{ height: height }"
+      @click="toggleDayLock()"
+      @keydown.enter.prevent="toggleDayLock()"
+      @keydown.space.prevent="toggleDayLock()"
+    >
       <h3 class="day-label m-0 font-bold leading-none text-sm md:text-md lg:text-lg">
         {{ weekdayLabel || weekday }}
       </h3>
-      <div v-if="locked && !isExport" v-tooltip.bottom="tooltip(toolTipText)" class="absolute -bottom-6">
-        <Button icon="pi pi-lock" rounded text icon-class="text-text-primary" aria-label="Toggle Day Lock" />
+      <div
+        v-if="locked && !isExport"
+        v-tooltip.bottom="tooltip(toolTipText)"
+        class="absolute -bottom-6"
+      >
+        <Button
+          icon="pi pi-lock"
+          rounded
+          text
+          icon-class="text-text-primary"
+          aria-label="Toggle Day Lock"
+        />
       </div>
     </div>
   </div>
@@ -22,13 +39,16 @@ import { SemesterCode, Weekday } from '../../types/constants.types'
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 
-const props = withDefaults(defineProps<{
-  weekday: Weekday,
-  weekdayLabel: string,
-  semester: SemesterCode,
-  isExport?: boolean,
-  height: string
-}>(), { isExport: false })
+const props = withDefaults(
+  defineProps<{
+    weekday: Weekday
+    weekdayLabel: string
+    semester: SemesterCode
+    isExport?: boolean
+    height: string
+  }>(),
+  { isExport: false },
+)
 
 const locked = computed(() => {
   const blockedTimesForSemester = store.blockedTimes[props.semester] || []

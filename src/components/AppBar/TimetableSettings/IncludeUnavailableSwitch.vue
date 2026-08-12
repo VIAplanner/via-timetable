@@ -1,8 +1,13 @@
 <template>
   <div class="m-2 w-35">
-    <label for="includeUnavailableSwitch" class="block mb-0 text-sm font-bold">Include Unavailable Sections</label>
-    <ToggleSwitch v-model="includeUnavailable" :pt:slider:class="'IncludeUnavailableSwitchSlider'"
-      :pt:input:id="'includeUnavailableSwitch'" />
+    <label for="includeUnavailableSwitch" class="block mb-0 text-sm font-bold"
+      >Include Unavailable Sections</label
+    >
+    <ToggleSwitch
+      v-model="includeUnavailable"
+      :pt:slider:class="'IncludeUnavailableSwitchSlider'"
+      :pt:input:id="'includeUnavailableSwitch'"
+    />
   </div>
 </template>
 

@@ -1,13 +1,20 @@
 <template>
   <div class="w-3 md:w-4">
-    <AutoComplete ref="searchBarComponent" v-model="currentQuery" option-label="formattedName" :suggestions="allCourses"
-      loader="pi pi-spinner" :loading="loading"
-      :placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : 'Loading...'" :input-style="{
+    <AutoComplete
+      ref="searchBarComponent"
+      v-model="currentQuery"
+      option-label="formattedName"
+      :suggestions="allCourses"
+      loader="pi pi-spinner"
+      :loading="loading"
+      :placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : 'Loading...'"
+      :input-style="{
         'background-color': dynamicColor,
         border: 'none',
         'border-radius': '16px',
         color: dynamicTextColor,
-      }" :pt="{
+      }"
+      :pt="{
         panel: {
           style: isSmallDevice
             ? { width: 'calc(100vw - 1rem)', maxWidth: 'calc(100vw - 1rem)' }
@@ -20,8 +27,14 @@
             wordBreak: 'break-word',
           },
         },
-      }" fluid @complete="populateRecommendations()" @focus="onFocus()" @blur="isActive = false"
-      @option-select="courseSearched()" @min-length="5" />
+      }"
+      fluid
+      @complete="populateRecommendations()"
+      @focus="onFocus()"
+      @blur="isActive = false"
+      @option-select="courseSearched()"
+      @min-length="5"
+    />
   </div>
 </template>
 

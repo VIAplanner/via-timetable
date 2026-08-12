@@ -3,18 +3,36 @@
     <h2 class="font-bold text-lg">Select Sessions</h2>
     <div v-for="sessionGroup of sessionGroups" :key="sessionGroup.group">
       <div class="gap-2 flex items-center">
-        <RadioButton :input-id="sessionGroup.group" :value="sessionGroup.group" name="sessionGroup"
-          :model-value="selectedSessionGroup" @change="handleSessionGroupChangeRequest(sessionGroup)" />
+        <RadioButton
+          :input-id="sessionGroup.group"
+          :value="sessionGroup.group"
+          name="sessionGroup"
+          :model-value="selectedSessionGroup"
+          @change="handleSessionGroupChangeRequest(sessionGroup)"
+        />
         <label :for="sessionGroup.group">{{ sessionGroup.label }}</label>
       </div>
-      <div v-for="subsession of sessionGroup.subsessions" :key="subsession.value" class="pl-4 gap-2 flex items-center">
-        <Checkbox v-model="selectedSubsessions" :input-id="subsession.value" :value="subsession.value" name="subsession"
-          :disabled="sessionGroup.group !== selectedSessionGroup" />
+      <div
+        v-for="subsession of sessionGroup.subsessions"
+        :key="subsession.value"
+        class="pl-4 gap-2 flex items-center"
+      >
+        <Checkbox
+          v-model="selectedSubsessions"
+          :input-id="subsession.value"
+          :value="subsession.value"
+          name="subsession"
+          :disabled="sessionGroup.group !== selectedSessionGroup"
+        />
         <label :for="subsession.value">{{ subsession.label }}</label>
       </div>
     </div>
   </div>
-  <ChangeSessionGroup v-model:visible="confirmDialogVisible" @cancel="cancelChange" @continue="confirmChange" />
+  <ChangeSessionGroup
+    v-model:visible="confirmDialogVisible"
+    @cancel="cancelChange"
+    @continue="confirmChange"
+  />
 </template>
 
 <script setup lang="ts">

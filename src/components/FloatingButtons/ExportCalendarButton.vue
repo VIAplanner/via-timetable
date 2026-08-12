@@ -1,11 +1,20 @@
 <template>
   <div>
-    <Button v-tooltip.left="tooltip('Export Timetables')" rounded icon="pi pi-download" :pt:root:class="'text-white'"
-      aria-label="Export Timetables" @click="exportTimetables()" />
+    <Button
+      v-tooltip.left="tooltip('Export Timetables')"
+      rounded
+      icon="pi pi-download"
+      :pt:root:class="'text-white'"
+      aria-label="Export Timetables"
+      @click="exportTimetables()"
+    />
 
     <div v-if="exportSemester" aria-hidden="true" class="export-template-stage">
-      <ExportTimetableTemplate :semester="exportSemester" :timetable="store.timetables[exportSemester]"
-        :title="exportTitle" />
+      <ExportTimetableTemplate
+        :semester="exportSemester"
+        :timetable="store.timetables[exportSemester]"
+        :title="exportTitle"
+      />
     </div>
   </div>
 </template>

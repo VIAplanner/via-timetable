@@ -1,7 +1,12 @@
 <template>
   <div>
-    <Dialog v-model:visible="visible" modal :style="{ 'max-width': '290px' }" :show-header="false"
-      aria-label="Timetable generation warning">
+    <Dialog
+      v-model:visible="visible"
+      modal
+      :style="{ 'max-width': '290px' }"
+      :show-header="false"
+      aria-label="Timetable generation warning"
+    >
       <h2 class="text-lg font-bold my-2">Warning</h2>
       <p>
         We are unable to generate timetables for one or more semesters based on your current course

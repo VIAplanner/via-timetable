@@ -1,8 +1,17 @@
 <template>
   <div class="m-2">
     <label for="maxGapInput" class="block mb-0 text-sm font-bold">Max Gap</label>
-    <InputNumber v-model="maxGap" suffix=" Hours" :min="0" :max="12" show-buttons button-layout="stacked"
-      input-class="MaxGapInput" placeholder="2 Hours" :pt:pcInputText:root:id="'maxGapInput'" />
+    <InputNumber
+      v-model="maxGap"
+      suffix=" Hours"
+      :min="0"
+      :max="12"
+      show-buttons
+      button-layout="stacked"
+      input-class="MaxGapInput"
+      placeholder="2 Hours"
+      :pt:pcInputText:root:id="'maxGapInput'"
+    />
   </div>
 </template>
 

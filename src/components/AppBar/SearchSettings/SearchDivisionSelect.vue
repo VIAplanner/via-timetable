@@ -3,7 +3,12 @@
     <div>
       <h2 class="font-bold text-lg">Select Divisions</h2>
       <div v-for="division of divisions" :key="division.value" class="flex items-center gap-2">
-        <Checkbox v-model="selectedDivisions" :input-id="division.value" name="division" :value="division.value" />
+        <Checkbox
+          v-model="selectedDivisions"
+          :input-id="division.value"
+          name="division"
+          :value="division.value"
+        />
         <label :for="division.value">
           {{ division.label }}
         </label>

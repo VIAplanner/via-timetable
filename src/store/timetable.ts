@@ -60,9 +60,7 @@ export const useTimetableStore = defineStore(
     const currentlyBuildingTimetable = ref<boolean>(false)
 
     // Detail cards - TODO: type `props` properly
-    const cards = ref<
-      { course: string; visible: boolean; props: VIAplanner.CourseCardProps }[]
-    >([])
+    const cards = ref<{ course: string; visible: boolean; props: VIAplanner.CourseCardProps }[]>([])
 
     const blockedTimes = ref<Record<VIAplanner.SemesterCode, VIAplanner.BlockedTimeData[]>>({
       [VIAplannerConstants.FIRST_SEM]: [],
@@ -415,7 +413,7 @@ export const useTimetableStore = defineStore(
         let hasMeetingTime = false
         const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData['meetingTimes'])
           ? sectionData['meetingTimes']
-          : (Object.values(sectionData['meetingTimes'] || {}))
+          : Object.values(sectionData['meetingTimes'] || {})
         for (const meetingTimeData of meetingTimes) {
           const buildingCode = meetingTimeData['building']['buildingCode']
           const fallbackSemesters = resolveSubsessionSemesters(meetingTimeData['sessionCode']).map(
@@ -664,10 +662,7 @@ export const useTimetableStore = defineStore(
     }
 
     function normalizeBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
-      const normalized: Record<
-        VIAplanner.SemesterCode,
-        VIAplanner.BuilderCourseSelection[]
-      > = {
+      const normalized: Record<VIAplanner.SemesterCode, VIAplanner.BuilderCourseSelection[]> = {
         [VIAplannerConstants.FIRST_SEM]: [],
         [VIAplannerConstants.SECOND_SEM]: [],
       }
@@ -848,7 +843,9 @@ export const useTimetableStore = defineStore(
       return divisionalLegends.value.data
     }
 
-    async function getDivisionalEnrolmentIndicators(): Promise<VIAplanner.DivisionalEnrolmentIndicator[] | null> {
+    async function getDivisionalEnrolmentIndicators(): Promise<
+      VIAplanner.DivisionalEnrolmentIndicator[] | null
+    > {
       if (
         !divisionalEnrolmentIndicators.value ||
         divisionalEnrolmentIndicators.value.expiry < Date.now()
@@ -857,12 +854,10 @@ export const useTimetableStore = defineStore(
           const response = await axios.get<VIAplanner.DivisionalEnrolmentIndicatorsResponse>(
             `${import.meta.env.VITE_API_BASE_URL}/divisionalEnrolmentIndicators`,
           )
-          const data: VIAplanner.DivisionalEnrolmentIndicator[] = response.data.data.map(
-            (raw) => ({
-              division: raw.division,
-              codes: raw.codes.map((code) => ({ code: code.code, name: code.name })),
-            }),
-          )
+          const data: VIAplanner.DivisionalEnrolmentIndicator[] = response.data.data.map((raw) => ({
+            division: raw.division,
+            codes: raw.codes.map((code) => ({ code: code.code, name: code.name })),
+          }))
           divisionalEnrolmentIndicators.value = {
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: data,

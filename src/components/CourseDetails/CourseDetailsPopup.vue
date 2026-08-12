@@ -1,25 +1,45 @@
 <template>
   <div>
-    <Dialog v-model:visible="visible"
+    <Dialog
+      v-model:visible="visible"
       class="w-[calc(100vw-1rem)] h-[calc(100dvh-4rem)] my-4 lg:w-[70vw] lg:h-[60vh] lg:my-0 overflow-hidden"
-      :style="{ 'max-height': 'calc(100dvh - 4rem)' }" :draggable="false" @update:visible="handleVisibleUpdate">
+      :style="{ 'max-height': 'calc(100dvh - 4rem)' }"
+      :draggable="false"
+      @update:visible="handleVisibleUpdate"
+    >
       <!-- Header -->
       <template #header>
-        <div class="flex flex-col gap-3 w-full items-start lg:flex-row lg:justify-between lg:items-center">
+        <div
+          class="flex flex-col gap-3 w-full items-start lg:flex-row lg:justify-between lg:items-center"
+        >
           <h2 class="text-xl lg:text-2xl font-bold leading-tight wrap-break-word">
             {{ `${courseData.code} ${courseData.sectionCode} - ${courseData.name}` }}
           </h2>
-          <Button icon="pi pi-plus" label="Quick Add Course" class="hidden lg:inline-flex lg:mr-3"
-            :pt:icon:class="'text-white'" :pt:label:class="'text-white'" @click="addCourse()" />
+          <Button
+            icon="pi pi-plus"
+            label="Quick Add Course"
+            class="hidden lg:inline-flex lg:mr-3"
+            :pt:icon:class="'text-white'"
+            :pt:label:class="'text-white'"
+            @click="addCourse()"
+          />
         </div>
       </template>
       <div class="flex justify-center mb-4 lg:hidden">
-        <Button icon="pi pi-plus" label="Quick Add Course" class="w-full max-w-xs" :pt:icon:class="'text-white'"
-          :pt:label:class="'text-white'" @click="addCourse()" />
+        <Button
+          icon="pi pi-plus"
+          label="Quick Add Course"
+          class="w-full max-w-xs"
+          :pt:icon:class="'text-white'"
+          :pt:label:class="'text-white'"
+          @click="addCourse()"
+        />
       </div>
       <div class="flex h-full flex-col gap-4 overflow-y-auto pr-1">
         <!-- Icon Bar -->
-        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-2">
+        <div
+          class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-2"
+        >
           <!-- Campus -->
           <span class="flex items-center gap-2">
             <i class="pi pi-home"></i>
@@ -33,15 +53,21 @@
           <!-- Distribution Requirement -->
           <span class="flex items-center gap-2">
             <i class="pi pi-graduation-cap"></i>
-            <span class="wrap-break-word">{{ courseData.maxCredit }} Credits ({{
-              parseDistributionRequirements(courseData.breadths)
-              }})</span>
+            <span class="wrap-break-word"
+              >{{ courseData.maxCredit }} Credits ({{
+                parseDistributionRequirements(courseData.breadths)
+              }})</span
+            >
           </span>
           <!-- View Legend Button -->
-          <div v-if="divisionalData && divisionalLegend && divisionalLegend.content"
-            class="flex w-full justify-center sm:w-auto sm:justify-start">
-            <DivisionalLegend :division="`${courseData.faculty.name} (${courseData.faculty.code})`"
-              :content="divisionalLegend.content" />
+          <div
+            v-if="divisionalData && divisionalLegend && divisionalLegend.content"
+            class="flex w-full justify-center sm:w-auto sm:justify-start"
+          >
+            <DivisionalLegend
+              :division="`${courseData.faculty.name} (${courseData.faculty.code})`"
+              :content="divisionalLegend.content"
+            />
           </div>
         </div>
 
@@ -64,20 +90,23 @@
           <div class="flex flex-col w-full lg:w-[40%]">
             <h3 class="text-md font-bold">Requisite Info</h3>
             <p v-if="courseData.cmCourseInfo?.prerequisitesText" class="wrap-break-word">
-              <span class="font-medium">Prerequisites: </span>{{ courseData.cmCourseInfo.prerequisitesText }}
+              <span class="font-medium">Prerequisites: </span
+              >{{ courseData.cmCourseInfo.prerequisitesText }}
             </p>
             <!-- Prerequisites -->
             <p v-if="courseData.cmCourseInfo?.exclusionsText" class="wrap-break-word">
-              <span class="font-medium">Exclusions: </span>{{ courseData.cmCourseInfo.exclusionsText }}
+              <span class="font-medium">Exclusions: </span
+              >{{ courseData.cmCourseInfo.exclusionsText }}
             </p>
             <!-- Exclusions -->
             <p v-if="courseData.cmCourseInfo?.corequisitesText" class="wrap-break-word">
-              <span class="font-medium">Corequisites: </span>{{ courseData.cmCourseInfo.corequisitesText }}
+              <span class="font-medium">Corequisites: </span
+              >{{ courseData.cmCourseInfo.corequisitesText }}
             </p>
             <!-- Corequisites -->
             <p v-if="courseData.cmCourseInfo?.recommendedPreparation" class="wrap-break-word">
-              <span class="font-medium">Recommended Preparation: </span>{{
-                courseData.cmCourseInfo.recommendedPreparation }}
+              <span class="font-medium">Recommended Preparation: </span
+              >{{ courseData.cmCourseInfo.recommendedPreparation }}
             </p>
             <!-- Recommended Prep -->
           </div>
@@ -85,20 +114,29 @@
         <!-- Section List -->
         <Accordion :value="['0']" :multiple="true">
           <template v-for="type in sectionTypes" :key="type.key">
-            <AccordionPanel v-if="courseData.sections.some((section: Section) => section.type === type.label)"
-              :value="type.key">
+            <AccordionPanel
+              v-if="courseData.sections.some((section: Section) => section.type === type.label)"
+              :value="type.key"
+            >
               <AccordionHeader>
                 <h2 class="text-lg font-bold">{{ type.label }}s</h2>
               </AccordionHeader>
-              <AccordionContent v-for="section in courseData.sections
-                .filter((section: Section) => section.type === type.label)
-                .sort(
-                  (s1: Section, s2: Section) =>
-                    parseInt(s1.name.match(/\d+(?!\d)/)?.[0] ?? '0') -
-                    parseInt(s2.name.match(/\d+(?!\d)/)?.[0] ?? '0'),
-                )" :key="section.name">
-                <CourseDetailsSectionCard :section-type="type" :section="section" :course-data="courseData"
-                  :divisional-data="divisionalData" />
+              <AccordionContent
+                v-for="section in courseData.sections
+                  .filter((section: Section) => section.type === type.label)
+                  .sort(
+                    (s1: Section, s2: Section) =>
+                      parseInt(s1.name.match(/\d+(?!\d)/)?.[0] ?? '0') -
+                      parseInt(s2.name.match(/\d+(?!\d)/)?.[0] ?? '0'),
+                  )"
+                :key="section.name"
+              >
+                <CourseDetailsSectionCard
+                  :section-type="type"
+                  :section="section"
+                  :course-data="courseData"
+                  :divisional-data="divisionalData"
+                />
               </AccordionContent>
             </AccordionPanel>
           </template>

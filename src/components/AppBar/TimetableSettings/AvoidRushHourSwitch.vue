@@ -1,8 +1,11 @@
 <template>
   <div class="m-2 w-35">
     <label for="avoidRushHourSwitch" class="block mb-0 text-sm font-bold">Avoid Rush Hour</label>
-    <ToggleSwitch v-model="avoidRushHour" :pt:slider:class="'AvoidRushHourSwitch'"
-      :pt:input:id="'avoidRushHourSwitch'" />
+    <ToggleSwitch
+      v-model="avoidRushHour"
+      :pt:slider:class="'AvoidRushHourSwitch'"
+      :pt:input:id="'avoidRushHourSwitch'"
+    />
   </div>
 </template>
 

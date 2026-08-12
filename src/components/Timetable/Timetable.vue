@@ -1,34 +1,58 @@
 <template>
   <div class="flex flex-row h-full">
     <NoTimetablePopup />
-    <div class="flex flex-col ml-0 md:ml-1 mr-0" :style="{ 'margin-top': `${oneHourHeightPixels * 0.6}px` }">
-      <div v-for="(time, index) in timeRange" :key="index" class="time-axis-number w-13 md:w-16"
-        :style="{ height: oneHourHeight }">
-        <HourSwitch :time="time" :last="index !== timeRange.length - 1" :semester="semester" :is-export="isExport"
-          :height="oneHourHeight" />
+    <div
+      class="flex flex-col ml-0 md:ml-1 mr-0"
+      :style="{ 'margin-top': `${oneHourHeightPixels * 0.6}px` }"
+    >
+      <div
+        v-for="(time, index) in timeRange"
+        :key="index"
+        class="time-axis-number w-13 md:w-16"
+        :style="{ height: oneHourHeight }"
+      >
+        <HourSwitch
+          :time="time"
+          :last="index !== timeRange.length - 1"
+          :semester="semester"
+          :is-export="isExport"
+          :height="oneHourHeight"
+        />
       </div>
     </div>
     <div class="col-11 w-full p-0 pr-8">
       <!-- Weekday Axis -->
       <div class="grid grid-nogutter" name="weekDaysAxis">
         <div v-for="(weekday, index) in weekdays" :key="weekday" class="col">
-          <WeekdaySwitch :weekday="weekday" :weekday-label="useShortWeekdays ? (weekdaysShort[index]!) : weekday"
-            :semester="semester" :is-export="isExport" :height="`${oneHourHeightPixels * 0.6}px`" />
+          <WeekdaySwitch
+            :weekday="weekday"
+            :weekday-label="useShortWeekdays ? weekdaysShort[index]! : weekday"
+            :semester="semester"
+            :is-export="isExport"
+            :height="`${oneHourHeightPixels * 0.6}px`"
+          />
         </div>
       </div>
       <!-- Timetable Content -->
       <div class="grid grid-nogutter timetableContent" name="timetableContent">
         <div v-for="(meetingSections, day) in timetable" :key="day" class="col relative">
-          <div v-for="hour in timeSlotCount" :key="hour" :style="{
-            height: oneHourHeight,
-            'box-sizing': 'border-box',
-            'border-right': '1px solid gray',
-            'border-bottom': '1px solid gray',
-            ...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {}),
-          }" :class="isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell'" />
-          <div v-for="event in getEventsForDay(meetingSections)"
+          <div
+            v-for="hour in timeSlotCount"
+            :key="hour"
+            :style="{
+              height: oneHourHeight,
+              'box-sizing': 'border-box',
+              'border-right': '1px solid gray',
+              'border-bottom': '1px solid gray',
+              ...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {}),
+            }"
+            :class="isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell'"
+          />
+          <div
+            v-for="event in getEventsForDay(meetingSections)"
             :key="event.start + '-' + event.currEnd + (event.overlapIndex || 0)"
-            class="absolute left-0 right-0 flex pb-px" :style="{
+            class="absolute left-0 right-0 flex pb-px"
+            :style="{
               top: `${(event.currStart / 3600 - timetableStart) * oneHourHeightPixels}px`,
               height: `${((event.currEnd - event.currStart) / 3600) * oneHourHeightPixels}px`,
               width: event.totalOverlapping ? `${100 / event.totalOverlapping}%` : '100%',
@@ -42,23 +66,37 @@
               ...(event.isEmpty || event.overlapIndex === event.totalOverlapping - 1
                 ? { 'padding-right': '1px' }
                 : {}),
-            }">
+            }"
+          >
             <template v-if="!event.isEmpty">
-              <TimetableEvent v-for="(courseActivityData, index) in event.courses"
-                :key="courseActivityData.course + courseActivityData.activity + index" :event-data="courseActivityData"
-                :semester="semester" :day="day" :is-empty="false" :is-export="isExport" :style="{
+              <TimetableEvent
+                v-for="(courseActivityData, index) in event.courses"
+                :key="courseActivityData.course + courseActivityData.activity + index"
+                :event-data="courseActivityData"
+                :semester="semester"
+                :day="day"
+                :is-empty="false"
+                :is-export="isExport"
+                :style="{
                   'background-color':
                     store.selectedCourses[store.selectedSession][courseActivityData.course]?.color,
-                }" />
+                }"
+              />
             </template>
             <template v-else-if="!isExport">
-              <TimetableEvent :event-data="{
-                course: '', // Placeholder value, wont be accessed since is-empty === true
-                activity: '', // Placeholder value, wont be accessed since is-empty === true
-                day: 1, // Placeholder value, wont be accessed since is-empty === true
-                start: event.currStart,
-                end: event.currEnd,
-              }" :semester="semester" :day="day" :is-empty="true" :is-export="isExport" />
+              <TimetableEvent
+                :event-data="{
+                  course: '', // Placeholder value, wont be accessed since is-empty === true
+                  activity: '', // Placeholder value, wont be accessed since is-empty === true
+                  day: 1, // Placeholder value, wont be accessed since is-empty === true
+                  start: event.currStart,
+                  end: event.currEnd,
+                }"
+                :semester="semester"
+                :day="day"
+                :is-empty="true"
+                :is-export="isExport"
+              />
             </template>
           </div>
         </div>

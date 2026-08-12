@@ -1,7 +1,12 @@
 <template>
   <div>
-    <Dialog v-model:visible="visible" modal :style="{ 'max-width': '290px' }" :show-header="false"
-      aria-label="Overwrite locked section warning">
+    <Dialog
+      v-model:visible="visible"
+      modal
+      :style="{ 'max-width': '290px' }"
+      :show-header="false"
+      aria-label="Overwrite locked section warning"
+    >
       <h2 class="text-lg font-bold my-2">Warning</h2>
       <p>
         You are trying to overwrite a section that is currently locked, do you want to unlock it and

@@ -1,19 +1,44 @@
 <template>
-  <div class="noScrollbar w-full overflow-y-auto" :style="{
-    height: duration * oneHourHeight,
-  }">
+  <div
+    class="noScrollbar w-full overflow-y-auto"
+    :style="{
+      height: duration * oneHourHeight,
+    }"
+  >
     <!-- Non-empty event -->
-    <div v-if="!isEmpty" class="h-full text-white p-1 text-sm cursor-pointer" role="button" tabindex="0"
-      aria-label="Open course details" @mouseenter="setHovered(true)" @mouseleave="setHovered(false)"
-      @click="handleEventClick()" @keydown.enter.prevent="handleEventClick()"
-      @keydown.space.prevent="handleEventClick()">
+    <div
+      v-if="!isEmpty"
+      class="h-full text-white p-1 text-sm cursor-pointer"
+      role="button"
+      tabindex="0"
+      aria-label="Open course details"
+      @mouseenter="setHovered(true)"
+      @mouseleave="setHovered(false)"
+      @click="handleEventClick()"
+      @keydown.enter.prevent="handleEventClick()"
+      @keydown.space.prevent="handleEventClick()"
+    >
       <div class="flex flex-row justify-between">
         <h3 class="font-bold relative">{{ eventData.course }}</h3>
         <div v-if="!isSmallDevice && !isExport" class="absolute right-0">
-          <Button v-if="sectionLocked" rounded text icon="pi pi-lock" icon-class="text-white"
-            aria-label="Unblock Section" @click.stop="blockSectionToggle()" />
-          <Button v-else-if="hovered || isSmallDevice" rounded text icon="pi pi-lock-open" icon-class="text-white"
-            aria-label="Block Section" @click.stop="blockSectionToggle()" />
+          <Button
+            v-if="sectionLocked"
+            rounded
+            text
+            icon="pi pi-lock"
+            icon-class="text-white"
+            aria-label="Unblock Section"
+            @click.stop="blockSectionToggle()"
+          />
+          <Button
+            v-else-if="hovered || isSmallDevice"
+            rounded
+            text
+            icon="pi pi-lock-open"
+            icon-class="text-white"
+            aria-label="Block Section"
+            @click.stop="blockSectionToggle()"
+          />
         </div>
       </div>
       <p :class="{ 'text-red-300': sectionLocked && !isExport }">
@@ -24,12 +49,27 @@
       <p>{{ parseTime(eventData.start) }} - {{ parseTime(eventData.end) }}</p>
     </div>
     <!-- Empty event -->
-    <div v-else-if="eventData.start % 3600 === 0 && eventData.end % 3600 === 0"
-      :class="['event', 'h-full', dynamicColor]" :style="{ height: getHeight }" role="button" tabindex="0"
-      aria-label="Toggle blocked time" @mouseover="setHovered(true)" @focusin="setHovered(true)"
-      @mouseleave="setHovered(false)" @focusout="setHovered(false)" @click="blockTimeToggle()"
-      @keydown.enter.prevent="blockTimeToggle()" @keydown.space.prevent="blockTimeToggle()">
-      <div v-show="hovered" v-ripple class="m-0 p-0 h-full flex items-center" @click="blockTimeToggle()">
+    <div
+      v-else-if="eventData.start % 3600 === 0 && eventData.end % 3600 === 0"
+      :class="['event', 'h-full', dynamicColor]"
+      :style="{ height: getHeight }"
+      role="button"
+      tabindex="0"
+      aria-label="Toggle blocked time"
+      @mouseover="setHovered(true)"
+      @focusin="setHovered(true)"
+      @mouseleave="setHovered(false)"
+      @focusout="setHovered(false)"
+      @click="blockTimeToggle()"
+      @keydown.enter.prevent="blockTimeToggle()"
+      @keydown.space.prevent="blockTimeToggle()"
+    >
+      <div
+        v-show="hovered"
+        v-ripple
+        class="m-0 p-0 h-full flex items-center"
+        @click="blockTimeToggle()"
+      >
         <p v-show="hovered" class="text-center unselectable text-text-primary w-full">
           {{ dynamicText }}
         </p>
@@ -67,14 +107,14 @@ const days = [...DAYS]
 const activityData = computed(() => {
   return !props.isEmpty
     ? store.selectedCourses[store.selectedSession][props.eventData.course]?.courseData.sections
-      .find((section) => section.name === props.eventData.activity)
-      ?.meetingTimes.find((meetingTime) => {
-        return (
-          meetingTime.day === days.indexOf(props.day) + 1 &&
-          meetingTime.start === props.eventData.start &&
-          meetingTime.end === props.eventData.end
-        )
-      })
+        .find((section) => section.name === props.eventData.activity)
+        ?.meetingTimes.find((meetingTime) => {
+          return (
+            meetingTime.day === days.indexOf(props.day) + 1 &&
+            meetingTime.start === props.eventData.start &&
+            meetingTime.end === props.eventData.end
+          )
+        })
     : null
 })
 

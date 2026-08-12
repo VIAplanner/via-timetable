@@ -1,8 +1,15 @@
 <template>
   <div class="m-2">
-    <label for="onlinePreferenceSetting" class="block mb-0 text-sm font-bold">Online Preference</label>
-    <SelectButton v-model="onlinePreference" :options="options" :allow-empty="false" :pt:root:class="'shadow-md'"
-      :pt:pcToggleButton:root:id="'onlinePreferenceSetting'" />
+    <label for="onlinePreferenceSetting" class="block mb-0 text-sm font-bold"
+      >Online Preference</label
+    >
+    <SelectButton
+      v-model="onlinePreference"
+      :options="options"
+      :allow-empty="false"
+      :pt:root:class="'shadow-md'"
+      :pt:pcToggleButton:root:id="'onlinePreferenceSetting'"
+    />
   </div>
 </template>
 

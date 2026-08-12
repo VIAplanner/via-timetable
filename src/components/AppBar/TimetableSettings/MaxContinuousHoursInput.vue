@@ -1,8 +1,17 @@
 <template>
   <div class="m-2">
     <label for="maxHoursInput" class="block mb-0 text-sm font-bold">Max Continuous Classes</label>
-    <InputNumber v-model="maxHours" suffix=" Hours" :min="1" :max="12" show-buttons button-layout="stacked"
-      input-class="MaxHoursInput" placeholder="3 Hours" :pt:pcInputText:root:id="'maxHoursInput'" />
+    <InputNumber
+      v-model="maxHours"
+      suffix=" Hours"
+      :min="1"
+      :max="12"
+      show-buttons
+      button-layout="stacked"
+      input-class="MaxHoursInput"
+      placeholder="3 Hours"
+      :pt:pcInputText:root:id="'maxHoursInput'"
+    />
   </div>
 </template>
 

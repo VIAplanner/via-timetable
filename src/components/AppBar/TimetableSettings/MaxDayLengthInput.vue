@@ -1,8 +1,17 @@
 <template>
   <div class="m-2">
     <label for="maxDayLengthInput" class="block mb-0 text-sm font-bold">Max Day Length</label>
-    <InputNumber v-model="maxDayLength" suffix=" Hours" :min="1" :max="12" show-buttons button-layout="stacked"
-      input-class="MaxDayLengthInput" placeholder="3 Hours" :pt:pcInputText:root:id="'maxDayLengthInput'" />
+    <InputNumber
+      v-model="maxDayLength"
+      suffix=" Hours"
+      :min="1"
+      :max="12"
+      show-buttons
+      button-layout="stacked"
+      input-class="MaxDayLengthInput"
+      placeholder="3 Hours"
+      :pt:pcInputText:root:id="'maxDayLengthInput'"
+    />
   </div>
 </template>
 
