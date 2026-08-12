@@ -1,7 +1,7 @@
 <template>
   <div>
     <Dialog
-      v-model:visible="visible"
+      v-model:visible="visibleRef"
       modal
       :style="{ 'max-width': '290px' }"
       :show-header="false"
@@ -27,28 +27,30 @@ const props = defineProps<{
   visible: boolean
 }>()
 
-const visible = ref(false)
+const visibleRef = ref(props.visible)
+
+const dialogVisible = ref(false)
 
 const emit = defineEmits(['update:visible', 'cancel', 'continue'])
 
 watch(
   () => props.visible,
   (val: boolean) => {
-    visible.value = val
+    dialogVisible.value = val
   },
 )
 
-watch(visible, (val: boolean) => {
+watch(dialogVisible, (val: boolean) => {
   emit('update:visible', val)
 })
 
 const handleCancel = () => {
-  visible.value = false
+  dialogVisible.value = false
   emit('cancel')
 }
 
 const handleContinue = () => {
-  visible.value = false
+  dialogVisible.value = false
   emit('continue')
 }
 </script>

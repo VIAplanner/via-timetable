@@ -35,7 +35,7 @@ import { EnrolmentInd } from '../../types/courses.types'
 
 const open = ref(false)
 
-const props = defineProps<{
+defineProps<{
   enrolmentIndicators: EnrolmentIndicator[]
   division: string
   highlights: EnrolmentInd[]

@@ -123,10 +123,11 @@ async function populateRecommendations() {
     store.searchBarSuggestions = courses.map((course) => `${course.code} ${course.sectionCode}`)
 
     loading.value = false
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (axios.isCancel(error)) return
     loading.value = false
-    console.error(`Error fetching data for ${query}: ${error.message}`)
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    console.error(`Error fetching data for ${query}: ${message}`)
   }
 }
 

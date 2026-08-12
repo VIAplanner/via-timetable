@@ -1,6 +1,7 @@
 <template>
   <div class="m-2">
     <label for="minDayLengthInput" class="block mb-0 text-sm font-bold">Min Day Length</label>
+    <!-- eslint-disable vue/attribute-hyphenation -->
     <InputNumber
       v-model="minDayLength"
       suffix=" Hours"
@@ -12,6 +13,7 @@
       placeholder="3 Hours"
       :pt:pcInputText:root:id="'minDayLengthInput'"
     />
+    <!-- eslint-enable vue/attribute-hyphenation -->
   </div>
 </template>
 

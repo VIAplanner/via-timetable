@@ -136,7 +136,7 @@ const useShortWeekdays = computed(() => isSmallDevice.value)
 const timetableStart = computed(() => {
   let earliest = 9
 
-  for (const dayEvents of Object.values(props.timetable)) {
+  for (const dayEvents of Object.values(props.timetable) as ActivityTimeData[][]) {
     for (const event of dayEvents) {
       const start = Math.floor(event.start / 3600)
       if (start < earliest) earliest = start
@@ -150,7 +150,7 @@ const timetableStart = computed(() => {
 const timetableEnd = computed(() => {
   let latest = 18
 
-  for (const dayEvents of Object.values(props.timetable)) {
+  for (const dayEvents of Object.values(props.timetable) as ActivityTimeData[][]) {
     for (const event of dayEvents) {
       const end = Math.ceil(event.end / 3600)
       if (end > latest) latest = end

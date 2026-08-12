@@ -3,6 +3,7 @@
     <label for="onlinePreferenceSetting" class="block mb-0 text-sm font-bold"
       >Online Preference</label
     >
+    <!-- eslint-disable vue/attribute-hyphenation -->
     <SelectButton
       v-model="onlinePreference"
       :options="options"
@@ -10,6 +11,7 @@
       :pt:root:class="'shadow-md'"
       :pt:pcToggleButton:root:id="'onlinePreferenceSetting'"
     />
+    <!-- eslint-enable vue/attribute-hyphenation -->
   </div>
 </template>
 

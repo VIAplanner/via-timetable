@@ -6,7 +6,7 @@
       role="region"
       aria-label="Timetable"
     >
-      <Timetable
+      <TimetableGrid
         :id="store.selectedSession === FIRST_SEM ? 'exportFirstMe' : 'exportSecondMe'"
         :timetable="store.timetables[store.selectedSession]"
         :semester="store.selectedSession"
@@ -15,10 +15,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimetableStore } from '../store/timetable'
-import Timetable from '../components/Timetable/Timetable.vue'
-import { FIRST_SEM } from '../store/timetable.shared'
+import TimetableGrid from '../components/Timetable/TimetableGrid.vue'
+import { FIRST_SEM } from '../types/constants.types'
 
 const store = useTimetableStore()
 </script>

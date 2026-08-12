@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MaxHoursInput from './MaxContinuousHoursInput.vue'
 import MaxGapInput from './MaxGapInput.vue'
 </script>

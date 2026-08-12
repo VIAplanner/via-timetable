@@ -6,11 +6,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import { useTimetableStore } from './store/timetable'
 import CourseDetailCardsLayer from './components/CourseDetails/CourseDetailCardsLayer.vue'
 import { useToast } from 'primevue/usetoast'
+import { SemesterCode } from './types/constants.types'
 
 const store = useTimetableStore()
 const toast = useToast()
@@ -21,15 +22,15 @@ const toastBreakpoints = {
 }
 
 onMounted(async () => {
-  store.initializeToast(toast)
-  store.initializeHistory()
-  store.updatePreferences()
+  void store.initializeToast(toast)
+  void store.initializeHistory()
+  void store.updatePreferences()
   await initializeSessionGroup()
   await store.refreshExpiredCourseData()
   applyDarkMode()
   await generateCourseCards()
   await loadCoursesToBuilder()
-  store.loadBlockedTimesToBuilder()
+  void store.loadBlockedTimesToBuilder()
 })
 
 /**
@@ -37,14 +38,16 @@ onMounted(async () => {
  */
 async function initializeSessionGroup() {
   const sessionGroups = await store.getSessions()
+  if (!sessionGroups) return
   if (
     !store.selectedSessionGroup ||
     !sessionGroups.some((sessionGroup) => sessionGroup.group === store.selectedSessionGroup)
   ) {
+    if (!sessionGroups.length) return
     const newSessionGroup = sessionGroups[sessionGroups.length - 1]
-    store.selectedSessionGroup = newSessionGroup.group
+    store.selectedSessionGroup = newSessionGroup!.group
 
-    store.selectedSubsessions = newSessionGroup.subsessions.map((subsession) => subsession.value)
+    store.selectedSubsessions = newSessionGroup!.subsessions.map((subsession) => subsession.value)
   }
 }
 
@@ -63,19 +66,21 @@ async function generateCourseCards() {
   const divisionalLegends = await store.getDivisionalLegends()
   const divisionalEnrolmentIndicators = await store.getDivisionalEnrolmentIndicators()
 
-  for (const semester of Object.keys(store.selectedCourses)) {
+  for (const semester of Object.keys(store.selectedCourses) as SemesterCode[]) {
+    const semesterCourses = store.selectedCourses[semester]
+    if (!semesterCourses) continue
+
     for (const course of Object.keys(store.selectedCourses[semester])) {
-      store.registerDetailCard(
-        course,
-        store.selectedCourses[semester][course].courseData.sectionCode,
-        {
-          courseData: store.selectedCourses[semester][course].courseData,
-          divisionalData: {
-            divisionalLegends,
-            divisionalEnrolmentIndicators,
-          },
+      const entry = semesterCourses[course]
+      if (!entry) continue
+
+      store.registerDetailCard(course, entry.courseData.sectionCode, {
+        courseData: entry.courseData,
+        divisionalData: {
+          divisionalLegends,
+          divisionalEnrolmentIndicators,
         },
-      )
+      })
     }
   }
 }

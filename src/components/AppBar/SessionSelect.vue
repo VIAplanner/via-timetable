@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- eslint-disable vue/attribute-hyphenation -->
     <SelectButton
       v-model="selectedSession"
       :options="sessions"
@@ -9,6 +10,7 @@
       :pt:pcToggleButton:root:class="isSmallDevice ? 'px-0.5! py-0.5! text-xs!' : ''"
       :class="isSmallDevice ? 'mr-1' : ''"
     />
+    <!-- eslint-enable vue/attribute-hyphenation -->
   </div>
 </template>
 

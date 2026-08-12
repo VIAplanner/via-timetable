@@ -1,6 +1,7 @@
 <template>
   <div class="m-2">
     <label for="maxGapInput" class="block mb-0 text-sm font-bold">Max Gap</label>
+    <!-- eslint-disable vue/attribute-hyphenation -->
     <InputNumber
       v-model="maxGap"
       suffix=" Hours"
@@ -12,6 +13,7 @@
       placeholder="2 Hours"
       :pt:pcInputText:root:id="'maxGapInput'"
     />
+    <!-- eslint-enable vue/attribute-hyphenation -->
   </div>
 </template>
 

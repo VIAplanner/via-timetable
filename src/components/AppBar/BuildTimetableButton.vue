@@ -16,6 +16,6 @@ const store = useTimetableStore()
 
 function build() {
   store.switchSession = false
-  store.generateTimetable()
+  void store.generateTimetable()
 }
 </script>

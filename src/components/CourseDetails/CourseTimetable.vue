@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ParsedMeetingTime } from '../../types/app_state.types'
 
-const props = defineProps<{
+defineProps<{
   dateTimes: Record<string, ParsedMeetingTime[] | null>
 }>()
 </script>

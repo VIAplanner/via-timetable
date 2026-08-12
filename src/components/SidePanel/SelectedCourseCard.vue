@@ -56,7 +56,7 @@ function editCourse() {
  * @brief Deletes the course given by props from the timetable
  */
 function deleteCourse() {
-  store.removeCourse(props.course.courseData.code)
+  void store.removeCourse(props.course.courseData.code)
   store.saveStateHistory()
 }
 </script>

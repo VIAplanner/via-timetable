@@ -203,21 +203,21 @@ async function syncSelectedSectionsFromStore() {
 watch(selectedLec, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
-  store.timetableModifyActivity(props.courseData, val, true)
+  void store.timetableModifyActivity(props.courseData, val, true)
   store.saveStateHistory()
 })
 
 watch(selectedTut, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
-  store.timetableModifyActivity(props.courseData, val, true)
+  void store.timetableModifyActivity(props.courseData, val, true)
   store.saveStateHistory()
 })
 
 watch(selectedPra, (val) => {
   if (suppressSelectionWatchers.value || !val) return
   store.switchSession = false
-  store.timetableModifyActivity(props.courseData, val, true)
+  void store.timetableModifyActivity(props.courseData, val, true)
   store.saveStateHistory()
 })
 
@@ -238,7 +238,7 @@ onMounted(syncSelectedSectionsFromStore)
 watch(
   () => props.courseData.code,
   () => {
-    syncSelectedSectionsFromStore()
+    void syncSelectedSectionsFromStore()
   },
   { immediate: true },
 )

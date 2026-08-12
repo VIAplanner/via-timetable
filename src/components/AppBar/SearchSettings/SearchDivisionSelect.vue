@@ -45,7 +45,9 @@ watch(
   { deep: true },
 )
 
-watchEffect(async () => {
-  divisions.value = (await store.getDivisions()) || []
+watchEffect(() => {
+  void (async () => {
+    divisions.value = (await store.getDivisions()) || []
+  })()
 })
 </script>

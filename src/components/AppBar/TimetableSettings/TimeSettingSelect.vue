@@ -2,6 +2,7 @@
   <div class="m-2">
     <label class="block mb-0 text-sm font-bold">
       {{ label }}
+      <!-- eslint-disable vue/attribute-hyphenation -->
       <Select
         v-model="internalValue"
         :options="times"
@@ -13,6 +14,7 @@
         :pt:option:class="'TimeSettingOption'"
         :pt:pcFilter:root:class="'text-text-primary rounded-sm focus-within:outline-none caret-text-primary pl-3 py-2 bg-content-hover-background'"
       />
+      <!-- eslint-enable vue/attribute-hyphenation -->
     </label>
   </div>
 </template>
@@ -26,8 +28,8 @@ const times = ref([...TIMES])
 const props = withDefaults(
   defineProps<{
     output: number
-    label: string
-    defaultValue: number
+    label?: string
+    defaultValue?: number
   }>(),
   { label: 'Enter time', defaultValue: 9 },
 )

@@ -8,6 +8,7 @@
       @close="dialogClosed"
     >
       <div class="p-0">
+        <!-- eslint-disable vue/attribute-hyphenation -->
         <Carousel
           :value="tutorialSteps"
           :num-visible="1"
@@ -32,6 +33,7 @@
             </div>
           </template>
         </Carousel>
+        <!-- eslint-enable vue/attribute-hyphenation -->
       </div>
     </Dialog>
   </div>
@@ -42,7 +44,6 @@ import { ref, watch, computed } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 
-// @ts-ignore
 import genColor from 'color-generator'
 
 import desktop1 from '../../assets/tutorial/tutorial_desktop_1.gif'

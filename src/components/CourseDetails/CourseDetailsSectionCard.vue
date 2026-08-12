@@ -3,7 +3,11 @@
     <div class="flex flex-col gap-3 lg:flex-row lg:justify-between">
       <div class="flex flex-row gap-x-5 items-start">
         <label :for="section.name" class="flex flex-row gap-x-5 items-start cursor-pointer">
-          <RadioButton v-model="sectionType.field" :input-id="section.name" :value="section.name" />
+          <RadioButton
+            v-model="sectionTypeRef.field"
+            :input-id="section.name"
+            :value="section.name"
+          />
           <h2 class="text-md font-bold">
             <span v-if="sectionConflicts.length === 0">
               {{ section.name }}
@@ -164,6 +168,8 @@ const props = defineProps<{
   divisionalData: DivisionalData | undefined
 }>()
 
+const sectionTypeRef = ref(props.sectionType)
+
 const notes = computed(() => {
   return props.section.notes.filter((note: Note) => note.content)
 })
@@ -185,7 +191,7 @@ const sectionConflicts = computed(() => {
  */
 function conflictsInSession(sessionCode: string): string[] {
   const conflicts: string[] = []
-  const currentMeetingTimes = Object.values(props.section.meetingTimes)
+  const currentMeetingTimes = props.section.meetingTimes
 
   const session = store.subsessionCodeToSession(sessionCode)
   if (!session) return conflicts
@@ -294,7 +300,7 @@ function getWaitlistHighlight(ratio: number): string {
 function parseMeetingTimes(meetingTimes: MeetingTime[]) {
   const result: Record<string, ParsedMeetingTime[]> = {}
 
-  for (const meetingTime of Object.values(meetingTimes)) {
+  for (const meetingTime of meetingTimes) {
     if (!Object.keys(result).includes(meetingTime.sessionCode)) result[meetingTime.sessionCode] = []
 
     const formattedMeetingTime = {

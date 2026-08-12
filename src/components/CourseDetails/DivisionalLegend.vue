@@ -14,6 +14,8 @@
     :style="{ maxWidth: '100vw', padding: '1rem' }"
     :header="`${division} Divisional Legend`"
   >
+    <!-- The HTML returned is scraped directly from UofT servers and is not modified at all -->
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="divisionalLegendPopup" v-html="content"></div>
   </Dialog>
 </template>
@@ -23,7 +25,7 @@ import { ref } from 'vue'
 
 const visible = ref(false)
 
-const props = defineProps<{
+defineProps<{
   content: string
   division: string
 }>()

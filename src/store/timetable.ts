@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { defineStore, StateTree } from 'pinia'
 import axios from 'axios'
-// @ts-expect-error no type definitions published for color-generator
 import genColor from 'color-generator'
 import { ViaBuilderManager } from '@kelexer/via-builder'
 import * as VIAplanner from '../types/index.types'
@@ -59,7 +58,6 @@ export const useTimetableStore = defineStore(
     const avoidRushHour = ref<boolean>(false)
     const currentlyBuildingTimetable = ref<boolean>(false)
 
-    // Detail cards - TODO: type `props` properly
     const cards = ref<{ course: string; visible: boolean; props: VIAplanner.CourseCardProps }[]>([])
 
     const blockedTimes = ref<Record<VIAplanner.SemesterCode, VIAplanner.BlockedTimeData[]>>({
@@ -136,7 +134,7 @@ export const useTimetableStore = defineStore(
       const manager = await getBuilderManager()
       manager.removeCourse(VIAplannerConstants.blockedTimesCourseCodePlaceholder, '')
       manager.addCourse(blockedTimesPlaceholderCourse.value)
-      generateTimetable()
+      void generateTimetable()
     }
 
     async function setLockedDayStatus(day: VIAplanner.Weekday, lock: boolean) {
@@ -149,7 +147,7 @@ export const useTimetableStore = defineStore(
       const manager = await getBuilderManager()
       manager.removeCourse(VIAplannerConstants.blockedTimesCourseCodePlaceholder, '')
       manager.addCourse(blockedTimesPlaceholderCourse.value)
-      generateTimetable()
+      void generateTimetable()
     }
 
     async function setLockedTimeStatus(
@@ -221,8 +219,11 @@ export const useTimetableStore = defineStore(
     function syncBlockedTimesPlaceholderCourse() {
       const meetingTimes = []
 
-      for (const [semester, blockers] of Object.entries(blockedTimes.value)) {
-        const semesterIndex = getSemesterIndex(semester as VIAplanner.SemesterCode)
+      for (const [semester, blockers] of Object.entries(blockedTimes.value) as [
+        VIAplanner.SemesterCode,
+        VIAplanner.BlockedTimeData[],
+      ][]) {
+        const semesterIndex = getSemesterIndex(semester)
 
         for (const blocker of blockers) {
           const dayIndex = VIAplannerConstants.DAYS.indexOf(blocker.day)
@@ -533,10 +534,11 @@ export const useTimetableStore = defineStore(
                 course.sessionGroup === courseData.courseData.sessionGroup),
           ) || null
         )
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error'
         console.error(
           `Failed to refresh course ${courseData.courseData.code} ${courseData.courseData.sectionCode}:`,
-          error.message,
+          message,
         )
         return null
       }
@@ -593,7 +595,7 @@ export const useTimetableStore = defineStore(
       for (const type of ['LEC', 'TUT', 'PRA']) manager.removeCourse(course, type)
 
       removeUnusedCards()
-      if (shouldGenerate) generateTimetable()
+      if (shouldGenerate) void generateTimetable()
     }
 
     async function generateTimetable() {
@@ -656,7 +658,7 @@ export const useTimetableStore = defineStore(
               continue
           }
 
-          timetableModifyActivity(courseData['courseData'], course['section'])
+          void timetableModifyActivity(courseData['courseData'], course['section'])
         }
       }
     }
@@ -693,7 +695,7 @@ export const useTimetableStore = defineStore(
 
             const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData.meetingTimes)
               ? sectionData.meetingTimes
-              : (Object.values(sectionData.meetingTimes || {}) as VIAplanner.MeetingTime[])
+              : Object.values(sectionData.meetingTimes || {})
 
             return meetingTimes.some((meetingTime) =>
               resolveSubsessionSemesters(meetingTime.sessionCode).includes(session),
@@ -732,10 +734,14 @@ export const useTimetableStore = defineStore(
         history.value = history.value.slice(0, historyIndex.value + 1)
 
       const newHistory = {
-        blockedTimes: JSON.parse(JSON.stringify(blockedTimes.value)),
-        selectedCourses: JSON.parse(JSON.stringify(selectedCourses.value)),
-        timetables: JSON.parse(JSON.stringify(timetables.value)),
-        lockedSections: JSON.parse(JSON.stringify(lockedSections.value)),
+        blockedTimes: JSON.parse(JSON.stringify(blockedTimes.value)) as typeof blockedTimes.value,
+        selectedCourses: JSON.parse(
+          JSON.stringify(selectedCourses.value),
+        ) as typeof selectedCourses.value,
+        timetables: JSON.parse(JSON.stringify(timetables.value)) as typeof timetables.value,
+        lockedSections: JSON.parse(
+          JSON.stringify(lockedSections.value),
+        ) as typeof lockedSections.value,
       }
 
       history.value.push(newHistory)
@@ -750,10 +756,14 @@ export const useTimetableStore = defineStore(
     function initializeHistory() {
       history.value = [
         {
-          blockedTimes: JSON.parse(JSON.stringify(blockedTimes.value)),
-          selectedCourses: JSON.parse(JSON.stringify(selectedCourses.value)),
-          timetables: JSON.parse(JSON.stringify(timetables.value)),
-          lockedSections: JSON.parse(JSON.stringify(lockedSections.value)),
+          blockedTimes: JSON.parse(JSON.stringify(blockedTimes.value)) as typeof blockedTimes.value,
+          selectedCourses: JSON.parse(
+            JSON.stringify(selectedCourses.value),
+          ) as typeof selectedCourses.value,
+          timetables: JSON.parse(JSON.stringify(timetables.value)) as typeof timetables.value,
+          lockedSections: JSON.parse(
+            JSON.stringify(lockedSections.value),
+          ) as typeof lockedSections.value,
         },
       ]
       historyIndex.value = 0
@@ -774,10 +784,10 @@ export const useTimetableStore = defineStore(
     }
 
     function loadState(newState: StateTree) {
-      blockedTimes.value = newState.blockedTimes
-      selectedCourses.value = newState.selectedCourses
-      timetables.value = newState.timetables
-      lockedSections.value = newState.lockedSections
+      blockedTimes.value = newState.blockedTimes as typeof blockedTimes.value
+      selectedCourses.value = newState.selectedCourses as typeof selectedCourses.value
+      timetables.value = newState.timetables as typeof timetables.value
+      lockedSections.value = newState.lockedSections as typeof lockedSections.value
     }
 
     function registerDetailCard(
@@ -834,8 +844,9 @@ export const useTimetableStore = defineStore(
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: data,
           }
-        } catch (error: any) {
-          console.error('Failed to retrieve divisional legends:', error.message)
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : 'Unknown error'
+          console.error('Failed to retrieve divisional legends:', message)
           return null
         }
       }
@@ -862,8 +873,9 @@ export const useTimetableStore = defineStore(
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: data,
           }
-        } catch (error: any) {
-          console.error('Failed to retrieve divisional enrolment indicators:', error.message)
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : 'Unknown error'
+          console.error('Failed to retrieve divisional enrolment indicators:', message)
           return null
         }
       }
@@ -881,8 +893,9 @@ export const useTimetableStore = defineStore(
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: newDivisions.data.divisions,
           }
-        } catch (error: any) {
-          console.error('Failed to retrieve divisions:', error.message)
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : 'Unknown error'
+          console.error('Failed to retrieve divisions:', message)
           return null
         }
       }
@@ -900,8 +913,9 @@ export const useTimetableStore = defineStore(
             expiry: Date.now() + VIAplannerConstants.FETCH_CACHE_EXPIRY,
             data: newSessions.data.sessions,
           }
-        } catch (error: any) {
-          console.error('Failed to retrieve sessions:', error.message)
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : 'Unknown error'
+          console.error('Failed to retrieve sessions:', message)
           return null
         }
       }
@@ -1172,10 +1186,14 @@ export const useTimetableStore = defineStore(
       storage: localStorage,
       serializer: {
         serialize: (state) => {
-          const { cards, history, historyIndex, currentlyBuildingTimetable, ...rest } = state
+          const rest = { ...state } as Record<string, unknown>
+          delete rest.cards
+          delete rest.history
+          delete rest.historyIndex
+          delete rest.currentlyBuildingTimetable
           return JSON.stringify(rest)
         },
-        deserialize: (value: string) => JSON.parse(value),
+        deserialize: (value: string) => JSON.parse(value) as unknown as StateTree,
       },
     },
   },

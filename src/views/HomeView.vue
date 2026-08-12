@@ -84,14 +84,14 @@
         </div>
       </div>
       <div class="hidden md:block md:w-[25%]">
-        <SideBar />
+        <SideBar :fullscreen="false" />
       </div>
     </div>
     <HelpDial class="fixed bottom-2 right-2 z-50" />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { useTimetableStore } from '../store/timetable'
 import TutorialPopup from '../components/Popup/TutorialPopup.vue'

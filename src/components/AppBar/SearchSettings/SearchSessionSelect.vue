@@ -115,7 +115,9 @@ watch(
   },
 )
 
-watchEffect(async () => {
-  sessionGroups.value = (await store.getSessions()) || []
+watchEffect(() => {
+  void (async () => {
+    sessionGroups.value = (await store.getSessions()) || []
+  })()
 })
 </script>

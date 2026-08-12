@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
@@ -72,12 +72,13 @@ function openGitHub() {
  */
 async function fetchStarCount() {
   await axios
-    .get('https://api.github.com/repos/VIAplanner/via-timetable')
+    .get<{ stargazers_count: number }>('https://api.github.com/repos/VIAplanner/via-timetable')
     .then((res) => {
       starCount.value = res.data.stargazers_count
     })
-    .catch((err) => {
-      console.error('Error fetching stargazers count:', err)
+    .catch((error: unknown) => {
+      const message = axios.isAxiosError(error) ? error.message : 'Unknown error'
+      console.error('Error fetching stargazers count:', message)
     })
 }
 </script>

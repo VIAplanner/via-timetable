@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import OnlinePreferenceSelect from './OnlinePreferenceSelect.vue'
 import IncludeUnavailableSwitch from './IncludeUnavailableSwitch.vue'
 import AvoidRushHourSwitch from './AvoidRushHourSwitch.vue'

@@ -7,7 +7,7 @@
     </div>
 
     <div class="export-template__content">
-      <Timetable :timetable="timetable" :semester="semester" :is-export="true" />
+      <TimetableGrid :timetable="timetable" :semester="semester" :is-export="true" />
     </div>
 
     <div class="export-template__footer">
@@ -19,12 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import Timetable from '../Timetable/Timetable.vue'
+import TimetableGrid from '../Timetable/TimetableGrid.vue'
 import logo from '../../assets/VIA-Planner-Blue.png?inline'
 import { SemesterCode } from '../../types/constants.types.js'
 import { SemesterEventsData } from '../../types/app_state.types.js'
 
-const props = defineProps<{
+defineProps<{
   semester: SemesterCode
   timetable: SemesterEventsData
   title: string
