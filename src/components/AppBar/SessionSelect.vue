@@ -1,19 +1,14 @@
 <template>
   <div>
-    <SelectButton
-      v-model="selectedSession"
-      :options="sessions"
-      :allow-empty="false"
-      :pt:root:class="'shadow-md'"
+    <SelectButton v-model="selectedSession" :options="sessions" :allow-empty="false" :pt:root:class="'shadow-md'"
       :size="isSmallDevice ? 'small' : 'large'"
       :pt:pcToggleButton:root:class="isSmallDevice ? 'px-0.5! py-0.5! text-xs!' : ''"
-      :class="isSmallDevice ? 'mr-1' : ''"
-    />
+      :class="isSmallDevice ? 'mr-1' : ''" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 import { FIRST_SEM, SEMESTER_CODES } from '../../types/constants.types'
@@ -21,7 +16,7 @@ import { FIRST_SEM, SEMESTER_CODES } from '../../types/constants.types'
 const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()
 
-const sessions: Ref<Array<string>> = ref([...SEMESTER_CODES])
+const sessions = ref([...SEMESTER_CODES])
 
 const selectedSession = ref(store.selectedSession || FIRST_SEM)
 

@@ -1,19 +1,8 @@
 <template>
   <div>
-    <Dialog
-      v-model:visible="visible"
-      modal
-      header="Welcome to VIAplanner!"
-      :style="dialogStyle"
-      @close="dialogClosed"
-    >
+    <Dialog v-model:visible="visible" modal header="Welcome to VIAplanner!" :style="dialogStyle" @close="dialogClosed">
       <div class="p-0">
-        <Carousel
-          :value="tutorialSteps"
-          :num-visible="1"
-          :num-scroll="1"
-          :pt:indicatorList:class="'py-0'"
-        >
+        <Carousel :value="tutorialSteps" :num-visible="1" :num-scroll="1" :pt:indicatorList:class="'py-0'">
           <template #item="slotProps">
             <div class="tutorial-popup-slide">
               <h2 class="text-sm md:text-xl font-bold">
@@ -23,11 +12,8 @@
                 {{ slotProps.data.description }}
               </p>
               <div class="mb-4" style="width: 100%; display: flex; justify-content: center">
-                <img
-                  :src="slotProps.data.path"
-                  :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
-                  :style="getImageStyle(/*slotProps.data.path*/)"
-                />
+                <img :src="slotProps.data.path" :alt="`${slotProps.data.step}: ${slotProps.data.title}`"
+                  :style="getImageStyle()" />
               </div>
             </div>
           </template>
@@ -38,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 
@@ -63,7 +49,7 @@ import mobile7 from '../../assets/tutorial/tutorial_mobile_7.gif'
 
 const store = useTimetableStore()
 
-const visible: Ref<boolean> = ref(store.tutorialPopup)
+const visible = ref(store.tutorialPopup)
 
 watch(
   () => store.tutorialPopup,
@@ -130,7 +116,7 @@ const dialogStyle = computed(() => {
 
 const imageHeight = computed(() => (isSmallDevice.value ? '55vh' : '60vh'))
 
-function getImageStyle(/*path: string*/) {
+function getImageStyle() {
   return {
     width: '100%',
     height: imageHeight.value,

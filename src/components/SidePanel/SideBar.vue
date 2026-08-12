@@ -6,31 +6,18 @@
       credits
     </p>
     <hr class="mb-3" />
-    <img
-      alt="Session icon"
-      :src="imgSrc"
-      class="absolute z-0"
-      width="100%"
-      style="left: 50%; top: 50%; transform: translate(-50%, -50%)"
-    />
-    <div
-      class="flex flex-row justify-center items-start"
-      :style="{ height: `${coursePanelHeight}px`, 'z-index': -1 }"
-    >
+    <img alt="Session icon" :src="imgSrc" class="absolute z-0" width="100%"
+      style="left: 50%; top: 50%; transform: translate(-50%, -50%)" />
+    <div class="flex flex-row justify-center items-start" :style="{ height: `${coursePanelHeight}px`, 'z-index': -1 }">
       <div class="flex flex-col w-full">
-        <SelectedCourseCard
-          v-for="[code, course] in orderedCourses"
-          :key="code"
-          :course="course"
-          class="z-1"
-        />
+        <SelectedCourseCard v-for="[code, course] in orderedCourses" :key="code" :course="course" class="z-1" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import fallBackground from '../../assets/fall-background.png'
 import winterBackground from '../../assets/winter-background.png'
@@ -49,9 +36,9 @@ const props = defineProps({
   },
 })
 
-const sideBarTitle: Ref<string> = ref('Loading Sessions...')
+const sideBarTitle = ref('Loading Sessions...')
 
-const orderedCourses = computed<Array<[string, SelectedCourseData]>>(() => {
+const orderedCourses = computed<[string, SelectedCourseData][]>(() => {
   return Object.entries(store.selectedCourses[store.selectedSession] ?? {}).sort(
     ([codeA], [codeB]) => codeA.localeCompare(codeB),
   )

@@ -1,20 +1,13 @@
 <template>
   <div class="w-3 md:w-4">
-    <AutoComplete
-      ref="searchBarComponent"
-      v-model="currentQuery"
-      option-label="formattedName"
-      :suggestions="allCourses"
-      loader="pi pi-spinner"
-      :loading="loading"
-      :placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : 'Loading...'"
-      :input-style="{
+    <AutoComplete ref="searchBarComponent" v-model="currentQuery" option-label="formattedName" :suggestions="allCourses"
+      loader="pi pi-spinner" :loading="loading"
+      :placeholder="!loading ? (isSmallDevice ? 'Search' : 'Search courses...') : 'Loading...'" :input-style="{
         'background-color': dynamicColor,
         border: 'none',
         'border-radius': '16px',
         color: dynamicTextColor,
-      }"
-      :pt="{
+      }" :pt="{
         panel: {
           style: isSmallDevice
             ? { width: 'calc(100vw - 1rem)', maxWidth: 'calc(100vw - 1rem)' }
@@ -27,19 +20,13 @@
             wordBreak: 'break-word',
           },
         },
-      }"
-      fluid
-      @complete="populateRecommendations()"
-      @focus="onFocus()"
-      @blur="isActive = false"
-      @option-select="courseSearched()"
-      @min-length="5"
-    />
+      }" fluid @complete="populateRecommendations()" @focus="onFocus()" @blur="isActive = false"
+      @option-select="courseSearched()" @min-length="5" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import axios from 'axios'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
@@ -54,10 +41,10 @@ const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()
 
 const searchBarComponent = ref<{ overlayVisible: boolean } | null>(null)
-const allCourses: Ref<SearchCourse[]> = ref([])
-const loading: Ref<boolean> = ref(false)
-const isActive: Ref<boolean> = ref(false)
-const currentQuery: Ref<SearchCourse | string | null> = ref(null)
+const allCourses = ref<SearchCourse[]>([])
+const loading = ref(false)
+const isActive = ref(false)
+const currentQuery = ref<SearchCourse | string | null>(null)
 
 const dynamicTextColor = computed(() => {
   return store.darkMode ? '#ffffff' : '#222222'
@@ -68,7 +55,7 @@ const dynamicColor = computed(() => {
   return store.darkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(179, 179, 179, 0.3)'
 })
 
-function parseSessionEmoji(sessions: Array<string>) {
+function parseSessionEmoji(sessions: string[]) {
   return sessions
     .map((session) => {
       if (session.length < 5) return ''

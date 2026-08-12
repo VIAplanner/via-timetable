@@ -8,37 +8,24 @@
             <span v-if="sectionConflicts.length === 0">
               {{ section.name }}
             </span>
-            <span
-              v-else
-              v-tooltip.bottom="tooltip(`Conflicts with ${sectionConflicts.join(', ')}`)"
-              class="text-yellow-500"
-            >
+            <span v-else v-tooltip.bottom="tooltip(`Conflicts with ${sectionConflicts.join(', ')}`)"
+              class="text-yellow-500">
               {{ section.name }}
             </span>
             <span> ({{ getSectionDeliveryType(section.deliveryModes) }}) </span>
-            <span
-              v-if="section.openLimitInd === 'C'"
-              v-tooltip.bottom="
-                tooltip('You may not be able to enrol in this section on Acorn at this time')
-              "
-              class="text-yellow-500"
-            >
+            <span v-if="section.openLimitInd === 'C'" v-tooltip.bottom="tooltip('You may not be able to enrol in this section on Acorn at this time')
+              " class="text-yellow-500">
               (Unavailable)
             </span>
           </h2>
         </label>
       </div>
-      <a
-        v-if="
-          courseData.campus === 'University of Toronto at Mississauga' &&
-          section.deliveryModes &&
-          section.deliveryModes[0]
-        "
-        :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-text-secondary self-start lg:self-auto"
-      >
+      <a v-if="
+        courseData.campus === 'University of Toronto at Mississauga' &&
+        section.deliveryModes &&
+        section.deliveryModes[0]
+      " :href="`https://metis.utm.utoronto.ca/CourseInfo/syllabus_display.php?course=${courseData.code}/${courseData.sectionCode}/${section.name}/${section.deliveryModes[0].session}`"
+        target="_blank" rel="noopener noreferrer" class="text-text-secondary self-start lg:self-auto">
         <u>View Syllabus</u>
       </a>
     </div>
@@ -65,27 +52,20 @@
         <!-- Availability -->
         <p>
           <span class="font-medium">Availability: </span>
-          <span
-            :class="
-              getAvailabilityHighlight(
-                (section.maxEnrolment - section.currentEnrolment) / section.maxEnrolment,
-              )
-            "
-          >
+          <span :class="getAvailabilityHighlight(
+            (section.maxEnrolment - section.currentEnrolment) / section.maxEnrolment,
+          )
+            ">
             {{ section.maxEnrolment - section.currentEnrolment }} / {{ section.maxEnrolment }}
           </span>
         </p>
         <!-- Waitlist -->
         <p v-if="section.currentWaitlist">
           <span class="font-medium">Waitlist: </span>
-          <span
-            v-tooltip.right="
-              tooltip(
-                'You are likely to get past the waitlist if your position is within 10% of the class size',
-              )
-            "
-            :class="getWaitlistHighlight(section.currentWaitlist / section.maxEnrolment)"
-          >
+          <span v-tooltip.right="tooltip(
+            'You are likely to get past the waitlist if your position is within 10% of the class size',
+          )
+            " :class="getWaitlistHighlight(section.currentWaitlist / section.maxEnrolment)">
             {{ section.currentWaitlist }}
           </span>
         </p>
@@ -93,23 +73,16 @@
         <div class="flex flex-col gap-1">
           <div v-if="section.enrolmentInd" class="flex flex-row items-center gap-x-3">
             <p><span class="font-medium">Enrolment Controls: </span>{{ section.enrolmentInd }}</p>
-            <EnrolmentLegendPopup
-              v-if="
-                divisionalData && divisionalEnrolmentIndicator && divisionalEnrolmentIndicator.codes
-              "
-              :enrolment-indicators="divisionalEnrolmentIndicator.codes"
+            <EnrolmentLegendPopup v-if="
+              divisionalData && divisionalEnrolmentIndicator && divisionalEnrolmentIndicator.codes
+            " :enrolment-indicators="divisionalEnrolmentIndicator.codes"
               :division="`${courseData.faculty.name} (${courseData.faculty.code})`"
-              :highlights="[section.enrolmentInd]"
-            />
+              :highlights="[section.enrolmentInd]" />
           </div>
-          <button
-            v-if="section.enrolmentControls && section.enrolmentControls.length"
-            type="button"
+          <button v-if="section.enrolmentControls && section.enrolmentControls.length" type="button"
             class="self-start text-text-secondary no-underline underline-offset-2 hover:underline"
-            :aria-expanded="showEnrolmentControls"
-            aria-label="Toggle enrolment controls"
-            @click="showEnrolmentControls = !showEnrolmentControls"
-          >
+            :aria-expanded="showEnrolmentControls" aria-label="Toggle enrolment controls"
+            @click="showEnrolmentControls = !showEnrolmentControls">
             {{ showEnrolmentControls ? 'Hide enrolment controls' : 'Show enrolment controls' }}
           </button>
           <div v-if="showEnrolmentControls">
@@ -136,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import EnrolmentLegendPopup from './EnrolmentLegendPopup.vue'
 import CourseTimetable from './CourseTimetable.vue'
@@ -155,7 +128,7 @@ import { DivisionalData, SectionType, ParsedMeetingTime } from '../../types/app_
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
-const showEnrolmentControls: Ref<boolean> = ref(false)
+const showEnrolmentControls = ref(false)
 
 const props = defineProps<{
   sectionType: SectionType
@@ -183,19 +156,19 @@ const sectionConflicts = computed(() => {
  * @param sessionCode The session to check conflicts in
  * @returns A list of course activities that conflict in the format '{ course name } { activity name }'
  */
-function conflictsInSession(sessionCode: string): Array<string> {
-  const conflicts: Array<string> = []
+function conflictsInSession(sessionCode: string): string[] {
+  const conflicts: string[] = []
   const currentMeetingTimes = Object.values(props.section.meetingTimes)
 
   const session = store.subsessionCodeToSession(sessionCode)
   if (!session) return conflicts
 
-  const sessionsToCheck = session === 'Y' ? ['F', 'S'] : ([session] as Array<SemesterCode>)
+  const sessionsToCheck: SemesterCode[] = session === 'Y' ? ['F', 'S'] : ([session])
 
-  for (const meetingTime of currentMeetingTimes as MeetingTime[]) {
+  for (const meetingTime of currentMeetingTimes) {
     if (meetingTime.sessionCode !== sessionCode) continue
 
-    for (const semester of sessionsToCheck as Array<SemesterCode>) {
+    for (const semester of sessionsToCheck) {
       const selectedSessionTimetable = store.timetables[semester]
       if (!selectedSessionTimetable) continue
 
@@ -291,8 +264,8 @@ function getWaitlistHighlight(ratio: number): string {
  * @returns The formatted and ordered meeting time data keyed by 'first' and 'second' for the semester, mapping to a
  * sorted array of meeting times containing a time, location, and URL to a map showing the location
  */
-function parseMeetingTimes(meetingTimes: Array<MeetingTime>) {
-  const result: Record<string, Array<ParsedMeetingTime>> = {}
+function parseMeetingTimes(meetingTimes: MeetingTime[]) {
+  const result: Record<string, ParsedMeetingTime[]> = {}
 
   for (const meetingTime of Object.values(meetingTimes)) {
     if (!Object.keys(result).includes(meetingTime.sessionCode)) result[meetingTime.sessionCode] = []
@@ -334,7 +307,7 @@ function parseMeetingTimes(meetingTimes: Array<MeetingTime>) {
  */
 function parseDayFull(dayInt: number): Weekday | null {
   if (dayInt < 1 || dayInt > 7) return null
-  return DAYS[dayInt - 1] as Weekday
+  return DAYS[dayInt - 1]!
 }
 
 /**

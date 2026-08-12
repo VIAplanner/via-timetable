@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 import TimeSettingSelect from './TimeSettingSelect.vue'
 import MaxDayLengthInput from './MaxDayLengthInput.vue'
@@ -20,8 +20,8 @@ import MinDayLengthInput from './MinDayLengthInput.vue'
 
 const store = useTimetableStore()
 
-const start: Ref<number> = ref(store.preferredStart || 9)
-const maxEnd: Ref<number> = ref(store.preferredMaxEnd || 15)
+const start = ref(store.preferredStart || 9)
+const maxEnd = ref(store.preferredMaxEnd || 15)
 
 watch(start, (val: number) => {
   if (val !== store.preferredStart) store.preferredStart = val

@@ -1,26 +1,17 @@
 <template>
   <div>
-    <Button
-      v-tooltip.left="tooltip('Export Timetables')"
-      rounded
-      icon="pi pi-download"
-      :pt:root:class="'text-white'"
-      aria-label="Export Timetables"
-      @click="exportTimetables()"
-    />
+    <Button v-tooltip.left="tooltip('Export Timetables')" rounded icon="pi pi-download" :pt:root:class="'text-white'"
+      aria-label="Export Timetables" @click="exportTimetables()" />
 
     <div v-if="exportSemester" aria-hidden="true" class="export-template-stage">
-      <ExportTimetableTemplate
-        :semester="exportSemester"
-        :timetable="store.timetables[exportSemester]"
-        :title="exportTitle"
-      />
+      <ExportTimetableTemplate :semester="exportSemester" :timetable="store.timetables[exportSemester]"
+        :title="exportTitle" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, Ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { toPng } from 'html-to-image'
 import { useTimetableStore } from '../../store/timetable'
 import ExportTimetableTemplate from './ExportTimetableTemplate.vue'
@@ -30,8 +21,8 @@ import { SessionGroup } from '../../types/reference_data.types'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
-const exportSemester: Ref<SemesterCode | null> = ref(null)
-const exportTitle: Ref<string> = ref('')
+const exportSemester = ref<SemesterCode | null>(null)
+const exportTitle = ref('')
 
 /**
  * @brief Converts a semester code and list of session groups into the subsession within the currently selected session
@@ -39,7 +30,7 @@ const exportTitle: Ref<string> = ref('')
  * @param sessions The list of session groups
  * @param semester The semester code
  */
-function getSemesterTitle(sessions: Array<SessionGroup>, semester: string): string {
+function getSemesterTitle(sessions: SessionGroup[], semester: string): string {
   const sessionGroup = sessions.find((group) => group.group === store.selectedSessionGroup)
 
   if (!sessionGroup) return ''

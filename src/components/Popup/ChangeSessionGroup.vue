@@ -1,12 +1,7 @@
 <template>
   <div>
-    <Dialog
-      v-model:visible="visible"
-      modal
-      :style="{ 'max-width': '290px' }"
-      :show-header="false"
-      aria-label="Change session group warning"
-    >
+    <Dialog v-model:visible="visible" modal :style="{ 'max-width': '290px' }" :show-header="false"
+      aria-label="Change session group warning">
       <h2 class="text-lg font-bold my-2">Warning</h2>
       <p>
         Changing session groups will delete your current timetable and selected courses. Do you want
@@ -21,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   visible: {
@@ -30,7 +25,7 @@ const props = defineProps({
   },
 })
 
-const visible: Ref<boolean> = ref(false)
+const visible = ref(false)
 
 const emit = defineEmits(['update:visible', 'cancel', 'continue'])
 

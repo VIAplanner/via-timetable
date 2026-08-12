@@ -1,27 +1,18 @@
 <template>
   <div class="m-2">
     <label for="minDayLengthInput" class="block mb-0 text-sm font-bold">Min Day Length</label>
-    <InputNumber
-      v-model="minDayLength"
-      suffix=" Hours"
-      :min="1"
-      :max="12"
-      show-buttons
-      button-layout="stacked"
-      input-class="MinDayLengthInput"
-      placeholder="3 Hours"
-      :pt:pcInputText:root:id="'minDayLengthInput'"
-    />
+    <InputNumber v-model="minDayLength" suffix=" Hours" :min="1" :max="12" show-buttons button-layout="stacked"
+      input-class="MinDayLengthInput" placeholder="3 Hours" :pt:pcInputText:root:id="'minDayLengthInput'" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useTimetableStore } from '../../../store/timetable'
 
 const store = useTimetableStore()
 
-const minDayLength: Ref<number> = ref(store.minDayLength ?? 3)
+const minDayLength = ref(store.minDayLength ?? 3)
 
 watch(minDayLength, (val: number) => {
   if (val !== store.minDayLength) store.minDayLength = val

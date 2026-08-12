@@ -1,27 +1,16 @@
 <template>
-  <Button
-    icon="pi pi-book"
-    label="View Legend"
-    size="small"
-    :pt:icon:class="'text-white'"
-    :pt:label:class="'text-white'"
-    @click="visible = true"
-  />
-  <Dialog
-    v-model:visible="visible"
-    modal
-    :show-header="true"
-    :style="{ maxWidth: '100vw', padding: '1rem' }"
-    :header="`${division} Divisional Legend`"
-  >
+  <Button icon="pi pi-book" label="View Legend" size="small" :pt:icon:class="'text-white'"
+    :pt:label:class="'text-white'" @click="visible = true" />
+  <Dialog v-model:visible="visible" modal :show-header="true" :style="{ maxWidth: '100vw', padding: '1rem' }"
+    :header="`${division} Divisional Legend`">
     <div class="divisionalLegendPopup" v-html="content"></div>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { ref } from 'vue'
 
-const visible: Ref<boolean> = ref(false)
+const visible = ref(false)
 
 const props = defineProps({
   content: {

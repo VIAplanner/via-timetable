@@ -1,58 +1,34 @@
 <template>
   <div class="flex flex-row h-full">
     <NoTimetablePopup />
-    <div
-      class="flex flex-col ml-0 md:ml-1 mr-0"
-      :style="{ 'margin-top': `${oneHourHeightPixels * 0.6}px` }"
-    >
-      <div
-        v-for="(time, index) in timeRange"
-        :key="index"
-        class="time-axis-number w-13 md:w-16"
-        :style="{ height: oneHourHeight }"
-      >
-        <HourSwitch
-          :time="time"
-          :last="index !== timeRange.length - 1"
-          :semester="semester"
-          :is-export="isExport"
-          :height="oneHourHeight"
-        />
+    <div class="flex flex-col ml-0 md:ml-1 mr-0" :style="{ 'margin-top': `${oneHourHeightPixels * 0.6}px` }">
+      <div v-for="(time, index) in timeRange" :key="index" class="time-axis-number w-13 md:w-16"
+        :style="{ height: oneHourHeight }">
+        <HourSwitch :time="time" :last="index !== timeRange.length - 1" :semester="semester" :is-export="isExport"
+          :height="oneHourHeight" />
       </div>
     </div>
     <div class="col-11 w-full p-0 pr-8">
       <!-- Weekday Axis -->
       <div class="grid grid-nogutter" name="weekDaysAxis">
         <div v-for="(weekday, index) in weekdays" :key="weekday" class="col">
-          <WeekdaySwitch
-            :weekday="weekday"
-            :weekday-label="useShortWeekdays ? (weekdaysShort[index] as string) : weekday"
-            :semester="semester"
-            :is-export="isExport"
-            :height="`${oneHourHeightPixels * 0.6}px`"
-          />
+          <WeekdaySwitch :weekday="weekday" :weekday-label="useShortWeekdays ? (weekdaysShort[index]!) : weekday"
+            :semester="semester" :is-export="isExport" :height="`${oneHourHeightPixels * 0.6}px`" />
         </div>
       </div>
       <!-- Timetable Content -->
       <div class="grid grid-nogutter timetableContent" name="timetableContent">
         <div v-for="(meetingSections, day) in timetable" :key="day" class="col relative">
-          <div
-            v-for="hour in timeSlotCount"
-            :key="hour"
-            :style="{
-              height: oneHourHeight,
-              'box-sizing': 'border-box',
-              'border-right': '1px solid gray',
-              'border-bottom': '1px solid gray',
-              ...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {}),
-            }"
-            :class="isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell'"
-          />
-          <div
-            v-for="event in getEventsForDay(meetingSections)"
+          <div v-for="hour in timeSlotCount" :key="hour" :style="{
+            height: oneHourHeight,
+            'box-sizing': 'border-box',
+            'border-right': '1px solid gray',
+            'border-bottom': '1px solid gray',
+            ...(day === 'Monday' ? { 'border-left': '1px solid gray' } : {}),
+          }" :class="isExport ? 'bg-white timetablecell' : 'bg-timetablecell timetablecell'" />
+          <div v-for="event in getEventsForDay(meetingSections)"
             :key="event.start + '-' + event.currEnd + (event.overlapIndex || 0)"
-            class="absolute left-0 right-0 flex pb-px"
-            :style="{
+            class="absolute left-0 right-0 flex pb-px" :style="{
               top: `${(event.currStart / 3600 - timetableStart) * oneHourHeightPixels}px`,
               height: `${((event.currEnd - event.currStart) / 3600) * oneHourHeightPixels}px`,
               width: event.totalOverlapping ? `${100 / event.totalOverlapping}%` : '100%',
@@ -66,37 +42,23 @@
               ...(event.isEmpty || event.overlapIndex === event.totalOverlapping - 1
                 ? { 'padding-right': '1px' }
                 : {}),
-            }"
-          >
+            }">
             <template v-if="!event.isEmpty">
-              <TimetableEvent
-                v-for="(courseActivityData, index) in event.courses"
-                :key="courseActivityData.course + courseActivityData.activity + index"
-                :event-data="courseActivityData"
-                :semester="semester"
-                :day="day"
-                :is-empty="false"
-                :is-export="isExport"
-                :style="{
+              <TimetableEvent v-for="(courseActivityData, index) in event.courses"
+                :key="courseActivityData.course + courseActivityData.activity + index" :event-data="courseActivityData"
+                :semester="semester" :day="day" :is-empty="false" :is-export="isExport" :style="{
                   'background-color':
                     store.selectedCourses[store.selectedSession][courseActivityData.course]?.color,
-                }"
-              />
+                }" />
             </template>
             <template v-else-if="!isExport">
-              <TimetableEvent
-                :event-data="{
-                  course: '', // Placeholder value, wont be accessed since is-empty === true
-                  activity: '', // Placeholder value, wont be accessed since is-empty === true
-                  day: 1, // Placeholder value, wont be accessed since is-empty === true
-                  start: event.currStart,
-                  end: event.currEnd,
-                }"
-                :semester="semester"
-                :day="day"
-                :is-empty="true"
-                :is-export="isExport"
-              />
+              <TimetableEvent :event-data="{
+                course: '', // Placeholder value, wont be accessed since is-empty === true
+                activity: '', // Placeholder value, wont be accessed since is-empty === true
+                day: 1, // Placeholder value, wont be accessed since is-empty === true
+                start: event.currStart,
+                end: event.currEnd,
+              }" :semester="semester" :day="day" :is-empty="true" :is-export="isExport" />
             </template>
           </div>
         </div>
@@ -106,14 +68,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import TimetableEvent from './TimetableEvent.vue'
 import NoTimetablePopup from '../Popup/NoTimetablePopup.vue'
 import HourSwitch from './HourSwitch.vue'
 import WeekdaySwitch from './WeekdaySwitch.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, DAYS_SHORT, SemesterCode, Weekday } from '../../types/constants.types'
+import { DAYS, DAYS_SHORT, SemesterCode } from '../../types/constants.types'
 import { ActivityTimeData, SemesterEventsData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
@@ -128,8 +90,8 @@ const props = withDefaults(
   { isExport: false },
 )
 
-const weekdays: Ref<Array<Weekday>> = ref([...DAYS])
-const weekdaysShort: Ref<Array<String>> = ref([...DAYS_SHORT])
+const weekdays = ref([...DAYS])
+const weekdaysShort = ref([...DAYS_SHORT])
 const useShortWeekdays = computed(() => isSmallDevice.value)
 
 /** The hour that the earliest class starts on for any day in the given semester */
@@ -267,10 +229,10 @@ function toPublicEvent(event: WorkingEvent): TimetableDayEvent {
  * @param meetingSections The day's scheduled activities (one day's worth of `SemesterEventsData`)
  * @return The day's slots — real events and empty-gap placeholders — in chronological order
  */
-function getEventsForDay(meetingSections: Array<ActivityTimeData>): Array<TimetableDaySlot> {
+function getEventsForDay(meetingSections: ActivityTimeData[]): TimetableDaySlot[] {
   // Empty day case
   if (!meetingSections.length) {
-    const result: Array<TimetableDaySlot> = []
+    const result: TimetableDaySlot[] = []
     let invalidStart = -1
     for (let i = timetableStart.value; i < timetableEnd.value; i++) {
       result.push({
@@ -289,7 +251,7 @@ function getEventsForDay(meetingSections: Array<ActivityTimeData>): Array<Timeta
   }
 
   // Create individual events for each activity
-  const allEvents: Array<WorkingEvent> = []
+  const allEvents: WorkingEvent[] = []
   for (const course of meetingSections) {
     allEvents.push({
       start: course.start,
@@ -315,7 +277,7 @@ function getEventsForDay(meetingSections: Array<ActivityTimeData>): Array<Timeta
     if (!current || current.processed) continue
 
     // Find all events that overlap with current
-    const overlappingEvents: Array<WorkingEvent> = [current]
+    const overlappingEvents = [current]
     const groupStart = current.start
     let groupEnd = current.end
 
@@ -340,7 +302,7 @@ function getEventsForDay(meetingSections: Array<ActivityTimeData>): Array<Timeta
   }
 
   // Fill gaps with empty slots
-  const finalResult: Array<TimetableDaySlot> = []
+  const finalResult: TimetableDaySlot[] = []
   let currentTime = timetableStart.value * HOUR_OFFSET
   let invalidStart = -1
 
@@ -350,7 +312,7 @@ function getEventsForDay(meetingSections: Array<ActivityTimeData>): Array<Timeta
 
   while (currentTime < timetableEnd.value * HOUR_OFFSET) {
     // Find events that start at or before current time and haven't ended
-    const activeEvents: Array<WorkingEvent> = []
+    const activeEvents: WorkingEvent[] = []
 
     for (let i = 0; i < allEvents.length; i++) {
       const event = allEvents[i]

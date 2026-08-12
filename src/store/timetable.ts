@@ -38,11 +38,11 @@ export const useTimetableStore = defineStore(
       window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
     )
 
-    const divisions = ref<{ data: Array<VIAplanner.Division>; expiry: number } | null>(null)
-    const sessions = ref<{ data: Array<VIAplanner.SessionGroup>; expiry: number } | null>(null)
-    const selectedDivisions = ref<Array<VIAplanner.DivisionCode>>([])
+    const divisions = ref<{ data: VIAplanner.Division[]; expiry: number } | null>(null)
+    const sessions = ref<{ data: VIAplanner.SessionGroup[]; expiry: number } | null>(null)
+    const selectedDivisions = ref<VIAplanner.DivisionCode[]>([])
     const selectedSessionGroup = ref<string | null>(null)
-    const selectedSubsessions = ref<Array<string>>([])
+    const selectedSubsessions = ref<string[]>([])
     const selectedSession = ref<VIAplanner.SemesterCode>(VIAplannerConstants.FIRST_SEM)
 
     const divisionalLegends = ref<VIAplanner.DivisionalLegends | null>(null)
@@ -61,10 +61,10 @@ export const useTimetableStore = defineStore(
 
     // Detail cards - TODO: type `props` properly
     const cards = ref<
-      Array<{ course: string; visible: boolean; props: VIAplanner.CourseCardProps }>
+      { course: string; visible: boolean; props: VIAplanner.CourseCardProps }[]
     >([])
 
-    const blockedTimes = ref<Record<VIAplanner.SemesterCode, Array<VIAplanner.BlockedTimeData>>>({
+    const blockedTimes = ref<Record<VIAplanner.SemesterCode, VIAplanner.BlockedTimeData[]>>({
       [VIAplannerConstants.FIRST_SEM]: [],
       [VIAplannerConstants.SECOND_SEM]: [],
     })
@@ -93,7 +93,7 @@ export const useTimetableStore = defineStore(
       [VIAplannerConstants.SECOND_SEM]: emptySemesterEvents(),
     })
 
-    const lockedSections = ref<Record<VIAplanner.SemesterCode, Record<string, Array<string>>>>({
+    const lockedSections = ref<Record<VIAplanner.SemesterCode, Record<string, string[]>>>({
       [VIAplannerConstants.FIRST_SEM]: {},
       [VIAplannerConstants.SECOND_SEM]: {},
     })
@@ -103,8 +103,8 @@ export const useTimetableStore = defineStore(
     const noTimetablePopup = ref<boolean>(false)
     const sessionChangeWarning = ref<boolean>(false)
     const tutorialPopup = ref<boolean>(true)
-    const searchBarSuggestions = ref<Array<string>>([])
-    const history = ref<Array<StateTree>>([]) // todo type
+    const searchBarSuggestions = ref<string[]>([])
+    const history = ref<StateTree[]>([])
     const historyIndex = ref<number>(0)
 
     const toast = ref<ToastServiceMethods | null>(null)
@@ -415,7 +415,7 @@ export const useTimetableStore = defineStore(
         let hasMeetingTime = false
         const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData['meetingTimes'])
           ? sectionData['meetingTimes']
-          : (Object.values(sectionData['meetingTimes'] || {}) as VIAplanner.MeetingTime[])
+          : (Object.values(sectionData['meetingTimes'] || {}))
         for (const meetingTimeData of meetingTimes) {
           const buildingCode = meetingTimeData['building']['buildingCode']
           const fallbackSemesters = resolveSubsessionSemesters(meetingTimeData['sessionCode']).map(
@@ -545,11 +545,11 @@ export const useTimetableStore = defineStore(
     }
 
     async function refreshExpiredCourseData() {
-      const refreshTargets: Array<{
+      const refreshTargets: {
         session: VIAplanner.SemesterCode
         course: string
         entry: VIAplanner.SelectedCourseData
-      }> = []
+      }[] = []
       const fetchCache = new Map<string, Promise<VIAplanner.Course | null>>()
 
       for (const session of VIAplannerConstants.SEMESTER_CODES) {
@@ -639,7 +639,7 @@ export const useTimetableStore = defineStore(
 
       const normalizedTimetable = normalizeBuiltTimetable(timetable)
 
-      for (const session of Object.keys(normalizedTimetable) as Array<VIAplanner.SemesterCode>) {
+      for (const session of Object.keys(normalizedTimetable) as VIAplanner.SemesterCode[]) {
         for (const course of normalizedTimetable[session]) {
           if (course['code'] === VIAplannerConstants.blockedTimesCourseCodePlaceholder) continue
           const courseData = selectedCourses.value[session][course['code']]
@@ -666,7 +666,7 @@ export const useTimetableStore = defineStore(
     function normalizeBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
       const normalized: Record<
         VIAplanner.SemesterCode,
-        Array<VIAplanner.BuilderCourseSelection>
+        VIAplanner.BuilderCourseSelection[]
       > = {
         [VIAplannerConstants.FIRST_SEM]: [],
         [VIAplannerConstants.SECOND_SEM]: [],
@@ -825,13 +825,13 @@ export const useTimetableStore = defineStore(
       else console.error(`No card for ${course} was found`)
     }
 
-    async function getDivisionalLegends(): Promise<Array<VIAplanner.DivisionalLegend> | null> {
+    async function getDivisionalLegends(): Promise<VIAplanner.DivisionalLegend[] | null> {
       if (!divisionalLegends.value || divisionalLegends.value.expiry < Date.now()) {
         try {
           const response = await axios.get<VIAplanner.DivisionalLegendsResponse>(
             `${import.meta.env.VITE_API_BASE_URL}/divisionalLegends`,
           )
-          const data: Array<VIAplanner.DivisionalLegend> = response.data.data.map((raw) => ({
+          const data: VIAplanner.DivisionalLegend[] = response.data.data.map((raw) => ({
             division: raw.division,
             content: raw.content,
           }))
@@ -848,7 +848,7 @@ export const useTimetableStore = defineStore(
       return divisionalLegends.value.data
     }
 
-    async function getDivisionalEnrolmentIndicators(): Promise<Array<VIAplanner.DivisionalEnrolmentIndicator> | null> {
+    async function getDivisionalEnrolmentIndicators(): Promise<VIAplanner.DivisionalEnrolmentIndicator[] | null> {
       if (
         !divisionalEnrolmentIndicators.value ||
         divisionalEnrolmentIndicators.value.expiry < Date.now()
@@ -857,7 +857,7 @@ export const useTimetableStore = defineStore(
           const response = await axios.get<VIAplanner.DivisionalEnrolmentIndicatorsResponse>(
             `${import.meta.env.VITE_API_BASE_URL}/divisionalEnrolmentIndicators`,
           )
-          const data: Array<VIAplanner.DivisionalEnrolmentIndicator> = response.data.data.map(
+          const data: VIAplanner.DivisionalEnrolmentIndicator[] = response.data.data.map(
             (raw) => ({
               division: raw.division,
               codes: raw.codes.map((code) => ({ code: code.code, name: code.name })),
@@ -876,7 +876,7 @@ export const useTimetableStore = defineStore(
       return divisionalEnrolmentIndicators.value.data
     }
 
-    async function getDivisions(): Promise<Array<VIAplanner.Division> | null> {
+    async function getDivisions(): Promise<VIAplanner.Division[] | null> {
       if (!divisions.value || divisions.value.expiry < Date.now()) {
         try {
           const newDivisions = await axios.get<VIAplanner.ReferenceData>(
@@ -895,7 +895,7 @@ export const useTimetableStore = defineStore(
       return divisions.value.data
     }
 
-    async function getSessions(): Promise<Array<VIAplanner.SessionGroup> | null> {
+    async function getSessions(): Promise<VIAplanner.SessionGroup[] | null> {
       if (!sessions.value || sessions.value.expiry < Date.now()) {
         try {
           const newSessions = await axios.get<VIAplanner.ReferenceData>(
@@ -925,7 +925,7 @@ export const useTimetableStore = defineStore(
 
           const sessionsForMeeting = resolveSubsessionSemesters(meetingTime.sessionCode)
           if (!selectedSessionFromActivity && sessionsForMeeting.length > 0)
-            selectedSessionFromActivity = sessionsForMeeting[0] as VIAplanner.SemesterCode
+            selectedSessionFromActivity = sessionsForMeeting[0]!
 
           for (const session of sessionsForMeeting) {
             if (
@@ -1022,7 +1022,7 @@ export const useTimetableStore = defineStore(
       return semester === VIAplannerConstants.FIRST_SEM ? 0 : 1
     }
 
-    function resolveSubsessionSemesters(subsessionCode: string): Array<VIAplanner.SemesterCode> {
+    function resolveSubsessionSemesters(subsessionCode: string): VIAplanner.SemesterCode[] {
       const session = subsessionCodeToSession(subsessionCode)
       if (session === VIAplannerConstants.BOTH_SEM)
         return [VIAplannerConstants.FIRST_SEM, VIAplannerConstants.SECOND_SEM]
