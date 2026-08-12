@@ -29,12 +29,9 @@ import { SelectedCourseData } from '../../types/app_state.types'
 const store = useTimetableStore()
 const { height } = useWindowSize()
 
-const props = defineProps({
-  fullscreen: {
-    type: Boolean,
-    default: false,
-  },
-})
+const props = defineProps<{
+  fullscreen: boolean
+}>()
 
 const sideBarTitle = ref('Loading Sessions...')
 

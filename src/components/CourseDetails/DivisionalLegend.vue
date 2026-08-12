@@ -12,16 +12,10 @@ import { ref } from 'vue'
 
 const visible = ref(false)
 
-const props = defineProps({
-  content: {
-    type: String,
-    required: true,
-  },
-  division: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  content: string,
+  division: string
+}>()
 </script>
 
 <style>

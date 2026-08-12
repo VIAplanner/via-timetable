@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
 import { DAYS, SemesterCode } from '../../types/constants.types'
@@ -25,25 +25,12 @@ const { tooltip } = useResponsiveTooltip()
 
 const days = [...DAYS]
 
-const props = defineProps({
-  time: {
-    type: String,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    required: true,
-  },
-  semester: {
-    type: String as PropType<SemesterCode>,
-    required: true,
-  },
-  isExport: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+const props = withDefaults(defineProps<{
+  time: string,
+  last: boolean,
+  semester: SemesterCode,
+  isExport?: boolean
+}>(), { isExport: false })
 
 const intTime = computed(() => {
   const timeSplit = props.time.split(' ')
