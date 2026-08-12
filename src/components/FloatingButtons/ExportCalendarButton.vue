@@ -27,7 +27,6 @@ import ExportTimetableTemplate from './ExportTimetableTemplate.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
 import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../types/constants.types'
 import { SessionGroup } from '../../types/reference_data.types'
-// import { FIRST_SEM, SECOND_SEM, SemesterCode } from '../../store/timetable.shared'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
@@ -41,12 +40,12 @@ const exportTitle: Ref<string> = ref('')
  * @param semester The semester code
  */
 function getSemesterTitle(sessions: Array<SessionGroup>, semester: string): string {
-  const sessionGroup = sessions.find((group: any) => group.group === store.selectedSessionGroup)
+  const sessionGroup = sessions.find((group) => group.group === store.selectedSessionGroup)
 
   if (!sessionGroup) return ''
 
   const sessionKey = ` (${semester})`
-  const subsession = sessionGroup.subsessions.find((entry: any) => entry.label.includes(sessionKey))
+  const subsession = sessionGroup.subsessions.find((entry) => entry.label.includes(sessionKey))
 
   return subsession ? subsession.label.replace(sessionKey, '') : ''
 }

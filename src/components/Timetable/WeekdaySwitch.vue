@@ -65,14 +65,13 @@ const props = defineProps({
 
 const locked = computed(() => {
   const blockedTimesForSemester = store.blockedTimes[props.semester] || []
-  const dayBlocks = blockedTimesForSemester.filter((blocker: any) => blocker.day === props.weekday)
+  const dayBlocks = blockedTimesForSemester.filter((blocker) => blocker.day === props.weekday)
 
   for (let hour = 8; hour <= 22; hour++) {
     const start = hour * 3600
     const end = start + 3600
 
-    if (!dayBlocks.some((blocker: any) => blocker.start === start && blocker.end === end))
-      return false
+    if (!dayBlocks.some((blocker) => blocker.start === start && blocker.end === end)) return false
   }
 
   return true

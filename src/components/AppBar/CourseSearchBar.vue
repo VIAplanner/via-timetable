@@ -43,13 +43,10 @@ import { ref, Ref, computed } from 'vue'
 import axios from 'axios'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
+import { Course, CourseSearchResponse } from '../../types/courses.types'
 
 /** Represents a single course for the purposes of displaying in the search bar, so it encodes only essential data */
-interface Course {
-  code: string
-  sectionCode: string
-  name: string
-  sessions: string[]
+interface SearchCourse extends Course {
   formattedName?: string
 }
 
@@ -57,10 +54,10 @@ const store = useTimetableStore()
 const { isSmallDevice } = useWindowSize()
 
 const searchBarComponent = ref<{ overlayVisible: boolean } | null>(null)
-const allCourses: Ref<Course[]> = ref([])
+const allCourses: Ref<SearchCourse[]> = ref([])
 const loading: Ref<boolean> = ref(false)
 const isActive: Ref<boolean> = ref(false)
-const currentQuery: Ref<Course | string | null> = ref(null)
+const currentQuery: Ref<SearchCourse | string | null> = ref(null)
 
 const dynamicTextColor = computed(() => {
   return store.darkMode ? '#ffffff' : '#222222'
@@ -103,7 +100,7 @@ async function populateRecommendations() {
   try {
     loading.value = true
 
-    const coursesDataResult = await axios.get(
+    const coursesDataResult = await axios.get<CourseSearchResponse>(
       `${import.meta.env.VITE_API_BASE_URL}/courses/${queryTrimmed}`,
       {
         params: {
@@ -116,16 +113,14 @@ async function populateRecommendations() {
       },
     )
 
-    const courses: Array<Course> = Array.from(coursesDataResult.data.courses as Array<Course>)
+    const courses: Course[] = coursesDataResult.data.courses
 
-    allCourses.value = courses.map((course: Course) => {
-      course.formattedName = `${parseSessionEmoji(course.sessions)}  ${course.code} ${course.sectionCode} - ${course.name}`
-      return course
-    })
+    allCourses.value = courses.map((course): SearchCourse => ({
+      ...course,
+      formattedName: `${parseSessionEmoji(course.sessions)}  ${course.code} ${course.sectionCode} - ${course.name}`,
+    }))
 
-    store.searchBarSuggestions = courses.map(
-      (course: Course) => `${course.code} ${course.sectionCode}`,
-    )
+    store.searchBarSuggestions = courses.map((course) => `${course.code} ${course.sectionCode}`)
 
     loading.value = false
   } catch (error: any) {

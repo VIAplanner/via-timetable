@@ -18,15 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
+import { ref } from 'vue'
 import SearchDivisionSelect from './SearchDivisionSelect.vue'
 import SearchSessionSelect from './SearchSessionSelect.vue'
 import { useResponsiveTooltip } from '../../../composables/useResponsiveTooltip'
 
-const popover: Ref<any> = ref(null)
+const popover = ref<{ toggle: (event: Event) => void } | null>(null)
 const { tooltip } = useResponsiveTooltip()
 
-function toggleSearchPanel(event: any) {
-  popover.value.toggle(event)
+function toggleSearchPanel(event: Event) {
+  popover.value?.toggle(event)
 }
 </script>

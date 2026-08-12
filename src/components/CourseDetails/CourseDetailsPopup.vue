@@ -115,7 +115,7 @@
         <Accordion :value="['0']" :multiple="true">
           <template v-for="type in sectionTypes" :key="type.key">
             <AccordionPanel
-              v-if="courseData.sections.some((section: any) => section.type === type.label)"
+              v-if="courseData.sections.some((section: Section) => section.type === type.label)"
               :value="type.key"
             >
               <AccordionHeader>
@@ -123,10 +123,11 @@
               </AccordionHeader>
               <AccordionContent
                 v-for="section in courseData.sections
-                  .filter((section: any) => section.type === type.label)
+                  .filter((section: Section) => section.type === type.label)
                   .sort(
-                    (s1: any, s2: any) =>
-                      parseInt(s1.name.match(/\d+(?!\d)/)) - parseInt(s2.name.match(/\d+(?!\d)/)),
+                    (s1: Section, s2: Section) =>
+                      parseInt(s1.name.match(/\d+(?!\d)/)?.[0] ?? '0') -
+                      parseInt(s2.name.match(/\d+(?!\d)/)?.[0] ?? '0'),
                   )"
                 :key="section.name"
               >
@@ -152,8 +153,15 @@ import DivisionalLegend from './DivisionalLegend.vue'
 import CourseDetailsSectionCard from './CourseDetailsSectionCard.vue'
 import { FIRST_SEM, SECOND_SEM } from '../../types/constants.types'
 import type { Breadth, Course, Section } from '../../types/courses.types'
+import type { DivisionalLegend as DivisionalLegendType } from '../../types/divisions.types'
+import { DivisionalData, SectionType } from '../../types/app_state.types'
 
 const store = useTimetableStore()
+
+const props = defineProps<{
+  courseData: Course
+  divisionalData?: DivisionalData
+}>()
 
 const visible: Ref<boolean> = ref(true)
 
@@ -213,20 +221,15 @@ watch(selectedPra, (val: string | null) => {
   store.saveStateHistory()
 })
 
-const sectionTypes = [
-  { key: 'LEC', label: 'Lecture', field: selectedLec },
-  { key: 'TUT', label: 'Tutorial', field: selectedTut },
-  { key: 'PRA', label: 'Practical', field: selectedPra },
+const sectionTypes: SectionType[] = [
+  { key: 'LEC', label: 'Lecture', field: selectedLec.value },
+  { key: 'TUT', label: 'Tutorial', field: selectedTut.value },
+  { key: 'PRA', label: 'Practical', field: selectedPra.value },
 ]
 
-const props = defineProps<{
-  courseData: Course
-  divisionalData?: any
-}>()
-
 const divisionalLegend = computed(() => {
-  return props?.divisionalData?.divisionalLegends.data.data.find(
-    (legend: any) => legend.division === props.courseData.faculty.code,
+  return props?.divisionalData?.divisionalLegends?.find(
+    (legend: DivisionalLegendType) => legend.division === props.courseData.faculty.code,
   )
 })
 
@@ -302,8 +305,8 @@ function parseSession(sessions: Array<string>): string {
  */
 function parseDistributionRequirements(distributionRequirements: Array<Breadth>) {
   return distributionRequirements
-    .map((distribution: any) => {
-      return distribution.breadthTypes && distribution.breadthTypes.length
+    .map((distribution: Breadth) => {
+      return distribution.breadthTypes && distribution.breadthTypes[0]
         ? distribution.breadthTypes[0].type
         : ''
     })

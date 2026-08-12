@@ -64,12 +64,12 @@ async function updateSideBarTitle() {
   const sessions = await store.getSessions()
   if (!sessions) return
   const sessionGroup = sessions.find(
-    (sessionGroup: any) => sessionGroup.group === store.selectedSessionGroup,
+    (sessionGroup) => sessionGroup.group === store.selectedSessionGroup,
   )
 
   if (sessionGroup) {
     const sessionKey = ` (${store.selectedSession})`
-    const subsession = sessionGroup.subsessions.find((subsession: any) =>
+    const subsession = sessionGroup.subsessions.find((subsession) =>
       subsession.label.includes(sessionKey),
     )
     sideBarTitle.value = subsession

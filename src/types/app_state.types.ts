@@ -1,6 +1,7 @@
-import type { WeekdayNumber } from './common.types.ts'
+import type { ActivityType, ActivityTypeFull, Campus, WeekdayNumber } from './common.types.ts'
 import type { Weekday } from './constants.types.ts'
-import type { Course } from './courses.types.ts'
+import type { BuildingCode, Course } from './courses.types.ts'
+import { DivisionalEnrolmentIndicator, DivisionalLegend } from './divisions.types.js'
 
 /** Encodes a blocked time interval */
 export interface BlockedTimeData {
@@ -37,4 +38,54 @@ export interface SemesterEventsData {
   Friday: ActivityTimeData[]
   Saturday: ActivityTimeData[]
   Sunday: ActivityTimeData[]
+}
+
+export interface DivisionalData {
+  divisionalLegends: DivisionalLegend[] | null
+  divisionalEnrolmentIndicators: DivisionalEnrolmentIndicator[] | null
+}
+
+export interface CourseCardProps {
+  courseData: Course
+  divisionalData?: DivisionalData
+}
+
+export interface BuilderCourseSelection {
+  code: string
+  campus: Campus
+  type: ActivityType
+  section: string
+}
+
+export interface BuilderEvent {
+  start: number
+  end: number
+  day: number
+  online: boolean
+  zz: boolean
+  semester: number
+}
+
+export interface BuilderCourseSectionInput {
+  name: string
+  meetingTimes: BuilderEvent[]
+}
+
+export interface BuilderCourseInput {
+  code: string
+  campus: string
+  type: ActivityType
+  sections: BuilderCourseSectionInput[]
+}
+
+export interface SectionType {
+  key: ActivityType
+  label: ActivityTypeFull
+  field: string | null
+}
+
+export interface ParsedMeetingTime {
+  time: string
+  location: BuildingCode | 'TBA'
+  locationURL: string | null
 }

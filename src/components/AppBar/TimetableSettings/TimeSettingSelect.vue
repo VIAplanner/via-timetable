@@ -18,30 +18,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { TIMES } from '../../../types/constants.types'
 
-const times: Ref<Array<{ display: string; numerical: number }>> = ref([...TIMES])
+const times = ref([...TIMES])
 
-const props = defineProps({
-  output: {
-    type: [Object, Number],
-  },
-  label: {
-    type: String,
-    default: 'Enter time',
-  },
-  defaultValue: {
-    type: String,
-    default: '9 AM',
-  },
-})
-
-const emit = defineEmits(['update:output'])
-
-const internalValue: Ref<string | number> = ref(
-  (props.output ?? props.defaultValue) as string | number,
+const props = withDefaults(
+  defineProps<{
+    output: number
+    label: string
+    defaultValue: number
+  }>(),
+  { label: 'Enter time', defaultValue: 9 },
 )
+
+const emit = defineEmits<{
+  'update:output': [value: number]
+}>()
+
+const internalValue = ref(props.output ?? props.defaultValue)
 
 watch(internalValue, (val) => {
   emit('update:output', val)

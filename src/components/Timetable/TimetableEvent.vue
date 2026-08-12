@@ -83,6 +83,7 @@ import { computed, ref, Ref } from 'vue'
 import { useTimetableStore } from '../../store/timetable'
 import { useWindowSize } from '../../composables/useWindowSize'
 import { DAYS, FIRST_SEM, SECOND_SEM, SemesterCode, Weekday } from '../../types/constants.types'
+import { ActivityTimeData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 const { isSmallDevice, height } = useWindowSize()
@@ -91,7 +92,7 @@ const hovered: Ref<boolean> = ref(false)
 
 const props = withDefaults(
   defineProps<{
-    eventData: any
+    eventData: ActivityTimeData
     day: Weekday
     semester: SemesterCode
     isEmpty: boolean
@@ -106,8 +107,8 @@ const days: Array<string> = [...DAYS]
 const activityData = computed(() => {
   return !props.isEmpty
     ? store.selectedCourses[store.selectedSession][props.eventData.course]?.courseData.sections
-        .find((section: any) => section.name === props.eventData.activity)
-        ?.meetingTimes.find((meetingTime: any) => {
+        .find((section) => section.name === props.eventData.activity)
+        ?.meetingTimes.find((meetingTime) => {
           return (
             meetingTime.day === days.indexOf(props.day as string) + 1 &&
             meetingTime.start === props.eventData.start &&
@@ -153,7 +154,7 @@ const sectionLocked = computed(() => {
 const timeBlocked = computed(() => {
   const blockedTimesForSemester = store.blockedTimes[props.semester] || []
 
-  return blockedTimesForSemester.some((blocker: any) => {
+  return blockedTimesForSemester.some((blocker) => {
     return (
       blocker.day === props.day &&
       blocker.start === props.eventData.start &&

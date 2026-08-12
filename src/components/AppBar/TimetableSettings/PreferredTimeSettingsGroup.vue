@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-start justify-between">
     <div class="flex flex-row items-start justify-between">
-      <TimeSettingSelect v-model:output="start" label="Pref. Min Start" default-value="9am" />
-      <TimeSettingSelect v-model:output="maxEnd" label="Pref. Max End" default-value="3pm" />
+      <TimeSettingSelect v-model:output="start" label="Pref. Min Start" :default-value="9" />
+      <TimeSettingSelect v-model:output="maxEnd" label="Pref. Max End" :default-value="15" />
     </div>
     <div class="flex flex-row items-start justify-between">
       <MaxDayLengthInput />

@@ -34,15 +34,13 @@
 
 <script setup lang="ts">
 import { useTimetableStore } from '../../store/timetable'
+import { SelectedCourseData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 
-const props = defineProps({
-  course: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  course: SelectedCourseData
+}>()
 
 /**
  * @brief Opens the details card of the course given by props

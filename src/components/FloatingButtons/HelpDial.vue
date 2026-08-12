@@ -28,15 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { ref } from 'vue'
 import AboutButton from './AboutButton.vue'
 import TutorialButton from './TutorialButton.vue'
 import ExportCalendarButton from './ExportCalendarButton.vue'
 
-const popover: Ref<any> = ref(null)
+const popover = ref<{ toggle: (event: Event) => void } | null>(null)
 
-function toggleHelpDial(event: any) {
-  popover.value.toggle(event)
+function toggleHelpDial(event: Event) {
+  popover.value?.toggle(event)
 }
 </script>
 

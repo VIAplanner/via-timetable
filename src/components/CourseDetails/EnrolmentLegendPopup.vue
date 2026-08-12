@@ -30,23 +30,16 @@
 
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
+import { EnrolmentIndicator } from '../../types/divisions.types'
+import { EnrolmentInd } from '../../types/courses.types'
 
 const open: Ref<boolean> = ref(false)
 
-const props = defineProps({
-  enrolmentIndicators: {
-    type: Object,
-    required: true,
-  },
-  division: {
-    type: String,
-    required: true,
-  },
-  highlights: {
-    type: Array,
-    required: true,
-  },
-})
+const props = defineProps<{
+  enrolmentIndicators: EnrolmentIndicator[]
+  division: string
+  highlights: EnrolmentInd[]
+}>()
 </script>
 
 <style scoped>

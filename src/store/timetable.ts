@@ -1,11 +1,12 @@
 import { ref } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, StateTree } from 'pinia'
 import axios from 'axios'
 // @ts-expect-error no type definitions published for color-generator
 import genColor from 'color-generator'
 import { ViaBuilderManager } from '@kelexer/via-builder'
 import * as VIAplanner from '../types/index.types'
 import * as VIAplannerConstants from '../types/index.types'
+import { ToastServiceMethods } from 'primevue/toastservice'
 
 let managerInstance: ViaBuilderManager | null = null
 
@@ -59,21 +60,23 @@ export const useTimetableStore = defineStore(
     const currentlyBuildingTimetable = ref<boolean>(false)
 
     // Detail cards - TODO: type `props` properly
-    const cards = ref<Array<{ course: string; visible: boolean; props: any }>>([])
+    const cards = ref<
+      Array<{ course: string; visible: boolean; props: VIAplanner.CourseCardProps }>
+    >([])
 
     const blockedTimes = ref<Record<VIAplanner.SemesterCode, Array<VIAplanner.BlockedTimeData>>>({
       [VIAplannerConstants.FIRST_SEM]: [],
       [VIAplannerConstants.SECOND_SEM]: [],
     })
 
-    const blockedTimesPlaceholderCourse = ref({
+    const blockedTimesPlaceholderCourse = ref<VIAplanner.BuilderCourseInput>({
       code: VIAplannerConstants.blockedTimesCourseCodePlaceholder,
-      campus: '',
-      type: '',
+      campus: 'Off Campus',
+      type: 'LEC',
       sections: [
         {
           name: '',
-          meetingTimes: [] as Array<Record<string, any>>,
+          meetingTimes: [],
         },
       ],
     })
@@ -101,11 +104,10 @@ export const useTimetableStore = defineStore(
     const sessionChangeWarning = ref<boolean>(false)
     const tutorialPopup = ref<boolean>(true)
     const searchBarSuggestions = ref<Array<string>>([])
-    const history = ref<Array<object>>([]) // todo type
+    const history = ref<Array<StateTree>>([]) // todo type
     const historyIndex = ref<number>(0)
 
-    // TODO: type as ToastServiceMethods once its import path is confirmed
-    const toast = ref<any>(null)
+    const toast = ref<ToastServiceMethods | null>(null)
 
     // Whether to switch the displayed session when a timetable event is registered
     const switchSession = ref<boolean>(true)
@@ -114,8 +116,7 @@ export const useTimetableStore = defineStore(
      * Actions
      */
 
-    function initializeToast(toastInstance: any) {
-      // todo type
+    function initializeToast(toastInstance: ToastServiceMethods) {
       toast.value = toastInstance
     }
 
@@ -375,14 +376,23 @@ export const useTimetableStore = defineStore(
         }
       }
 
-      const lecturesJSON: Record<string, any> = {}
-      const tutorialsJSON: Record<string, any> = {}
-      const practicalsJSON: Record<string, any> = {}
-
-      for (const courseJSON of [lecturesJSON, tutorialsJSON, practicalsJSON]) {
-        courseJSON['code'] = courseData['code']
-        courseJSON['campus'] = courseData['campus']
-        courseJSON['sections'] = []
+      const lecturesJSON: VIAplanner.BuilderCourseInput = {
+        code: courseData['code'],
+        campus: courseData['campus'],
+        type: 'LEC',
+        sections: [],
+      }
+      const tutorialsJSON: VIAplanner.BuilderCourseInput = {
+        code: courseData['code'],
+        campus: courseData['campus'],
+        type: 'TUT',
+        sections: [],
+      }
+      const practicalsJSON: VIAplanner.BuilderCourseInput = {
+        code: courseData['code'],
+        campus: courseData['campus'],
+        type: 'PRA',
+        sections: [],
       }
 
       const sessionsToSemester: Record<string, number> = {}
@@ -397,10 +407,10 @@ export const useTimetableStore = defineStore(
       }
 
       for (const sectionData of courseData['sections']) {
-        const sectionJSON: Record<string, any> = {}
-
-        sectionJSON['name'] = sectionData['name']
-        sectionJSON['meetingTimes'] = [] as Array<Record<string, any>>
+        const sectionJSON: VIAplanner.BuilderCourseSectionInput = {
+          name: sectionData['name'],
+          meetingTimes: [],
+        }
 
         let hasMeetingTime = false
         const meetingTimes: VIAplanner.MeetingTime[] = Array.isArray(sectionData['meetingTimes'])
@@ -416,17 +426,20 @@ export const useTimetableStore = defineStore(
             typeof mappedSemester === 'number' ? [mappedSemester] : fallbackSemesters
 
           for (const semesterIndex of semesterIndexes) {
-            const meetingTimeJSON: Record<string, any> = {}
-            meetingTimeJSON['start'] = meetingTimeData['start']
-            meetingTimeJSON['end'] = meetingTimeData['end']
-            meetingTimeJSON['day'] = meetingTimeData['day'] - 1
             const mode = getCourseSectionDeliveryModeForSession(
               sectionData.deliveryModes,
               meetingTimeData['sessionCode'],
             )
-            meetingTimeJSON['online'] = mode === 'SYNC' || mode === 'ASYNC'
-            meetingTimeJSON['zz'] = buildingCode === 'ZZ'
-            meetingTimeJSON['semester'] = semesterIndex
+
+            const meetingTimeJSON: VIAplanner.BuilderEvent = {
+              start: meetingTimeData['start'],
+              end: meetingTimeData['end'],
+              day: meetingTimeData['day'] - 1,
+              online: mode === 'SYNC' || mode === 'ASYNC',
+              zz: buildingCode === 'ZZ',
+              semester: semesterIndex,
+            }
+
             sectionJSON['meetingTimes'].push(meetingTimeJSON)
             hasMeetingTime = true
           }
@@ -609,8 +622,8 @@ export const useTimetableStore = defineStore(
       }
     }
 
-    function applyBuiltTimetable(timetable: any) {
-      const hasBuildFailure = timetable.some((entry: any) => {
+    function applyBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
+      const hasBuildFailure = timetable.some((entry) => {
         return (
           entry['code'] !== VIAplannerConstants.blockedTimesCourseCodePlaceholder &&
           entry['section'] === ''
@@ -650,16 +663,18 @@ export const useTimetableStore = defineStore(
       }
     }
 
-    function normalizeBuiltTimetable(timetable: any) {
-      const normalized: Record<VIAplanner.SemesterCode, Array<any>> = {
+    function normalizeBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
+      const normalized: Record<
+        VIAplanner.SemesterCode,
+        Array<VIAplanner.BuilderCourseSelection>
+      > = {
         [VIAplannerConstants.FIRST_SEM]: [],
         [VIAplannerConstants.SECOND_SEM]: [],
       }
 
       for (const entry of timetable) {
-        if (!entry || entry['code'] === VIAplannerConstants.blockedTimesCourseCodePlaceholder) {
+        if (!entry || entry['code'] === VIAplannerConstants.blockedTimesCourseCodePlaceholder)
           continue
-        }
 
         const candidateSessions = VIAplannerConstants.SEMESTER_CODES
         const matchingCandidateSessions = candidateSessions.filter(
@@ -752,25 +767,29 @@ export const useTimetableStore = defineStore(
     function undo() {
       if (historyIndex.value > 0) {
         historyIndex.value--
-        loadState(history.value[historyIndex.value])
+        loadState(history.value[historyIndex.value]!)
       }
     }
 
     function redo() {
       if (historyIndex.value < history.value.length - 1) {
         historyIndex.value++
-        loadState(history.value[historyIndex.value])
+        loadState(history.value[historyIndex.value]!)
       }
     }
 
-    function loadState(newState: any) {
+    function loadState(newState: StateTree) {
       blockedTimes.value = newState.blockedTimes
       selectedCourses.value = newState.selectedCourses
       timetables.value = newState.timetables
       lockedSections.value = newState.lockedSections
     }
 
-    function registerDetailCard(course: string, sectionCode: string, props: any) {
+    function registerDetailCard(
+      course: string,
+      sectionCode: string,
+      props: VIAplanner.CourseCardProps,
+    ) {
       if (!cards.value.find((card) => card.course === `${course} ${sectionCode}`))
         cards.value.push({ course: `${course} ${sectionCode}`, visible: false, props })
     }
@@ -1157,7 +1176,7 @@ export const useTimetableStore = defineStore(
       key: 'timetable',
       storage: localStorage,
       serializer: {
-        serialize: (state: any) => {
+        serialize: (state) => {
           const { cards, history, historyIndex, currentlyBuildingTimetable, ...rest } = state
           return JSON.stringify(rest)
         },

@@ -32,7 +32,7 @@ export type Campus = LooseString<
 >
 
 /** All possible activity kinds */
-export type ActivityType = LooseString<'LEC' | 'TUT' | 'PRA'>
+export type ActivityType = 'LEC' | 'TUT' | 'PRA'
 
 /** Human-readable representations of ActivityType */
 export type ActivityTypeFull = LooseString<'Lecture' | 'Tutorial' | 'Practical'>

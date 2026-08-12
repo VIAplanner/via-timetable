@@ -42,10 +42,9 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  dateTimes: {
-    type: Object,
-    required: true,
-  },
-})
+import { ParsedMeetingTime } from '../../types/app_state.types'
+
+const props = defineProps<{
+  dateTimes: Record<string, ParsedMeetingTime[] | null>
+}>()
 </script>

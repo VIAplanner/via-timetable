@@ -54,7 +54,7 @@
             {{
               section.instructors
                 .map(
-                  (instructor: any) => `${instructor.firstName}
+                  (instructor: Instructor) => `${instructor.firstName}
             ${instructor.lastName}`,
                 )
                 .join(', ')
@@ -142,21 +142,30 @@ import EnrolmentLegendPopup from './EnrolmentLegendPopup.vue'
 import CourseTimetable from './CourseTimetable.vue'
 import { useResponsiveTooltip } from '../../composables/useResponsiveTooltip'
 import { DAYS, SemesterCode, Weekday } from '../../types/constants.types'
-import { Course, MeetingTime, Section } from '../../types/courses.types'
+import {
+  Course,
+  DeliveryMode,
+  Instructor,
+  MeetingTime,
+  Note,
+  Section,
+} from '../../types/courses.types'
+import { DivisionalEnrolmentIndicator } from '../../types/divisions.types'
+import { DivisionalData, SectionType, ParsedMeetingTime } from '../../types/app_state.types'
 
 const store = useTimetableStore()
 const { tooltip } = useResponsiveTooltip()
 const showEnrolmentControls: Ref<boolean> = ref(false)
 
 const props = defineProps<{
-  sectionType: any
+  sectionType: SectionType
   section: Section
   courseData: Course
-  divisionalData: any
+  divisionalData: DivisionalData | undefined
 }>()
 
 const notes = computed(() => {
-  return props.section.notes.filter((note: any) => note.content)
+  return props.section.notes.filter((note: Note) => note.content)
 })
 
 const sectionConflicts = computed(() => {
@@ -183,11 +192,8 @@ function conflictsInSession(sessionCode: string): Array<string> {
 
   const sessionsToCheck = session === 'Y' ? ['F', 'S'] : ([session] as Array<SemesterCode>)
 
-  for (const meetingTime of currentMeetingTimes as Array<any>) {
+  for (const meetingTime of currentMeetingTimes as MeetingTime[]) {
     if (meetingTime.sessionCode !== sessionCode) continue
-
-    const currentStart = parseInt(meetingTime.start)
-    const currentEnd = parseInt(meetingTime.end)
 
     for (const semester of sessionsToCheck as Array<SemesterCode>) {
       const selectedSessionTimetable = store.timetables[semester]
@@ -207,8 +213,8 @@ function conflictsInSession(sessionCode: string): Array<string> {
           continue
 
         if (
-          currentStart < event.end &&
-          currentEnd > event.start &&
+          meetingTime.start < event.end &&
+          meetingTime.end > event.start &&
           !conflicts.includes(`${event.course} ${event.activity}`)
         ) {
           conflicts.push(`${event.course} ${event.activity}`)
@@ -221,8 +227,9 @@ function conflictsInSession(sessionCode: string): Array<string> {
 }
 
 const divisionalEnrolmentIndicator = computed(() => {
-  return props.divisionalData?.divisionalEnrolmentIndicators?.data?.data?.find(
-    (indicator: any) => indicator.division === props.courseData.faculty.code,
+  return props.divisionalData?.divisionalEnrolmentIndicators?.find(
+    (indicator: DivisionalEnrolmentIndicator) =>
+      indicator.division === props.courseData.faculty.code,
   )
 })
 
@@ -232,7 +239,7 @@ const divisionalEnrolmentIndicator = computed(() => {
  * typical course JSON format
  * @return Either 'Online Sync', 'Online Async', 'In Person', 'Hybrid'
  */
-function getSectionDeliveryType(deliveryModes: any): string {
+function getSectionDeliveryType(deliveryModes: DeliveryMode[]): string {
   const session = deliveryModes?.[0]?.session
   if (!session) return ''
 
@@ -285,7 +292,7 @@ function getWaitlistHighlight(ratio: number): string {
  * sorted array of meeting times containing a time, location, and URL to a map showing the location
  */
 function parseMeetingTimes(meetingTimes: Array<MeetingTime>) {
-  const result: Record<string, Array<any>> = {}
+  const result: Record<string, Array<ParsedMeetingTime>> = {}
 
   for (const meetingTime of Object.values(meetingTimes)) {
     if (!Object.keys(result).includes(meetingTime.sessionCode)) result[meetingTime.sessionCode] = []
@@ -300,19 +307,21 @@ function parseMeetingTimes(meetingTimes: Array<MeetingTime>) {
     if (sessionCode) result[sessionCode]!.push(formattedMeetingTime)
   }
 
-  const formattedResult: Record<string, any> = {
+  const formattedResult: Record<string, ParsedMeetingTime[] | null> = {
     first: null,
     second: null,
   }
 
   for (const session of Object.keys(result)) {
-    for (let i = 0; i < result[session]!.length; i++) {
-      if (result[session]![i].location === 'ZZ')
-        result[session]!.push(result[session]!.splice(i, 1)[0])
-    }
+    const sessionMeetingTimes = result[session]!
 
-    if (['9', '5F', '5'].includes(session.substring(4))) formattedResult.first = result[session]
-    else formattedResult.second = result[session]
+    const orderedMeetingTimes = [
+      ...sessionMeetingTimes.filter((meetingTime) => meetingTime.location !== 'ZZ'),
+      ...sessionMeetingTimes.filter((meetingTime) => meetingTime.location === 'ZZ'),
+    ]
+
+    if (['9', '5F', '5'].includes(session.substring(4))) formattedResult.first = orderedMeetingTimes
+    else formattedResult.second = orderedMeetingTimes
   }
 
   return formattedResult
