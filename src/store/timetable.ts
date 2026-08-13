@@ -6,6 +6,7 @@ import { ViaBuilderManager } from '@kelexer/via-builder'
 import * as VIAplanner from '../types/index.types'
 import * as VIAplannerConstants from '../types/index.types'
 import { ToastServiceMethods } from 'primevue/toastservice'
+import { ViaBuilderCourseInput, ViaBuilderCourseResult, ViaBuilderMeetingTime, ViaBuilderSectionInput } from '@kelexer/via-builder/dist/via-builder'
 
 let managerInstance: ViaBuilderManager | null = null
 
@@ -65,7 +66,7 @@ export const useTimetableStore = defineStore(
       [VIAplannerConstants.SECOND_SEM]: [],
     })
 
-    const blockedTimesPlaceholderCourse = ref<VIAplanner.BuilderCourseInput>({
+    const blockedTimesPlaceholderCourse = ref<ViaBuilderCourseInput>({
       code: VIAplannerConstants.blockedTimesCourseCodePlaceholder,
       campus: 'Off Campus',
       type: 'LEC',
@@ -375,19 +376,19 @@ export const useTimetableStore = defineStore(
         }
       }
 
-      const lecturesJSON: VIAplanner.BuilderCourseInput = {
+      const lecturesJSON: ViaBuilderCourseInput = {
         code: courseData['code'],
         campus: courseData['campus'],
         type: 'LEC',
         sections: [],
       }
-      const tutorialsJSON: VIAplanner.BuilderCourseInput = {
+      const tutorialsJSON: ViaBuilderCourseInput = {
         code: courseData['code'],
         campus: courseData['campus'],
         type: 'TUT',
         sections: [],
       }
-      const practicalsJSON: VIAplanner.BuilderCourseInput = {
+      const practicalsJSON: ViaBuilderCourseInput = {
         code: courseData['code'],
         campus: courseData['campus'],
         type: 'PRA',
@@ -406,7 +407,7 @@ export const useTimetableStore = defineStore(
       }
 
       for (const sectionData of courseData['sections']) {
-        const sectionJSON: VIAplanner.BuilderCourseSectionInput = {
+        const sectionJSON: ViaBuilderSectionInput = {
           name: sectionData['name'],
           meetingTimes: [],
         }
@@ -430,7 +431,7 @@ export const useTimetableStore = defineStore(
               meetingTimeData['sessionCode'],
             )
 
-            const meetingTimeJSON: VIAplanner.BuilderEvent = {
+            const meetingTimeJSON: ViaBuilderMeetingTime = {
               start: meetingTimeData['start'],
               end: meetingTimeData['end'],
               day: meetingTimeData['day'] - 1,
@@ -622,7 +623,7 @@ export const useTimetableStore = defineStore(
       }
     }
 
-    function applyBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
+    function applyBuiltTimetable(timetable: ViaBuilderCourseResult[]) {
       const hasBuildFailure = timetable.some((entry) => {
         return (
           entry['code'] !== VIAplannerConstants.blockedTimesCourseCodePlaceholder &&
@@ -663,8 +664,8 @@ export const useTimetableStore = defineStore(
       }
     }
 
-    function normalizeBuiltTimetable(timetable: VIAplanner.BuilderCourseSelection[]) {
-      const normalized: Record<VIAplanner.SemesterCode, VIAplanner.BuilderCourseSelection[]> = {
+    function normalizeBuiltTimetable(timetable: ViaBuilderCourseResult[]) {
+      const normalized: Record<VIAplanner.SemesterCode, ViaBuilderCourseResult[]> = {
         [VIAplannerConstants.FIRST_SEM]: [],
         [VIAplannerConstants.SECOND_SEM]: [],
       }
@@ -1069,15 +1070,15 @@ export const useTimetableStore = defineStore(
       const manager = await getBuilderManager()
       // More info on formatting at https://github.com/Kelexer1/via-builder
       manager.setPreferences({
-        MAX_GAP: maxGap.value,
-        MAX_DAY_LENGTH: maxDayLength.value,
-        MIN_DAY_LENGTH: minDayLength.value,
-        MAX_CONTINUOUS_CLASSES: maxHours.value,
-        PREFERRED_MIN_START: preferredStart.value * 3600,
-        PREFERRED_MAX_END: preferredMaxEnd.value * 3600,
-        GUARANTEE_CROSS_CAMPUS_GAP: true,
-        AVOID_RUSH_HOURS: avoidRushHour.value,
-        ONLINE_PREFERENCE:
+        maxGap: maxGap.value,
+        maxDayLength: maxDayLength.value,
+        minDayLength: minDayLength.value,
+        maxContinuousClasses: maxHours.value,
+        preferredMinStart: preferredStart.value * 3600,
+        preferredMaxEnd: preferredMaxEnd.value * 3600,
+        guaranteeCrossCampusGap: true,
+        avoidRushHours: avoidRushHour.value,
+        onlinePreference:
           onlinePreference.value === 'Avoid' ? 0 : onlinePreference.value === 'Prefer' ? 1 : 2,
       })
     }

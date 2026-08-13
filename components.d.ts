@@ -68,6 +68,7 @@ declare module 'vue' {
     TimeSettingSelect: typeof import('./src/components/AppBar/TimetableSettings/TimeSettingSelect.vue')['default']
     Timetable: typeof import('./src/components/Timetable/Timetable.vue')['default']
     TimetableEvent: typeof import('./src/components/Timetable/TimetableEvent.vue')['default']
+    TimetableGrid: typeof import('./src/components/Timetable/TimetableGrid.vue')['default']
     TimetableSettingsMenu: typeof import('./src/components/AppBar/TimetableSettings/TimetableSettingsMenu.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     ToggleSwitch: typeof import('primevue/toggleswitch')['default']

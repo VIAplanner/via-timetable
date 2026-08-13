@@ -1,4 +1,4 @@
-import type { ActivityType, ActivityTypeFull, Campus, WeekdayNumber } from './common.types.ts'
+import type { ActivityType, ActivityTypeFull, WeekdayNumber } from './common.types.ts'
 import type { Weekday } from './constants.types.ts'
 import type { BuildingCode, Course } from './courses.types.ts'
 import { DivisionalEnrolmentIndicator, DivisionalLegend } from './divisions.types.js'
@@ -48,34 +48,6 @@ export interface DivisionalData {
 export interface CourseCardProps {
   courseData: Course
   divisionalData?: DivisionalData
-}
-
-export interface BuilderCourseSelection {
-  code: string
-  campus: Campus
-  type: ActivityType
-  section: string
-}
-
-export interface BuilderEvent {
-  start: number
-  end: number
-  day: number
-  online: boolean
-  zz: boolean
-  semester: number
-}
-
-export interface BuilderCourseSectionInput {
-  name: string
-  meetingTimes: BuilderEvent[]
-}
-
-export interface BuilderCourseInput {
-  code: string
-  campus: string
-  type: ActivityType
-  sections: BuilderCourseSectionInput[]
 }
 
 export interface SectionType {

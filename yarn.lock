@@ -213,10 +213,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@kelexer/via-builder@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@kelexer/via-builder/-/via-builder-1.0.0.tgz#0e4d5b75b5c97aae312bf5fa80262cdd62eaf5b5"
-  integrity sha512-hPx7XqI8a5/xuvcEkI747XhYKZC6ygz9Axpt2PEM6R3BYNlmaHcqKAgHIPmMc342zKRFe9+0DUUkypYzAC2+fQ==
+"@kelexer/via-builder@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@kelexer/via-builder/-/via-builder-1.1.0.tgz#a99870967658789520705d34ae265914e3854653"
+  integrity sha512-lK+1RzCGOaaYrQlIJc4fAnHW8qoTSCW8CeZuzIaSsFivZ31wfZed+TfaIbJeYCIk0lOwdDMCP0s+WK1leaYMbA==
 
 "@napi-rs/wasm-runtime@^1.1.4":
   version "1.2.2"
