@@ -4,7 +4,7 @@
       <div class="flex flex-row gap-x-5 items-start">
         <label :for="section.name" class="flex flex-row gap-x-5 items-start cursor-pointer">
           <RadioButton
-            v-model="sectionTypeRef.field"
+            v-model="sectionTypeRef.code"
             :input-id="section.name"
             :value="section.name"
           />

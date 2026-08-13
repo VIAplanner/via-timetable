@@ -6,7 +6,12 @@ import { ViaBuilderManager } from '@kelexer/via-builder'
 import * as VIAplanner from '../types/index.types'
 import * as VIAplannerConstants from '../types/index.types'
 import { ToastServiceMethods } from 'primevue/toastservice'
-import { ViaBuilderCourseInput, ViaBuilderCourseResult, ViaBuilderMeetingTime, ViaBuilderSectionInput } from '@kelexer/via-builder/dist/via-builder'
+import {
+  ViaBuilderCourseInput,
+  ViaBuilderCourseResult,
+  ViaBuilderMeetingTime,
+  ViaBuilderSectionInput,
+} from '@kelexer/via-builder/dist/via-builder'
 
 let managerInstance: ViaBuilderManager | null = null
 

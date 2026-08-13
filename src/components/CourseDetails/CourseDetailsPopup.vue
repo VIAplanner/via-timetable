@@ -222,9 +222,9 @@ watch(selectedPra, (val) => {
 })
 
 const sectionTypes: SectionType[] = [
-  { key: 'LEC', label: 'Lecture', field: selectedLec.value },
-  { key: 'TUT', label: 'Tutorial', field: selectedTut.value },
-  { key: 'PRA', label: 'Practical', field: selectedPra.value },
+  { key: 'LEC', label: 'Lecture', code: selectedLec.value },
+  { key: 'TUT', label: 'Tutorial', code: selectedTut.value },
+  { key: 'PRA', label: 'Practical', code: selectedPra.value },
 ]
 
 const divisionalLegend = computed(() => {

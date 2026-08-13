@@ -18,10 +18,11 @@ function updateWindowSize(): void {
   height.value = window.innerHeight
 }
 
+/** Encodes data about the current state of the window */
 interface UseWindowSizeReturn {
-  width: Ref<number>
-  height: Ref<number>
-  isSmallDevice: ComputedRef<boolean>
+  width: Ref<number> // Width in px
+  height: Ref<number> // Height in px
+  isSmallDevice: ComputedRef<boolean> // Whether the window is "small", for mobile formats etc.
 }
 
 export function useWindowSize(breakpoint = 640): UseWindowSizeReturn {

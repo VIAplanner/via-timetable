@@ -64,12 +64,7 @@
       @keydown.enter.prevent="blockTimeToggle()"
       @keydown.space.prevent="blockTimeToggle()"
     >
-      <div
-        v-show="hovered"
-        v-ripple
-        class="m-0 p-0 h-full flex items-center"
-        @click="blockTimeToggle()"
-      >
+      <div v-show="hovered" v-ripple class="m-0 p-0 h-full flex items-center">
         <p v-show="hovered" class="text-center unselectable text-text-primary w-full">
           {{ dynamicText }}
         </p>
