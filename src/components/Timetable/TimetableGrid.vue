@@ -6,14 +6,14 @@
       :style="{ 'margin-top': `${oneHourHeightPixels * 0.6}px` }"
     >
       <div
-        v-for="(time, index) in timeRange"
-        :key="index"
+        v-for="(time, timeIndex) in timeRange"
+        :key="timeIndex"
         class="time-axis-number w-13 md:w-16"
         :style="{ height: oneHourHeight }"
       >
         <HourSwitch
           :time="time"
-          :last="index !== timeRange.length - 1"
+          :last="timeIndex !== timeRange.length - 1"
           :semester="semester"
           :is-export="isExport"
           :height="oneHourHeight"
@@ -23,10 +23,10 @@
     <div class="col-11 w-full p-0 pr-8">
       <!-- Weekday Axis -->
       <div class="grid grid-nogutter" name="weekDaysAxis">
-        <div v-for="(weekday, index) in weekdays" :key="weekday" class="col">
+        <div v-for="(weekday, weekdayIndex) in weekdaysToIterate" :key="weekday" class="col">
           <WeekdaySwitch
             :weekday="weekday"
-            :weekday-label="useShortWeekdays ? weekdaysShort[index]! : weekday"
+            :weekday-label="weekdaysDisplay[weekdayIndex]!"
             :semester="semester"
             :is-export="isExport"
             :height="`${oneHourHeightPixels * 0.6}px`"
@@ -35,7 +35,11 @@
       </div>
       <!-- Timetable Content -->
       <div class="grid grid-nogutter timetableContent" name="timetableContent">
-        <div v-for="(meetingSections, day) in timetable" :key="day" class="col relative">
+        <div
+          v-for="([day, meetingSections], dayIndex) in daysTrimmed"
+          :key="dayIndex"
+          class="col relative"
+        >
           <div
             v-for="hour in timeSlotCount"
             :key="hour"
@@ -70,8 +74,8 @@
           >
             <template v-if="!event.isEmpty">
               <TimetableEvent
-                v-for="(courseActivityData, index) in event.courses"
-                :key="courseActivityData.course + courseActivityData.activity + index"
+                v-for="(courseActivityData, eventIndex) in event.courses"
+                :key="courseActivityData.course + courseActivityData.activity + eventIndex"
                 :event-data="courseActivityData"
                 :semester="semester"
                 :day="day"
@@ -113,7 +117,7 @@ import NoTimetablePopup from '../Popup/NoTimetablePopup.vue'
 import HourSwitch from './HourSwitch.vue'
 import WeekdaySwitch from './WeekdaySwitch.vue'
 import { useWindowSize } from '../../composables/useWindowSize'
-import { DAYS, DAYS_SHORT, SemesterCode } from '../../types/constants.types'
+import { DAYS, DAYS_SHORT, SemesterCode, Weekday } from '../../types/constants.types'
 import { ActivityTimeData, SemesterEventsData } from '../../types/app_state.types'
 
 const store = useTimetableStore()
@@ -130,7 +134,25 @@ const props = withDefaults(
 
 const weekdays = ref([...DAYS])
 const weekdaysShort = ref([...DAYS_SHORT])
-const useShortWeekdays = computed(() => isSmallDevice.value)
+const weekdaysDisplay = computed(() => (isSmallDevice.value ? weekdaysShort.value : weekdays.value))
+
+/** The provided data for each day with Sunday and Saturday most likely excluded to save space */
+const daysTrimmed = computed(() => {
+  const result: [Weekday, ActivityTimeData[]][] = []
+  for (const [day, meetingTimes] of Object.entries(props.timetable) as [
+    Weekday,
+    ActivityTimeData[],
+  ][]) {
+    if ((day === 'Sunday' || day === 'Saturday') && meetingTimes.length == 0)
+      continue // Skip empty Sunday or Saturday
+    else result.push([day, meetingTimes])
+  }
+  return result
+})
+
+const weekdaysToIterate = computed(() => {
+  return weekdays.value.slice(0, daysTrimmed.value.length)
+})
 
 /** The hour that the earliest class starts on for any day in the given semester */
 const timetableStart = computed(() => {
