@@ -143,8 +143,14 @@ const daysTrimmed = computed(() => {
     Weekday,
     ActivityTimeData[],
   ][]) {
-    if ((day === 'Sunday' || day === 'Saturday') && meetingTimes.length == 0)
-      continue // Skip empty Sunday or Saturday
+    if (day === 'Sunday' && meetingTimes.length === 0)
+      continue // Skip empty Sunday
+    else if (
+      day === 'Saturday' &&
+      meetingTimes.length === 0 &&
+      props.timetable['Sunday'].length === 0
+    )
+      continue // Skip empty Saturday only if Sunday is also empty
     else result.push([day, meetingTimes])
   }
   return result
