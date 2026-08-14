@@ -1,0 +1,25 @@
+name: Lint & Format
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint-and-format:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: ESLint
+        run: yarn lint:check
+
+      - name: Prettier
+        run: yarn format:check
