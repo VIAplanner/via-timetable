@@ -1,19 +1,26 @@
 <template>
-    <div>
-        <CourseDetailsPopup v-for="card of visibleCards" :key="card.course" v-bind="card.props"
-            @close="store.setDetailCardVisibility(card.course, false)" />
-    </div>
+  <div>
+    <CourseDetailsPopup
+      v-for="card of visibleCards"
+      :key="card.course"
+      v-bind="card.props"
+      @close="store.setDetailCardVisibility(card.course, false)"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useTimetableStore } from '../../store/timetable';
+import { computed } from 'vue'
+import { useTimetableStore } from '../../store/timetable'
 
-import CourseDetailsPopup from './CourseDetailsPopup.vue';
+import CourseDetailsPopup from './CourseDetailsPopup.vue'
+import { CourseCardProps } from '../../types/app_state.types'
 
-const store = useTimetableStore() as any;
+const store = useTimetableStore()
 
 const visibleCards = computed(() => {
-    return store.cards.filter((card: { course: string, visible: boolean, props: any }) => card && card.visible);
+  return store.cards.filter(
+    (card: { course: string; visible: boolean; props: CourseCardProps }) => card && card.visible,
+  )
 })
 </script>

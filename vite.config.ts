@@ -8,33 +8,29 @@ import checker from 'vite-plugin-checker'
 import path from 'path'
 
 export default defineConfig({
-    plugins: [
-        vue(),
-        tailwindcss(),
-        Components({
-            resolvers: [
-                PrimeVueResolver()
-            ]
-        }),
-        checker({ vueTsc: true })
-    ],
-    resolve: {
-        alias: [
-            { find: '@', replacement: path.resolve(__dirname, './src') }
-        ]
+  plugins: [
+    vue(),
+    tailwindcss(),
+    Components({
+      resolvers: [PrimeVueResolver()],
+    }),
+    checker({ vueTsc: true }),
+  ],
+  resolve: {
+    alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }],
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.viaplanner.net/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
-    server: {
-        proxy: {
-            '/api': {
-                target: 'https://api.viaplanner.net/',
-                changeOrigin: true,
-                rewrite: path => path.replace(/^\/api/, '')
-            }
-        },
-        port: 8080,
-        host: '0.0.0.0'
-    },
-    build: {
-        sourcemap: true
-    }
-});
+    port: 8080,
+    host: '0.0.0.0',
+  },
+  build: {
+    sourcemap: true,
+  },
+})

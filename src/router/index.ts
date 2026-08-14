@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import home from '../views/Home.vue';
-import about from '../views/About.vue';
-import timetable from '../views/Timetable.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import home from '../views/HomeView.vue'
+import about from '../views/AboutView.vue'
+import timetable from '../views/TimetableView.vue'
 
 const routes = [
   {
@@ -14,7 +14,7 @@ const routes = [
         name: 'timetable',
         path: 'timetable',
         component: timetable,
-      }
+      },
     ],
   },
   {
@@ -28,11 +28,11 @@ const routes = [
       name: 'home',
     },
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-});
+  routes,
+})
 
-export default router;
+export default router
